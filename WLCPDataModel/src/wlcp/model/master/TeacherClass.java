@@ -20,7 +20,7 @@ public class TeacherClass implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "TEACHER_CLASS_ID")
-	private int teacherClassId;
+	private Integer teacherClassId;
 	
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "TEACHER_ID")
@@ -30,29 +30,29 @@ public class TeacherClass implements Serializable {
 	private String teacherClassName;
 	
 	@Column(name = "GRADE")
-	private int grade;
+	private Integer grade;
 	
-	@Column(length = 40, name = "SCHOOL_NAME")
-	private String schoolName;
+	@JoinColumn(name = "SCHOOL", referencedColumnName = "SCHOOL_ID")
+	private School school;
 	
 	@Column(name = "SCHOOL_YEAR_START")
-	private int schoolYearStart;
+	private Integer schoolYearStart;
 	
 	@Column(name = "SCHOOL_YEAR_END")
-	private int schoolYearEnd;
+	private Integer schoolYearEnd;
 
-//	@ManyToMany
-//	@JoinTable(name = "CLASS_STUDENTS", joinColumns = @JoinColumn(name = "CLASSES", referencedColumnName = "SCHOOL_CLASS_ID"),
-//	inverseJoinColumns = @JoinColumn(name = "STUDENTS", referencedColumnName = "STUDENT_ID"))
-//	private List<Student> students = new ArrayList<Student>();
+	@ManyToMany
+	@JoinTable(name = "CLASS_STUDENTS", joinColumns = @JoinColumn(name = "CLASSES", referencedColumnName = "TEACHER_CLASS_ID"),
+	inverseJoinColumns = @JoinColumn(name = "STUDENTS", referencedColumnName = "STUDENT_ID"))
+	private List<Student> students = new ArrayList<Student>();
 	
-	public TeacherClass(Teacher teacher, String teacherClassName, int grade, String schoolName, int schoolYearStart,
-			int schoolYearEnd) {
+	public TeacherClass(Teacher teacher, String teacherClassName, Integer grade, School school, Integer schoolYearStart,
+			Integer schoolYearEnd) {
 		super();
 		this.teacher = teacher;
 		this.teacherClassName = teacherClassName;
 		this.grade = grade;
-		this.schoolName = schoolName;
+		this.school = school;
 		this.schoolYearStart = schoolYearStart;
 		this.schoolYearEnd = schoolYearEnd;
 	}
@@ -61,11 +61,11 @@ public class TeacherClass implements Serializable {
 		super();
 	}
 
-	public int getTeacherClassId() {
+	public Integer getTeacherClassId() {
 		return teacherClassId;
 	}
 
-	public void setTeacherClassId(int teacherClassId) {
+	public void setTeacherClassId(Integer teacherClassId) {
 		this.teacherClassId = teacherClassId;
 	}
 
@@ -85,35 +85,35 @@ public class TeacherClass implements Serializable {
 		this.teacherClassName = teacherClassName;
 	}
 
-	public int getGrade() {
+	public Integer getGrade() {
 		return grade;
 	}
 
-	public void setGrade(int grade) {
+	public void setGrade(Integer grade) {
 		this.grade = grade;
 	}
 
-	public String getSchoolName() {
-		return schoolName;
+	public School getSchool() {
+		return school;
 	}
 
-	public void setSchoolName(String schoolName) {
-		this.schoolName = schoolName;
+	public void setSchool(School school) {
+		this.school = school;
 	}
 
-	public int getSchoolYearStart() {
+	public Integer getSchoolYearStart() {
 		return schoolYearStart;
 	}
 
-	public void setSchoolYearStart(int schoolYearStart) {
+	public void setSchoolYearStart(Integer schoolYearStart) {
 		this.schoolYearStart = schoolYearStart;
 	}
 
-	public int getSchoolYearEnd() {
+	public Integer getSchoolYearEnd() {
 		return schoolYearEnd;
 	}
 
-	public void setSchoolYearEnd(int schoolYearEnd) {
+	public void setSchoolYearEnd(Integer schoolYearEnd) {
 		this.schoolYearEnd = schoolYearEnd;
 	}
 	

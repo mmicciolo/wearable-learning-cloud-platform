@@ -74,7 +74,7 @@ public class DataModelTest {
 		
 		//Create a teacher
 		Teacher teacher = new Teacher("First Name", "Last Name", "Email@Email.com", "Password", null);
-		teacher.getTeacherClasses().add(new TeacherClass(teacher, "A Class", 5, "A School", 2017, 2018));
+		teacher.getTeacherClasses().add(new TeacherClass(teacher, "A Class", 5, null, 2017, 2018));
 		
 		//Persist the teacher
 		manager.getTransaction().begin();

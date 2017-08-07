@@ -20,7 +20,7 @@ public class Teacher implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "TEACHER_ID")
-	private int teacherId;
+	private Integer teacherId;
 	
 	@Column(length = 40, name = "FIRST_NAME")
 	private String firstName;
@@ -54,11 +54,11 @@ public class Teacher implements Serializable {
 		super();
 	}
 
-	public int getTeacherId() {
+	public Integer getTeacherId() {
 		return teacherId;
 	}
 
-	public void setTeacherId(int teacherId) {
+	public void setTeacherId(Integer teacherId) {
 		this.teacherId = teacherId;
 	}
 

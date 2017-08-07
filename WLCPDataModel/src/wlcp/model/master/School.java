@@ -17,7 +17,7 @@ public class School implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "SCHOOL_ID")
-	private int schoolId;
+	private Integer schoolId;
 	
 	@Column(length = 40, name = "SCHOOL_NAME")
 	private String schoolName;
@@ -31,10 +31,32 @@ public class School implements Serializable {
 		this.schoolAddress = schoolAddress;
 	}
 
-
-
 	public School() {
 		super();
+	}
+
+	public Integer getSchoolId() {
+		return schoolId;
+	}
+
+	public void setSchoolId(Integer schoolId) {
+		this.schoolId = schoolId;
+	}
+
+	public String getSchoolName() {
+		return schoolName;
+	}
+
+	public void setSchoolName(String schoolName) {
+		this.schoolName = schoolName;
+	}
+
+	public String getSchoolAddress() {
+		return schoolAddress;
+	}
+
+	public void setSchoolAddress(String schoolAddress) {
+		this.schoolAddress = schoolAddress;
 	}
    
 }

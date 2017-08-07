@@ -32,7 +32,7 @@ public class Teacher implements Serializable {
 	private String emailAddress;
 	
 	@OneToMany(cascade = CascadeType.PERSIST)
-	@JoinTable(name = "TEACHER_CLASSES", joinColumns = @JoinColumn(name = "TEACHER_ID", referencedColumnName = "TEACHER_ID"), inverseJoinColumns = @JoinColumn(name = "TEAHCER_CLASS_ID", referencedColumnName = "TEACHER_CLASS_ID"))
+	@JoinTable(name = "TEACHER_CLASSES", joinColumns = @JoinColumn(name = "TEACHER_ID", referencedColumnName = "TEACHER_ID"), inverseJoinColumns = @JoinColumn(name = "TEACHER_CLASS_ID", referencedColumnName = "TEACHER_CLASS_ID"))
 	private List<TeacherClass> teacherClasses = new ArrayList<TeacherClass>();
 
 	public Teacher(String firstName, String lastName, String emailAddress) {

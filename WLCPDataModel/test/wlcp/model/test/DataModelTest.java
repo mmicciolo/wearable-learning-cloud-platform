@@ -70,6 +70,7 @@ public class DataModelTest {
 	
 	@Test
 	public void testTeacherWithClasses() {
+		
 		//Create a teacher
 		Teacher teacher = new Teacher("First Name", "Last Name", "Email@Email.com");
 		teacher.getTeacherClasses().add(new TeacherClass(teacher, "A Class", 5, "A School", 2017, 2018));
@@ -81,6 +82,33 @@ public class DataModelTest {
 		
 		//Test
 		assertEquals(teacher, manager.getReference(Teacher.class, 1));
+	}
+	
+	@Test
+	public void testTeachersWithSameClass() {
+		
+		//Create teachers
+		Teacher teacher = new Teacher("First", "Teacher", "Teacher@Email.com");
+		Teacher teacher1 = new Teacher("Second", "Teacher", "Teacher1@Email.com");
+		
+		//Create a class for both teachers
+		TeacherClass teacherClass = new TeacherClass(teacher, "A Class", 5, "A School", 2017, 2018);
+		
+		//Add the class to both teachers
+		teacher.getTeacherClasses().add(teacherClass);
+		teacher1.getTeacherClasses().add(teacherClass);
+		
+		//Persist
+		manager.getTransaction().begin();
+		manager.persist(teacher);
+		manager.getTransaction().commit();
+		manager.getTransaction().begin();
+		manager.persist(teacher1);
+		manager.getTransaction().commit();
+		
+		//Compare
+		assertEquals(teacher, manager.getReference(Teacher.class, 1));
+		assertEquals(teacher1, manager.getReference(Teacher.class, 2));
 	}
 
 }

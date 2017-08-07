@@ -31,18 +31,17 @@ public class Teacher implements Serializable {
 	@Column(length = 40, name = "EMAIL_ADDRESS")
 	private String emailAddress;
 	
-	@OneToMany
-	@JoinTable(name = "TEACHER_CLASSES", joinColumns = @JoinColumn(name = "TEACHER_ID", referencedColumnName = "TEACHER_ID"), inverseJoinColumns = @JoinColumn(name = "SCHOOL_CLASS_ID", referencedColumnName = "SCHOOL_CLASS_ID"))
-	private List<SchoolClass> schoolClasses = new ArrayList<SchoolClass>();
+	@OneToMany(cascade = CascadeType.PERSIST)
+	@JoinTable(name = "TEACHER_CLASSES", joinColumns = @JoinColumn(name = "TEACHER_ID", referencedColumnName = "TEACHER_ID"), inverseJoinColumns = @JoinColumn(name = "TEAHCER_CLASS_ID", referencedColumnName = "TEACHER_CLASS_ID"))
+	private List<TeacherClass> teacherClasses = new ArrayList<TeacherClass>();
 
-	public Teacher(String firstName, String lastName, String emailAddress, List<SchoolClass> schoolClasses) {
+	public Teacher(String firstName, String lastName, String emailAddress) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.emailAddress = emailAddress;
-		this.schoolClasses = schoolClasses;
 	}
-
+	
 	public Teacher() {
 		super();
 	}
@@ -79,12 +78,12 @@ public class Teacher implements Serializable {
 		this.emailAddress = emailAddress;
 	}
 
-	public List<SchoolClass> getSchoolClasses() {
-		return schoolClasses;
+	public List<TeacherClass> getTeacherClasses() {
+		return teacherClasses;
 	}
 
-	public void setSchoolClasses(List<SchoolClass> schoolClasses) {
-		this.schoolClasses = schoolClasses;
+	public void setTeacherClasses(List<TeacherClass> teacherClasses) {
+		this.teacherClasses = teacherClasses;
 	}
 	
 }

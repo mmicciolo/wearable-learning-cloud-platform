@@ -22,7 +22,7 @@ public class Student implements Serializable {
 	private int studentId;
 	
 	@ManyToMany(mappedBy = "students")
-	List<SchoolClass> classes = new ArrayList<SchoolClass>();
+	List<TeacherClass> classes = new ArrayList<TeacherClass>();
 
 	public Student() {
 		super();

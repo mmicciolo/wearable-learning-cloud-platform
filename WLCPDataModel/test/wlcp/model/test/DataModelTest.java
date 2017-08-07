@@ -2,8 +2,6 @@ package wlcp.model.test;
 
 import static org.junit.Assert.*;
 
-import java.sql.DriverManager;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,21 +10,20 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 import org.eclipse.persistence.config.PersistenceUnitProperties;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
-import wlcp.model.master.SchoolClass;
 import wlcp.model.master.Teacher;
+import wlcp.model.master.TeacherClass;
 
 public class DataModelTest {
 	
 	private static EntityManagerFactory factory;
 	private static EntityManager manager;
-
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-		
+	
+	@Before
+	public void setupBefore() {
 		//Setup an embedded db connection
 		Map<String, String> TEST_CONFIG_LOCALHOST = new HashMap<String, String>();
 		TEST_CONFIG_LOCALHOST.put(PersistenceUnitProperties.JDBC_URL, "jdbc:mysql://localhost/test");
@@ -46,64 +43,44 @@ public class DataModelTest {
 		//Create a new entity manager
 		manager = factory.createEntityManager();
 	}
-
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-		
+	
+	@After
+	public void tearDownAfter() {
 		//Close the manager
 		manager.close();
 		
 		//Closer the factory
 		factory.close();
 	}
-	
+
 	@Test
-	public void test() {
-		int i = 0;
+	public void testTeacherWithoutClasses() {
+		
+		//Create a teacher
+		Teacher teacher = new Teacher("First Name", "Last Name", "Email@Email.com");
+		
+		//Persist the teacher
+		manager.getTransaction().begin();
+		manager.persist(teacher);
+		manager.getTransaction().commit();
+		
+		//Test
+		assertEquals(teacher, manager.getReference(Teacher.class, 1));
 	}
 	
-//	@Test
-//	public void testTeacher() {
-//		
-//		//Create a teacher
-//		Teacher testTeacher = DataModelTestMethods.CreateTeacher();
-//		
-//		//Start the transactions
-//		manager.getTransaction().begin();
-//		
-//		//Persist the teacher
-//		manager.persist(testTeacher);
-//		
-//		//Commit the entity
-//		manager.getTransaction().commit();
-//		
-//		//Get the persisted teacher
-//		Teacher persistedTeacher = manager.getReference(Teacher.class, 1);
-//		
-//		//Compare
-//		assertEquals(testTeacher, persistedTeacher);
-//	}
-//	
-//	@Test
-//	public void testSchoolClass() {
-//		
-//		//Create a class
-//		SchoolClass testSchoolClass = DataModelTestMethods.CreateSchoolClass();
-//		
-//		//Start the transaction
-//		manager.getTransaction().begin();
-//		
-//		//Persist the class
-//		manager.persist(testSchoolClass);
-//		
-//		//Commit the entity
-//		manager.getTransaction().commit();
-//		
-//		//Get the persisted class
-//		SchoolClass persistedSchoolClass = manager.getReference(SchoolClass.class, 1);
-//		
-//		//Compare
-//		assertEquals(testSchoolClass, persistedSchoolClass);
-//	}
+	@Test
+	public void testTeacherWithClasses() {
+		//Create a teacher
+		Teacher teacher = new Teacher("First Name", "Last Name", "Email@Email.com");
+		teacher.getTeacherClasses().add(new TeacherClass(teacher, "A Class", 5, "A School", 2017, 2018));
+		
+		//Persist the teacher
+		manager.getTransaction().begin();
+		manager.persist(teacher);
+		manager.getTransaction().commit();
+		
+		//Test
+		assertEquals(teacher, manager.getReference(Teacher.class, 1));
+	}
 
 }

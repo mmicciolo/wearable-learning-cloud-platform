@@ -14,6 +14,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import wlcp.model.master.School;
 import wlcp.model.master.Teacher;
 import wlcp.model.master.TeacherClass;
 
@@ -57,7 +58,7 @@ public class DataModelTest {
 	public void testTeacherWithoutClasses() {
 		
 		//Create a teacher
-		Teacher teacher = new Teacher("First Name", "Last Name", "Email@Email.com");
+		Teacher teacher = new Teacher("First Name", "Last Name", "Email@Email.com", null);
 		
 		//Persist the teacher
 		manager.getTransaction().begin();
@@ -72,7 +73,7 @@ public class DataModelTest {
 	public void testTeacherWithClasses() {
 		
 		//Create a teacher
-		Teacher teacher = new Teacher("First Name", "Last Name", "Email@Email.com");
+		Teacher teacher = new Teacher("First Name", "Last Name", "Email@Email.com", null);
 		teacher.getTeacherClasses().add(new TeacherClass(teacher, "A Class", 5, "A School", 2017, 2018));
 		
 		//Persist the teacher
@@ -85,30 +86,21 @@ public class DataModelTest {
 	}
 	
 	@Test
-	public void testTeachersWithSameClass() {
+	public void testTeacherWithSchool() {
 		
-		//Create teachers
-		Teacher teacher = new Teacher("First", "Teacher", "Teacher@Email.com");
-		Teacher teacher1 = new Teacher("Second", "Teacher", "Teacher1@Email.com");
+		//Create a school
+		School school = new School("School Name", "School Address");
 		
-		//Create a class for both teachers
-		TeacherClass teacherClass = new TeacherClass(teacher, "A Class", 5, "A School", 2017, 2018);
+		//Create a teacher
+		Teacher teacher = new Teacher("First Name", "Last Name", "Email@Email.com", school);
 		
-		//Add the class to both teachers
-		teacher.getTeacherClasses().add(teacherClass);
-		teacher1.getTeacherClasses().add(teacherClass);
-		
-		//Persist
+		//Persist the teacher
 		manager.getTransaction().begin();
 		manager.persist(teacher);
 		manager.getTransaction().commit();
-		manager.getTransaction().begin();
-		manager.persist(teacher1);
-		manager.getTransaction().commit();
 		
-		//Compare
+		//Test
 		assertEquals(teacher, manager.getReference(Teacher.class, 1));
-		assertEquals(teacher1, manager.getReference(Teacher.class, 2));
 	}
 
 }

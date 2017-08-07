@@ -3,6 +3,7 @@
 	<persistence-unit name="WLCPDataModel">
 		<class>wlcp.model.master.Teacher</class>
 		<class>wlcp.model.master.TeacherClass</class>
+		<class>wlcp.model.master.School</class>
 <!-- 		<class>wlcp.model.master.Student</class> -->
 	</persistence-unit>
 </persistence>

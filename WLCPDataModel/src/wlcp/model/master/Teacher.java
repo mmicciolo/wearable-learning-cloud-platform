@@ -31,17 +31,21 @@ public class Teacher implements Serializable {
 	@Column(length = 40, name = "EMAIL_ADDRESS")
 	private String emailAddress;
 	
-	@OneToMany(cascade = CascadeType.PERSIST)
-	@JoinTable(name = "TEACHER_CLASSES", joinColumns = @JoinColumn(name = "TEACHER_ID", referencedColumnName = "TEACHER_ID"), inverseJoinColumns = @JoinColumn(name = "TEACHER_CLASS_ID", referencedColumnName = "TEACHER_CLASS_ID"))
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(name = "SCHOOL", referencedColumnName = "SCHOOL_ID")
+	private School school;
+	
+	@OneToMany(cascade = CascadeType.PERSIST, mappedBy = "teacher")
 	private List<TeacherClass> teacherClasses = new ArrayList<TeacherClass>();
-
-	public Teacher(String firstName, String lastName, String emailAddress) {
+	
+	public Teacher(String firstName, String lastName, String emailAddress, School school) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.emailAddress = emailAddress;
+		this.school = school;
 	}
-	
+
 	public Teacher() {
 		super();
 	}
@@ -76,6 +80,14 @@ public class Teacher implements Serializable {
 
 	public void setEmailAddress(String emailAddress) {
 		this.emailAddress = emailAddress;
+	}
+
+	public School getSchool() {
+		return school;
+	}
+
+	public void setSchool(School school) {
+		this.school = school;
 	}
 
 	public List<TeacherClass> getTeacherClasses() {

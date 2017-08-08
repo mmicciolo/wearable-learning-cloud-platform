@@ -35,7 +35,7 @@ public class Teacher implements Serializable {
 	private String password;
 	
 	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(name = "SCHOOL", referencedColumnName = "SCHOOL_ID")
+	@JoinColumn(name = "SCHOOL_ID", referencedColumnName = "SCHOOL_ID")
 	private School school;
 	
 	@OneToMany(cascade = CascadeType.PERSIST, mappedBy = "teacher")

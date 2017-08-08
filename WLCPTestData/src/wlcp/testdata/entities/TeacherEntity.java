@@ -27,8 +27,7 @@ public class TeacherEntity extends DataLoaderEntity<Teacher> {
 		List<Teacher> teachers = super.ReadData();
 		LoadCSVRecords();
 		for(CSVRecord record : csvRecords) {
-			School school = entityManager.getReference(School.class, Integer.parseInt(record.get("SCHOOL_ID")));
-			teachers.get((int)record.getRecordNumber() - 1).setSchool(school);
+			teachers.get((int)record.getRecordNumber() - 1).setSchool(entityManager.getReference(School.class, Integer.parseInt(record.get("SCHOOL_ID"))));
 		}
 		return teachers;
 	}

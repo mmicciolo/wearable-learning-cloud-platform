@@ -32,7 +32,7 @@ public class TeacherClass implements Serializable {
 	@Column(name = "GRADE")
 	private Integer grade;
 	
-	@JoinColumn(name = "SCHOOL", referencedColumnName = "SCHOOL_ID")
+	@JoinColumn(name = "SCHOOL_ID", referencedColumnName = "SCHOOL_ID")
 	private School school;
 	
 	@Column(name = "SCHOOL_YEAR_START")
@@ -42,8 +42,8 @@ public class TeacherClass implements Serializable {
 	private Integer schoolYearEnd;
 
 	@ManyToMany
-	@JoinTable(name = "CLASS_STUDENTS", joinColumns = @JoinColumn(name = "CLASSES", referencedColumnName = "TEACHER_CLASS_ID"),
-	inverseJoinColumns = @JoinColumn(name = "STUDENTS", referencedColumnName = "STUDENT_ID"))
+	@JoinTable(name = "CLASS_STUDENTS", joinColumns = @JoinColumn(name = "TEACHER_CLASS_ID", referencedColumnName = "TEACHER_CLASS_ID"),
+	inverseJoinColumns = @JoinColumn(name = "STUDENT_ID", referencedColumnName = "STUDENT_ID"))
 	private List<Student> students = new ArrayList<Student>();
 	
 	public TeacherClass(Teacher teacher, String teacherClassName, Integer grade, School school, Integer schoolYearStart,

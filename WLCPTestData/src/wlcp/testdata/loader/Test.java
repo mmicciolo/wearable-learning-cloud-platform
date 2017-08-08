@@ -10,6 +10,7 @@ import javax.persistence.Persistence;
 import org.eclipse.persistence.config.PersistenceUnitProperties;
 
 import wlcp.testdata.entities.SchoolEntity;
+import wlcp.testdata.entities.TeacherClassEntity;
 import wlcp.testdata.entities.TeacherEntity;
 
 public class Test {
@@ -32,8 +33,9 @@ public class Test {
 		//Create a new entity manager
 		EntityManager manager = factory.createEntityManager();
 		
-		DataLoaderFactory.LoadData(new SchoolEntity("C:\\Users\\Matt\\Git\\wearable-learning-cloud-platform\\WLCPTestData\\TestData\\School.csv"), manager);
-		DataLoaderFactory.LoadData(new TeacherEntity("C:\\Users\\Matt\\Git\\wearable-learning-cloud-platform\\WLCPTestData\\TestData\\Teacher.csv"), manager);
+		DataLoaderFactory.LoadData(new SchoolEntity("C:\\Users\\Matt\\git\\wearable-learning-cloud-platform\\WLCPTestData\\TestData\\School.csv"), manager);
+		DataLoaderFactory.LoadData(new TeacherEntity("C:\\Users\\Matt\\git\\wearable-learning-cloud-platform\\WLCPTestData\\TestData\\Teacher.csv"), manager);
+		DataLoaderFactory.LoadData(new TeacherClassEntity("C:\\Users\\Matt\\git\\wearable-learning-cloud-platform\\WLCPTestData\\TestData\\TeacherClass.csv"), manager);
 
 	}
 

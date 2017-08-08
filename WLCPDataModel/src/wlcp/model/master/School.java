@@ -19,10 +19,10 @@ public class School implements Serializable {
 	@Column(name = "SCHOOL_ID")
 	private Integer schoolId;
 	
-	@Column(length = 40, name = "SCHOOL_NAME")
+	@Column(length = 80, name = "SCHOOL_NAME")
 	private String schoolName;
 	
-	@Column(length = 40, name = "SCHOOL_ADDRESS")
+	@Column(length = 80, name = "SCHOOL_ADDRESS")
 	private String schoolAddress;
 
 	public School(String schoolName, String schoolAddress) {

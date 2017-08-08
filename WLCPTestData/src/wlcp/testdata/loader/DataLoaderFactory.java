@@ -39,7 +39,7 @@ public class DataLoaderFactory {
 			ReadData(dataLoaderEntity, entityManager);
 		}
 		//Check if we have a valid entity manager
-		if(entityManager != null) {
+		if(entityManager != null && dataLoaderEntity.getEntityList().size() > 0) {
 			try {
 				//Get the method to get the entites id
 				Method method = dataLoaderEntity.getEntityList().get(0).getClass().getMethod(dataLoaderEntity.columnGetterMap.get("IDGetter").getMethodName());

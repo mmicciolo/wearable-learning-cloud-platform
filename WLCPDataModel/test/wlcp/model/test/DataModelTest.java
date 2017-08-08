@@ -15,6 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import wlcp.model.master.School;
+import wlcp.model.master.Student;
 import wlcp.model.master.Teacher;
 import wlcp.model.master.TeacherClass;
 
@@ -101,6 +102,63 @@ public class DataModelTest {
 		
 		//Test
 		assertEquals(teacher, manager.getReference(Teacher.class, 1));
+	}
+	
+	@Test
+	public void testSchool() {
+		
+		//Create a school
+		School school = new School("School Name", "School Address");
+		
+		//Persist the school
+		manager.getTransaction().begin();
+		manager.persist(school);
+		manager.getTransaction().commit();
+		
+		//Test
+		assertEquals(school, manager.getReference(School.class, 1));
+	}
+	
+	@Test
+	public void testClassWithoutStudents() {
+		
+		//Create a school
+		School school = new School("School Name", "School Address");
+		
+		//Create a class
+		TeacherClass teacherClass = new TeacherClass(new Teacher(), "Class Name", 4, school, 2017, 2018);
+		
+		//Persist the class
+		manager.getTransaction().begin();
+		manager.persist(teacherClass);
+		manager.getTransaction().commit();
+		
+		//Test
+		assertEquals(teacherClass, manager.getReference(TeacherClass.class, 1));
+	}
+	
+	@Test
+	public void testClassWithStudents() {
+		
+		//Create a school
+		School school = new School("School Name", "School Address");
+		
+		//Create a class
+		TeacherClass teacherClass = new TeacherClass(new Teacher(), "Class Name", 4, school, 2017, 2018);
+		
+		//Create a student
+		Student student = new Student("First Name", "Last Name", "Username", "Password", school);
+		student.getTeacherClasses().add(teacherClass);
+		
+		teacherClass.getStudents().add(student);
+		
+		//Persist the class
+		manager.getTransaction().begin();
+		manager.persist(teacherClass);
+		manager.getTransaction().commit();
+		
+		//Test
+		assertEquals(teacherClass, manager.getReference(TeacherClass.class, 1));
 	}
 
 }

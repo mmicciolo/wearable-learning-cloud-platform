@@ -1,3 +1,6 @@
 /SchoolEntity.class
 /TeacherEntity.class
 /TeacherClassEntity.class
+/StudentEntity.class
+/ClassStudent.class
+/ClassStudentEntity.class

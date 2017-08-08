@@ -32,6 +32,7 @@ public class TeacherClass implements Serializable {
 	@Column(name = "GRADE")
 	private Integer grade;
 	
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "SCHOOL_ID", referencedColumnName = "SCHOOL_ID")
 	private School school;
 	
@@ -41,7 +42,7 @@ public class TeacherClass implements Serializable {
 	@Column(name = "SCHOOL_YEAR_END")
 	private Integer schoolYearEnd;
 
-	@ManyToMany
+	@ManyToMany(cascade = CascadeType.PERSIST)
 	@JoinTable(name = "CLASS_STUDENTS", joinColumns = @JoinColumn(name = "TEACHER_CLASS_ID", referencedColumnName = "TEACHER_CLASS_ID"),
 	inverseJoinColumns = @JoinColumn(name = "STUDENT_ID", referencedColumnName = "STUDENT_ID"))
 	private List<Student> students = new ArrayList<Student>();
@@ -115,6 +116,14 @@ public class TeacherClass implements Serializable {
 
 	public void setSchoolYearEnd(Integer schoolYearEnd) {
 		this.schoolYearEnd = schoolYearEnd;
+	}
+
+	public List<Student> getStudents() {
+		return students;
+	}
+
+	public void setStudents(List<Student> students) {
+		this.students = students;
 	}
 	
 }

@@ -28,16 +28,10 @@ public class DataModelTest {
 	public void setupBefore() {
 		//Setup an embedded db connection
 		Map<String, String> TEST_CONFIG_LOCALHOST = new HashMap<String, String>();
-		TEST_CONFIG_LOCALHOST.put(PersistenceUnitProperties.JDBC_URL, "jdbc:mysql://localhost/test");
-		TEST_CONFIG_LOCALHOST.put(PersistenceUnitProperties.JDBC_DRIVER, "com.mysql.jdbc.Driver");
-		TEST_CONFIG_LOCALHOST.put(PersistenceUnitProperties.JDBC_USER, "root");
-		TEST_CONFIG_LOCALHOST.put(PersistenceUnitProperties.JDBC_PASSWORD, "");
-		//TEST_CONFIG_LOCALHOST.put(PersistenceUnitProperties.JDBC_URL, "jdbc:derby:memory:DefaultDB;create=true");
-		//TEST_CONFIG_LOCALHOST.put(PersistenceUnitProperties.JDBC_DRIVER, "org.apache.derby.jdbc.EmbeddedDriver");
-		//TEST_CONFIG_LOCALHOST.put("eclipselink.ddl-generation", "drop-and-create-tables");
+		TEST_CONFIG_LOCALHOST.put(PersistenceUnitProperties.JDBC_URL, "jdbc:derby:memory:DefaultDB;create=true");
+		TEST_CONFIG_LOCALHOST.put(PersistenceUnitProperties.JDBC_DRIVER, "org.apache.derby.jdbc.EmbeddedDriver");
 		TEST_CONFIG_LOCALHOST.put("eclipselink.ddl-generation", "drop-and-create-tables");
-		//TEST_CONFIG_LOCALHOST.put("eclipselink.target-database", "Derby");
-		TEST_CONFIG_LOCALHOST.put("eclipselink.target-database", "MySQL");
+		TEST_CONFIG_LOCALHOST.put("eclipselink.target-database", "Derby");
 		
 		//Create a new factory using the JPA PEPDataModel
 		factory = Persistence.createEntityManagerFactory("WLCPDataModel", TEST_CONFIG_LOCALHOST);
@@ -148,8 +142,9 @@ public class DataModelTest {
 		
 		//Create a student
 		Student student = new Student("First Name", "Last Name", "Username", "Password", school);
-		student.getTeacherClasses().add(teacherClass);
 		
+		//Setup the relationship
+		student.getTeacherClasses().add(teacherClass);
 		teacherClass.getStudents().add(student);
 		
 		//Persist the class
@@ -159,6 +154,49 @@ public class DataModelTest {
 		
 		//Test
 		assertEquals(teacherClass, manager.getReference(TeacherClass.class, 1));
+	}
+	
+	@Test
+	public void testStudentWithoutClass() {
+		
+		//Create a school
+		School school = new School("School Name", "School Address");
+		
+		//Create a student
+		Student student = new Student("First Name", "Last Name", "Username", "Password", school);
+		
+		//Persist the student
+		manager.getTransaction().begin();
+		manager.persist(student);
+		manager.getTransaction().commit();
+		
+		//Test
+		assertEquals(student, manager.getReference(Student.class, 1));
+	}
+	
+	@Test
+	public void testStudentWithClass() {
+		
+		//Create a school
+		School school = new School("School Name", "School Address");
+		
+		//Create a student
+		Student student = new Student("First Name", "Last Name", "Username", "Password", school);
+		
+		//Create a class
+		TeacherClass teacherClass = new TeacherClass(new Teacher(), "Class Name", 4, school, 2017, 2018);
+		
+		//Setup the relationship
+		student.getTeacherClasses().add(teacherClass);
+		teacherClass.getStudents().add(student);
+		
+		//Persist the student
+		manager.getTransaction().begin();
+		manager.persist(student);
+		manager.getTransaction().commit();
+		
+		//Test
+		assertEquals(student, manager.getReference(Student.class, 1));
 	}
 
 }

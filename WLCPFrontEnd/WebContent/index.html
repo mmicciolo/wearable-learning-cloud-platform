@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta http-equiv='Content-Type' content='text/html;charset=UTF-8'/>
+
+		<script src="https://openui5.hana.ondemand.com/resources/sap-ui-core.js"
+				id="sap-ui-bootstrap"
+				data-sap-ui-libs="sap.m"
+				data-sap-ui-theme="sap_belize">
+		</script>
+		<!-- only load the mobile lib "sap.m" and the "sap_bluecrystal" theme -->
+		
+		<style type="text/css">
+			.popoutSpacing {
+				margin: 0 10px;
+			}
+			.toolbar {
+				padding-left : 20px;
+				padding-right : 20px;
+			}
+		</style>
+
+		<script>
+				sap.ui.localResources("wlcpfrontend");
+				var app = new sap.m.App({initialPage:"idView1"});
+				var page = sap.ui.view({id:"idView1", viewName:"wlcpfrontend.views.MainToolpage", type:sap.ui.core.mvc.ViewType.XML});
+				app.addPage(page);
+				app.placeAt("content");
+		</script>
+
+	</head>
+	<body class="sapUiBody" role="application">
+		<div id="content"></div>
+	</body>
+</html>

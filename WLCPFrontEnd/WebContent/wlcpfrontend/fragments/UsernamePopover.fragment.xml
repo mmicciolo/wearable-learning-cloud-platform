@@ -1,19 +1,19 @@
-   <core:FragmentDefinition
-   	xmlns="sap.m"
-   	xmlns:core="sap.ui.core"
-   	xmlns:tnt="sap.tnt"
-   	xmlns:f="sap.ui.layout.form"
-   	xmlns:l="sap.ui.layout">
-   	<Popover showHeader = "true" title="User Info" class="sapMOTAPopover sapTntToolHeaderPopover" placement="Bottom">
-   		<l:HorizontalLayout class="sapUiSmallMargin">
-   			<Label text="Name:"></Label>
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core"
+	xmlns:tnt="sap.tnt"
+	xmlns:f="sap.ui.layout.form"
+	xmlns:l="sap.ui.layout">
+	<Popover showHeader = "true" title="User Info" class="sapMOTAPopover sapTntToolHeaderPopover" placement="Bottom">
+		<l:HorizontalLayout class="sapUiSmallMargin">
+			<Label text="Name:"></Label>
 			<Text text="Matthew Micciolo" class="popoutSpacing"/>
-   		</l:HorizontalLayout>
-   		<l:HorizontalLayout class="sapUiSmallMargin">
-   			<Label text="Username:"></Label>
+		</l:HorizontalLayout>
+		<l:HorizontalLayout class="sapUiSmallMargin">
+			<Label text="Username:"></Label>
 			<Text text="mmicciolo@wpi.edu" class="popoutSpacing"/>
-   		</l:HorizontalLayout>
-   		<tnt:ToolHeader>
-   		</tnt:ToolHeader>
-   	</Popover>
-   </core:FragmentDefinition>
+		</l:HorizontalLayout>
+		<tnt:ToolHeader>
+		</tnt:ToolHeader>
+	</Popover>
+</core:FragmentDefinition>

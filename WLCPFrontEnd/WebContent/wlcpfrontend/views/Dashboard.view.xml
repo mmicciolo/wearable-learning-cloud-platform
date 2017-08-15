@@ -1,0 +1,36 @@
+<core:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:l="sap.ui.layout"
+		controllerName="wlcpfrontend.controllers.Dashboard" xmlns:html="http://www.w3.org/1999/xhtml">
+	<Page id="dashboard" showHeader="false">
+		<content>
+			<ScrollContainer height="100%" vertical="true" class="sapUiMediumMarginBeginEnd">
+				<Toolbar>
+					<Label text="Dashboard" design="Bold"/>
+				</Toolbar>
+				<StandardTile type="Monitor" icon="sap-icon://hint" title="Classes" number="5" info="Hello" infoState="Success"/>
+				<StandardTile type="Monitor" icon="sap-icon://hint" title="Games" number="1"/>
+				<StandardTile type="Monitor" icon="sap-icon://hint" title="Game Instances" number="0"/>
+				<StandardTile type="Monitor" icon="sap-icon://hint" title="Students" number="10"/>
+				<Toolbar>
+					<Label text="Platform Status" design="Bold"/>
+				</Toolbar>
+				<l:HorizontalLayout class="sapUiSmallMarginTop">
+					<Label text="Game Server" class="sapUiSmallMarginEnd"/>
+					<ObjectStatus text="OFFLINE" state="Error" class="sapUiLargeMarginEnd"/>
+					<Label text="Database" class="sapUiSmallMarginEnd"/>
+					<ObjectStatus text="OFFLINE" state="Error" class="sapUiLargeMarginEnd"/>
+					<Label text="OData" class="sapUiSmallMarginEnd"/>
+					<ObjectStatus text="OFFLINE" state="Error"/>
+				</l:HorizontalLayout>
+				<Toolbar>
+					<Label text="Resource Status" design="Bold"/>
+				</Toolbar>
+				<Label text="CPU Usage" class="sapUiSmallMarginTop"/>
+				<ProgressIndicator class="sapUiSmallMarginBottom" percentValue="30" displayValue="30%" showValue="true" state="Success" />
+				<Label text="Disk Usage" class="sapUiSmallMarginTop"/>
+				<ProgressIndicator class="sapUiSmallMarginBottom" percentValue="56" displayValue="56%" showValue="true" state="Success" />
+				<Label text="Network Usage" class="sapUiSmallMarginTop"/>
+				<ProgressIndicator class="sapUiSmallMarginBottom" percentValue="5" displayValue="5%" showValue="true" state="Success" />
+			</ScrollContainer>
+		</content>
+	</Page>
+</core:View>

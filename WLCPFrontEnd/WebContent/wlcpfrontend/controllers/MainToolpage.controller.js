@@ -5,10 +5,11 @@ sap.ui.controller("wlcpfrontend.controllers.MainToolpage", {
 		navigation: [{
 			title: "Dashboard",
 			icon: "sap-icon://bbyd-dashboard",
-			key: "dashboard",
+			key: "wlcpfrontend.views.Dashboard,dashboard",
 		},  {
 			title : "Classes",
 			icon : "sap-icon://chalkboard",
+			key: "wlcpfrontend.views.Classes,classes",
 			expanded : false,
 			items : [
 				{
@@ -66,12 +67,36 @@ sap.ui.controller("wlcpfrontend.controllers.MainToolpage", {
 		}]
 	},
 	
+	/**
+	 * Called when an item on the left hand navigation list is clicked on
+	 * @memberOf wlcpfrontend.View
+	 */
 	onItemSelect : function(oEvent) {
+		
+		//Get the item from the event and the current view
 		var item = oEvent.getParameter('item');
 		var viewId = this.getView().getId();
-		sap.ui.getCore().byId(viewId + "--pageContainer").to(viewId + "--" + item.getKey());
+		
+		//Remove the page we are currently on
+		sap.ui.getCore().byId(viewId + "--pageContainer").removePage(this.currentPage);
+		
+		//Split the view name from the page id
+		var keySplit = item.getKey().split(',');
+		
+		//Store our currentview
+		this.currentView = this.currentView = sap.ui.xmlview(keySplit[0]);
+		//Store the page we are going to navigate to for future references
+		this.currentPage = sap.ui.getCore().byId(this.currentView.getId() + "--" + keySplit[1]);
+		
+		//Add the page to the navigation container and go to that page
+		sap.ui.getCore().byId(viewId + "--pageContainer").addPage(this.currentPage);
+		sap.ui.getCore().byId(viewId + "--pageContainer").to(this.currentPage.getId());
 	},
 	
+	/**
+	 * Called when we want to collapse or expand the left hand navigation
+	 * @memberOf wlcpfrontend.View
+	 */
 	onSideNavButtonPress : function() {
 		var viewId = this.getView().getId();
 		var toolPage = sap.ui.getCore().byId(viewId + "--toolPage");
@@ -79,38 +104,24 @@ sap.ui.controller("wlcpfrontend.controllers.MainToolpage", {
 		toolPage.setSideExpanded(!toolPage.getSideExpanded());
 	},
 	
+	/**
+	 * Called when the user clicks on the avatar icon
+	 * @memberOf wlcpfrontend.View
+	 */
 	handleAvatarPress : function(oEvent) {
-		// create popover
+	
+		//Create and popover
 		if (! this._oPopover) {
 			this._oPopover = sap.ui.xmlfragment("wlcpfrontend.fragments.UsernamePopover", this);
 			this.getView().addDependent(this._oPopover);
 			this._oPopover.bindElement("/ProductCollection/0");
 		}
 
-		// delay because addDependent will do a async rerendering and the actionSheet will immediately close without it.
+		//Delay before showing
 		var oButton = oEvent.getSource();
 		jQuery.sap.delayedCall(0, this, function () {
 			this._oPopover.openBy(oButton);
 		});
-//		var popover = new sap.m.Popover({
-//			showHeader: true,
-//			placement: sap.m.PlacementType.Bottom,
-//			title: "User Info",
-//			content:[
-//				new sap.m.Label({
-//					text : "My Label:",
-//					textAlign: sap.ui.core.TextAlign.Center,
-//					labelFor : new sap.m.Text({
-//						text: "Hello"
-//					})
-//				}),
-//				new sap.tnt.ToolHeader( {
-//					
-//				})
-//			]
-//		}).addStyleClass('sapMOTAPopover sapTntToolHeaderPopover');
-//
-//		popover.openBy(event.getSource());
 	},
 
 /**
@@ -119,8 +130,16 @@ sap.ui.controller("wlcpfrontend.controllers.MainToolpage", {
 * @memberOf wlcpfrontend.View
 */
 	onInit: function() {
+		
+		//Setup the data model
 		this.model.setData(this.data);
 		this.getView().setModel(this.model);
+		
+		//Load the initial view which is the dashboard
+		this.currentView = sap.ui.xmlview("wlcpfrontend.views.Dashboard");
+		this.currentPage = sap.ui.getCore().byId(this.currentView.getId() + "--dashboard");
+		sap.ui.getCore().byId(this.getView().getId() + "--pageContainer").addPage(this.currentPage);
+		sap.ui.getCore().byId(this.getView().getId() + "--pageContainer").to(this.currentPage.getId());
 	},
 
 /**

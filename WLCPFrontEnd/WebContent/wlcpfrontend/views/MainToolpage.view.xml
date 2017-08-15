@@ -44,47 +44,7 @@
 				</tnt:SideNavigation>
 			</tnt:sideContent>
 			<tnt:mainContents>
-				<NavContainer id="pageContainer">
-					<pages>
-						<ScrollContainer height="100%" vertical="true" class="sapUiMediumMarginBeginEnd">
-						<Toolbar>
-							<Label text="Dashboard" design="Bold"/>
-						</Toolbar>
-						<StandardTile type="Monitor" icon="sap-icon://hint" title="Classes"/>
-						<StandardTile type="Monitor" icon="sap-icon://hint" title="Games"/>
-						<StandardTile type="Monitor" icon="sap-icon://hint" title="Game Instances"/>
-						<StandardTile type="Monitor" icon="sap-icon://hint" title="Students"/>
-						<Toolbar>
-							<Label text="Platform Status" design="Bold"/>
-						</Toolbar>
-						<l:HorizontalLayout class="sapUiSmallMarginTop">
-							<Label text="Game Server" class="sapUiSmallMarginEnd"/>
-							<ObjectStatus text="OFFLINE" state="Error" class="sapUiLargeMarginEnd"/>
-							<Label text="Database" class="sapUiSmallMarginEnd"/>
-							<ObjectStatus text="OFFLINE" state="Error" class="sapUiLargeMarginEnd"/>
-							<Label text="OData" class="sapUiSmallMarginEnd"/>
-							<ObjectStatus text="OFFLINE" state="Error"/>
-						</l:HorizontalLayout>
-						<Toolbar>
-							<Label text="Resource Status" design="Bold"/>
-						</Toolbar>
-						<Label text="CPU Usage" class="sapUiSmallMarginTop"/>
-						<ProgressIndicator class="sapUiSmallMarginBottom" percentValue="30" displayValue="30%" showValue="true" state="Success" />
-						<Label text="Disk Usage" class="sapUiSmallMarginTop"/>
-						<ProgressIndicator class="sapUiSmallMarginBottom" percentValue="56" displayValue="56%" showValue="true" state="Success" />
-						<Label text="Network Usage" class="sapUiSmallMarginTop"/>
-						<ProgressIndicator class="sapUiSmallMarginBottom" percentValue="5" displayValue="5%" showValue="true" state="Success" />
-						</ScrollContainer>
-<!-- 						<Page id="dashboard" showHeader="false" class="sapUiMediumMarginBeginEnd"> -->
-<!-- 							<Toolbar> -->
-<!-- 								<Label text="Dashboard" design="Bold"></Label> -->
-<!-- 							</Toolbar> -->
-<!-- 							<TileContainer> -->
-<!-- 								<StandardTile type="Monitor" icon="sap-icon://hint" title="Hello"/> -->
-<!-- 							</TileContainer> -->
-<!-- 						</Page> -->
-					</pages>
-				</NavContainer>
+				<NavContainer id="pageContainer"/>
 			</tnt:mainContents>
 		</tnt:ToolPage>
 </core:View>

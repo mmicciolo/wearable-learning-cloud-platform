@@ -2,7 +2,18 @@
 		controllerName="wlcpfrontend.controllers.Classes" xmlns:html="http://www.w3.org/1999/xhtml">
 	<Page id="classes" showHeader="false">
 		<content>
-			<Text text="Hi"/>
+			<ScrollContainer height="100%" vertical="true" class="sapUiMediumMarginBeginEnd">
+				<Toolbar>
+					<Label text="Classes" design="Bold"/>
+				</Toolbar>
+				<Table id="classesTable">
+					<columns>
+						<Column width="12em">
+							<Text text="Class"></Text>
+						</Column>
+					</columns>
+				</Table>
+			</ScrollContainer>
 		</content>
 	</Page>
 </core:View>

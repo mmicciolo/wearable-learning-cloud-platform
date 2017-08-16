@@ -21,6 +21,7 @@ sap.ui.controller("wlcpfrontend.controllers.MainToolpage", {
 		}, {
 			title : "Games",
 			icon : "sap-icon://iphone",
+			key : "parent",
 			expanded : false,
 			items : [
 				{
@@ -67,11 +68,13 @@ sap.ui.controller("wlcpfrontend.controllers.MainToolpage", {
 		}]
 	},
 	
+	currentItem : null,
+	
 	/**
-	 * Called when an item on the left hand navigation list is clicked on
+	 * Called when a parent item on the left hand navigation list is clicked on
 	 * @memberOf wlcpfrontend.View
 	 */
-	onItemSelect : function(oEvent) {
+	selectParentItem : function(oEvent) {
 		
 		//Get the item from the event and the current view
 		var item = oEvent.getParameter('item');
@@ -80,17 +83,37 @@ sap.ui.controller("wlcpfrontend.controllers.MainToolpage", {
 		//Remove the page we are currently on
 		sap.ui.getCore().byId(viewId + "--pageContainer").removePage(this.currentPage);
 		
+		//Unexpand the item
+		if(this.currentItem != null) {
+			this.currentItem.setExpanded(false);
+		}
+		
 		//Split the view name from the page id
 		var keySplit = item.getKey().split(',');
 		
-		//Store our currentview
+		//Store our current item
+		this.currentItem = item;
+		
+		//Store our current view
 		this.currentView = this.currentView = sap.ui.xmlview(keySplit[0]);
+		
 		//Store the page we are going to navigate to for future references
 		this.currentPage = sap.ui.getCore().byId(this.currentView.getId() + "--" + keySplit[1]);
+		
+		//Set the item to be expanded
+		item.setExpanded(true);
 		
 		//Add the page to the navigation container and go to that page
 		sap.ui.getCore().byId(viewId + "--pageContainer").addPage(this.currentPage);
 		sap.ui.getCore().byId(viewId + "--pageContainer").to(this.currentPage.getId());
+	},
+	
+	/**
+	 * Called when a child item of the navigation list is selected
+	 * @memberOf wlcpfrontend.View
+	 */
+	selectChildItem : function(oEvent) {
+		console.log("child");
 	},
 	
 	/**

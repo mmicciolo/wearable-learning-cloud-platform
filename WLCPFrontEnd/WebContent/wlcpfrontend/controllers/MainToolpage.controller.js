@@ -1,74 +1,21 @@
 sap.ui.controller("wlcpfrontend.controllers.MainToolpage", {
 	
 	model : new sap.ui.model.json.JSONModel(),
-	data : {
-		navigation: [{
-			title: "Dashboard",
-			icon: "sap-icon://bbyd-dashboard",
-			key: "wlcpfrontend.views.Dashboard,dashboard",
-		},  {
-			title : "Classes",
-			icon : "sap-icon://chalkboard",
-			key: "wlcpfrontend.views.Classes,classes",
-			expanded : false,
-			items : [
-				{
-					title : "Create Class"
-				}, {
-					title : "Manage Classes"
-				}
-			]
-		}, {
-			title : "Games",
-			icon : "sap-icon://iphone",
-			key : "parent",
-			expanded : false,
-			items : [
-				{
-					title : "Create Game"
-				}, {
-					title : "Manage Games"
-				}, {
-					title : "Visual Game Editor"
-				}, {
-					title : "Game Code Editor"
-				}
-			]
-		}, {
-			title : "Game Instances",
-			icon : "sap-icon://instance",
-			expanded : false,
-			items : [
-				{
-					title : "Start Game Instance"
-				}
-			]
-		}, {
-			title : "Students",
-			icon : "sap-icon://course-book",
-			expanded : false,
-			items : [
-				{
-					title : "Create Student"
-				}, {
-					title : "Manage Students"
-				}
-			]
-		}, {
-			title : "Administrator",
-			icon : "sap-icon://wrench"
-		}
-		],
-		fixedNavigation: [{
-			title: "About",
-			icon: "sap-icon://hint"
-		}, {
-			title : "Help",
-			icon : "sap-icon://sys-help"
-		}]
-	},
 	
+	/**
+	 * Current item selected in the navigation
+	 */
 	currentItem : null,
+	
+	/**
+	 * Current view being display in the navigation container
+	 */
+	currentView : null,
+	
+	/**
+	 * Current page being display in the navigation container
+	 */
+	currentPage : null,
 	
 	/**
 	 * Called when a parent item on the left hand navigation list is clicked on
@@ -155,7 +102,8 @@ sap.ui.controller("wlcpfrontend.controllers.MainToolpage", {
 	onInit: function() {
 		
 		//Setup the data model
-		this.model.setData(this.data);
+		//this.model.setData(this.data);
+		this.model.loadData("wlcpfrontend/model/Dashboard.json");
 		this.getView().setModel(this.model);
 		
 		//Load the initial view which is the dashboard

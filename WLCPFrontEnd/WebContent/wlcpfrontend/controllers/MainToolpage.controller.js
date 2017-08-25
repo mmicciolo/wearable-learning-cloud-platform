@@ -21,7 +21,7 @@ sap.ui.controller("wlcpfrontend.controllers.MainToolpage", {
 	 * Called when a parent item on the left hand navigation list is clicked on
 	 * @memberOf wlcpfrontend.View
 	 */
-	selectParentItem : function(oEvent) {
+	selectParentItem2 : function(oEvent) {
 		
 		//Get the item from the event and the current view
 		var item = oEvent.getParameter('item');
@@ -42,7 +42,7 @@ sap.ui.controller("wlcpfrontend.controllers.MainToolpage", {
 		this.currentItem = item;
 		
 		//Store our current view
-		this.currentView = this.currentView = sap.ui.xmlview(keySplit[0]);
+		this.currentView = sap.ui.xmlview(keySplit[0]);
 		
 		//Store the page we are going to navigate to for future references
 		this.currentPage = sap.ui.getCore().byId(this.currentView.getId() + "--" + keySplit[1]);
@@ -55,11 +55,84 @@ sap.ui.controller("wlcpfrontend.controllers.MainToolpage", {
 		sap.ui.getCore().byId(viewId + "--pageContainer").to(this.currentPage.getId());
 	},
 	
+	selectParentItem : function (oEvent) {
+		
+		//Get the item from the event
+		var item = oEvent.getParameter('item');
+		var viewId = this.getView().getId();
+		
+		//Split the item type and view name from the page id
+		var keySplit = item.getKey().split(',');
+		
+		//Switch based off of the type of thing we want to display
+		switch(keySplit[3]) {
+		case "page":
+			this.goToPage(item, viewId, keySplit[0], keySplit[1], keySplit[2]);
+			break;
+		case "popup":
+			this.goToPage(item, viewId, keySplit[0], keySplit[4], keySplit[5]);
+			//var fragment = sap.ui.xmlfragment("wlcpfrontend.fragments.CreateClass");
+			//this.getView().addDependent(fragment);
+			//fragment.open();
+			var view = sap.ui.xmlview(keySplit[1]);
+			this.getView().addDependent(view);
+			view.open();
+			
+			break;
+		default:
+		}
+	},
+	
+	goToPage : function(item, viewId, hierarchyType, viewName, pageName) {
+		
+		//If we are trying to switch to the view we are already on, ignore the request
+		if(viewName == this.currentView.sViewName) {
+			return;
+		}
+		
+		//If its a parent page
+		if(hierarchyType == "parent") {
+			
+			//Unexpand the old item
+			if(this.currentItem != null) {
+				this.currentItem.setExpanded(false);
+			}
+			
+			//Expand the new item
+			item.setExpanded(true);
+			
+			//Store the item
+			this.currentItem = item;
+		}
+		
+		//Create and Store our current view
+		this.currentView = sap.ui.xmlview(viewName);
+		
+		//Store the page we are going to navigate to for future references
+		this.currentPage = sap.ui.getCore().byId(this.currentView.getId() + "--" + pageName);
+		
+		//Add the page to the navigation container and go to that page
+		sap.ui.getCore().byId(viewId + "--pageContainer").addPage(this.currentPage);
+		sap.ui.getCore().byId(viewId + "--pageContainer").to(this.currentPage.getId());
+	},
+	
+	
 	/**
 	 * Called when a child item of the navigation list is selected
 	 * @memberOf wlcpfrontend.View
 	 */
 	selectChildItem : function(oEvent) {
+		
+		//Get the item from the event and the current view
+		//var item = oEvent.getParameter('item');
+		
+		//this.selectParentItem(oEvent);
+		
+		this.one = sap.ui.xmlview("wlcpfrontend.views.Classes");
+		this.two = sap.ui.xmlview("wlcpfrontend.views.Classes");
+		this.one.destroy(true);
+		
+		//Does the parent view already exist?
 		console.log("child");
 	},
 	

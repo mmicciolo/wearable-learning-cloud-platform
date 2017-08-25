@@ -1,19 +1,62 @@
-<core:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m"
+<core:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:t="sap.ui.table"
 		controllerName="wlcpfrontend.controllers.Classes" xmlns:html="http://www.w3.org/1999/xhtml">
-	<Page id="classes" showHeader="false">
+	<Page id="classes" showHeader="false" title="Teachers Classes">
 		<content>
-			<ScrollContainer height="100%" vertical="true" class="sapUiMediumMarginBeginEnd">
-				<Toolbar>
-					<Label text="Classes" design="Bold"/>
+			<Panel>
+				<Toolbar class="sapUiTinyMarginTopBottom">
+					<Title text="Classes"/>
+					<ToolbarSpacer/>
+					<Button icon = "sap-icon://create" text="Create Class" type="Accept" press="CreateClass"></Button>
+					<Button icon = "sap-icon://edit" text="Enable Editing"></Button>
+					<Button icon = "sap-icon://delete" text="Delete Selected" type="Reject"></Button>
 				</Toolbar>
-				<Table id="classesTable">
-					<columns>
-						<Column width="12em">
-							<Text text="Class"></Text>
-						</Column>
-					</columns>
-				</Table>
-			</ScrollContainer>
+				<t:Table rows="{classes>/table}" selectionMode="MultiToggle">
+					<t:columns>
+						<t:Column>
+							<Label text="Class Name" />
+							<t:template>
+								<Input value="{classes>ClassName}" editable="false" wrapping="false" />
+							</t:template>
+						</t:Column>
+						<t:Column>
+							<Label text="Teacher"/>
+							<t:template>
+								<ComboBox value="{classes>TeacherName}" editable="false" wrapping="false" />
+							</t:template>
+						</t:Column>
+						<t:Column>
+							<Label text="School"/>
+							<t:template>
+								<ComboBox value="{classes>School}" editable="false" wrapping="false" />
+							</t:template>
+						</t:Column>
+						<t:Column>
+							<Label text="Grade"/>
+							<t:template>
+								<Input value="{classes>Grade}" editable="false" wrapping="false" />
+							</t:template>
+						</t:Column>
+						<t:Column>
+							<Label text="Start Year"/>
+							<t:template>
+								<Input value="{classes>StartYear}" editable="false" wrapping="false" />
+							</t:template>
+						</t:Column>
+						<t:Column>
+							<Label text="End Year"/>
+							<t:template>
+								<Input value="{classes>EndYear}" editable="false" wrapping="false" />
+							</t:template>
+						</t:Column>
+						<t:Column>
+							<Label text="Delete"/>
+							<t:template>
+								<Button icon = "sap-icon://delete" text="Delete" type="Reject"/>
+							</t:template>
+						</t:Column>
+					</t:columns>
+				</t:Table>
+			</Panel>
 		</content>
 	</Page>
 </core:View>

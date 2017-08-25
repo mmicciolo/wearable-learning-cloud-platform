@@ -2,14 +2,14 @@
 		controllerName="wlcpfrontend.controllers.Dashboard" xmlns:html="http://www.w3.org/1999/xhtml">
 	<Page id="dashboard" showHeader="false">
 		<content>
-			<ScrollContainer height="100%" vertical="true" class="sapUiMediumMarginBeginEnd">
+			<Panel>
 				<Toolbar>
 					<Label text="Dashboard" design="Bold"/>
 				</Toolbar>
 				<StandardTile type="Monitor" icon="sap-icon://hint" title="Classes" number="5" info="Hello" infoState="Success"/>
-				<StandardTile type="Monitor" icon="sap-icon://hint" title="Games" number="1"/>
-				<StandardTile type="Monitor" icon="sap-icon://hint" title="Game Instances" number="0"/>
-				<StandardTile type="Monitor" icon="sap-icon://hint" title="Students" number="10"/>
+				<StandardTile type="Monitor" icon="sap-icon://hint" title="Games" number="1"  info="Hello" infoState="Success"/>
+				<StandardTile type="Monitor" icon="sap-icon://hint" title="Game Instances" number="0"  info="Hello" infoState="Success"/>
+				<StandardTile type="Monitor" icon="sap-icon://hint" title="Students" number="10"  info="Hello" infoState="Success"/>
 				<Toolbar>
 					<Label text="Platform Status" design="Bold"/>
 				</Toolbar>
@@ -30,7 +30,7 @@
 				<ProgressIndicator class="sapUiSmallMarginBottom" percentValue="56" displayValue="56%" showValue="true" state="Success" />
 				<Label text="Network Usage" class="sapUiSmallMarginTop"/>
 				<ProgressIndicator class="sapUiSmallMarginBottom" percentValue="5" displayValue="5%" showValue="true" state="Success" />
-			</ScrollContainer>
+			</Panel>
 		</content>
 	</Page>
 </core:View>

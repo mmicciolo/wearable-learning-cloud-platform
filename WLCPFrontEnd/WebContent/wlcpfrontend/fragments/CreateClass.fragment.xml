@@ -1,0 +1,9 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core">
+	
+	<Dialog title = "Create Class">
+		
+	</Dialog>
+
+</core:FragmentDefinition>

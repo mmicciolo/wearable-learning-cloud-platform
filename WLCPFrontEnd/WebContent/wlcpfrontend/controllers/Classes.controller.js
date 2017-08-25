@@ -20,10 +20,17 @@ sap.ui.controller("wlcpfrontend.controllers.Classes", {
 		}]
 	},
 	
+	dialog : null,
+	
 	CreateClass : function(oEvent) {
-		var fragment = sap.ui.xmlfragment("wlcpfrontend.fragments.CreateClass");
-		this.getView().addDependent(fragment);
-		fragment.open();
+		this.dialog = sap.ui.xmlfragment("wlcpfrontend.fragments.CreateClass", this);
+		this.getView().addDependent(this.dialog);
+		this.dialog.open();
+	},
+	
+	CanceCreateClass : function(oEvent) {
+		this.dialog.close();
+		this.getView().removeDependent(this.dialog);
 	},
 
 /**

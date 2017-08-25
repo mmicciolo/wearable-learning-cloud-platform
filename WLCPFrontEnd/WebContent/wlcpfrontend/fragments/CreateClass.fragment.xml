@@ -3,7 +3,33 @@
 	xmlns:core="sap.ui.core">
 	
 	<Dialog title = "Create Class">
-		
+		<buttons>
+			<Button text="Create"/>
+			<Button text="Cancel" type="Reject" press="CanceCreateClass"/>
+		</buttons>
+		<VBox>
+			<Label text="Class Name:" required="true"/>
+			<Input />
+		</VBox>
+		<VBox>
+			<Label text="Teacher:" required="true"/>
+			<ComboBox />
+		</VBox>
+		<VBox>
+			<Label text="School:" required="true"/>
+			<ComboBox />
+		</VBox>
+		<VBox>
+			<Label text="Grade:" required="true"/>
+			<Input />
+		</VBox>
+		<VBox>
+			<Label text="Start Year:" required="true"/>
+			<Input />
+		</VBox>
+		<VBox>
+			<Label text="End Year:" required="true"/>
+			<Input />
+		</VBox>
 	</Dialog>
-
 </core:FragmentDefinition>

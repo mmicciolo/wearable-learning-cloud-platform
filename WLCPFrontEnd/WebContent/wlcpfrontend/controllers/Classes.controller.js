@@ -4,7 +4,10 @@ sap.ui.controller("wlcpfrontend.controllers.Classes", {
 	data : {
 		table: [{
 			ClassName : "Computer Science",
-			TeacherName : "Matthew Micciolo",
+			Teachers : [{
+				firstName : "Matthew",
+				lastName : "Micciolo"
+			}],
 			School : "Worcester Polytechnic Institue",
 			Grade : 15,
 			StartYear : 2017,
@@ -12,7 +15,10 @@ sap.ui.controller("wlcpfrontend.controllers.Classes", {
 		},
 		{
 			ClassName : "IMGD 4000",
-			TeacherName : "Matthew Micciolo",
+			Teachers : [{
+				firstName : "Matthew",
+				lastName : "Micciolo"
+			}],
 			School : "Worcester Polytechnic Institue",
 			Grade : 15,
 			StartYear : 2017,
@@ -31,6 +37,10 @@ sap.ui.controller("wlcpfrontend.controllers.Classes", {
 	CanceCreateClass : function(oEvent) {
 		this.dialog.close();
 		this.getView().removeDependent(this.dialog);
+	},
+	
+	AddTeacher : function(oEvent) {
+		console.log(oEvent.getSource().getParent().getParent().getParent().getIndex());
 	},
 
 /**

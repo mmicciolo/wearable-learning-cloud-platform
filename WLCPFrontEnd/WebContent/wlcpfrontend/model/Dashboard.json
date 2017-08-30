@@ -38,7 +38,11 @@
 		"icon" : "sap-icon://study-leave"
 	}, {
 		"title" : "Administrator",
-		"icon" : "sap-icon://wrench"
+		"icon" : "sap-icon://wrench",
+		"expanded" : false,
+		"items" : [{
+			"title" : "Manage Schools"
+		}]
 	}],
 	"fixedNavigation" : [{
 		"title" : "About",

@@ -4,10 +4,7 @@ sap.ui.controller("wlcpfrontend.controllers.Classes", {
 	data : {
 		table: [{
 			ClassName : "Computer Science",
-			Teachers : [{
-				firstName : "Matthew",
-				lastName : "Micciolo"
-			}],
+			Teacher : "Matthew Micciolo",
 			School : "Worcester Polytechnic Institue",
 			Grade : 15,
 			StartYear : 2017,
@@ -15,10 +12,7 @@ sap.ui.controller("wlcpfrontend.controllers.Classes", {
 		},
 		{
 			ClassName : "IMGD 4000",
-			Teachers : [{
-				firstName : "Matthew",
-				lastName : "Micciolo"
-			}],
+			Teacher : "Matthew Micciolo",
 			School : "Worcester Polytechnic Institue",
 			Grade : 15,
 			StartYear : 2017,
@@ -27,6 +21,8 @@ sap.ui.controller("wlcpfrontend.controllers.Classes", {
 	},
 	
 	dialog : null,
+	
+	editing : false,
 	
 	CreateClass : function(oEvent) {
 		this.dialog = sap.ui.xmlfragment("wlcpfrontend.fragments.CreateClass", this);
@@ -39,8 +35,71 @@ sap.ui.controller("wlcpfrontend.controllers.Classes", {
 		this.getView().removeDependent(this.dialog);
 	},
 	
-	AddTeacher : function(oEvent) {
-		console.log(oEvent.getSource().getParent().getParent().getParent().getIndex());
+	EditClasses : function(oEvent) {
+		
+		if(!this.editing) {
+			//Get the table
+			var table = sap.ui.getCore().byId(this.getView().getId() + "--classesTable");
+			
+			//Loop through the rows
+			for(var i = 0; i < table.getBinding().getLength(); i++) {
+				for(var n = 0; n < table.getRows()[i].getCells().length; n++) {
+					if(n == 6) {
+						table.getRows()[i].getCells()[n].setText("Edit");
+					} else if(n == 1 || n == 2) {
+						//Dont allow Teacher or School to be edited
+					} else {
+						table.getRows()[i].getCells()[n].setEditable(true);
+					}
+				}
+			}
+			
+			//Change the edit button to save
+			var editButton = sap.ui.getCore().byId(this.getView().getId() + "--editButton");
+			editButton.setText("Save");
+			editButton.setIcon("sap-icon://save")
+			
+			this.editing = true;
+		} else {
+			//Get the table
+			var table = sap.ui.getCore().byId(this.getView().getId() + "--classesTable");
+			
+			//Loop through the rows
+			for(var i = 0; i < table.getBinding().getLength(); i++) {
+				for(var n = 0; n < table.getRows()[i].getCells().length; n++) {
+					if(n == 6) {
+						table.getRows()[i].getCells()[n].setText("View");
+					} else if(n == 1 || n == 2) {
+						//Dont allow Teacher or School to be edited
+					} else {
+						table.getRows()[i].getCells()[n].setEditable(false);
+					}
+				}
+			}
+			
+			//Change the edit button to save
+			var editButton = sap.ui.getCore().byId(this.getView().getId() + "--editButton");
+			editButton.setText("Enable Editing");
+			editButton.setIcon("sap-icon://edit")
+			
+			this.editing = false;
+		}
+	},
+	
+	ViewEdit : function(oEvent) {
+		if(this.editing) {
+			this.AddRemoveStudents(oEvent);
+		} else {
+			this.ViewStudents(oEvent);
+		}
+	},
+	
+	ViewStudents : function(oEvent) {
+		console.log("View");
+	},
+	
+	AddRemoveStudents : function(oEvent) {
+		console.log("Add Remove");
 	},
 
 /**

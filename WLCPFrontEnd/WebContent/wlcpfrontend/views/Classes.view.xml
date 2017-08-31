@@ -4,13 +4,13 @@
 		<content>
 			<Panel>
 				<Toolbar class="sapUiTinyMarginTopBottom">
-					<Title text="Classes"/>
+					<Title text="Your Classes"/>
 					<ToolbarSpacer/>
 					<Button icon = "sap-icon://create" text="Create Class" type="Accept" press="CreateClass" tooltip="Click to create a new class"></Button>
-					<Button icon = "sap-icon://edit" text="Enable Editing" tooltip="Click to allow editing the values in the table"></Button>
+					<Button id="editButton" icon = "sap-icon://edit" text="Enable Editing" press="EditClasses" tooltip="Click to allow editing the values in the table"></Button>
 					<Button icon = "sap-icon://delete" text="Delete Selected" type="Reject" tooltip="Click to deleted a checked row(s)"></Button>
 				</Toolbar>
-				<t:Table rows="{classes>/table}" selectionMode="MultiToggle">
+				<t:Table id="classesTable" rows="{classes>/table}" selectionMode="MultiToggle">
 					<t:columns>
 						<t:Column>
 							<Label text="Class Name" />
@@ -21,17 +21,18 @@
 						<t:Column>
 							<Label text="Teacher"/>
 							<t:template>
-								<VBox>
-									<List items="{classes>Teachers}">
-										<InputListItem>
-											<HBox>
-												<ComboBox editable="false" value="{classes>firstName}"></ComboBox>
-												<Button icon="sap-icon://delete" enabled="false"></Button>
-											</HBox>
-										</InputListItem>
-									</List>
-									<Button icon="sap-icon://add" enabled="true" press="AddTeacher" class="center"/>
-								</VBox>
+								<Input value="{classes>Teacher}" editable="false" wrapping="false"/>
+<!-- 								<VBox> -->
+<!-- 									<List items="{classes>Teachers}"> -->
+<!-- 										<InputListItem> -->
+<!-- 											<HBox> -->
+<!-- 												<ComboBox editable="false" value="{classes>firstName}"></ComboBox> -->
+<!-- 												<Button icon="sap-icon://delete" enabled="false"></Button> -->
+<!-- 											</HBox> -->
+<!-- 										</InputListItem> -->
+<!-- 									</List> -->
+<!-- 									<Button icon="sap-icon://add" enabled="true" press="AddTeacher" class="center"/> -->
+<!-- 								</VBox> -->
 							</t:template>
 						</t:Column>
 						<t:Column>
@@ -56,6 +57,12 @@
 							<Label text="End Year"/>
 							<t:template>
 								<Input value="{classes>EndYear}" editable="false" wrapping="false" />
+							</t:template>
+						</t:Column>
+						<t:Column>
+							<Label text="Students"/>
+							<t:template>
+								<Button text="View" class="center" press="ViewEdit"/>
 							</t:template>
 						</t:Column>
 					</t:columns>

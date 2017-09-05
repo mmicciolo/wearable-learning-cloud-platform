@@ -1,0 +1,50 @@
+<core:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:t="sap.ui.table"
+		controllerName="wlcpfrontend.controllers.Students" xmlns:html="http://www.w3.org/1999/xhtml">
+	<Page id="students" showHeader="false" title="Teacher's Students">
+		<content>
+			<Panel>
+				<Toolbar class="sapUiTinyMarginTopBottom">
+					<Title text="Your Students"/>
+					<ToolbarSpacer/>
+					<Button icon = "sap-icon://create" text="Create Student" type="Accept" press="CreateClass" tooltip="Click to create a new class"></Button>
+					<Button id="editButton" icon = "sap-icon://edit" text="Enable Editing" press="EditClasses" tooltip="Click to allow editing the values in the table"></Button>
+					<Button icon = "sap-icon://delete" text="Delete Selected" type="Reject" tooltip="Click to deleted a checked row(s)"></Button>
+				</Toolbar>
+					<t:Table id="studentsTable" rows="{path : 'odata>/Students', parameters : {expand : 'SchoolDetails'}}" selectionMode="MultiToggle">
+					<t:columns>
+						<t:Column width="0px">
+							<Label text="Student Id"/>
+							<t:template>
+								<Input value="{odata>StudentId}" editable="false" wrapping="false" />
+							</t:template>
+						</t:Column>
+						<t:Column>
+							<Label text="First Name" />
+							<t:template>
+								<Input value="{odata>FirstName}" editable="false" wrapping="false" />
+							</t:template>
+						</t:Column>
+						<t:Column>
+							<Label text="Last Name"/>
+							<t:template>
+								<Input value="{odata>LastName} {odata>TeacherDetails/LastName}" editable="false" wrapping="false"/>
+							</t:template>
+						</t:Column>
+						<t:Column>
+							<Label text="School"/>
+							<t:template>
+								<Input value="{odata>SchoolDetails/SchoolName}" editable="false" wrapping="false" />
+							</t:template>
+						</t:Column>
+						<t:Column>
+							<Label text="Classes"/>
+							<t:template>
+								<Button text="View" class="center" press="ViewEdit"/>
+							</t:template>
+						</t:Column>
+					</t:columns>
+				</t:Table>
+			</Panel>
+		</content>
+	</Page>
+</core:View>

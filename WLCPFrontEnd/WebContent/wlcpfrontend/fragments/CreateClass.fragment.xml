@@ -5,7 +5,7 @@
 	<Dialog title = "Create Class">
 		<buttons>
 			<Button text="Create"/>
-			<Button text="Cancel" type="Reject" press="CanceCreateClass"/>
+			<Button text="Cancel" type="Reject" press="CancelCreateClass"/>
 		</buttons>
 		<VBox>
 			<Label text="Class Name:" required="true"/>

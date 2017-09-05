@@ -1,6 +1,6 @@
 <core:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:t="sap.ui.table"
 		controllerName="wlcpfrontend.controllers.Classes" xmlns:html="http://www.w3.org/1999/xhtml">
-	<Page id="classes" showHeader="false" title="Teachers Classes">
+	<Page id="classes" showHeader="false" title="Teacher's Classes">
 		<content>
 			<Panel>
 				<Toolbar class="sapUiTinyMarginTopBottom">
@@ -10,53 +10,48 @@
 					<Button id="editButton" icon = "sap-icon://edit" text="Enable Editing" press="EditClasses" tooltip="Click to allow editing the values in the table"></Button>
 					<Button icon = "sap-icon://delete" text="Delete Selected" type="Reject" tooltip="Click to deleted a checked row(s)"></Button>
 				</Toolbar>
-				<t:Table id="classesTable" rows="{classes>/table}" selectionMode="MultiToggle">
+					<t:Table id="classesTable" rows="{path : 'odata>/TeacherClasss', parameters : {expand : 'TeacherDetails,SchoolDetails,StudentDetails'}}" selectionMode="MultiToggle">
 					<t:columns>
+						<t:Column width="0px">
+							<Label text="Class Id"/>
+							<t:template>
+								<Input value="{odata>TeacherClassId}" editable="false" wrapping="false" />
+							</t:template>
+						</t:Column>
 						<t:Column>
 							<Label text="Class Name" />
 							<t:template>
-								<Input value="{classes>ClassName}" editable="false" wrapping="false" />
+								<Input value="{odata>TeacherClassName}" editable="false" wrapping="false" />
 							</t:template>
 						</t:Column>
 						<t:Column>
 							<Label text="Teacher"/>
 							<t:template>
-								<Input value="{classes>Teacher}" editable="false" wrapping="false"/>
-<!-- 								<VBox> -->
-<!-- 									<List items="{classes>Teachers}"> -->
-<!-- 										<InputListItem> -->
-<!-- 											<HBox> -->
-<!-- 												<ComboBox editable="false" value="{classes>firstName}"></ComboBox> -->
-<!-- 												<Button icon="sap-icon://delete" enabled="false"></Button> -->
-<!-- 											</HBox> -->
-<!-- 										</InputListItem> -->
-<!-- 									</List> -->
-<!-- 									<Button icon="sap-icon://add" enabled="true" press="AddTeacher" class="center"/> -->
-<!-- 								</VBox> -->
+								<Input value="{odata>TeacherDetails/FirstName} {odata>TeacherDetails/LastName}" editable="false" wrapping="false"/>
 							</t:template>
 						</t:Column>
 						<t:Column>
 							<Label text="School"/>
 							<t:template>
-								<Input value="{classes>School}" editable="false" wrapping="false" />
+								<Input value="{odata>SchoolDetails/SchoolName}" editable="false" wrapping="false" />
 							</t:template>
 						</t:Column>
 						<t:Column>
 							<Label text="Grade"/>
 							<t:template>
-								<Input value="{classes>Grade}" editable="false" wrapping="false" />
+								<Input value="{odata>Grade}" editable="false" wrapping="false" />
 							</t:template>
 						</t:Column>
 						<t:Column>
 							<Label text="Start Year"/>
 							<t:template>
-								<Input value="{classes>StartYear}" editable="false" wrapping="false" />
+								<Input value="{odata>SchoolYearStart}" editable="false" wrapping="false" />
 							</t:template>
 						</t:Column>
 						<t:Column>
 							<Label text="End Year"/>
 							<t:template>
-								<Input value="{classes>EndYear}" editable="false" wrapping="false" />
+								<Input value="{odata>SchoolYearEnd}" editable="false" wrapping="false" />
 							</t:template>
 						</t:Column>
 						<t:Column>

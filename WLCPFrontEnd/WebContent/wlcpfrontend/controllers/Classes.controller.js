@@ -1,25 +1,5 @@
 sap.ui.controller("wlcpfrontend.controllers.Classes", {
 	
-	model : new sap.ui.model.json.JSONModel(),
-	data : {
-		table: [{
-			ClassName : "Computer Science",
-			Teacher : "Matthew Micciolo",
-			School : "Worcester Polytechnic Institue",
-			Grade : 15,
-			StartYear : 2017,
-			EndYear : 2018,
-		},
-		{
-			ClassName : "IMGD 4000",
-			Teacher : "Matthew Micciolo",
-			School : "Worcester Polytechnic Institue",
-			Grade : 15,
-			StartYear : 2017,
-			EndYear : 2018,
-		}]
-	},
-	
 	dialog : null,
 	
 	editing : false,
@@ -30,7 +10,7 @@ sap.ui.controller("wlcpfrontend.controllers.Classes", {
 		this.dialog.open();
 	},
 	
-	CanceCreateClass : function(oEvent) {
+	CancelCreateClass : function(oEvent) {
 		this.dialog.close();
 		this.getView().removeDependent(this.dialog);
 	},
@@ -42,11 +22,11 @@ sap.ui.controller("wlcpfrontend.controllers.Classes", {
 			var table = sap.ui.getCore().byId(this.getView().getId() + "--classesTable");
 			
 			//Loop through the rows
-			for(var i = 0; i < table.getBinding().getLength(); i++) {
+			for(var i = 0; i < table.getBinding().getLength() - 1; i++) {
 				for(var n = 0; n < table.getRows()[i].getCells().length; n++) {
-					if(n == 6) {
+					if(n == 7) {
 						table.getRows()[i].getCells()[n].setText("Edit");
-					} else if(n == 1 || n == 2) {
+					} else if(n == 2 || n == 3) {
 						//Dont allow Teacher or School to be edited
 					} else {
 						table.getRows()[i].getCells()[n].setEditable(true);
@@ -65,11 +45,11 @@ sap.ui.controller("wlcpfrontend.controllers.Classes", {
 			var table = sap.ui.getCore().byId(this.getView().getId() + "--classesTable");
 			
 			//Loop through the rows
-			for(var i = 0; i < table.getBinding().getLength(); i++) {
+			for(var i = 0; i < table.getBinding().getLength() - 1; i++) {
 				for(var n = 0; n < table.getRows()[i].getCells().length; n++) {
-					if(n == 6) {
+					if(n == 7) {
 						table.getRows()[i].getCells()[n].setText("View");
-					} else if(n == 1 || n == 2) {
+					} else if(n == 2 || n == 3) {
 						//Dont allow Teacher or School to be edited
 					} else {
 						table.getRows()[i].getCells()[n].setEditable(false);
@@ -95,24 +75,28 @@ sap.ui.controller("wlcpfrontend.controllers.Classes", {
 	},
 	
 	ViewStudents : function(oEvent) {
-		console.log("View");
+		
+		//Get the path to the student data
+		var classId = oEvent.getSource().getParent().getCells()[0].getValue();
+		this.dialog = sap.ui.xmlfragment("wlcpfrontend.fragments.ViewClassStudents", this);
+		this.dialog.setModel(sap.ui.getCore().getModel("odata"));
+		this.dialog.getContent()[0].bindItems("/TeacherClasss(" + classId + ")/StudentDetails", this.dialog.getContent()[0].getBindingInfo("items").template);
+		this.getView().addDependent(this.dialog);
+		this.dialog.open();
 	},
 	
 	AddRemoveStudents : function(oEvent) {
 		console.log("Add Remove");
-	},
+	}
 
 /**
 * Called when a controller is instantiated and its View controls (if available) are already created.
 * Can be used to modify the View before it is displayed, to bind event handlers and do other one-time initialization.
 * @memberOf wlcpfrontend.views.Classes
 */
-	onInit: function() {
-		var table = this.getView().byId("classesTable");
-		this.model.setData(this.data);
-		//this.getView().setModel(this.model, "classes");
-		sap.ui.getCore().setModel(this.model, "classes");
-	}
+//	onInit: function() {	
+//		
+//	}
 
 /**
 * Similar to onAfterRendering, but this hook is invoked before the controller's View is re-rendered

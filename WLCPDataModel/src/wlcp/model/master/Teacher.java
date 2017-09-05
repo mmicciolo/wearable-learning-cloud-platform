@@ -31,6 +31,9 @@ public class Teacher implements Serializable {
 	@Column(length = 40, name = "EMAIL_ADDRESS")
 	private String emailAddress;
 	
+	@Column(length = 40, name = "USERNAME")
+	private String username;
+	
 	@Column(length = 40, name = "PASSWORD")
 	private String password;
 	
@@ -41,11 +44,12 @@ public class Teacher implements Serializable {
 	@OneToMany(cascade = CascadeType.PERSIST, mappedBy = "teacher")
 	private List<TeacherClass> teacherClasses = new ArrayList<TeacherClass>();
 	
-	public Teacher(String firstName, String lastName, String emailAddress, String password, School school) {
+	public Teacher(String firstName, String lastName, String emailAddress, String username, String password, School school) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.emailAddress = emailAddress;
+		this.username = username;
 		this.password = password;
 		this.school = school;
 	}
@@ -84,6 +88,14 @@ public class Teacher implements Serializable {
 
 	public void setEmailAddress(String emailAddress) {
 		this.emailAddress = emailAddress;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getPassword() {

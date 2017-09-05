@@ -1,3 +1,12 @@
 TEACHER_ID,TEACHER_CLASS_NAME,GRADE,SCHOOL_ID,SCHOOL_YEAR_START,SCHOOL_YEAR_END
-1,Matts Class,12,1,2017,2018
-2,Ivons Class,12,1,2017,2018
+1,Computer Science 1,9,1,2017,2018
+1,Computer Science 2,10,1,2017,2018
+1,Computer Science 3,11,1,2017,2018
+1,AP Computer Science,12,1,2017,2018
+2,Statistics,12,1,2017,2018
+3,Geometry,8,1,2017,2018
+4,Trigonometry,8,1,2017,2018
+5,Algebra 2,8,1,2017,2018
+6,Pre Calculus,9,1,2017,2018
+7,Web Development,12,2,2017,2018
+7,Algebra 1,12,2,2017,2018

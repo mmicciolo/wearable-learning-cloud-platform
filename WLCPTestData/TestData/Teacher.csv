@@ -1,3 +1,8 @@
-FIRST_NAME,LAST_NAME,EMAIL_ADDRESS,PASSWORD,SCHOOL_ID
-Matthew,Micciolo,mmicciolo@wpi.edu,matthew,1
-Ivon,Arroyo,iarroyo@wpi.edu,ivon,1
+FIRST_NAME,LAST_NAME,EMAIL_ADDRESS,USERNAME,PASSWORD,SCHOOL_ID
+Matthew,Micciolo,mmicciolo@wpi.edu,mmicciolo,matthew,1
+Ivon,Arroyo,iarroyo@wpi.edu,iarroyo,ivon,1
+Erin,Ottmar,eottmar@wpi.edu,eottmar,erin,1
+Taylyn,Hulse,thulse@wpi.edu,thulse,tayln,1
+Avery,Harrison,aharrison@wpi.edu,aharrison,avery,1
+Rashid,Chatani,rchatani@wpi.edu,rchantani,rashid,1
+Angela,Taricco,ataricco@wpi.edu,ataricco,angela,2

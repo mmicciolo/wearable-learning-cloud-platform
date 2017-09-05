@@ -53,7 +53,7 @@ public class DataModelTest {
 	public void testTeacherWithoutClasses() {
 		
 		//Create a teacher
-		Teacher teacher = new Teacher("First Name", "Last Name", "Email@Email.com", "Password", null);
+		Teacher teacher = new Teacher("First Name", "Last Name", "Email@Email.com", "Username", "Password", null);
 		
 		//Persist the teacher
 		manager.getTransaction().begin();
@@ -68,7 +68,7 @@ public class DataModelTest {
 	public void testTeacherWithClasses() {
 		
 		//Create a teacher
-		Teacher teacher = new Teacher("First Name", "Last Name", "Email@Email.com", "Password", null);
+		Teacher teacher = new Teacher("First Name", "Last Name", "Email@Email.com", "Username", "Password", null);
 		teacher.getTeacherClasses().add(new TeacherClass(teacher, "A Class", 5, null, 2017, 2018));
 		
 		//Persist the teacher
@@ -87,7 +87,7 @@ public class DataModelTest {
 		School school = new School("School Name", "School Address");
 		
 		//Create a teacher
-		Teacher teacher = new Teacher("First Name", "Last Name", "Email@Email.com", "Password", school);
+		Teacher teacher = new Teacher("First Name", "Last Name", "Email@Email.com", "Username", "Password", school);
 		
 		//Persist the teacher
 		manager.getTransaction().begin();

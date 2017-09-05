@@ -46,6 +46,9 @@ public class Test {
 		TeacherClass teacherClass = manager.getReference(TeacherClass.class, 1);
 		Student student = manager.getReference(Student.class, 1);
 		int i = 0;
+		
+		manager.close();
+		factory.close();
 	}
 
 }

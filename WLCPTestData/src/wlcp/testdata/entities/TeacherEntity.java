@@ -18,6 +18,7 @@ public class TeacherEntity extends DataLoaderEntity<Teacher> {
 		columnSetterMap.put("FIRST_NAME", new GetterSetter("setFirstName", String.class));
 		columnSetterMap.put("LAST_NAME", new GetterSetter("setLastName", String.class));
 		columnSetterMap.put("EMAIL_ADDRESS", new GetterSetter("setEmailAddress", String.class));
+		columnSetterMap.put("USERNAME", new GetterSetter("setUsername", String.class));
 		columnSetterMap.put("PASSWORD", new GetterSetter("setPassword", String.class));
 		columnGetterMap.put("IDGetter", new GetterSetter("getTeacherId", Integer.class));
 	}

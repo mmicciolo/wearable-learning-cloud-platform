@@ -108,12 +108,16 @@ sap.ui.controller("wlcpfrontend.controllers.MainToolpage", {
 		//Create and Store our current view
 		this.currentView = sap.ui.xmlview(viewName);
 		
+		//Store the old page for later removal
+		var oldPage = this.currentPage;
+		
 		//Store the page we are going to navigate to for future references
 		this.currentPage = sap.ui.getCore().byId(this.currentView.getId() + "--" + pageName);
 		
-		//Add the page to the navigation container and go to that page
+		//Add the page to the navigation container and go to that page and remove the old one
 		sap.ui.getCore().byId(viewId + "--pageContainer").addPage(this.currentPage);
-		sap.ui.getCore().byId(viewId + "--pageContainer").to(this.currentPage.getId());
+		sap.ui.getCore().byId(viewId + "--pageContainer").to(this.currentPage.getId(), "fade");
+		sap.ui.getCore().byId(viewId + "--pageContainer").removePage(oldPage);
 	},
 	
 	

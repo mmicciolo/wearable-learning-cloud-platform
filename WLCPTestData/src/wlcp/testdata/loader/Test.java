@@ -9,13 +9,10 @@ import javax.persistence.Persistence;
 
 import org.eclipse.persistence.config.PersistenceUnitProperties;
 
-import wlcp.model.master.Student;
-import wlcp.model.master.TeacherClass;
-import wlcp.testdata.entities.ClassStudentEntity;
-import wlcp.testdata.entities.SchoolEntity;
-import wlcp.testdata.entities.StudentEntity;
-import wlcp.testdata.entities.TeacherClassEntity;
-import wlcp.testdata.entities.TeacherEntity;
+import wlcp.model.master.Username;
+import wlcp.testdata.entities.GameLobbyEntity;
+import wlcp.testdata.entities.UsernameEntity;
+import wlcp.testdata.entities.UsernameGameLobbyEntity;
 
 public class Test {
 
@@ -37,15 +34,9 @@ public class Test {
 		//Create a new entity manager
 		EntityManager manager = factory.createEntityManager();
 		
-		DataLoaderFactory.LoadData(new SchoolEntity("C:\\Users\\Matt\\git\\wearable-learning-cloud-platform\\WLCPTestData\\TestData\\School.csv"), manager);
-		DataLoaderFactory.LoadData(new TeacherEntity("C:\\Users\\Matt\\git\\wearable-learning-cloud-platform\\WLCPTestData\\TestData\\Teacher.csv"), manager);
-		DataLoaderFactory.LoadData(new TeacherClassEntity("C:\\Users\\Matt\\git\\wearable-learning-cloud-platform\\WLCPTestData\\TestData\\TeacherClass.csv"), manager);
-		DataLoaderFactory.LoadData(new StudentEntity("C:\\Users\\Matt\\git\\wearable-learning-cloud-platform\\WLCPTestData\\TestData\\Student.csv"), manager);
-		DataLoaderFactory.LoadData(new ClassStudentEntity("C:\\Users\\Matt\\git\\wearable-learning-cloud-platform\\WLCPTestData\\TestData\\ClassStudent.csv"), manager);
-
-		TeacherClass teacherClass = manager.getReference(TeacherClass.class, 1);
-		Student student = manager.getReference(Student.class, 1);
-		int i = 0;
+		DataLoaderFactory.LoadData(new UsernameEntity("C:\\Users\\Matt\\git\\wearable-learning-cloud-platform\\WLCPTestData\\TestData\\Username.csv"), manager);
+		DataLoaderFactory.LoadData(new GameLobbyEntity("C:\\Users\\Matt\\git\\wearable-learning-cloud-platform\\WLCPTestData\\TestData\\GameLobby.csv"), manager);
+		DataLoaderFactory.LoadData(new UsernameGameLobbyEntity("C:\\Users\\Matt\\git\\wearable-learning-cloud-platform\\WLCPTestData\\TestData\\UsernameGameLobby.csv"), manager);
 		
 		manager.close();
 		factory.close();

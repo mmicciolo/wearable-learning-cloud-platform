@@ -1,0 +1,21 @@
+@CHARSET "ISO-8859-1";
+
+.myBackgroundStyle .sapMPageBgStandard {
+	background-image: url('/WLCPFrontEnd/wlcpfrontend/images/bk.jpg');
+    background-size: cover;
+}
+
+.myBackgroundStyle .sapMListUl {
+	opacity: 0.9;
+}
+		 
+.box {
+	width: 350px;
+	height: 350px;
+	background-color: white;
+	box-shadow: 4px 8px 16px rgba(0, 0, 0, 1);
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}

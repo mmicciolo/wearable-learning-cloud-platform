@@ -9,7 +9,6 @@ import javax.persistence.Persistence;
 
 import org.eclipse.persistence.config.PersistenceUnitProperties;
 
-import wlcp.model.master.Username;
 import wlcp.testdata.entities.GameLobbyEntity;
 import wlcp.testdata.entities.UsernameEntity;
 import wlcp.testdata.entities.UsernameGameLobbyEntity;

@@ -1,0 +1,25 @@
+<core:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m"
+		controllerName="wlcpfrontend.controllers.GameLobbies" xmlns:html="http://www.w3.org/1999/xhtml">
+	<Page id="gameLobbies" showHeader="true" title="Your Game Lobbies" enableScrolling="false">
+		<subHeader>
+			<Toolbar>
+				<SearchField id="searchField" liveChange="onSearch" placeholder="Search by Game Lobby name..." width="100%" />
+				<Button text="Upload CSV" type="Accept"/>
+			</Toolbar>
+		</subHeader>
+		<TileContainer id="gameLobbyTileContainer" tiles="{path : 'odata>/GameLobbys', parameters : {expand : 'UsernameDetails'}}" >
+			<StandardTile press="TilePress" number="{odata>GameLobbyId}" numberUnit="Game Lobby Id" title="{odata>GameLobbyName}" icon="sap-icon://group" />
+		</TileContainer>
+		<footer>
+			<Toolbar design="Transparent">
+				<ToolbarSpacer/>
+					<Button icon="sap-icon://close-command-field" type="Transparent"/>
+					<Button icon="sap-icon://navigation-left-arrow" type="Transparent"/>
+					<Button icon="sap-icon://add" type="Accept"  press="onCreateGameLobby"/>
+					<Button icon="sap-icon://navigation-right-arrow" type="Transparent"/>
+					<Button icon="sap-icon://open-command-field" type="Transparent"/>
+				<ToolbarSpacer/>
+			</Toolbar>
+		</footer>
+	</Page>
+</core:View>

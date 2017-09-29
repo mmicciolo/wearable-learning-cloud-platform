@@ -1,0 +1,15 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core">
+	
+	<Dialog title = "Create Game Lobby">
+		<buttons>
+			<Button text="Create" type="Accept" press="onCreate"/>
+			<Button text="Cancel" type="Reject" press="onCancel"/>
+		</buttons>
+		<VBox>
+			<Label text="Game Lobby Name" required="true"/>
+			<Input value="{/GameLobbyName}" />
+		</VBox>
+	</Dialog>
+</core:FragmentDefinition>

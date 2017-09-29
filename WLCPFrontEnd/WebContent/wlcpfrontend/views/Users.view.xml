@@ -1,6 +1,6 @@
 <core:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:t="sap.ui.table"
-		controllerName="wlcpfrontend.controllers.Students" xmlns:html="http://www.w3.org/1999/xhtml">
-	<Page id="students" showHeader="true" title="School's Students" enableScrolling="false">
+		controllerName="wlcpfrontend.controllers.Users" xmlns:html="http://www.w3.org/1999/xhtml">
+	<Page id="users" showHeader="true" title="School's Students" enableScrolling="false">
 		<subHeader>
 			<Toolbar>
 				<SearchField width="100%" />

@@ -1,9 +1,6 @@
 package wlcp.model.master;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.*;
 
 /**
@@ -28,11 +25,6 @@ public class GameLobby implements Serializable {
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "USERNAME", nullable = false)
 	private Username username;
-	
-//	@ManyToMany(cascade = CascadeType.PERSIST)
-//	@JoinTable(name = "USERNAME_GAMELOBBY", joinColumns = @JoinColumn(name = "GAME_LOBBY_ID", referencedColumnName = "GAME_LOBBY_ID"),
-//	inverseJoinColumns = @JoinColumn(name = "USERNAME", referencedColumnName = "USERNAME"))
-//	private List<Username> usernames = new ArrayList<Username>();
 
 	public GameLobby() {
 		super();

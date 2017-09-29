@@ -1,4 +1,4 @@
-sap.ui.controller("wlcpfrontend.controllers.Students", {
+sap.ui.controller("wlcpfrontend.controllers.Users", {
 	
 	
 	dialog : null,

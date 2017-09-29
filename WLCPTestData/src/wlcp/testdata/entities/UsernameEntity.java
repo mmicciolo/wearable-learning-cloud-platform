@@ -1,12 +1,5 @@
 package wlcp.testdata.entities;
 
-import java.util.List;
-
-import javax.persistence.EntityManager;
-
-import org.apache.commons.csv.CSVRecord;
-
-import wlcp.model.master.GameLobby;
 import wlcp.model.master.Username;
 import wlcp.testdata.loader.DataLoaderEntity;
 import wlcp.testdata.loader.GetterSetter;

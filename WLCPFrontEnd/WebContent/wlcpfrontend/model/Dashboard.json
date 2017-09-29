@@ -4,46 +4,24 @@
 		"icon" : "sap-icon://bbyd-dashboard",
 		"key" : "parent,wlcpfrontend.views.Dashboard,dashboard,page"
 	},  {
-		"title" : "Classes",
-		"icon" : "sap-icon://chalkboard",
-		"key" : "parent,wlcpfrontend.views.Classes,classes,page",
-		"expanded" : false
-	}, {
-		"title" : "Students",
-		"icon" : "sap-icon://course-book",
-		"key" : "parent,wlcpfrontend.views.Students,students,page",
+		"title" : "Game Lobbies",
+		"icon" : "sap-icon://group",
+		"key" : "parent,wlcpfrontend.views.GameLobbies,gameLobbies,page",
 		"expanded" : false
 	}, {
 		"title" : "Games",
 		"icon" : "sap-icon://iphone",
 		"key" : "parent",
-		"expanded" : false,
-		"items" : [{
-				"title" : "Create Game"
-			}, {
-				"title" : "Manage Games"
-			}, {
-				"title" : "Visual Game Editor"
-			}, {
-				"title" : "Game Code Editor"
-			}]
+		"expanded" : false
 	}, {
 		"title" : "Game Instances",
 		"icon" : "sap-icon://instance",
-		"expanded" : false,
-		"items" : [{
-				"title" : "Start Game Instance"
-			}]
+		"expanded" : false
 	}, {
-		"title" : "Schools",
-		"icon" : "sap-icon://study-leave"
-	}, {
-		"title" : "Administrator",
-		"icon" : "sap-icon://wrench",
-		"expanded" : false,
-		"items" : [{
-			"title" : "Manage Schools"
-		}]
+		"title" : "Users",
+		"icon" : "sap-icon://account",
+		"key" : "parent,wlcpfrontend.views.Users,users,page",
+		"expanded" : false
 	}],
 	"fixedNavigation" : [{
 		"title" : "About",

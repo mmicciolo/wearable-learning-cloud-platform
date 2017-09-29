@@ -2,7 +2,6 @@ package wlcp.model.test;
 
 import static org.junit.Assert.*;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.HashMap;
 import java.util.Map;
 

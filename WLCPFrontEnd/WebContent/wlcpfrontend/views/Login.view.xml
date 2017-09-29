@@ -2,14 +2,15 @@
 		controllerName="wlcpfrontend.controllers.Login" xmlns:html="http://www.w3.org/1999/xhtml">
 	<Page title="Title" showHeader="false">
 		<content>
-<!-- 			<Text text="Log into WLCP" class="text"/> -->
 			<VBox fitContainer="true" justifyContent="Center" alignItems="Center" alignContent="Center" class="box">
 				<items>
 					<Text text="Wearable Learning Cloud Platform" class="sapUiSmallMarginBottom"/>
-					<Input width="12em" id="uid" placeholder="Username"></Input>
-					<Input width="12em" id="pasw" placeholder="Password" type="Password"></Input>
-					<ComboBox width="12em" placeholder="Mode"></ComboBox>
-					<Button width="12em" text="Login" type="Emphasized" press="onLoginTap"></Button>
+					<Input width="12em" id="uid" placeholder="Username" value="{/username}"></Input>
+					<Input width="12em" id="pasw" placeholder="Password" value="{/password}" type="Password"></Input>
+					<ComboBox width="12em" placeholder="Mode" items="{/items}" value="{/mode}">
+						<core:Item key="{key}" text="{text}" />
+					</ComboBox>
+					<Button width="12em" text="Login" type="Emphasized" press="onLoginPress"></Button>
 					<HBox>
 						<items>
 							<Link text="Forgot Password?" class="sapUiSmallMarginTop sapUiTinyMarginEnd"/>
@@ -19,15 +20,5 @@
 				</items>
 			</VBox>
 		</content>
-<!-- 		<footer > -->
-<!-- 			<Bar> -->
-<!-- 				<contentLeft> -->
-<!-- 					<Text text="techippo"></Text> -->
-<!-- 				</contentLeft> -->
-<!-- 				<contentRight> -->
-<!-- 					<Text text="myLogin"></Text> -->
-<!-- 				</contentRight> -->
-<!-- 			</Bar> -->
-<!-- 		</footer> -->
 	</Page>
 </core:View>

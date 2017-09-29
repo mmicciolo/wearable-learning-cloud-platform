@@ -1,13 +1,60 @@
 sap.ui.controller("wlcpfrontend.controllers.Login", {
+	
+	modelData : {
+		username : "",
+		password : "",
+		mode : "",
+		items : [
+			{
+				key : "A",
+				text : "Game Manager"
+			},
+			{
+				key : "A",
+				text : "Game Editor"
+			}, 
+			{
+				key : "A",
+				text : "Player"
+			}
+		]
+	},
+	
+	model : new sap.ui.model.json.JSONModel(),
+	
+	userModelData : {
+		username: "mmicciolo"
+	},
+	
+	userModel : new sap.ui.model.json.JSONModel(),
+	
+	onLoginPress: function() {
+		switch(this.modelData.mode) {
+		case "Game Manager": 
+			var app = sap.ui.getCore().byId("app1");
+			var page = sap.ui.view({id:"mainToolPage", viewName:"wlcpfrontend.views.MainToolpage", type:sap.ui.core.mvc.ViewType.XML});
+			app.addPage(page);
+			app.to(page.getId());
+			break;
+		default:
+			break;
+		}
+	},
 
 /**
 * Called when a controller is instantiated and its View controls (if available) are already created.
 * Can be used to modify the View before it is displayed, to bind event handlers and do other one-time initialization.
 * @memberOf wlcpfrontend.views.Login
 */
-//	onInit: function() {
-//
-//	},
+	onInit: function() {
+		
+		//Set the data to the model
+		this.model.setData(this.modelData);
+		this.getView().setModel(this.model);
+		
+		this.userModel.setData(this.userModelData);
+		sap.ui.getCore().setModel(this.userModel, "user");
+	},
 
 /**
 * Similar to onAfterRendering, but this hook is invoked before the controller's View is re-rendered

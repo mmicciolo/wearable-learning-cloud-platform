@@ -193,7 +193,7 @@ sap.ui.controller("wlcpfrontend.controllers.MainToolpage", {
 		if(window.location.href.includes("localhost")) {
 			this.oModel = new sap.ui.model.odata.v2.ODataModel("http://localhost:8080/WLCPWebApp/WLCPOData.svc");
 		} else {
-			this.oModel = new sap.ui.model.odata.v2.ODataModel("http://24.240.135.66:8080/WLCPWebApp/WLCPOData.svc");
+			this.oModel = new sap.ui.model.odata.v2.ODataModel("http://mmicciolo.tk:8080/WLCPWebApp/WLCPOData.svc");
 		}
 		sap.ui.getCore().setModel(this.oModel, "odata");
 	},

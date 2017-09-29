@@ -1,0 +1,40 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core">
+	
+	<Dialog title = "Edit Student">
+		<buttons>
+			<Button text="Save" type="Accept" press="SaveStudent"/>
+			<Button text="Cancel" type="Reject" press="CancelDialog"/>
+		</buttons>
+		<HBox>
+		<Panel>
+		<VBox>
+			<Label text="First Name"/>
+			<Input value="{/FirstName}" />
+		</VBox>
+		<VBox>
+			<Label text="Last Name"/>
+			<Input value="{/LastName}" />
+		</VBox>
+		<VBox>
+			<Label text="Username"/>
+			<Input value="{/Username}" />
+		</VBox>
+		<VBox>
+			<Label text="Password"/>
+			<Input value="{/Password}" />
+		</VBox>
+		</Panel>
+		<Panel>
+			<VBox>
+			<Label text="Classes"></Label>
+			<List items="{/Classes}">
+				<StandardListItem title="{FirstName} {LastName}">
+				</StandardListItem>
+			</List>
+			</VBox>
+		</Panel>
+		</HBox>
+	</Dialog>
+</core:FragmentDefinition>

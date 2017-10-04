@@ -33,7 +33,10 @@ public class Username implements Serializable {
 	@Column(length = 40, name = "EMAIL_ADDRESS")
 	private String emailAddress;
 	
-	@OneToMany(cascade = CascadeType.PERSIST, mappedBy = "username")
+	
+	@JoinTable(name = "USERNAME_GAMELOBBIES", joinColumns = @JoinColumn(name = "USERNAME", referencedColumnName = "USERNAME"), inverseJoinColumns = @JoinColumn(name = "GAME_LOBBY", referencedColumnName = "GAME_LOBBY_ID"))
+	@OneToMany
+	//@OneToMany(cascade = CascadeType.PERSIST, mappedBy = "username")
 	private List<GameLobby> gameLobbies = new ArrayList<GameLobby>();
 
 	public Username() {

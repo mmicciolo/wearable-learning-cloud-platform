@@ -13,6 +13,97 @@
 		<!-- only load the mobile lib "sap.m" and the "sap_bluecrystal" theme -->
 		
 		<link rel="stylesheet" href="/WLCPFrontEnd/wlcpfrontend/css/Login.css"/>
+		
+		<script src="http://code.interactjs.io/v1.2.9/interact.js"></script>
+		<script src="https://jsplumbtoolkit.com/lib/jsplumb.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+		
+						<style>
+				#gameEditor--drag-1 {
+  width: 25%;
+  height: 25%;
+  min-height: 6.5em;
+  margin: 10%;
+
+  background-color: #29e;
+  color: white;
+
+  border-radius: 0.75em;
+  padding: 4%;
+
+  -webkit-transform: translate(0px, 0px);
+          transform: translate(0px, 0px);
+}
+
+.item {
+    height:80px;
+    width: 80px;
+    border: 1px solid blue;
+    float: left;
+    position: absolute;
+    top: 150px;
+    left: 150px;
+}
+
+.state {
+	height:80px;
+    width: 80px;
+    border: 1px solid blue;
+    margin-top: 40px;
+}
+
+.statepos {
+     position : absolute;
+     left: 50%;
+     margin-left: -40px;
+}
+
+.start {
+    height:80px;
+    width: 80px;
+    border: 1px solid blue;
+    float: left;
+    position: absolute;
+}
+
+.ds {
+    width:100px;
+    height:100px;
+    border:1px solid brown;
+    position: absolute;
+    top: 300px;
+    left: 300px;
+}
+
+.statebox {
+	width:100px;
+    height:100px;	
+    border-radius: 25px;
+}
+.sapMTabStrip {
+	background : #3f5161;
+	box-shadow : inherit;
+}
+.scroll {
+	background : #3f5161;
+}
+.sapMTabStrip .sapMTSTabsContainer .sapMTSTabs .sapMTabStripItem .sapMTSItemCloseBtnCnt {
+	display : inherit;
+}
+.sapMTabStrip .sapMTSTabsContainer .sapMTSTabs .sapMTabStripItem .sapMTabStripItemLabel {
+	color : white;
+}
+.sapMTabStrip .sapMTSRightOverflowButtons .sapMBtn.sapMBtnBase {
+	background : #3f5161; 
+}
+.sapMTabStrip .sapMTSLeftOverflowButtons .sapMBtn.sapMBtnBase {
+	background : #3f5161; 
+}
+html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
+display : none;
+}
+				</style>
 
 		<script>
 				sap.ui.localResources("wlcpfrontend");

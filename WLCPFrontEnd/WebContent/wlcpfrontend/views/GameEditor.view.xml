@@ -1,0 +1,52 @@
+<core:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:tnt="sap.tnt" xmlns:f="sap.f" xmlns:l="sap.ui.layout"
+		controllerName="wlcpfrontend.controllers.GameEditor" xmlns:html="http://www.w3.org/1999/xhtml">
+	<Page id="gameEditor" title="Title" showHeader="false">
+		<content>
+			<tnt:ToolHeader>
+				<Button id="sideNavigationToggleButton" icon="sap-icon://menu2" type="Transparent" press="onSideNavButtonPress">
+					<layoutData>
+						<OverflowToolbarLayoutData priority="NeverOverflow" />
+					</layoutData>
+				</Button>
+				<ToolbarSpacer/>
+				<Title level = "H3" text = "Wearable Learning Cloud Platform">
+					<layoutData>
+						<OverflowToolbarLayoutData priority="NeverOverflow" />
+					</layoutData>
+				</Title>
+				<tnt:ToolHeaderUtilitySeparator />
+				<ToolbarSpacer>
+					<layoutData>
+						<OverflowToolbarLayoutData priority="NeverOverflow" minWidth="20px" />
+					</layoutData>
+				</ToolbarSpacer>
+				<f:Avatar displaySize="XS" initials="MM" press="handleAvatarPress"/>
+				<Button icon = "sap-icon://user-settings" type="Transparent">
+				</Button>
+				<Button icon = "sap-icon://log" type="Transparent">
+				</Button>
+			</tnt:ToolHeader>
+			<l:Splitter id="mainSplitter" height="100%" width="100%">
+			<ScrollContainer id="toolbox" height="100%" width="240px" horizontal="true" vertical="true" focusable="true" class="scroll">
+				<layoutData><l:SplitterLayoutData size="240px" resizable="false"/></layoutData>
+				<TabContainer>
+					<items>
+						<TabContainerItem name="Inputs" editable="false">
+							<content>
+								<VBox class="statepos">
+									<Button text="Add State" press="add"/>
+									<html:div class="state" draggable="true"></html:div>
+									<html:div class="state" draggable="true"></html:div>
+								</VBox>
+							</content>
+						</TabContainerItem>
+						<TabContainerItem name="Ouputs"></TabContainerItem>
+					</items>
+				</TabContainer>
+			</ScrollContainer>
+			<ScrollContainer id="pad" height="100%" horizontal="true" vertical="true" focusable="false">
+			</ScrollContainer>
+			</l:Splitter>
+		</content>
+	</Page>
+</core:View>

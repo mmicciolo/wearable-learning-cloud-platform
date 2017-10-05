@@ -28,13 +28,16 @@
 			</tnt:ToolHeader>
 			<l:Splitter id="mainSplitter" height="100%" width="100%">
 			<ScrollContainer id="toolbox" height="100%" width="240px" horizontal="true" vertical="true" focusable="true" class="scroll">
-				<layoutData><l:SplitterLayoutData size="240px" resizable="false"/></layoutData>
+				<layoutData>
+					<l:SplitterLayoutData size="240px" resizable="false"/>
+				</layoutData>
 				<TabContainer>
 					<items>
 						<TabContainerItem name="Inputs" editable="false">
 							<content>
 								<VBox class="statepos">
-									<Button text="Add State" press="add"/>
+									<Label text="Toolbar" class="toolbarLabel sapUiSmallMarginTopBottom"/>
+									<Button text="Add State" press="add2"/>
 									<html:div class="state" draggable="true"></html:div>
 									<html:div class="state" draggable="true"></html:div>
 								</VBox>

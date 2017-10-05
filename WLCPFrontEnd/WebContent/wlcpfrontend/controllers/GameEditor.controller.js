@@ -13,55 +13,6 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		});
 	},
 	
-//	jsPlumb : function() {
-//		jsPlumb.ready(function () {
-//			
-//		    var firstInstance = jsPlumb.getInstance();
-//		    firstInstance.importDefaults({
-//		        Connector: ["Bezier", {
-//		            curviness: 150
-//		        }],
-//		        Anchors: ["BottomCenter", "TopCenter"]
-//		    });
-//		    
-//		    firstInstance.draggable("gameEditor--item_1");
-//		    firstInstance.draggable("gameEditor--downstream_1");
-//		    
-//		    firstInstance.addEndpoint('gameEditor--item_1', {isSource:true});
-//		    firstInstance.addEndpoint('gameEditor--downstream_1', {isEndpoint:true});
-//		    
-////		    var exampleGreyEndpointOptions = {
-////		    		  endpoint:"Rectangle",
-////		    		  paintStyle:{ width:25, height:21, fill:'#666' },
-////		    		  isSource:true,
-////		    		  connectorStyle : { stroke:"#666" },
-////		    		  isTarget:true
-////		    		};
-////		    
-////		    firstInstance.addEndpoint("gameEditor--item_1", { 
-////		    	  anchor:"Bottom"
-////		    	}, exampleGreyEndpointOptions); 
-////
-////		firstInstance.addEndpoint("gameEditor--downstream_1", { 
-////		    	  anchor:"Top" 
-////		    	}, exampleGreyEndpointOptions);
-//
-//
-//
-//		    
-////		    firstInstance.connect({
-////		        source: "gameEditor--item_1",
-////		        target: "gameEditor--downstream_1",
-////		        scope: "someScope",
-////		        anchors:["Right", "Left" ],
-////		        endpoint:"Rectangle",
-////		        endpointStyle:{ fill: "yellow" }
-////		    });
-//
-//
-//		});
-//	},
-	
 	inputEndPoint : {
 		 endpoint:"Dot",
 		 isTarget:true,
@@ -73,21 +24,82 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		 endpoint:"Dot",
 		 isTarget:false,
 		 isSource:true,
-		 maxConnections: -1
+		 maxConnections: -1,
 	},
 	
 	setupStart : function() {
-		var iDiv = document.createElement('div');
-		iDiv.id = "start";
+		var startStateDiv = document.createElement('div');
+		startStateDiv.id = "startState";
 		this.boxIdCount++;
-		iDiv.className = 'start';
-		iDiv.innerHTML = "Start";
-		//document.getElementsByTagName('body')[0].appendChild(iDiv);
-		document.getElementById('gameEditor--pad').appendChild(iDiv);
-		document.getElementById(iDiv.id).style.left = ((document.getElementById("gameEditor--pad").offsetWidth / 2) - (document.getElementById(iDiv.id).offsetWidth / 2)) + "px";
-		document.getElementById(iDiv.id).style.top = "100px";
-		jsPlumbInstance.draggable(iDiv.id);
-		jsPlumbInstance.addEndpoint(iDiv.id, { anchor:"Bottom" }, this.outputEndPoint);
+		startStateDiv.className = 'start';
+		startStateDiv.innerHTML = "Start";
+		document.getElementById('gameEditor--pad').appendChild(startStateDiv);
+		document.getElementById(startStateDiv.id).style.left = ((document.getElementById("gameEditor--pad").offsetWidth / 2) - (document.getElementById(startStateDiv.id).offsetWidth / 2)) + "px";
+		document.getElementById(startStateDiv.id).style.top = "100px";
+		jsPlumbInstance.draggable(startStateDiv.id);
+		jsPlumbInstance.addEndpoint(startStateDiv.id, { anchor:"Bottom" }, this.outputEndPoint);
+	},
+	
+	setupStart2 : function() {
+		
+		//Main div
+		var startStateDiv = document.createElement('div');
+		startStateDiv.id = "start";
+		startStateDiv.className = "newstate bordershadow";
+		
+		//Top color
+		var topColorDiv = document.createElement('div');
+		topColorDiv.className = "colorone";
+		
+		//Top Color Text
+		var topColorText = document.createElement('div');
+		topColorText.className = "centerText";
+		topColorText.innerHTML = "Start State";
+		topColorDiv.appendChild(topColorText);
+		
+		//Bottom color
+		var bottomColorDiv = document.createElement('div');
+		bottomColorDiv.className = "colortwo";
+		
+		//Append
+		startStateDiv.appendChild(topColorDiv);
+		startStateDiv.appendChild(bottomColorDiv);
+		
+		document.getElementById('gameEditor--pad').appendChild(startStateDiv);
+		jsPlumbInstance.draggable(startStateDiv.id);
+		jsPlumbInstance.addEndpoint(startStateDiv.id, { anchor:"Bottom", paintStyle:{ fill: "#427CAC" } }, this.outputEndPoint);
+	},
+	
+	add2 : function() {
+		
+		//Main div
+		var startStateDiv = document.createElement('div');
+		startStateDiv.id = this.boxId + this.boxIdCount;
+		this.boxIdCount++;
+		startStateDiv.className = "newstate bordershadow";
+		
+		//Top color
+		var topColorDiv = document.createElement('div');
+		topColorDiv.className = "colorone";
+		
+		//Top Color Text
+		var topColorText = document.createElement('div');
+		topColorText.className = "centerText";
+		topColorText.innerHTML = this.boxId + this.boxIdCount;
+		topColorDiv.appendChild(topColorText);
+		
+		//Bottom color
+		var bottomColorDiv = document.createElement('div');
+		bottomColorDiv.className = "colortwo";
+		
+		//Append
+		startStateDiv.appendChild(topColorDiv);
+		startStateDiv.appendChild(bottomColorDiv);
+		
+		document.getElementById('gameEditor--pad').appendChild(startStateDiv);
+		jsPlumbInstance.draggable(startStateDiv.id);
+		jsPlumbInstance.addEndpoint(startStateDiv.id, { anchor:"Top", paintStyle:{ fill: "#427CAC" } }, this.inputEndPoint);
+		jsPlumbInstance.addEndpoint(startStateDiv.id, { anchor:"Bottom", paintStyle:{ fill: "#427CAC" } }, this.outputEndPoint);
 	},
 	
 	add : function(oEvent) {	
@@ -112,7 +124,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		this.getView().byId("gameEditor").addEventDelegate({
 			  onAfterRendering: function(){
 				  this.jsPlumb();
-				  this.setupStart();
+				  this.setupStart2();
 			  }
 			}, this);
 	},
@@ -144,48 +156,3 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 //	}
 
 });
-
-
-
-////target elements with the "draggable" class
-//interact('.draggable')
-//  .draggable({
-//    // enable inertial throwing
-//    inertia: true,
-//    // keep the element within the area of it's parent
-//    restrict: {
-//      restriction: "parent",
-//      endOnly: true,
-//      elementRect: { top: 0, left: 0, bottom: 1, right: 1 }
-//    },
-//    // enable autoScroll
-//    autoScroll: true,
-//
-//    // call this function on every dragmove event
-//    onmove: dragMoveListener,
-//    // call this function on every dragend event
-//    onend: function (event) {
-//      var textEl = event.target.querySelector('p');
-//
-//      textEl && (textEl.textContent =
-//        'moved a distance of '
-//        + (Math.sqrt(event.dx * event.dx +
-//                     event.dy * event.dy)|0) + 'px');
-//    }
-//  });
-//
-//  function dragMoveListener (event) {
-//    var target = event.target,
-//        // keep the dragged position in the data-x/data-y attributes
-//        x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
-//        y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
-//
-//    // translate the element
-//    target.style.webkitTransform =
-//    target.style.transform =
-//      'translate(' + x + 'px, ' + y + 'px)';
-//
-//    // update the posiion attributes
-//    target.setAttribute('data-x', x);
-//    target.setAttribute('data-y', y);
-//  }

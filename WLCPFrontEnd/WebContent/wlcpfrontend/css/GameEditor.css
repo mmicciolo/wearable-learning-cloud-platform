@@ -1,0 +1,76 @@
+@CHARSET "ISO-8859-1";
+
+.sapMTabStrip {
+	background : #3f5161;
+	box-shadow : inherit;
+}
+
+.scroll {
+	background : #3f5161;
+}
+
+.sapMTabStrip .sapMTSTabsContainer .sapMTSTabs .sapMTabStripItem .sapMTSItemCloseBtnCnt {
+	display : inherit;
+}
+
+.sapMTabStrip .sapMTSTabsContainer .sapMTSTabs .sapMTabStripItem .sapMTabStripItemLabel {
+	color : white;
+}
+
+.sapMTabStrip .sapMTSRightOverflowButtons .sapMBtn.sapMBtnBase {
+	background : #3f5161; 
+}
+
+.sapMTabStrip .sapMTSLeftOverflowButtons .sapMBtn.sapMBtnBase {
+	background : #3f5161; 
+}
+
+html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
+	display : none;
+}
+
+.sapMTabStrip .sapMTSTabsContainer {
+	width : 100px;
+	left: 50%;
+	margin-left: -50px;
+}
+
+.toolbarLabel {
+	color : white;
+	margin-left: 20px;
+}
+
+
+
+.newstate {
+	height:125px;
+    width: 150px;
+    float: left;
+    position: absolute;
+}
+.colorone {
+height : 100px;
+width : 150px;
+background-color: #D3D7D9;
+border-radius : 15px 15px 0px 0px;
+}
+.colortwo {
+height : 25px;
+width : 150px;
+background-color: #3F5161;
+border-radius : 0px 0px 15px 15px;
+}
+
+.centerText {
+text-align:center;
+  display: block;
+  position: relative;
+top: 50%;
+  transform: translateY(-50%);
+  color:#3F5161;
+}
+
+.bordershadow:hover {
+    box-shadow: 0px 0px 50px #427CAC;
+    border-radius : 15px;
+}

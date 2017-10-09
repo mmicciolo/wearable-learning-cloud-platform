@@ -27,23 +27,37 @@
 				</Button>
 			</tnt:ToolHeader>
 			<l:Splitter id="mainSplitter" height="100%" width="100%">
-			<ScrollContainer id="toolbox" height="100%" width="240px" horizontal="true" vertical="true" focusable="true" class="scroll">
+			<ScrollContainer id="toolbox" height="100%" width="240px" horizontal="false" vertical="true" focusable="true" class="scroll">
 				<layoutData>
 					<l:SplitterLayoutData size="240px" resizable="false"/>
 				</layoutData>
 				<TabContainer>
 					<items>
-						<TabContainerItem name="Inputs" editable="false">
+						<TabContainerItem name="States" editable="false">
 							<content>
 								<VBox class="statepos">
 									<Label text="Toolbar" class="toolbarLabel sapUiSmallMarginTopBottom"/>
 									<Button text="Add State" press="add2"/>
-									<html:div class="state" draggable="true"></html:div>
-									<html:div class="state" draggable="true"></html:div>
+									<html:div id="toolboxDisplayState" class="state centerToolboxState stateBorderShadow">
+										<html:div class="toolboxDisplayStateTopColor"><html:div class="centerText">Display Text</html:div></html:div>
+										<html:div class="toolboxDisplayStateBottomColor"></html:div>
+									</html:div>
+									<html:div class="state centerToolboxState stateBorderShadow" style="top:150px;">
+										<html:div class="toolboxButtonPressStateTopColor"><html:div class="centerText">Button Input</html:div></html:div>
+										<html:div class="toolboxButtonPressStateBottomColor"></html:div>
+									</html:div>
+									<html:div class="state centerToolboxState stateBorderShadow" style="top:300px;">
+										<html:div class="toolboxBuzzerStateTopColor"><html:div class="centerText">Buzzer</html:div></html:div>
+										<html:div class="toolboxBuzzerStateBottomColor"></html:div>
+									</html:div>
+									<html:div class="state centerToolboxState stateBorderShadow" style="top:450px;">
+										<html:div class="toolboxLEDStateTopColor"><html:div class="centerText">LED</html:div></html:div>
+										<html:div class="toolboxLEDStateBottomColor"></html:div>
+									</html:div>
 								</VBox>
 							</content>
 						</TabContainerItem>
-						<TabContainerItem name="Ouputs"></TabContainerItem>
+						<TabContainerItem name="Transitions"></TabContainerItem>
 					</items>
 				</TabContainer>
 			</ScrollContainer>

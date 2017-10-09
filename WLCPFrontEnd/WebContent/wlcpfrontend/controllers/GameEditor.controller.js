@@ -9,7 +9,17 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 	jsPlumb : function() {
 		jsPlumb.ready(function () {
 			this.jsPlumbInstance = jsPlumb.getInstance();
-			this.jsPlumbInstance.importDefaults({Connector: ["Straight"]});
+			this.jsPlumbInstance.importDefaults({Connector: ["Straight"], ConnectionOverlays: [
+	            [ "Arrow", {
+	                location: 1,
+	                id: "arrow",
+	                length: 14,
+	                foldback: 0.8,
+	                paintStyle:{ fill: "#000000" }
+	            }]
+	        ]});
+			this.setupStart2();
+			this.setup();
 		});
 	},
 	
@@ -45,7 +55,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		//Main div
 		var startStateDiv = document.createElement('div');
 		startStateDiv.id = "start";
-		startStateDiv.className = "newstate bordershadow";
+		startStateDiv.className = "newstate stateBorderShadow";
 		
 		//Top color
 		var topColorDiv = document.createElement('div');
@@ -55,6 +65,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		var topColorText = document.createElement('div');
 		topColorText.className = "centerText";
 		topColorText.innerHTML = "Start State";
+		topColorText.id = "topColor";
 		topColorDiv.appendChild(topColorText);
 		
 		//Bottom color
@@ -66,8 +77,12 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		startStateDiv.appendChild(bottomColorDiv);
 		
 		document.getElementById('gameEditor--pad').appendChild(startStateDiv);
-		jsPlumbInstance.draggable(startStateDiv.id);
-		jsPlumbInstance.addEndpoint(startStateDiv.id, { anchor:"Bottom", paintStyle:{ fill: "#427CAC" } }, this.outputEndPoint);
+		this.jsPlumbInstance.draggable(startStateDiv.id);
+		this.jsPlumbInstance.addEndpoint(startStateDiv.id, { anchor:"Bottom", paintStyle:{ fill: "#427CAC" } }, this.outputEndPoint);
+		
+		//Edit Button
+		//var button = new sap.m.Button({ text : "..."});
+		//button.placeAt(topColorText.id);
 	},
 	
 	add2 : function() {
@@ -76,7 +91,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		var startStateDiv = document.createElement('div');
 		startStateDiv.id = this.boxId + this.boxIdCount;
 		this.boxIdCount++;
-		startStateDiv.className = "newstate bordershadow";
+		startStateDiv.className = "newstate stateBorderShadow";
 		
 		//Top color
 		var topColorDiv = document.createElement('div');
@@ -100,6 +115,45 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		jsPlumbInstance.draggable(startStateDiv.id);
 		jsPlumbInstance.addEndpoint(startStateDiv.id, { anchor:"Top", paintStyle:{ fill: "#427CAC" } }, this.inputEndPoint);
 		jsPlumbInstance.addEndpoint(startStateDiv.id, { anchor:"Bottom", paintStyle:{ fill: "#427CAC" } }, this.outputEndPoint);
+		
+		if(this.boxIdCount == 2) {
+			jsPlumbInstance.getConnections()[0].addOverlay([ "Label", { label: "Hello", id: "label", cssClass: "aLabel",  events: {
+		          click:function(labelOverlay, originalEvent) { 
+		              console.log("click on label overlay for :" + labelOverlay.component); 
+		            }
+		          } }]);
+		}
+	},
+	
+	add3 : function(left, top) {
+		
+		//Main div
+		var startStateDiv = document.createElement('div');
+		startStateDiv.id = this.boxId + this.boxIdCount;
+		this.boxIdCount++;
+		startStateDiv.className = "newstate stateBorderShadow";
+		
+		//Top color
+		var topColorDiv = document.createElement('div');
+		topColorDiv.className = "colorone";
+		
+		//Top Color Text
+		var topColorText = document.createElement('div');
+		topColorText.className = "centerText";
+		topColorText.innerHTML = this.boxId + this.boxIdCount;
+		topColorDiv.appendChild(topColorText);
+		
+		//Bottom color
+		var bottomColorDiv = document.createElement('div');
+		bottomColorDiv.className = "colortwo";
+		
+		//Append
+		startStateDiv.appendChild(topColorDiv);
+		startStateDiv.appendChild(bottomColorDiv);
+		
+		document.getElementById('gameEditor--pad').appendChild(startStateDiv);
+		document.getElementById(startStateDiv.id).style.left = (left - 240) + "px";
+		document.getElementById(startStateDiv.id).style.top = top + "px";
 	},
 	
 	add : function(oEvent) {	
@@ -115,6 +169,21 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		jsPlumbInstance.draggable(iDiv.id);
 	},
 	
+	test : function(event, ui) {
+		document.getElementById("gameEditor--mainSplitter-content-0").style.overflow = "auto";
+		document.getElementById("gameEditor--toolbox").style["overflow-x"] = "hidden";
+		document.getElementById("gameEditor--toolbox").style["overflow-y"] = "auto";
+		this.add3(ui.position.left, ui.position.top);
+	},
+	
+	setup : function() {
+		$("#gameEditor--toolboxDisplayState").draggable({ revert: false, helper: "clone", start : function(event, ui) {
+			document.getElementById("gameEditor--mainSplitter-content-0").style.overflow = "visible";
+			document.getElementById("gameEditor--toolbox").style["overflow-x"] = "visible";
+			document.getElementById("gameEditor--toolbox").style["overflow-y"] = "visible"
+		}, stop : $.proxy(this.test, this)});
+	},
+	
 /**
 * Called when a controller is instantiated and its View controls (if available) are already created.
 * Can be used to modify the View before it is displayed, to bind event handlers and do other one-time initialization.
@@ -123,8 +192,27 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 	onInit: function() {
 		this.getView().byId("gameEditor").addEventDelegate({
 			  onAfterRendering: function(){
-				  this.jsPlumb();
-				  this.setupStart2();
+				  this.jsPlumbInstance = jsPlumb.getInstance();
+					this.jsPlumbInstance.importDefaults({Connector: ["Straight"], ConnectionOverlays: [
+			            [ "Arrow", {
+			                location: 1,
+			                id: "arrow",
+			                length: 14,
+			                foldback: 0.8,
+			                paintStyle:{ fill: "#000000" }
+			            }]
+			        ]});
+					this.setupStart2();
+					this.setup();
+				  //while(!this.jsPlumbReady) {}
+				  //this.jsPlumb();
+				  //this.setupStart2();
+				  //this.setup();
+//					$("#gameEditor--toolboxDisplayState").draggable({ revert: false, helper: "clone", start : function(event, ui) {
+//						document.getElementById("gameEditor--mainSplitter-content-0").style.overflow = "visible";
+//						document.getElementById("gameEditor--toolbox").style["overflow-x"] = "visible";
+//						document.getElementById("gameEditor--toolbox").style["overflow-y"] = "visible"
+//					}, stop : this.add3});
 			  }
 			}, this);
 	},

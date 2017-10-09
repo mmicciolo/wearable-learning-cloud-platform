@@ -15,7 +15,6 @@
 		<link rel="stylesheet" href="/WLCPFrontEnd/wlcpfrontend/css/Login.css"/>
 		<link rel="stylesheet" href="/WLCPFrontEnd/wlcpfrontend/css/GameEditor.css"/>
 		
-		<script src="http://code.interactjs.io/v1.2.9/interact.js"></script>
 		<script src="https://jsplumbtoolkit.com/lib/jsplumb.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
@@ -32,12 +31,12 @@
     left: 150px;
 }
 
-.state {
-	height:80px;
-    width: 80px;
-    border: 1px solid blue;
-    margin-top: 40px;
-}
+/* .state { */
+/* 	height:80px; */
+/*     width: 80px; */
+/*     border: 1px solid blue; */
+/*     margin-top: 40px; */
+/* } */
 
 .statepos {
      position : absolute;
@@ -64,8 +63,9 @@
 		<script>
 				sap.ui.localResources("wlcpfrontend");
 				var app = new sap.m.App({id:"app1", initialPage:"idView1"});
-				var page = sap.ui.view({id:"idView1", viewName:"wlcpfrontend.views.Login", type:sap.ui.core.mvc.ViewType.XML});
-				page.addStyleClass("myBackgroundStyle");
+				//var page = sap.ui.view({id:"idView1", viewName:"wlcpfrontend.views.Login", type:sap.ui.core.mvc.ViewType.XML});
+				var page = sap.ui.view({id:"gameEditor", viewName:"wlcpfrontend.views.GameEditor", type:sap.ui.core.mvc.ViewType.XML});
+				//page.addStyleClass("myBackgroundStyle");
 				app.addPage(page);
 				app.placeAt("content");
 		</script>

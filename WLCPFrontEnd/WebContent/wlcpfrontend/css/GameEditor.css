@@ -30,9 +30,10 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
 }
 
 .sapMTabStrip .sapMTSTabsContainer {
-	width : 100px;
-	left: 50%;
-	margin-left: -50px;
+	width : 140px;
+/* 	left: 50%; */
+/* 	margin-left: -100px; */
+	margin-left: 20px;
 }
 
 .toolbarLabel {
@@ -41,13 +42,13 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
 }
 
 
-
 .newstate {
 	height:125px;
     width: 150px;
     float: left;
     position: absolute;
 }
+
 .colorone {
 height : 100px;
 width : 150px;
@@ -57,7 +58,7 @@ border-radius : 15px 15px 0px 0px;
 .colortwo {
 height : 25px;
 width : 150px;
-background-color: #3F5161;
+background-color: #5E696E;
 border-radius : 0px 0px 15px 15px;
 }
 
@@ -70,7 +71,80 @@ top: 50%;
   color:#3F5161;
 }
 
-.bordershadow:hover {
+.stateBorderShadow:hover {
     box-shadow: 0px 0px 50px #427CAC;
     border-radius : 15px;
+}
+
+.state {
+	height:125px;
+    width: 150px;
+    float: left;
+    position: absolute;
+}
+
+.centerToolboxState {
+	left: 50%;
+	margin-left: -75px;
+	margin-top: 50px;
+}
+
+/* Display State ToolBox */
+.toolboxDisplayStateTopColor {
+	height : 100px;
+	width : 150px;
+	background-color: #D3D7D9;
+	border-radius : 15px 15px 0px 0px;
+}
+
+.toolboxDisplayStateBottomColor {
+	height : 25px;
+	width : 150px;
+	background-color: #678BC7;
+	border-radius : 0px 0px 15px 15px;
+}
+
+/* Button Press State ToolBox */
+.toolboxButtonPressStateTopColor {
+	height : 100px;
+	width : 150px;
+	background-color: #D3D7D9;
+	border-radius : 15px 15px 0px 0px;
+}
+
+.toolboxButtonPressStateBottomColor {
+	height : 25px;
+	width : 150px;
+	background-color: #0092D1;
+	border-radius : 0px 0px 15px 15px;
+}
+
+/* Buzzer State ToolBox */
+.toolboxBuzzerStateTopColor {
+	height : 100px;
+	width : 150px;
+	background-color: #D3D7D9;
+	border-radius : 15px 15px 0px 0px;
+}
+
+.toolboxBuzzerStateBottomColor {
+	height : 25px;
+	width : 150px;
+	background-color: #1A9898;
+	border-radius : 0px 0px 15px 15px;
+}
+
+/* LED State ToolBox */
+.toolboxLEDStateTopColor {
+	height : 100px;
+	width : 150px;
+	background-color: #D3D7D9;
+	border-radius : 15px 15px 0px 0px;
+}
+
+.toolboxLEDStateBottomColor {
+	height : 25px;
+	width : 150px;
+	background-color: #759421;
+	border-radius : 0px 0px 15px 15px;
 }

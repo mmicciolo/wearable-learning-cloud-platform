@@ -89,6 +89,21 @@ top: 50%;
 	margin-top: 50px;
 }
 
+/* Start State */
+.startStateTopColor {
+	height : 100px;
+	width : 150px;
+	background-color: #D3D7D9;
+	border-radius : 15px 15px 0px 0px;
+}
+
+.startStateBottomColor {
+	height : 25px;
+	width : 150px;
+	background-color: #2B7D2B;
+	border-radius : 0px 0px 15px 15px;
+}
+
 /* Display State ToolBox */
 .toolboxDisplayStateTopColor {
 	height : 100px;

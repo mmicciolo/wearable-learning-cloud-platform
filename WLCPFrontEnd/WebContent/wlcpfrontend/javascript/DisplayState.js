@@ -4,8 +4,8 @@
 
 class DisplayState extends State {
 	
-	constructor(positionX, positionY, htmlId) {
-		super(positionX, positionY, htmlId);
+	constructor(topColorClass, bottomColorClass, text, htmlId, jsPlumbInstance) {
+		super(topColorClass, bottomColorClass, text, htmlId, jsPlumbInstance);
 		this.inputEndPoint = {
 				 endpoint:"Dot",
 				 isTarget:true,
@@ -18,16 +18,16 @@ class DisplayState extends State {
 				 isSource:true,
 				 maxConnections: -1,
 			};
+		this.create();
 	}
 	
-	drawDiv(jsPlumbInstance) {
+	create() {
 		
 		//Call the super method
-		super.drawDiv(jsPlumbInstance);
+		super.create();
 		
 		//Setup the end points
-		jsPlumbInstance.addEndpoint(this.stateDiv.id, { anchor:"Top", paintStyle:{ fill: "#5E696E" } }, this.inputEndPoint);
-		jsPlumbInstance.addEndpoint(this.stateDiv.id, { anchor:"Bottom", paintStyle:{ fill: "#5E696E" } }, this.outputEndPoint);
-	}
-	
+		this.jsPlumbInstance.addEndpoint(this.stateDiv.id, { anchor:"Top", paintStyle:{ fill: "#5E696E" } }, this.inputEndPoint);
+		this.jsPlumbInstance.addEndpoint(this.stateDiv.id, { anchor:"Bottom", paintStyle:{ fill: "#5E696E" } }, this.outputEndPoint);
+	}	
 }

@@ -37,13 +37,16 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 	initStartState : function() {
 		
 		//Create a new start state
-		var startState = new StartState(((document.getElementById("gameEditor--pad").offsetWidth / 2) - (150 / 2)),100, "start");
+		//var startState = new StartState(((document.getElementById("gameEditor--pad").offsetWidth / 2) - (150 / 2)),100, "start");
+		var startState = new StartState("startStateTopColor", "startStateBottomColor", "Start State" , "start", this.jsPlumbInstance);
+		startState.setPositionX(((document.getElementById("gameEditor--pad").offsetWidth / 2) - (150 / 2))); startState.setPositionY(100);
+		startState.draw();
 		
 		//Create the div
-		startState.createDiv("startStateTopColor", "startStateBottomColor", "Start State");
+		//startState.createDiv("startStateTopColor", "startStateBottomColor", "Start State");
 		
 		//Draw the div
-		startState.drawDiv(this.jsPlumbInstance);
+		//startState.drawDiv();
 	},	
 	
 	initToolbox : function() {
@@ -61,6 +64,14 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		}, 500, this);
 	},
 	
+	absoluteToRelativeX(absoluteX, width) {
+		return absoluteX - (document.getElementById("gameEditor--toolbox").getBoundingClientRect().width + document.getElementById("gameEditor--mainSplitter-splitbar-0").getBoundingClientRect().width + (width / 2));
+	},
+	
+	absoluteToRelativeY(absoluteY) {
+		return absoluteY + document.getElementById("gameEditor--toolbox-scroll").offsetHeight;
+	},
+	
 	toolboxDragStart : function() {
 		document.getElementById("gameEditor--mainSplitter-content-0").style.overflow = "visible";
 		document.getElementById("gameEditor--toolbox").style["overflow-x"] = "visible";
@@ -74,8 +85,16 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		
 		switch(ui.helper[0].childNodes[1].className) {
 			case "toolboxDisplayStateTopColor":
-				var displayState = new DisplayState(ui.position.left - 320, ui.position.top + 73, this.createStateId());
-				displayState.createDiv("toolboxDisplayStateTopColor", "toolboxDisplayStateBottomColor", "Display Text");
+				var displayState = new DisplayState("toolboxDisplayStateTopColor", "toolboxDisplayStateBottomColor", "Display Text" , this.createStateId(), this.jsPlumbInstance);
+				displayState.setPositionX(displayState.absoluteToRelativeX(ui.position.left)); displayState.setPositionY(displayState.absoluteToRelativeY(ui.position.top));
+				displayState.draw();
+//				var displayState = new DisplayState(displayState.absoluteToRelativeX(ui.position.left), displayState.absoluteToRelativeY(ui.position.top), this.createStateId());
+//				displayState.createDiv("toolboxDisplayStateTopColor", "toolboxDisplayStateBottomColor", "Display Text");
+//				displayState.drawDiv(this.jsPlumbInstance);
+				break;
+			case "toolboxButtonPressStateTopColor":
+				var displayState = new DisplayState(this.absoluteToRelativeX(ui.position.left, 150), this.absoluteToRelativeY(ui.position.top), this.createStateId());
+				displayState.createDiv("toolboxButtonPressStateTopColor", "toolboxButtonPressStateBottomColor", "Button Press");
 				displayState.drawDiv(this.jsPlumbInstance);
 				break;
 		}
@@ -86,55 +105,15 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		return this.boxId + this.boxIdCount;
 	},
 	
-	add2 : function() {
-		
-		//Main div
-		var startStateDiv = document.createElement('div');
-		startStateDiv.id = this.boxId + this.boxIdCount;
-		this.boxIdCount++;
-		startStateDiv.className = "newstate stateBorderShadow";
-		
-		//Top color
-		var topColorDiv = document.createElement('div');
-		topColorDiv.className = "colorone";
-		
-		//Top Color Text
-		var topColorText = document.createElement('div');
-		topColorText.className = "centerText";
-		topColorText.innerHTML = this.boxId + this.boxIdCount;
-		topColorDiv.appendChild(topColorText);
-		
-		//Bottom color
-		var bottomColorDiv = document.createElement('div');
-		bottomColorDiv.className = "colortwo";
-		
-		//Append
-		startStateDiv.appendChild(topColorDiv);
-		startStateDiv.appendChild(bottomColorDiv);
-		
-		document.getElementById('gameEditor--pad').appendChild(startStateDiv);
-		jsPlumbInstance.draggable(startStateDiv.id);
-		jsPlumbInstance.addEndpoint(startStateDiv.id, { anchor:"Top", paintStyle:{ fill: "#427CAC" } }, this.inputEndPoint);
-		jsPlumbInstance.addEndpoint(startStateDiv.id, { anchor:"Bottom", paintStyle:{ fill: "#427CAC" } }, this.outputEndPoint);
-		
-		if(this.boxIdCount == 2) {
-			jsPlumbInstance.getConnections()[0].addOverlay([ "Label", { label: "Hello", id: "label", cssClass: "aLabel",  events: {
-		          click:function(labelOverlay, originalEvent) { 
-		              console.log("click on label overlay for :" + labelOverlay.component); 
-		            }
-		          } }]);
-		}
-	},
-	
 	within2 : function(event, ui) {
-		  var localX = event.pageX - $("#gameEditor--pad").offset().left;
-		  var localY = event.pageY - $("#gameEditor--pad").offset().top;
+		var localX = this.absoluteToRelativeX(ui.position.left, 75);
+		var localY = this.absoluteToRelativeY(ui.position.top);
 		  for(var i = 0; i < this.jsPlumbInstance.getConnections().length; i++) {
 			  var x = this.jsPlumbInstance.getConnections()[i].connector.x;
 			  var y = this.jsPlumbInstance.getConnections()[i].connector.y;
 			  var h = this.jsPlumbInstance.getConnections()[i].connector.h;
 			  var w = this.jsPlumbInstance.getConnections()[i].connector.w;
-			  if(x <= localX && localX <= (x + w) && y <= localY && localY <= (y +h)) {
+			  if(localX < x + w && localX + 75 > x && localY < y + h && localY + 62.5 > y) {
 				   	//console.log("within");
 				   	var hasLabel = false;
 				    for(var key in this.jsPlumbInstance.getConnections()[i].getOverlays()) {

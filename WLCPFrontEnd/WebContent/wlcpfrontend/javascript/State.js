@@ -14,7 +14,7 @@ class State {
 		//Main div
 		this.stateDiv = document.createElement('div');
 		this.stateDiv.id = this.htmlId;
-		this.stateDiv.className = "newstate stateBorderShadow";
+		this.stateDiv.className = "state stateBorderShadow";
 		
 		//Top color
 		var topColorDiv = document.createElement('div');
@@ -22,7 +22,7 @@ class State {
 		
 		//Top Color Text
 		var topColorText = document.createElement('div');
-		topColorText.className = "centerText";
+		topColorText.className = "centerStateText";
 		topColorText.innerHTML = text;
 		topColorDiv.appendChild(topColorText);
 		

@@ -51,6 +51,16 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		$("#gameEditor--toolboxButtonPressState").draggable({ revert: false, helper: "clone", start : this.toolboxDragStart, stop : $.proxy(this.toolboxDragStop, this)});
 	},
 	
+	initToolbox2 : function() {
+		$("#gameEditor--transition").draggable({ revert: false, helper: "clone", start : this.toolboxDragStart, stop : $.proxy(this.within2, this)});
+	},
+	
+	onItemSelect : function(oEvent) {
+		setTimeout(function(t) {
+			t.initToolbox2();
+		}, 500, this);
+	},
+	
 	toolboxDragStart : function() {
 		document.getElementById("gameEditor--mainSplitter-content-0").style.overflow = "visible";
 		document.getElementById("gameEditor--toolbox").style["overflow-x"] = "visible";
@@ -64,7 +74,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		
 		switch(ui.helper[0].childNodes[1].className) {
 			case "toolboxDisplayStateTopColor":
-				var displayState = new DisplayState(ui.position.left - 240, ui.position.top + 150, this.createStateId());
+				var displayState = new DisplayState(ui.position.left - 320, ui.position.top + 73, this.createStateId());
 				displayState.createDiv("toolboxDisplayStateTopColor", "toolboxDisplayStateBottomColor", "Display Text");
 				displayState.drawDiv(this.jsPlumbInstance);
 				break;
@@ -116,6 +126,56 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		}
 	},
 	
+	within2 : function(event, ui) {
+		  var localX = event.pageX - $("#gameEditor--pad").offset().left;
+		  var localY = event.pageY - $("#gameEditor--pad").offset().top;
+		  for(var i = 0; i < this.jsPlumbInstance.getConnections().length; i++) {
+			  var x = this.jsPlumbInstance.getConnections()[i].connector.x;
+			  var y = this.jsPlumbInstance.getConnections()[i].connector.y;
+			  var h = this.jsPlumbInstance.getConnections()[i].connector.h;
+			  var w = this.jsPlumbInstance.getConnections()[i].connector.w;
+			  if(x <= localX && localX <= (x + w) && y <= localY && localY <= (y +h)) {
+				   	//console.log("within");
+				   	var hasLabel = false;
+				    for(var key in this.jsPlumbInstance.getConnections()[i].getOverlays()) {
+				        if( this.jsPlumbInstance.getConnections()[i].getOverlays()[key].hasOwnProperty("label")) {
+				        	hasLabel = true;
+				        	//console.log("has label");
+				        }
+				    }
+				    if(!hasLabel) {
+				    	this.jsPlumbInstance.getConnections()[i].addOverlay([ "Label", { label: "<div class=\"centerTransitionText\">Transition</div>", cssClass : "transition" }]);
+				    	//console.log("no label");
+				    } 	
+				}
+		  }
+	},
+	
+	within : function(e) {
+		  var localX = e.pageX - $("#gameEditor--pad").offset().left;
+		  var localY = e.pageY - $("#gameEditor--pad").offset().top;
+		  for(var i = 0; i < this.jsPlumbInstance.getConnections().length; i++) {
+			  var x = this.jsPlumbInstance.getConnections()[i].connector.x;
+			  var y = this.jsPlumbInstance.getConnections()[i].connector.y;
+			  var h = this.jsPlumbInstance.getConnections()[i].connector.h;
+			  var w = this.jsPlumbInstance.getConnections()[i].connector.w;
+			  if(x <= localX && localX <= (x + w) && y <= localY && localY <= (y +h)) {
+				   	//console.log("within");
+				   	var hasLabel = false;
+				    for(var key in this.jsPlumbInstance.getConnections()[i].getOverlays()) {
+				        if( this.jsPlumbInstance.getConnections()[i].getOverlays()[key].hasOwnProperty("label")) {
+				        	hasLabel = true;
+				        	//console.log("has label");
+				        }
+				    }
+				    if(!hasLabel) {
+				    	this.jsPlumbInstance.getConnections()[i].addOverlay([ "Label", { label: "<div class=\"centerTransitionText\">hey</div>", cssClass : "transition" }]);
+				    	//console.log("no label");
+				    } 	
+				}
+		  }
+	},
+	
 /**
 * Called when a controller is instantiated and its View controls (if available) are already created.
 * Can be used to modify the View before it is displayed, to bind event handlers and do other one-time initialization.
@@ -134,6 +194,9 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 				  
 				  //Setup the toolbox drag and drop
 				  this.initToolbox();
+				  
+				  //$("#gameEditor--pad").click($.proxy(this.within, this));
+				  
 			  }
 			}, this);
 	},

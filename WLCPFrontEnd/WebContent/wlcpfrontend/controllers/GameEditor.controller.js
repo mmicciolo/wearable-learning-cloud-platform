@@ -55,7 +55,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 	},
 	
 	initToolbox2 : function() {
-		$("#gameEditor--transition").draggable({ revert: false, helper: "clone", start : this.toolboxDragStart, stop : $.proxy(this.within2, this)});
+		$("#gameEditor--transition").draggable({ revert: false, helper: "clone", start : this.toolboxDragStart, stop : $.proxy(this.dropTransition, this)});
 	},
 	
 	onItemSelect : function(oEvent) {
@@ -105,6 +105,137 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		return this.boxId + this.boxIdCount;
 	},
 	
+	dropTransition : function(event, ui) {
+		
+		//Get the position of the transition
+		var localX = this.absoluteToRelativeX(ui.position.left, 75);
+		var localY = this.absoluteToRelativeY(ui.position.top);
+		
+		//Place holder for found connections
+		var connections = [];
+		
+		//Loop through all bounding boxes of connections and select ones the transition falls within
+		for(var i = 0; i < this.jsPlumbInstance.getConnections().length; i++) {
+			
+			//Get positions and size of bounding box
+			var x = this.jsPlumbInstance.getConnections()[i].connector.x;
+			var y = this.jsPlumbInstance.getConnections()[i].connector.y;
+			var h = this.jsPlumbInstance.getConnections()[i].connector.h;
+			var w = this.jsPlumbInstance.getConnections()[i].connector.w;
+			
+			//Check if the transition is within the bounding box
+			if(localX < x + w && localX + 75 > x && localY < y + h && localY + 62.5 > y) {
+				
+				//Check if the connection already has a label
+				var hasLabel = false;
+				for(var key in this.jsPlumbInstance.getConnections()[i].getOverlays()) {
+					if( this.jsPlumbInstance.getConnections()[i].getOverlays()[key].hasOwnProperty("label")) {
+						  hasLabel = true;
+					}
+				}
+				
+				//Only care about connections that dont have labels
+				if(!hasLabel) {
+					connections.push(this.jsPlumbInstance.getConnections()[i]);
+			  }   		
+		   }
+		}
+		
+		//If there is only 1 connection, snap the label to the connection
+		if(connections.length == 1) {
+			connections[0].addOverlay([ "Label", { label: "<div class=\"centerTransitionText\">Transition</div>", cssClass : "transition" }]);
+		} else if(connections.length != 0) { //If there is more than one connection
+			
+			//We need to figure out the closest
+			var closestConnection = null;
+			var closestDistance = 0;
+			
+			//Loop through the connections
+			for(var i = 0; i < connections.length; i++) {
+				
+				//Get positions and size of bounding box
+				var x = connections[i].connector.x;
+				var y = connections[i].connector.y;
+				var h = connections[i].connector.h;
+				var w = connections[i].connector.w;
+				
+				//Get the center point of the box
+				var centerX = x + (w / 2);
+				var centerY = y + (h / 2);
+				
+				//Calculate the distance from the transition to the center of the bounding box of the connection
+				var distance = Math.sqrt(Math.pow((centerX - localX), 2) + Math.pow((centerY - localY), 2));
+				
+				//If its the first connection set up the variables
+				if(closestConnection == null) {
+					closestConnection = connections[i];
+					closestDistance = distance;
+				} else { //If its not the first connection
+					
+					//Check to see if this connection is closer
+					if(distance < closestDistance) {
+						
+						//If it is, make it the new closest
+						closestConnection = connections[i];
+						closestDistance = distance;
+					}
+				}
+			}
+			//Add the transition to the closest connection
+			closestConnection.addOverlay([ "Label", { label: "<div class=\"centerTransitionText\">Transition</div>", cssClass : "transition" }]);
+		}
+	},
+	
+	within3 : function(event, ui) {
+		var localX = this.absoluteToRelativeX(ui.position.left, 75);
+		var localY = this.absoluteToRelativeY(ui.position.top);
+		var connections = [];
+		for(var i = 0; i < this.jsPlumbInstance.getConnections().length; i++) {
+			  var x = this.jsPlumbInstance.getConnections()[i].connector.x;
+			  var y = this.jsPlumbInstance.getConnections()[i].connector.y;
+			  var h = this.jsPlumbInstance.getConnections()[i].connector.h;
+			  var w = this.jsPlumbInstance.getConnections()[i].connector.w;
+			  if(localX < x + w && localX + 75 > x && localY < y + h && localY + 62.5 > y) {
+				  var hasLabel = false;
+				  for(var key in this.jsPlumbInstance.getConnections()[i].getOverlays()) {
+					  if( this.jsPlumbInstance.getConnections()[i].getOverlays()[key].hasOwnProperty("label")) {
+						  hasLabel = true;
+					  }
+				  }
+				  if(!hasLabel) {
+					  connections.push(this.jsPlumbInstance.getConnections()[i]);
+			    }   		
+			}
+		}
+		if(connections.length == 1) {
+			//If there is only 1 bounding box in range, snap to it
+			connections[0].addOverlay([ "Label", { label: "<div class=\"centerTransitionText\">Transition</div>", cssClass : "transition" }]);
+		} else if(connections.length != 0) {
+			//The transition interested with multiple bounding boxes, snap to the center of the closest one
+			var closestConnection = null;
+			var closestDistance = 0;
+			for(var i = 0; i < connections.length; i++) {
+				var x = connections[i].connector.x;
+				var y = connections[i].connector.y;
+				var h = connections[i].connector.h;
+				var w = connections[i].connector.w;
+				var centerX = x + (w / 2);
+				var centerY = y + (h / 2);
+				var distance = Math.sqrt(Math.pow((centerX - localX), 2) + Math.pow((centerY - localY), 2));
+				if(closestConnection == null) {
+					closestConnection = connections[i];
+					closestDistance = distance;
+				} else {
+					if(distance < closestDistance) {
+						closestConnection = connections[i];
+						closestDistance = distance;
+					}
+				}
+			}
+			closestConnection.addOverlay([ "Label", { label: "<div class=\"centerTransitionText\">Transition</div>", cssClass : "transition" }]);
+		}
+	},
+	
 	within2 : function(event, ui) {
 		var localX = this.absoluteToRelativeX(ui.position.left, 75);
 		var localY = this.absoluteToRelativeY(ui.position.top);
@@ -114,20 +245,18 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 			  var h = this.jsPlumbInstance.getConnections()[i].connector.h;
 			  var w = this.jsPlumbInstance.getConnections()[i].connector.w;
 			  if(localX < x + w && localX + 75 > x && localY < y + h && localY + 62.5 > y) {
-				   	//console.log("within");
-				   	var hasLabel = false;
-				    for(var key in this.jsPlumbInstance.getConnections()[i].getOverlays()) {
-				        if( this.jsPlumbInstance.getConnections()[i].getOverlays()[key].hasOwnProperty("label")) {
-				        	hasLabel = true;
-				        	//console.log("has label");
-				        }
-				    }
-				    if(!hasLabel) {
-				    	this.jsPlumbInstance.getConnections()[i].addOverlay([ "Label", { label: "<div class=\"centerTransitionText\">Transition</div>", cssClass : "transition" }]);
-				    	//console.log("no label");
-				    } 	
-				}
-		  }
+				  var hasLabel = false;
+				  for(var key in this.jsPlumbInstance.getConnections()[i].getOverlays()) {
+					  if( this.jsPlumbInstance.getConnections()[i].getOverlays()[key].hasOwnProperty("label")) {
+						  hasLabel = true;
+					  }
+				  }
+				  if(!hasLabel) {
+					  this.jsPlumbInstance.getConnections()[i].addOverlay([ "Label", { label: "<div class=\"centerTransitionText\">Transition</div>", cssClass : "transition" }]);
+					  break;
+			    }   		
+			}
+		}
 	},
 	
 	within : function(e) {

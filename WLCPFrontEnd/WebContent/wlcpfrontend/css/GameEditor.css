@@ -53,6 +53,10 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
     border-radius : 15px 15px 15px 15px;
 }
 
+.buttonPressTransition {
+	
+}
+
 .centerToolboxTransition {
 	left: 50%;
 	margin-left: -37.5px;

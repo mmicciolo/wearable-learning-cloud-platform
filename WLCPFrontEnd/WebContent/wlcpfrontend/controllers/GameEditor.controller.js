@@ -1,29 +1,14 @@
 sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 
 	pageId : "gameEditor",
-	boxId : "box",
-	boxIdCount : 0,
+	stateId : "state",
+	stateIdCount : 0,
 	
 	jsPlumbInstance : null,
 	
-	
-	inputEndPoint : {
-		 endpoint:"Dot",
-		 isTarget:true,
-		 isSource:false,
-		 maxConnections: -1
-	},
-	
-	outputEndPoint : {
-		 endpoint:"Dot",
-		 isTarget:false,
-		 isSource:true,
-		 maxConnections: -1,
-	},
-	
 	initJsPlumb : function() {
 		this.jsPlumbInstance = jsPlumb.getInstance();
-		this.jsPlumbInstance.importDefaults({Connector: ["Straight"], ConnectionOverlays: [
+		this.jsPlumbInstance.importDefaults({Connector: ["Bezier"], ConnectionOverlays: [
             [ "Arrow", {
                 location: 1,
                 id: "arrow",
@@ -47,36 +32,28 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 	},	
 	
 	initToolbox : function() {
-		$("#gameEditor--toolboxDisplayState").draggable({ revert: false, helper: "clone", start : this.toolboxDragStart, stop : $.proxy(this.toolboxDragStop, this)});
-		$("#gameEditor--toolboxBuzzerState").draggable({ revert: false, helper: "clone", start : this.toolboxDragStart, stop : $.proxy(this.toolboxDragStop, this)});
-		$("#gameEditor--toolboxLEDState").draggable({ revert: false, helper: "clone", start : this.toolboxDragStart, stop : $.proxy(this.toolboxDragStop, this)});
+		$("#gameEditor--toolboxDisplayState").draggable({ revert: false, helper: "clone", start : this.dragStart, stop : $.proxy(this.stateDragStop, this)});
+		$("#gameEditor--toolboxBuzzerState").draggable({ revert: false, helper: "clone", start : this.dragStart, stop : $.proxy(this.stateDragStop, this)});
+		$("#gameEditor--toolboxLEDState").draggable({ revert: false, helper: "clone", start : this.dragStart, stop : $.proxy(this.stateDragStop, this)});
 	},
 	
 	initToolbox2 : function() {
-		$("#gameEditor--transition").draggable({ revert: false, helper: "clone", start : this.toolboxDragStart, stop : $.proxy(this.dropTransition, this)});
+		$("#gameEditor--buttonPressTransition").draggable({ revert: false, helper: "clone", start : this.dragStart, stop : $.proxy(this.transitionDragStop, this)});
 	},
 	
 	onItemSelect : function(oEvent) {
 		setTimeout(function(t) {
 			t.initToolbox2();
 		}, 500, this);
-	},
+	},	
 	
-	absoluteToRelativeX(absoluteX, width) {
-		return absoluteX - (document.getElementById("gameEditor--toolbox").getBoundingClientRect().width + document.getElementById("gameEditor--mainSplitter-splitbar-0").getBoundingClientRect().width + (width / 2));
-	},
-	
-	absoluteToRelativeY(absoluteY) {
-		return absoluteY + document.getElementById("gameEditor--toolbox-scroll").offsetHeight;
-	},
-	
-	toolboxDragStart : function() {
+	dragStart : function() {
 		document.getElementById("gameEditor--mainSplitter-content-0").style.overflow = "visible";
 		document.getElementById("gameEditor--toolbox").style["overflow-x"] = "visible";
 		document.getElementById("gameEditor--toolbox").style["overflow-y"] = "visible";
 	},
 	
-	toolboxDragStop : function(event, ui) {
+	stateDragStop : function(event, ui) {
 		document.getElementById("gameEditor--mainSplitter-content-0").style.overflow = "auto";
 		document.getElementById("gameEditor--toolbox").style["overflow-x"] = "hidden";
 		document.getElementById("gameEditor--toolbox").style["overflow-y"] = "auto";
@@ -100,90 +77,22 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		}
 	},
 	
-	createStateId : function() {
-		this.boxIdCount++;
-		return this.boxId + this.boxIdCount;
+	transitionDragStop : function(event, ui) {
+		document.getElementById("gameEditor--mainSplitter-content-0").style.overflow = "auto";
+		document.getElementById("gameEditor--toolbox").style["overflow-x"] = "hidden";
+		document.getElementById("gameEditor--toolbox").style["overflow-y"] = "auto";
+		
+		var connection = Transition.getClosestConnection(ui.position.left, ui.position.top, this.jsPlumbInstance);
+		if(connection != null) {
+			if(ui.helper[0].className.includes("buttonPressTransition")) {
+				var buttonPressTransition = new ButtonPressTransition("transition", connection, this.jsPlumbInstance);
+			}
+		}
 	},
 	
-	dropTransition : function(event, ui) {
-		
-		//Get the position of the transition
-		var localX = this.absoluteToRelativeX(ui.position.left, 75);
-		var localY = this.absoluteToRelativeY(ui.position.top);
-		
-		//Place holder for found connections
-		var connections = [];
-		
-		//Loop through all bounding boxes of connections and select ones the transition falls within
-		for(var i = 0; i < this.jsPlumbInstance.getConnections().length; i++) {
-			
-			//Get positions and size of bounding box
-			var x = this.jsPlumbInstance.getConnections()[i].connector.x;
-			var y = this.jsPlumbInstance.getConnections()[i].connector.y;
-			var h = this.jsPlumbInstance.getConnections()[i].connector.h;
-			var w = this.jsPlumbInstance.getConnections()[i].connector.w;
-			
-			//Check if the transition is within the bounding box
-			if(localX < x + w && localX + 75 > x && localY < y + h && localY + 62.5 > y) {
-				
-				//Check if the connection already has a label
-				var hasLabel = false;
-				for(var key in this.jsPlumbInstance.getConnections()[i].getOverlays()) {
-					if( this.jsPlumbInstance.getConnections()[i].getOverlays()[key].hasOwnProperty("label")) {
-						  hasLabel = true;
-					}
-				}
-				
-				//Only care about connections that dont have labels
-				if(!hasLabel) {
-					connections.push(this.jsPlumbInstance.getConnections()[i]);
-			  }   		
-		   }
-		}
-		
-		//If there is only 1 connection, snap the label to the connection
-		if(connections.length == 1) {
-			connections[0].addOverlay([ "Label", { label: "<div class=\"centerTransitionText\">Transition</div>", cssClass : "transition" }]);
-		} else if(connections.length != 0) { //If there is more than one connection
-			
-			//We need to figure out the closest
-			var closestConnection = null;
-			var closestDistance = 0;
-			
-			//Loop through the connections
-			for(var i = 0; i < connections.length; i++) {
-				
-				//Get positions and size of bounding box
-				var x = connections[i].connector.x;
-				var y = connections[i].connector.y;
-				var h = connections[i].connector.h;
-				var w = connections[i].connector.w;
-				
-				//Get the center point of the box
-				var centerX = x + (w / 2);
-				var centerY = y + (h / 2);
-				
-				//Calculate the distance from the transition to the center of the bounding box of the connection
-				var distance = Math.sqrt(Math.pow((centerX - localX), 2) + Math.pow((centerY - localY), 2));
-				
-				//If its the first connection set up the variables
-				if(closestConnection == null) {
-					closestConnection = connections[i];
-					closestDistance = distance;
-				} else { //If its not the first connection
-					
-					//Check to see if this connection is closer
-					if(distance < closestDistance) {
-						
-						//If it is, make it the new closest
-						closestConnection = connections[i];
-						closestDistance = distance;
-					}
-				}
-			}
-			//Add the transition to the closest connection
-			closestConnection.addOverlay([ "Label", { label: "<div class=\"centerTransitionText\">Transition</div>", cssClass : "transition" }]);
-		}
+	createStateId : function() {
+		this.stateIdCount++;
+		return this.stateId + this.stateIdCount;
 	},
 	
 /**
@@ -204,9 +113,6 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 				  
 				  //Setup the toolbox drag and drop
 				  this.initToolbox();
-				  
-				  //$("#gameEditor--pad").click($.proxy(this.within, this));
-				  
 			  }
 			}, this);
 	},

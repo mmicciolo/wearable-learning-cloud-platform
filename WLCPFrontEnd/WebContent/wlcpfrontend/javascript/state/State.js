@@ -28,7 +28,7 @@ class State {
 		//Main div
 		this.stateDiv = document.createElement('div');
 		this.stateDiv.id = this.htmlId;
-		this.stateDiv.className = "state stateBorderShadow";
+		this.stateDiv.className = "state stateBorderShadow jtk-drag-select";
 		
 		//Top color
 		var topColorDiv = document.createElement('div');

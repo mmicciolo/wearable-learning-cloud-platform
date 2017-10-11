@@ -37,21 +37,19 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 	initStartState : function() {
 		
 		//Create a new start state
-		//var startState = new StartState(((document.getElementById("gameEditor--pad").offsetWidth / 2) - (150 / 2)),100, "start");
 		var startState = new StartState("startStateTopColor", "startStateBottomColor", "Start State" , "start", this.jsPlumbInstance);
+		
+		//Set the position
 		startState.setPositionX(((document.getElementById("gameEditor--pad").offsetWidth / 2) - (150 / 2))); startState.setPositionY(100);
+		
+		//Redraw it
 		startState.draw();
-		
-		//Create the div
-		//startState.createDiv("startStateTopColor", "startStateBottomColor", "Start State");
-		
-		//Draw the div
-		//startState.drawDiv();
 	},	
 	
 	initToolbox : function() {
 		$("#gameEditor--toolboxDisplayState").draggable({ revert: false, helper: "clone", start : this.toolboxDragStart, stop : $.proxy(this.toolboxDragStop, this)});
-		$("#gameEditor--toolboxButtonPressState").draggable({ revert: false, helper: "clone", start : this.toolboxDragStart, stop : $.proxy(this.toolboxDragStop, this)});
+		$("#gameEditor--toolboxBuzzerState").draggable({ revert: false, helper: "clone", start : this.toolboxDragStart, stop : $.proxy(this.toolboxDragStop, this)});
+		$("#gameEditor--toolboxLEDState").draggable({ revert: false, helper: "clone", start : this.toolboxDragStart, stop : $.proxy(this.toolboxDragStop, this)});
 	},
 	
 	initToolbox2 : function() {
@@ -88,14 +86,16 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 				var displayState = new DisplayState("toolboxDisplayStateTopColor", "toolboxDisplayStateBottomColor", "Display Text" , this.createStateId(), this.jsPlumbInstance);
 				displayState.setPositionX(displayState.absoluteToRelativeX(ui.position.left)); displayState.setPositionY(displayState.absoluteToRelativeY(ui.position.top));
 				displayState.draw();
-//				var displayState = new DisplayState(displayState.absoluteToRelativeX(ui.position.left), displayState.absoluteToRelativeY(ui.position.top), this.createStateId());
-//				displayState.createDiv("toolboxDisplayStateTopColor", "toolboxDisplayStateBottomColor", "Display Text");
-//				displayState.drawDiv(this.jsPlumbInstance);
 				break;
-			case "toolboxButtonPressStateTopColor":
-				var displayState = new DisplayState(this.absoluteToRelativeX(ui.position.left, 150), this.absoluteToRelativeY(ui.position.top), this.createStateId());
-				displayState.createDiv("toolboxButtonPressStateTopColor", "toolboxButtonPressStateBottomColor", "Button Press");
-				displayState.drawDiv(this.jsPlumbInstance);
+			case "toolboxBuzzerStateTopColor":
+				var buzzerState = new BuzzerState("toolboxBuzzerStateTopColor", "toolboxBuzzerStateBottomColor", "Buzzer Sound" , this.createStateId(), this.jsPlumbInstance);
+				buzzerState.setPositionX(buzzerState.absoluteToRelativeX(ui.position.left)); buzzerState.setPositionY(buzzerState.absoluteToRelativeY(ui.position.top));
+				buzzerState.draw();
+				break;
+			case "toolboxLEDStateTopColor":
+				var ledState = new LEDState("toolboxLEDStateTopColor", "toolboxLEDStateBottomColor", "LED" , this.createStateId(), this.jsPlumbInstance);
+				ledState.setPositionX(ledState.absoluteToRelativeX(ui.position.left)); ledState.setPositionY(ledState.absoluteToRelativeY(ui.position.top));
+				ledState.draw();
 				break;
 		}
 	},
@@ -184,104 +184,6 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 			//Add the transition to the closest connection
 			closestConnection.addOverlay([ "Label", { label: "<div class=\"centerTransitionText\">Transition</div>", cssClass : "transition" }]);
 		}
-	},
-	
-	within3 : function(event, ui) {
-		var localX = this.absoluteToRelativeX(ui.position.left, 75);
-		var localY = this.absoluteToRelativeY(ui.position.top);
-		var connections = [];
-		for(var i = 0; i < this.jsPlumbInstance.getConnections().length; i++) {
-			  var x = this.jsPlumbInstance.getConnections()[i].connector.x;
-			  var y = this.jsPlumbInstance.getConnections()[i].connector.y;
-			  var h = this.jsPlumbInstance.getConnections()[i].connector.h;
-			  var w = this.jsPlumbInstance.getConnections()[i].connector.w;
-			  if(localX < x + w && localX + 75 > x && localY < y + h && localY + 62.5 > y) {
-				  var hasLabel = false;
-				  for(var key in this.jsPlumbInstance.getConnections()[i].getOverlays()) {
-					  if( this.jsPlumbInstance.getConnections()[i].getOverlays()[key].hasOwnProperty("label")) {
-						  hasLabel = true;
-					  }
-				  }
-				  if(!hasLabel) {
-					  connections.push(this.jsPlumbInstance.getConnections()[i]);
-			    }   		
-			}
-		}
-		if(connections.length == 1) {
-			//If there is only 1 bounding box in range, snap to it
-			connections[0].addOverlay([ "Label", { label: "<div class=\"centerTransitionText\">Transition</div>", cssClass : "transition" }]);
-		} else if(connections.length != 0) {
-			//The transition interested with multiple bounding boxes, snap to the center of the closest one
-			var closestConnection = null;
-			var closestDistance = 0;
-			for(var i = 0; i < connections.length; i++) {
-				var x = connections[i].connector.x;
-				var y = connections[i].connector.y;
-				var h = connections[i].connector.h;
-				var w = connections[i].connector.w;
-				var centerX = x + (w / 2);
-				var centerY = y + (h / 2);
-				var distance = Math.sqrt(Math.pow((centerX - localX), 2) + Math.pow((centerY - localY), 2));
-				if(closestConnection == null) {
-					closestConnection = connections[i];
-					closestDistance = distance;
-				} else {
-					if(distance < closestDistance) {
-						closestConnection = connections[i];
-						closestDistance = distance;
-					}
-				}
-			}
-			closestConnection.addOverlay([ "Label", { label: "<div class=\"centerTransitionText\">Transition</div>", cssClass : "transition" }]);
-		}
-	},
-	
-	within2 : function(event, ui) {
-		var localX = this.absoluteToRelativeX(ui.position.left, 75);
-		var localY = this.absoluteToRelativeY(ui.position.top);
-		  for(var i = 0; i < this.jsPlumbInstance.getConnections().length; i++) {
-			  var x = this.jsPlumbInstance.getConnections()[i].connector.x;
-			  var y = this.jsPlumbInstance.getConnections()[i].connector.y;
-			  var h = this.jsPlumbInstance.getConnections()[i].connector.h;
-			  var w = this.jsPlumbInstance.getConnections()[i].connector.w;
-			  if(localX < x + w && localX + 75 > x && localY < y + h && localY + 62.5 > y) {
-				  var hasLabel = false;
-				  for(var key in this.jsPlumbInstance.getConnections()[i].getOverlays()) {
-					  if( this.jsPlumbInstance.getConnections()[i].getOverlays()[key].hasOwnProperty("label")) {
-						  hasLabel = true;
-					  }
-				  }
-				  if(!hasLabel) {
-					  this.jsPlumbInstance.getConnections()[i].addOverlay([ "Label", { label: "<div class=\"centerTransitionText\">Transition</div>", cssClass : "transition" }]);
-					  break;
-			    }   		
-			}
-		}
-	},
-	
-	within : function(e) {
-		  var localX = e.pageX - $("#gameEditor--pad").offset().left;
-		  var localY = e.pageY - $("#gameEditor--pad").offset().top;
-		  for(var i = 0; i < this.jsPlumbInstance.getConnections().length; i++) {
-			  var x = this.jsPlumbInstance.getConnections()[i].connector.x;
-			  var y = this.jsPlumbInstance.getConnections()[i].connector.y;
-			  var h = this.jsPlumbInstance.getConnections()[i].connector.h;
-			  var w = this.jsPlumbInstance.getConnections()[i].connector.w;
-			  if(x <= localX && localX <= (x + w) && y <= localY && localY <= (y +h)) {
-				   	//console.log("within");
-				   	var hasLabel = false;
-				    for(var key in this.jsPlumbInstance.getConnections()[i].getOverlays()) {
-				        if( this.jsPlumbInstance.getConnections()[i].getOverlays()[key].hasOwnProperty("label")) {
-				        	hasLabel = true;
-				        	//console.log("has label");
-				        }
-				    }
-				    if(!hasLabel) {
-				    	this.jsPlumbInstance.getConnections()[i].addOverlay([ "Label", { label: "<div class=\"centerTransitionText\">hey</div>", cssClass : "transition" }]);
-				    	//console.log("no label");
-				    } 	
-				}
-		  }
 	},
 	
 /**

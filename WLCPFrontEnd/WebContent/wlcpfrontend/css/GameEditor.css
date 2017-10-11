@@ -34,6 +34,15 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
 	width : 140px;
 }
 
+.jtk-drag-select * {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;    
+} 
+
 /* Transition */
 .transition {
 	height:62.5px;
@@ -141,7 +150,7 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
 .toolboxBuzzerStateBottomColor {
 	height : 25px;
 	width : 150px;
-	background-color: #1A9898;
+	background-color: #0092D1;
 	border-radius : 0px 0px 15px 15px;
 }
 
@@ -156,6 +165,6 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
 .toolboxLEDStateBottomColor {
 	height : 25px;
 	width : 150px;
-	background-color: #759421;
+	background-color: #1A9898;
 	border-radius : 0px 0px 15px 15px;
 }

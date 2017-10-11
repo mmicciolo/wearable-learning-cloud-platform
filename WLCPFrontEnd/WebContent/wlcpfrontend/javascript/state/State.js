@@ -56,7 +56,7 @@ class State {
 		this.height = this.stateDiv.getBoundingClientRect().height;
 		
 		//Make it draggable
-		this.jsPlumbInstance.draggable(this.stateDiv.id);
+		this.jsPlumbInstance.draggable(this.stateDiv.id, {containment : true});
 	}
 	
 	draw() {

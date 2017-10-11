@@ -8,8 +8,34 @@
 						<OverflowToolbarLayoutData priority="NeverOverflow" />
 					</layoutData>
 				</Button>
-				<ToolbarSpacer/>
-				<Title level = "H3" text = "Wearable Learning Cloud Platform">
+				<ToolbarSpacer width="180px"/>
+				<Button text="New" type="Transparent" icon="sap-icon://create">
+					<layoutData>
+						<OverflowToolbarLayoutData priority="Low" />
+					</layoutData>
+				</Button>
+				<Button text="Open" type="Transparent" icon="sap-icon://open-folder">
+					<layoutData>
+						<OverflowToolbarLayoutData priority="Low" />
+					</layoutData>
+				</Button>
+				<Button text="Save" type="Transparent" icon="sap-icon://save">
+					<layoutData>
+						<OverflowToolbarLayoutData priority="Low" />
+					</layoutData>
+				</Button>
+				<Button text="Compile" type="Transparent" icon="sap-icon://database">
+					<layoutData>
+						<OverflowToolbarLayoutData priority="Low" />
+					</layoutData>
+				</Button>
+				<Button text="Run" type="Transparent" icon="sap-icon://begin">
+					<layoutData>
+						<OverflowToolbarLayoutData priority="Low" />
+					</layoutData>
+				</Button>
+				<ToolbarSpacer width="12.5%"/>
+				<Title level = "H3" text = "Wearable Learning Cloud Platform" textAlign="Center">
 					<layoutData>
 						<OverflowToolbarLayoutData priority="NeverOverflow" />
 					</layoutData>
@@ -39,15 +65,15 @@
 									<html:div class="toolboxDisplayStateTopColor"><html:div class="centerStateText">Display Text</html:div></html:div>
 									<html:div class="toolboxDisplayStateBottomColor"></html:div>
 								</html:div>
-								<html:div id="toolboxButtonPressState" class="state centerToolboxState stateBorderShadow" style="top:150px;">
-									<html:div class="toolboxButtonPressStateTopColor"><html:div class="centerStateText">Button Input</html:div></html:div>
-									<html:div class="toolboxButtonPressStateBottomColor"></html:div>
-								</html:div>
-								<html:div class="state centerToolboxState stateBorderShadow" style="top:300px;">
+<!-- 								<html:div id="toolboxButtonPressState" class="state centerToolboxState stateBorderShadow" style="top:150px;"> -->
+<!-- 									<html:div class="toolboxButtonPressStateTopColor"><html:div class="centerStateText">Button Input</html:div></html:div> -->
+<!-- 									<html:div class="toolboxButtonPressStateBottomColor"></html:div> -->
+<!-- 								</html:div> -->
+								<html:div id="toolboxBuzzerState" class="state centerToolboxState stateBorderShadow" style="top:150px;">
 									<html:div class="toolboxBuzzerStateTopColor"><html:div class="centerStateText">Buzzer</html:div></html:div>
 									<html:div class="toolboxBuzzerStateBottomColor"></html:div>
 								</html:div>
-								<html:div class="state centerToolboxState stateBorderShadow" style="top:450px;">
+								<html:div id="toolboxLEDState" class="state centerToolboxState stateBorderShadow" style="top:300px;">
 									<html:div class="toolboxLEDStateTopColor"><html:div class="centerStateText">LED</html:div></html:div>
 									<html:div class="toolboxLEDStateBottomColor"></html:div>
 								</html:div>
@@ -63,7 +89,7 @@
 					</items>
 				</TabContainer>
 			</ScrollContainer>
-			<ScrollContainer id="pad" height="100%" horizontal="true" vertical="true" focusable="false">
+			<ScrollContainer id="pad" height="200%" horizontal="true" vertical="true" focusable="false">
 			</ScrollContainer>
 			</l:Splitter>
 		</content>

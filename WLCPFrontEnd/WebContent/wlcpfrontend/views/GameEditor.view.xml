@@ -79,9 +79,9 @@
 								</html:div>
 							</content>
 						</TabContainerItem>
-						<TabContainerItem id="itemasd" name="Transitions">
+						<TabContainerItem name="Transitions" editable="false">
 							<content>
-								<html:div id="buttonPressTransition" class="transition buttonPressTransition centerToolboxTransition jtk-drag-select">
+								<html:div id="buttonPressTransition" class="transition buttonPressTransition centerToolboxTransition">
 									<html:div class="centerTransitionText"><html:div>Button</html:div><html:div>Press</html:div></html:div>
 								</html:div>
 							</content>

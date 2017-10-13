@@ -16,9 +16,9 @@
 		<link rel="stylesheet" href="/WLCPFrontEnd/wlcpfrontend/css/GameEditor.css"/>
 		
 		<script src="https://jsplumbtoolkit.com/lib/jsplumb.js"></script>
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-		<script src="/WLCPFrontEnd/wlcpfrontend/javascript/jquery.ui.touch-punch.min.js"></script>
+<!-- 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
+<!-- 		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script> -->
+<!-- 		<script src="/WLCPFrontEnd/wlcpfrontend/javascript/jquery.ui.touch-punch.min.js"></script> -->
 		
 		<script src="/WLCPFrontEnd/wlcpfrontend/javascript/state/State.js"></script>
 		<script src="/WLCPFrontEnd/wlcpfrontend/javascript/state/StartState.js"></script>
@@ -31,11 +31,16 @@
 		<script src="/WLCPFrontEnd/wlcpfrontend/javascript/transition/ButtonPressTransition.js"></script>
 
 		<script>
+			    jQuery.sap.require('sap.ui.thirdparty.jqueryui.jquery-ui-core');
+			    jQuery.sap.require('sap.ui.thirdparty.jqueryui.jquery-ui-widget');
+			    jQuery.sap.require('sap.ui.thirdparty.jqueryui.jquery-ui-mouse');
+			    jQuery.sap.require('sap.ui.thirdparty.jqueryui.jquery-ui-droppable');
+			    jQuery.sap.require('sap.ui.thirdparty.jqueryui.jquery-ui-draggable');
 				sap.ui.localResources("wlcpfrontend");
 				var app = new sap.m.App({id:"app1", initialPage:"idView1"});
-				//var page = sap.ui.view({id:"idView1", viewName:"wlcpfrontend.views.Login", type:sap.ui.core.mvc.ViewType.XML});
-				var page = sap.ui.view({id:"gameEditor", viewName:"wlcpfrontend.views.GameEditor", type:sap.ui.core.mvc.ViewType.XML});
-				//page.addStyleClass("myBackgroundStyle");
+				var page = sap.ui.view({id:"idView1", viewName:"wlcpfrontend.views.Login", type:sap.ui.core.mvc.ViewType.XML});
+				//var page = sap.ui.view({id:"gameEditor", viewName:"wlcpfrontend.views.GameEditor", type:sap.ui.core.mvc.ViewType.XML});
+				page.addStyleClass("myBackgroundStyle");
 				app.addPage(page);
 				app.placeAt("content");
 		</script>

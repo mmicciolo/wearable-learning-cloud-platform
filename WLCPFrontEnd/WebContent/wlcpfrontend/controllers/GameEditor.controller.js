@@ -3,6 +3,9 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 	pageId : "gameEditor",
 	stateId : "state",
 	stateIdCount : 0,
+	transitionIdCount : 0,
+	
+	transitionMap : new Map(),
 	
 	jsPlumbInstance : null,
 	
@@ -85,7 +88,9 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		var connection = Transition.getClosestConnection(ui.position.left, ui.position.top, this.jsPlumbInstance);
 		if(connection != null) {
 			if(ui.helper[0].className.includes("buttonPressTransition")) {
-				var buttonPressTransition = new ButtonPressTransition("transition", connection, this.jsPlumbInstance);
+				var transitionId = "buttonPressTransition" + this.createTransitionId();
+				var buttonPressTransition = new ButtonPressTransition("transition", connection, transitionId, this);
+				this.transitionMap.set(transitionId, buttonPressTransition);
 			}
 		}
 	},
@@ -93,6 +98,11 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 	createStateId : function() {
 		this.stateIdCount++;
 		return this.stateId + this.stateIdCount;
+	},
+	
+	createTransitionId : function() {
+		this.transitionIdCount++;
+		return this.transitionIdCount;
 	},
 	
 /**
@@ -113,6 +123,8 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 				  
 				  //Setup the toolbox drag and drop
 				  this.initToolbox();
+				  
+				  //ButtonPressTransition.doubleClick();
 			  }
 			}, this);
 	},

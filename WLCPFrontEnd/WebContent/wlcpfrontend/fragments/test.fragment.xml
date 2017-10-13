@@ -1,0 +1,52 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:t="sap.ui.table"
+	xmlns:core="sap.ui.core">
+	
+	<Dialog title = "Edit Button Press">
+		<buttons>
+			<Button text="Accept" type="Accept"/>
+			<Button text="Close" type="Reject" press="closeDialog"/>
+		</buttons>
+		<t:Table id="buttonTable" title="Button Presses" rows="{/data}" selectionBehavior="RowOnly" visibleRowCount="13">
+			<t:columns>
+				<t:Column hAlign="Center">
+					<Label text="Scope"/>
+					<t:template>
+						<Label text="{scope}" design="Bold"/>
+					</t:template>
+				</t:Column>
+				<t:Column hAlign="Center">
+					<Label text="Any" />
+					<t:template>
+						<CheckBox selected="{any}" select="onChange"/>
+					</t:template>
+				</t:Column>
+				<t:Column hAlign="Center">
+					<Label text="Red" />
+					<t:template>
+						<CheckBox selected="{red}" select="onChange"/>
+					</t:template>
+				</t:Column>
+				<t:Column hAlign="Center">
+					<Label text="Green" />
+					<t:template>
+						<CheckBox selected="{green}" select="onChange"/>
+					</t:template>
+				</t:Column>
+				<t:Column hAlign="Center">
+					<Label text="Blue" />
+					<t:template>
+						<CheckBox selected="{blue}" select="onChange"/>
+					</t:template>
+				</t:Column>
+				<t:Column hAlign="Center">
+					<Label text="Black" />
+					<t:template>
+						<CheckBox selected="{black}" select="onChange"/>
+					</t:template>
+				</t:Column>
+			</t:columns>
+		</t:Table>
+	</Dialog>
+</core:FragmentDefinition>

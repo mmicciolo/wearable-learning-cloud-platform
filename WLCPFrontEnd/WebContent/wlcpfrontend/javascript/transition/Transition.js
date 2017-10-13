@@ -3,14 +3,16 @@
  */
 class Transition {
 	
-	constructor(cssClass, connection, jsPlumbInstance) {
+	constructor(cssClass, connection, overlayId, gameEditor) {
 		this.cssClass = cssClass;
 		//this.text = text;
 		this.width = 0;
 		this.height = 0;
 		this.connection = connection;
+		this.overlayId = overlayId;
 		this.htmlId = "";
-		this.jsPlumbInstance = jsPlumbInstance;
+		this.gameEditor = gameEditor;
+		this.jsPlumbInstance = gameEditor.jsPlumbInstance;
 	}
 	
 	static absoluteToRelativeX(absoluteX, width) {

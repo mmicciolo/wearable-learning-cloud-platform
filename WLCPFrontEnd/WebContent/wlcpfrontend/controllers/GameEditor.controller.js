@@ -1,10 +1,32 @@
 sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 
+	oModel : null,
+	
+	newGameModel : {
+		GameName : "",
+		TeamCount : 0,
+		PlayersPerTeam : 0,
+		UsernameDetails : {
+			__metadata : {
+	             uri : "http://localhost:8080/WLCPWebApp/WLCPOData.svc/Usernames('mmicciolo')"
+	         }
+		},
+		Visibility : true
+	},
+	
+	gameModel : {
+		GameName : "",
+		TeamCount : 0,
+		PlayersPerTeam : 0,
+		Visibility : true
+	},
+	
 	pageId : "gameEditor",
 	stateId : "state",
 	stateIdCount : 0,
 	transitionIdCount : 0,
 	
+	stateList : [],
 	transitionMap : new Map(),
 	
 	jsPlumbInstance : null,
@@ -32,8 +54,14 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		
 		//Redraw it
 		startState.draw();
+		
+		//Push back the state
+		this.stateList.push(startState);
+		
+		//Save it
+		startState.save(this.gameModel.GameName);
 	},	
-	
+
 	initToolbox : function() {
 		$("#gameEditor--toolboxDisplayState").draggable({ revert: false, helper: "clone", start : this.dragStart, stop : $.proxy(this.stateDragStop, this)});
 		$("#gameEditor--toolboxBuzzerState").draggable({ revert: false, helper: "clone", start : this.dragStart, stop : $.proxy(this.stateDragStop, this)});
@@ -66,6 +94,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 				var displayState = new DisplayState("toolboxDisplayStateTopColor", "toolboxDisplayStateBottomColor", "Display Text" , this.createStateId(), this.jsPlumbInstance);
 				displayState.setPositionX(displayState.absoluteToRelativeX(ui.position.left)); displayState.setPositionY(displayState.absoluteToRelativeY(ui.position.top));
 				displayState.draw();
+				this.stateList.push(displayState);
 				break;
 			case "toolboxBuzzerStateTopColor":
 				var buzzerState = new BuzzerState("toolboxBuzzerStateTopColor", "toolboxBuzzerStateBottomColor", "Buzzer Sound" , this.createStateId(), this.jsPlumbInstance);
@@ -105,6 +134,52 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		return this.transitionIdCount;
 	},
 	
+	newGame : function() {
+		var fragment = sap.ui.xmlfragment("wlcpfrontend.fragments.GameEditor.CreateGame", sap.ui.controller("wlcpfrontend.controllers.CreateLoadGame"));
+		fragment.setModel(new sap.ui.model.json.JSONModel(this.newGameModel));
+		fragment.open();
+	},
+	
+	initNewGame : function() {
+		
+		//Init jsPlumb
+		this.initJsPlumb();
+		  
+		//Init the start state
+		this.initStartState();
+		  
+		//Setup the toolbox drag and drop
+		this.initToolbox();
+	},
+	
+	loadGame : function() {
+
+	},
+	
+	initLoadedGame : function() {
+		
+	},
+	
+	saveGame : function() {
+
+		//Loop through and save all of the states
+		for(var i = 0; i < this.stateList.length; i++) {
+			
+			//Call their individually implemented save methods
+			this.stateList[i].save(this.gameModel.GameName);
+		}
+	},
+	
+	loadDataModel : function() {
+	  	//Load the main data model
+		if(window.location.href.includes("localhost")) {
+			this.oModel = new sap.ui.model.odata.v2.ODataModel("http://localhost:8080/WLCPWebApp/WLCPOData.svc");
+		} else {
+			this.oModel = new sap.ui.model.odata.v2.ODataModel("http://mmicciolo.tk:8080/WLCPWebApp/WLCPOData.svc");
+		}
+		sap.ui.getCore().setModel(this.oModel, "odata");
+	},
+	
 /**
 * Called when a controller is instantiated and its View controls (if available) are already created.
 * Can be used to modify the View before it is displayed, to bind event handlers and do other one-time initialization.
@@ -114,15 +189,18 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		this.getView().byId("gameEditor").addEventDelegate({
 			  onAfterRendering: function(){
 				  
+				  //Load the data model
+				  this.loadDataModel();
+				  
 				  //Wait for the inital DOM to render
 				  //Init jsPlumb
-				  this.initJsPlumb();
+				  //this.initJsPlumb();
 				  
 				  //Init the start state
-				  this.initStartState();
+				  //this.initStartState();
 				  
 				  //Setup the toolbox drag and drop
-				  this.initToolbox();
+				  //this.initToolbox();
 				  
 				  //ButtonPressTransition.doubleClick();
 			  }

@@ -9,17 +9,17 @@
 					</layoutData>
 				</Button>
 				<ToolbarSpacer width="180px"/>
-				<Button text="New" type="Transparent" icon="sap-icon://create">
+				<Button text="New" type="Transparent" icon="sap-icon://create" press="newGame">
 					<layoutData>
 						<OverflowToolbarLayoutData priority="Low" />
 					</layoutData>
 				</Button>
-				<Button text="Open" type="Transparent" icon="sap-icon://open-folder">
+				<Button text="Load" type="Transparent" icon="sap-icon://open-folder" press="loadGame">
 					<layoutData>
 						<OverflowToolbarLayoutData priority="Low" />
 					</layoutData>
 				</Button>
-				<Button text="Save" type="Transparent" icon="sap-icon://save">
+				<Button text="Save" type="Transparent" icon="sap-icon://save" press="saveGame">
 					<layoutData>
 						<OverflowToolbarLayoutData priority="Low" />
 					</layoutData>
@@ -89,7 +89,7 @@
 					</items>
 				</TabContainer>
 			</ScrollContainer>
-			<ScrollContainer id="pad" height="200%" horizontal="true" vertical="true" focusable="false">
+			<ScrollContainer id="pad" horizontal="true" vertical="true" focusable="false">
 			</ScrollContainer>
 			</l:Splitter>
 		</content>

@@ -3,5 +3,8 @@
 	<persistence-unit name="WLCPDataModel">
 		<class>wlcp.model.master.Username</class>
 		<class>wlcp.model.master.GameLobby</class>
+		<class>wlcp.model.master.Game</class>
+		<class>wlcp.model.master.state.State</class>
+		<class>wlcp.model.master.state.DisplayTextState</class>
 	</persistence-unit>
 </persistence>

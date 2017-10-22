@@ -43,6 +43,12 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
     user-select: none;    
 } 
 
+.centerButton {
+	left: 50%;
+  	transform: translateX(-50%);
+  	margin-top: 10px;
+}
+
 /* Transition */
 .transition {
 	height:62.5px;

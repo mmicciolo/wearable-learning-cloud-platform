@@ -1,7 +1,8 @@
 /**
  * 
  */
-class Transition {
+var GameEditor = {};
+GameEditor.Transition = class Transition {
 	
 	constructor(cssClass, connection, overlayId, gameEditor) {
 		this.cssClass = cssClass;

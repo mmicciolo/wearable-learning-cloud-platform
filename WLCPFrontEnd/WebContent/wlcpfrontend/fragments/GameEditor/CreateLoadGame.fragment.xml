@@ -1,0 +1,15 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core">
+	
+	<Dialog id="createLoadGame" title = "Create or Load Game">
+<!-- 		<buttons> -->
+<!-- 			<Button text="Cancel" type="Reject" press="cancelCreateLoadGame"/> -->
+<!-- 		</buttons> -->
+		<VBox>
+			<Button text="Create Game" width="12em" icon="sap-icon://create" press="createGamePressed" class="centerButton"></Button>
+			<Button text="Load Game" width="12em" icon="sap-icon://user-edit" press="loadGame" class="centerButton"></Button>
+		</VBox>
+	</Dialog>
+	
+</core:FragmentDefinition>

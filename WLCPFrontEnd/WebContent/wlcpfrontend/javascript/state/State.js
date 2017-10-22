@@ -56,7 +56,7 @@ class State {
 		this.height = this.stateDiv.getBoundingClientRect().height;
 		
 		//Make it draggable
-		this.jsPlumbInstance.draggable(this.stateDiv.id, {containment : true});
+		this.jsPlumbInstance.draggable(this.stateDiv.id, {containment : true, stop : $.proxy(this.moved, this)});
 	}
 	
 	draw() {
@@ -69,6 +69,17 @@ class State {
 		this.jsPlumbInstance.revalidate(this.stateDiv.id);
 	}
 	
+	moved() {
+		
+		//Update the position
+		this.positionX = parseFloat(document.getElementById(this.htmlId).style.left.replace("px", ""));
+		this.positionY = parseFloat(document.getElementById(this.htmlId).style.top.replace("px", ""));
+	}
+	
+	save(gameName) {
+		return this;
+	}
+	
 	getPositionX() {
 		return this.positionX;
 	}
@@ -78,11 +89,11 @@ class State {
 	}
 	
 	setPositionX(positionX) {
-		this.positionX = positionX;
+		this.positionX = parseFloat(positionX);
 	}
 	
 	setPositionY(positionY) {
-		this.positionY = positionY;
+		this.positionY = parseFloat(positionY);
 	}
 	
 	getHtmlId() {

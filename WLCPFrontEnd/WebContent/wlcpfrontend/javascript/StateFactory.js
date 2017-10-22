@@ -17,3 +17,11 @@ class StateFactory {
 	}
 	
 }
+
+class TransitionFactory {
+	
+	static createTransition(transitionClass) {
+		var transition = new GameEditor["Transition"]();
+		var i = 0;
+	}
+}

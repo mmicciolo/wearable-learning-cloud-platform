@@ -25,7 +25,7 @@
 		<script src="/WLCPFrontEnd/wlcpfrontend/javascript/state/DisplayState.js"></script>
 		<script src="/WLCPFrontEnd/wlcpfrontend/javascript/state/BuzzerState.js"></script>
 		<script src="/WLCPFrontEnd/wlcpfrontend/javascript/state/LEDState.js"></script>
-		<script src="/WLCPFrontEnd/wlcpfrontend/javascript/StateFactory.js"></script>
+<!-- 		<script src="/WLCPFrontEnd/wlcpfrontend/javascript/StateFactory.js"></script> -->
 		
 		<script src="/WLCPFrontEnd/wlcpfrontend/javascript/transition/Transition.js"></script>
 		<script src="/WLCPFrontEnd/wlcpfrontend/javascript/transition/ButtonPressTransition.js"></script>
@@ -36,11 +36,14 @@
 			    jQuery.sap.require('sap.ui.thirdparty.jqueryui.jquery-ui-mouse');
 			    jQuery.sap.require('sap.ui.thirdparty.jqueryui.jquery-ui-droppable');
 			    jQuery.sap.require('sap.ui.thirdparty.jqueryui.jquery-ui-draggable');
+				jQuery.sap.require("sap.m.MessageBox");
+				//jQuery.sap.require("sap.m.MessageToast");
 				sap.ui.localResources("wlcpfrontend");
+				jQuery.sap.includeScript("wlcpfrontend/javascript/StateFactory.js");
 				var app = new sap.m.App({id:"app1", initialPage:"idView1"});
-				var page = sap.ui.view({id:"idView1", viewName:"wlcpfrontend.views.Login", type:sap.ui.core.mvc.ViewType.XML});
-				//var page = sap.ui.view({id:"gameEditor", viewName:"wlcpfrontend.views.GameEditor", type:sap.ui.core.mvc.ViewType.XML});
-				page.addStyleClass("myBackgroundStyle");
+				//var page = sap.ui.view({id:"idView1", viewName:"wlcpfrontend.views.Login", type:sap.ui.core.mvc.ViewType.XML});
+				var page = sap.ui.view({id:"gameEditor", viewName:"wlcpfrontend.views.GameEditor", type:sap.ui.core.mvc.ViewType.XML});
+				//page.addStyleClass("myBackgroundStyle");
 				app.addPage(page);
 				app.placeAt("content");
 		</script>

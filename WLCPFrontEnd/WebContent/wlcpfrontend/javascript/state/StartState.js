@@ -48,19 +48,6 @@ class StartState extends State {
      }));
 		//Read in the state data
 		sap.ui.getCore().getModel("odata").read("/States", {filters : filters, success : $.proxy(this.saveState, this)});
-		
-//		var saveData = {
-//				GameDetails : {
-//					__metadata : {
-//			             uri : "http://localhost:8080/WLCPWebApp/WLCPOData.svc/Games('" + gameName + "')"
-//			         }
-//				},
-//				StateId : 0,
-//				GameStateId : this.htmlId,
-//				PositionX : this.positionX,
-//				PositionY : this.positionY	
-//		}
-//		sap.ui.getCore().getModel("odata").create("/States", saveData);
 	}
 
 	saveState(oData) {

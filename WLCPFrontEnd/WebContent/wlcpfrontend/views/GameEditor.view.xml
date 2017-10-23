@@ -89,7 +89,7 @@
 					</items>
 				</TabContainer>
 			</ScrollContainer>
-			<ScrollContainer id="pad" horizontal="true" vertical="true" focusable="false">
+			<ScrollContainer id="pad" height="100%" horizontal="true" vertical="true" focusable="false">
 			</ScrollContainer>
 			</l:Splitter>
 		</content>

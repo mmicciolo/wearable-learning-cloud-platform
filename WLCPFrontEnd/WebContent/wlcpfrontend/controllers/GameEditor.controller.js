@@ -168,6 +168,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 			//Call their individually implemented save methods
 			this.stateList[i].save(this.gameModel.GameName);
 		}
+		sap.m.MessageToast.show("Game Saved Successfully!");
 	},
 	
 	loadDataModel : function() {

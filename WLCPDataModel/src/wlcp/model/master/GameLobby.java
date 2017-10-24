@@ -60,12 +60,4 @@ public class GameLobby implements Serializable {
 		this.username = username;
 	}
 
-//	public List<Username> getUsernames() {
-//		return usernames;
-//	}
-//
-//	public void setUsernames(List<Username> usernames) {
-//		this.usernames = usernames;
-//	}
-	
 }

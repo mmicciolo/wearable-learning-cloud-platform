@@ -1,4 +1,4 @@
-USERNAME,PASSWORD,FIRST_NAME,LAST_NAME,EMAIL_ADDRESS
+USERNAME_ID,PASSWORD,FIRST_NAME,LAST_NAME,EMAIL_ADDRESS
 mmicciolo,matthew,Matthew,Micciolo,mmicciolo@wpi.edu
 iarroyo,ivon,Ivon,Arroyo,iarroyo@wpi.edu
 eottmar,erin,Erin,Ottmar,eottmar@wpi.edu

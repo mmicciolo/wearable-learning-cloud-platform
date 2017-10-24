@@ -1,9 +1,13 @@
 package wlcp.model.master.state;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.*;
 
 import wlcp.model.master.Game;
+import wlcp.model.master.connection.Connection;
 
 /**
  * Entity implementation class for Entity: State
@@ -23,7 +27,7 @@ public class State implements Serializable {
 	private Integer stateId;
 	
 	@ManyToOne()
-	@JoinColumn(name = "GAME_NAME")
+	@JoinColumn(name = "GAME")
 	private Game game;
 	
 	@Column(length = 40, name = "GAME_STATE_ID")
@@ -34,6 +38,14 @@ public class State implements Serializable {
 	
 	@Column(name = "POSITION_Y")
 	private Float positionY;
+	
+	@JoinTable(name = "STATE_INPUT_CONNECTIONS", joinColumns = @JoinColumn(name = "STATE_ID", referencedColumnName = "STATE_ID"), inverseJoinColumns = @JoinColumn(name = "CONNECTION_ID", referencedColumnName = "CONNECTION_ID"))
+	@OneToMany
+	private List<Connection> inputConnections = new ArrayList<Connection>();
+	
+	@JoinTable(name = "STATE_OUTPUT_CONNECTIONS", joinColumns = @JoinColumn(name = "STATE_ID", referencedColumnName = "STATE_ID"), inverseJoinColumns = @JoinColumn(name = "CONNECTION_ID", referencedColumnName = "CONNECTION_ID"))
+	@OneToMany
+	private List<Connection> outputConnections = new ArrayList<Connection>();
 
 	public State() {
 		super();

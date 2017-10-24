@@ -3,7 +3,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 	oModel : null,
 	
 	newGameModel : {
-		GameName : "",
+		GameId : "",
 		TeamCount : 0,
 		PlayersPerTeam : 0,
 		UsernameDetails : {
@@ -15,7 +15,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 	},
 	
 	gameModel : {
-		GameName : "",
+		GameId : "",
 		TeamCount : 0,
 		PlayersPerTeam : 0,
 		Visibility : true
@@ -59,7 +59,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		this.stateList.push(startState);
 		
 		//Save it
-		startState.save(this.gameModel.GameName);
+		startState.save(this.gameModel.GameId);
 	},	
 
 	initToolbox : function() {
@@ -166,7 +166,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		for(var i = 0; i < this.stateList.length; i++) {
 			
 			//Call their individually implemented save methods
-			this.stateList[i].save(this.gameModel.GameName);
+			this.stateList[i].save(this.gameModel.GameId);
 		}
 		sap.m.MessageToast.show("Game Saved Successfully!");
 	},

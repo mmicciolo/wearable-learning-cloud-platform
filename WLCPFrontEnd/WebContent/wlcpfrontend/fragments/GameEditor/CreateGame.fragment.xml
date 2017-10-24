@@ -8,7 +8,7 @@
 		</buttons>
 		<VBox>
 			<Label text="Game Name:" required="true"/>
-			<Input value="{/GameName}"/>
+			<Input value="{/GameId}"/>
 		</VBox>
 		<VBox>
 			<Label text="Team Count:"/>

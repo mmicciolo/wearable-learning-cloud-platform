@@ -50,11 +50,11 @@ sap.ui.controller("wlcpfrontend.controllers.CreateLoadGame", {
 	 */
 	createGameSuccess : function(oSuccess) {
 		if(sap.ui.getCore().byId("gameEditor") != null) {
-			sap.ui.getCore().byId("gameEditor").getController().gameModel.GameName = sap.ui.getCore().byId("gameEditor").getController().newGameModel.GameName;
+			sap.ui.getCore().byId("gameEditor").getController().gameModel.GameId = sap.ui.getCore().byId("gameEditor").getController().newGameModel.GameId;
 			sap.ui.getCore().byId("gameEditor").getController().gameModel.TeamCount = sap.ui.getCore().byId("gameEditor").getController().newGameModel.TeamCount;
 			sap.ui.getCore().byId("gameEditor").getController().gameModel.PlayersPerTeam = sap.ui.getCore().byId("gameEditor").getController().newGameModel.PlayersPerTeam;
 			sap.ui.getCore().byId("gameEditor").getController().gameModel.Visibility = sap.ui.getCore().byId("gameEditor").getController().newGameModel.Visibility;
-			sap.ui.getCore().byId("gameEditor").getController().newGameModel.GameName = "";
+			sap.ui.getCore().byId("gameEditor").getController().newGameModel.GameId = "";
 			sap.ui.getCore().byId("gameEditor").getController().newGameModel.TeamCount = 0;
 			sap.ui.getCore().byId("gameEditor").getController().newGameModel.PlayersPerTeam = 0;
 			sap.ui.getCore().byId("gameEditor").getController().newGameModel.Visibility = true;

@@ -6,5 +6,6 @@
 		<class>wlcp.model.master.Game</class>
 		<class>wlcp.model.master.state.State</class>
 		<class>wlcp.model.master.state.DisplayTextState</class>
+		<class>wlcp.model.master.connection.Connection</class>
 	</persistence-unit>
 </persistence>

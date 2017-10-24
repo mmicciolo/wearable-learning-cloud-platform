@@ -15,8 +15,8 @@ public class Game implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@Column(length = 40, name = "GAME_NAME")
-	private String gameName;
+	@Column(length = 40, name = "GAME_ID")
+	private String gameId;
 
 	@Column(name = "TEAM_COUNT")
 	private Integer teamCount;
@@ -35,22 +35,22 @@ public class Game implements Serializable {
 		super();
 	}
 
-	public Game(String gameName, Integer teamCount, Integer playersPerTeam, Username username,
+	public Game(String gameId, Integer teamCount, Integer playersPerTeam, Username username,
 			Boolean visibility) {
 		super();
-		this.gameName = gameName;
+		this.gameId = gameId;
 		this.teamCount = teamCount;
 		this.playersPerTeam = playersPerTeam;
 		this.username = username;
 		this.visibility = visibility;
 	}
 
-	public String getGameName() {
-		return gameName;
+	public String getGameId() {
+		return gameId;
 	}
 
-	public void setGameName(String gameName) {
-		this.gameName = gameName;
+	public void setGameId(String gameId) {
+		this.gameId = gameId;
 	}
 
 	public Integer getTeamCount() {

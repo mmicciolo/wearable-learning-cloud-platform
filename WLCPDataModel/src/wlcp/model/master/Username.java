@@ -18,8 +18,8 @@ public class Username implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@Column(length = 40, name = "USERNAME")
-	private String username;
+	@Column(length = 40, name = "USERNAME_ID")
+	private String usernameId;
 	
 	@Column(length = 40, name = "PASSWORD")
 	private String password;
@@ -33,31 +33,29 @@ public class Username implements Serializable {
 	@Column(length = 40, name = "EMAIL_ADDRESS")
 	private String emailAddress;
 	
-	
-	@JoinTable(name = "USERNAME_GAMELOBBIES", joinColumns = @JoinColumn(name = "USERNAME", referencedColumnName = "USERNAME"), inverseJoinColumns = @JoinColumn(name = "GAME_LOBBY", referencedColumnName = "GAME_LOBBY_ID"))
-	@OneToMany
-	//@OneToMany(cascade = CascadeType.PERSIST, mappedBy = "username")
+	@JoinTable(name = "USERNAME_GAMELOBBIES", joinColumns = @JoinColumn(name = "USERNAME_ID", referencedColumnName = "USERNAME_ID"), inverseJoinColumns = @JoinColumn(name = "GAME_LOBBY", referencedColumnName = "GAME_LOBBY_ID"))
+	@OneToMany(orphanRemoval = true)
 	private List<GameLobby> gameLobbies = new ArrayList<GameLobby>();
 
 	public Username() {
 		super();
 	}
 
-	public Username(String username, String password, String firstName, String lastName, String emailAddress) {
+	public Username(String usernameId, String password, String firstName, String lastName, String emailAddress) {
 		super();
-		this.username = username;
+		this.usernameId = usernameId;
 		this.password = password;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.emailAddress = emailAddress;
 	}
 
-	public String getUsername() {
-		return username;
+	public String getUsernameId() {
+		return usernameId;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setUsernameId(String usernameId) {
+		this.usernameId = usernameId;
 	}
 
 	public String getPassword() {

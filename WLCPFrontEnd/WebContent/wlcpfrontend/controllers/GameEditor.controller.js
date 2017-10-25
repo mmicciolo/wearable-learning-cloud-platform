@@ -172,7 +172,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 	loadGame2() {
 		//Open the busy dialog
 		this.busy = new sap.m.BusyDialog();
-		//this.busy.open();
+		this.busy.open();
 		
 		//Init jsPlumb
 		this.initJsPlumb();
@@ -235,10 +235,11 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 	
 	resetEditor : function() {
 		for(var i = 0; i < this.stateList.length; i++) {
-			document.getElementById('gameEditor--pad').removeChild(document.getElementById(this.stateList[i].htmlId));
 			this.jsPlumbInstance.remove(this.stateList[i].htmlId);
+			//document.getElementById('gameEditor--pad').removeChild(document.getElementById(this.stateList[i].htmlId));
 		}
 		this.stateList = [];
+		this.connectionList = [];
 		this.saveCount = null;
 		this.type = null;
 	},

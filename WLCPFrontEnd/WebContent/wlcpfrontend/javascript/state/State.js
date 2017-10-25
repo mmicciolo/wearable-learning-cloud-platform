@@ -122,6 +122,9 @@ class State {
 				break;
 			}
 		}
+		
+		//Load Connections
+		Connection.load();
 	}
 	
 	save(odataPath, saveSuccess, context) {

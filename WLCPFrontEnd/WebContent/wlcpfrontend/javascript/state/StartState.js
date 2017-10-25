@@ -24,30 +24,8 @@ class StartState extends State {
 		this.jsPlumbInstance.addEndpoint(this.stateDiv.id, { anchor:"Bottom", paintStyle:{ fill: "#5E696E" } }, this.outputEndPoint);
 	}
 	
-	save(gameName) {
-		
-		this.gameName = gameName;
-		var filters = [];
-		filters.push(new sap.ui.model.Filter({
-
-                     path: "Game",
-
-                     operator: sap.ui.model.FilterOperator.EQ,
-
-                     value1: gameName
-
-              }));
-		filters.push(new sap.ui.model.Filter({
-
-            path: "GameStateId",
-
-            operator: sap.ui.model.FilterOperator.EQ,
-
-            value1: this.htmlId
-
-     }));
-		//Read in the state data
-		sap.ui.getCore().getModel("odata").read("/States", {filters : filters, success : $.proxy(this.saveState, this)});
+	save() {
+		super.save("/States", this.saveState, this);
 	}
 
 	saveState(oData) {
@@ -59,23 +37,35 @@ class StartState extends State {
 			PositionY : this.positionY,
 			GameDetails : {
 				__metadata : {
-		             uri : "http://localhost:8080/WLCPWebApp/WLCPOData.svc/Games('" + this.gameName + "')"
+		             uri : "http://localhost:8080/WLCPWebApp/WLCPOData.svc/Games('" + sap.ui.getCore().byId("gameEditor").getController().gameModel.GameId + "')"
 		         }
 			}
 		}
 		
-		if(oData.results.length == 1) {
-			
-			//We need to update the entry
-			sap.ui.getCore().getModel("odata").update("/States(" + oData.results[0].StateId + ")", saveData);
-				
-		} else if(oData.results.length == 0) {
-			
-			//We need to create the entry
-			sap.ui.getCore().getModel("odata").create("/States", saveData);
-
-		} else {
-			//Something went terribly wrong...
-		}
+		super.saveState(oData, "/States", saveData);
+		
+//		//Save our connections
+//		var inputConnections = this.jsPlumbInstance.getConnections({target : this.htmlId});
+//		var outputConnections = this.jsPlumbInstance.getConnections({source : this.htmlId});
+//		
+//		//Loop through and save input connections
+//		if(inputConnections.length > 0) {
+//			
+//		}
+//		
+//		//Loop through and save output connections
+//		for(var i = 0; i < outputConnections.length; i++) {
+//			var connection = {
+//					ConnectionId : 0,
+//					StateDetails : {
+//						__metadata : {
+//				             uri : "http://localhost:8080/WLCPWebApp/WLCPOData.svc/States('" + this.gameName + "')"
+//				         }
+//					},
+//					ConnectionFrom : this.htmlId,
+//					ConnectionTo : outputConnections[i].target.id
+//				}
+//			sap.ui.getCore().getModel("odata").create("/Connections", connection);
+//		}
 	}
 }

@@ -42,6 +42,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
                 paintStyle:{ fill: "#000000" }
             }]
         ]});
+		this.jsPlumbInstance.bind("beforeDrop", $.proxy(this.connectionDropped, this));
 	},
 	
 	initStartState : function() {
@@ -59,7 +60,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		this.stateList.push(startState);
 		
 		//Save it
-		startState.save(this.gameModel.GameId);
+		//startState.save();
 	},	
 
 	initToolbox : function() {
@@ -124,6 +125,10 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		}
 	},
 	
+	connectionDropped : function(oEvent) {
+		return true;
+	},
+	
 	createStateId : function() {
 		this.stateIdCount++;
 		return this.stateId + this.stateIdCount;
@@ -161,14 +166,36 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 	},
 	
 	saveGame : function() {
-
-		//Loop through and save all of the states
-		for(var i = 0; i < this.stateList.length; i++) {
-			
-			//Call their individually implemented save methods
-			this.stateList[i].save(this.gameModel.GameId);
+		
+		//Open the busy dialog
+		this.busy = new sap.m.BusyDialog();
+		this.busy.open();
+		
+		//Setup some FSM variables
+		this.saveCount = 0;
+		this.type = "STATE";
+		
+		//Kick off the save
+		this.stateList[this.saveCount].save();
+	},
+	
+	saveFSM() {
+		this.saveCount++;
+		switch(this.type) {
+		case "STATE":
+			if(this.stateList[this.saveCount] != null) {
+				this.stateList[this.saveCount].save();
+			} else {
+				this.saveCount = -1;
+				this.type = "CONNECTION";
+				this.saveFSM();
+			}
+			break;
+		case "CONNECTION":
+			this.busy.close();
+			sap.m.MessageToast.show("Game Saved Successfully!");
+			break;
 		}
-		sap.m.MessageToast.show("Game Saved Successfully!");
 	},
 	
 	loadDataModel : function() {
@@ -195,13 +222,13 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 				  
 				  //Wait for the inital DOM to render
 				  //Init jsPlumb
-				  //this.initJsPlumb();
+				  this.initJsPlumb();
 				  
 				  //Init the start state
-				  //this.initStartState();
+				  this.initStartState();
 				  
 				  //Setup the toolbox drag and drop
-				  //this.initToolbox();
+				  this.initToolbox();
 				  
 				  //ButtonPressTransition.doubleClick();
 			  }

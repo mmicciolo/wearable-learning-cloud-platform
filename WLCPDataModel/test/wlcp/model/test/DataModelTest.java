@@ -14,6 +14,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import wlcp.model.master.Game;
 import wlcp.model.master.GameLobby;
 import wlcp.model.master.Username;
 
@@ -69,12 +70,18 @@ public class DataModelTest {
 		//Create a username
 		Username username = new Username("username", "password", "firstname", "lastname", "email");
 		
-		//Add a game lobby
-		username.getGameLobbies().add(new GameLobby("gamelobby", username));
-		
 		//Persist the username
 		manager.getTransaction().begin();
 		manager.persist(username);
+		manager.getTransaction().commit();
+		
+		//Add a game lobby
+		username = manager.getReference(Username.class, "username");
+		username.getGameLobbies().add(new GameLobby("gamelobby", username));
+		
+		//Marge the username
+		manager.getTransaction().begin();
+		manager.merge(username);
 		manager.getTransaction().commit();
 		
 		//Test
@@ -102,6 +109,18 @@ public class DataModelTest {
 		//Persist the lobby
 		manager.getTransaction().begin();
 		manager.persist(gameLobby);
+		manager.getTransaction().commit();
+	}
+	
+	@Test
+	public void testGame() {
+		
+		//Create a game
+		Game game = new Game("My Game", 3, 3, new Username("username", "password", "firstname", "lastname", "email"), true);
+		
+		//Persist the gane
+		manager.getTransaction().begin();
+		manager.persist(game);
 		manager.getTransaction().commit();
 	}
 

@@ -26,7 +26,7 @@ public class State implements Serializable {
 	@Column(name = "STATE_ID")
 	private Integer stateId;
 	
-	@ManyToOne()
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "GAME")
 	private Game game;
 	
@@ -40,11 +40,11 @@ public class State implements Serializable {
 	private Float positionY;
 	
 	@JoinTable(name = "STATE_INPUT_CONNECTIONS", joinColumns = @JoinColumn(name = "STATE_ID", referencedColumnName = "STATE_ID"), inverseJoinColumns = @JoinColumn(name = "CONNECTION_ID", referencedColumnName = "CONNECTION_ID"))
-	@OneToMany
+	@OneToMany(orphanRemoval = true)
 	private List<Connection> inputConnections = new ArrayList<Connection>();
 	
 	@JoinTable(name = "STATE_OUTPUT_CONNECTIONS", joinColumns = @JoinColumn(name = "STATE_ID", referencedColumnName = "STATE_ID"), inverseJoinColumns = @JoinColumn(name = "CONNECTION_ID", referencedColumnName = "CONNECTION_ID"))
-	@OneToMany
+	@OneToMany(orphanRemoval = true)
 	private List<Connection> outputConnections = new ArrayList<Connection>();
 
 	public State() {
@@ -98,5 +98,21 @@ public class State implements Serializable {
 	public void setPositionY(Float positionY) {
 		this.positionY = positionY;
 	}
-   
+
+	public List<Connection> getInputConnections() {
+		return inputConnections;
+	}
+
+	public void setInputConnections(List<Connection> inputConnections) {
+		this.inputConnections = inputConnections;
+	}
+
+	public List<Connection> getOutputConnections() {
+		return outputConnections;
+	}
+
+	public void setOutputConnections(List<Connection> outputConnections) {
+		this.outputConnections = outputConnections;
+	}
+
 }

@@ -31,7 +31,7 @@ class DisplayState extends State {
 		this.jsPlumbInstance.addEndpoint(this.stateDiv.id, { anchor:"Bottom", paintStyle:{ fill: "#5E696E" } }, this.outputEndPoint);
 		
 		//Setup double click
-		$("#"+this.stateDiv.id).dblclick(this.doubleClick);
+		//$("#"+this.stateDiv.id).dblclick(this.doubleClick);
 	}
 	
 	doubleClick() {
@@ -43,30 +43,8 @@ class DisplayState extends State {
 		dialog.open();
 	}
 	
-	save(gameName) {
-		
-		this.gameName = gameName;
-		var filters = [];
-		filters.push(new sap.ui.model.Filter({
-
-                     path: "Game",
-
-                     operator: sap.ui.model.FilterOperator.EQ,
-
-                     value1: gameName
-
-              }));
-		filters.push(new sap.ui.model.Filter({
-
-            path: "GameStateId",
-
-            operator: sap.ui.model.FilterOperator.EQ,
-
-            value1: this.htmlId
-
-     }));
-		//Read in the state data
-		sap.ui.getCore().getModel("odata").read("/DisplayTextStates", {filters : filters, success : $.proxy(this.saveState, this)});
+	save() {
+		super.save("/DisplayTextStates", this.saveState, this);
 	}
 
 	saveState(oData) {
@@ -78,24 +56,12 @@ class DisplayState extends State {
 			PositionY : this.positionY,
 			GameDetails : {
 				__metadata : {
-		             uri : "http://localhost:8080/WLCPWebApp/WLCPOData.svc/Games('" + this.gameName + "')"
+		             uri : "http://localhost:8080/WLCPWebApp/WLCPOData.svc/Games('" + sap.ui.getCore().byId("gameEditor").getController().gameModel.GameId + "')"
 		         }
 			},
 			DisplayText : "TEXT"
 		}
 		
-		if(oData.results.length == 1) {
-			
-			//We need to update the entry
-			sap.ui.getCore().getModel("odata").update("/DisplayTextStates(" + oData.results[0].StateId + ")", saveData);
-				
-		} else if(oData.results.length == 0) {
-			
-			//We need to create the entry
-			sap.ui.getCore().getModel("odata").create("/DisplayTextStates", saveData);
-
-		} else {
-			//Something went terribly wrong...
-		}
+		super.saveState(oData, "/DisplayTextStates", saveData);
 	}
 }

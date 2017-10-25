@@ -1,6 +1,6 @@
 ----------------------------------------------------------------
-Thu Sep 28 21:18:33 EDT 2017:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.13.1.1 - (1765088): instance a816c00e-015e-cb36-b482-000019b2f4e0 
+Tue Oct 24 21:55:29 EDT 2017:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.13.1.1 - (1765088): instance a816c00e-015f-513d-dda9-000019b4ec10 
 on database directory memory:C:\Users\Matt\git\wearable-learning-cloud-platform\WLCPDataModel\DefaultDB with class loader sun.misc.Launcher$AppClassLoader@18b4aac2 
 Loaded from file:/C:/Users/Matt/.m2/repository/org/apache/derby/derby/10.13.1.1/derby-10.13.1.1.jar
 java.vendor=Oracle Corporation

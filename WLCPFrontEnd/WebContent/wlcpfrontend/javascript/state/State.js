@@ -14,6 +14,8 @@ class State {
 		this.jsPlumbInstance = jsPlumbInstance;
 		this.htmlId = htmlId;
 		this.stateDiv = null;
+		this.inputConnections = [];
+		this.outputConnections = [];
 	}
 	
 	absoluteToRelativeX(absoluteX) {
@@ -40,6 +42,14 @@ class State {
 		topColorText.innerHTML = this.text;
 		topColorDiv.appendChild(topColorText);
 		
+		if(this.stateDiv.id != "start") {
+			//Delete Button
+			var deleteButton = document.createElement('div');
+			deleteButton.id = this.htmlId + "delete";
+			deleteButton.className = "close-thik";
+			topColorDiv.appendChild(deleteButton);	
+		}
+		
 		//Bottom color
 		var bottomColorDiv = document.createElement('div');
 		bottomColorDiv.className = this.bottomColorClass;
@@ -57,6 +67,15 @@ class State {
 		
 		//Make it draggable
 		this.jsPlumbInstance.draggable(this.stateDiv.id, {containment : true, stop : $.proxy(this.moved, this)});
+		
+		if(this.stateDiv.id != "start") {
+			//Make delete clickable
+			$("#" + deleteButton.id).click($.proxy(this.remove, this));
+		}
+	}
+	
+	remove() {
+		console.log("clcik");
 	}
 	
 	draw() {
@@ -76,8 +95,38 @@ class State {
 		this.positionY = parseFloat(document.getElementById(this.htmlId).style.top.replace("px", ""));
 	}
 	
-	save(gameName) {
-		return this;
+	save(odataPath, saveSuccess, context) {
+		var filters = [];
+		filters.push(new sap.ui.model.Filter({path: "Game", operator: sap.ui.model.FilterOperator.EQ, value1: sap.ui.getCore().byId("gameEditor").getController().gameModel.GameId}));
+		filters.push(new sap.ui.model.Filter({path: "GameStateId", operator: sap.ui.model.FilterOperator.EQ, value1: this.htmlId}));
+		
+		//Read in the state data
+		sap.ui.getCore().getModel("odata").read(odataPath, {filters: filters, success: $.proxy(saveSuccess, context), error: this.saveError});
+	}
+	
+	saveState(oData, odataPath, saveData) {
+		if(oData.results.length == 1) {
+			
+			//We need to update the entry
+			sap.ui.getCore().getModel("odata").update(odataPath + "(" + oData.results[0].StateId + ")", saveData, {success: this.saveSuccess, error: this.saveError});
+				
+		} else if(oData.results.length == 0) {
+			
+			//We need to create the entry
+			sap.ui.getCore().getModel("odata").create(odataPath, saveData, {success: this.saveSuccess, error: this.saveError});
+
+		} else {
+			//Something went terribly wrong...
+		}
+	}
+	
+	saveSuccess() {
+		sap.ui.getCore().byId("gameEditor").getController().saveFSM();
+	}
+	
+	saveError() {
+		sap.m.MessageBox.error("There was an error saving the game.");
+		sap.ui.getCore().byId("gameEditor").getController().busy.close();
 	}
 	
 	getPositionX() {

@@ -1,0 +1,23 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core">
+	<Dialog id="loadGame" title="Load Game">
+		<buttons>
+			<Button text="Load" type="Accept" press="loadGame"/>
+			<Button text="Cancel" type="Reject" press="cancelLoadGame"/>
+		</buttons>
+		<FlexBox alignItems="Center" justifyContent="Center">
+			<Label textAlign="Center" text="Select a game:"/>
+		</FlexBox>
+		<FlexBox alignItems="Center" justifyContent="Center">
+			<ComboBox id="loadGameComboBox" items="{path: '/Games', sorter: { path: 'GameId' }}" placeholder="Select Game">
+				<core:Item key="{GameId}" text="{GameId}" />
+			</ComboBox>
+		</FlexBox>
+<!-- 		<VBox> -->
+<!-- 			<Label textAlign="Center" text="Select a game:"/> -->
+<!-- 			<ComboBox/> -->
+<!-- 		</VBox> -->
+	</Dialog>
+	
+</core:FragmentDefinition>

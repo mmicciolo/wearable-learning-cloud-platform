@@ -33,6 +33,10 @@ public class State implements Serializable {
 	@Column(length = 40, name = "GAME_STATE_ID")
 	private String gameStateId;
 	
+	@Enumerated(EnumType.ORDINAL)
+	@Column(name = "STATE_TYPE")
+	private StateType stateType;
+	
 	@Column(name = "POSITION_X")
 	private Float positionX;
 	
@@ -81,6 +85,14 @@ public class State implements Serializable {
 
 	public void setGameStateId(String gameStateId) {
 		this.gameStateId = gameStateId;
+	}
+
+	public StateType getStateType() {
+		return stateType;
+	}
+
+	public void setStateType(StateType stateType) {
+		this.stateType = stateType;
 	}
 
 	public Float getPositionX() {

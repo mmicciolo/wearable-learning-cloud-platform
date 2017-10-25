@@ -30,6 +30,9 @@ public class Game implements Serializable {
 	
 	@Column(name = "VISIBILITY")
 	private Boolean visibility;
+	
+	@Column(name = "STATE_ID_COUNT")
+	private Integer stateIdCount;
 
 	public Game() {
 		super();
@@ -83,6 +86,14 @@ public class Game implements Serializable {
 
 	public void setVisibility(Boolean visibility) {
 		this.visibility = visibility;
+	}
+
+	public Integer getStateIdCount() {
+		return stateIdCount;
+	}
+
+	public void setStateIdCount(Integer stateIdCount) {
+		this.stateIdCount = stateIdCount;
 	}
 	
 }

@@ -2,9 +2,9 @@
  * 
  */
 
-var StateType = {
-		DISPLAY_STATE: 1
-};
+//var StateType = {
+//		DISPLAY_STATE: 1
+//};
 
 class StateFactory {
 	

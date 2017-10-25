@@ -6,6 +6,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		GameId : "",
 		TeamCount : 0,
 		PlayersPerTeam : 0,
+		StateIdCount : 0,
 		UsernameDetails : {
 			__metadata : {
 	             uri : "http://localhost:8080/WLCPWebApp/WLCPOData.svc/Usernames('mmicciolo')"
@@ -18,6 +19,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		GameId : "",
 		TeamCount : 0,
 		PlayersPerTeam : 0,
+		StateIdCount : 0,
 		Visibility : true
 	},
 	
@@ -27,6 +29,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 	transitionIdCount : 0,
 	
 	stateList : [],
+	connectionList : [],
 	transitionMap : new Map(),
 	
 	jsPlumbInstance : null,
@@ -60,7 +63,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		this.stateList.push(startState);
 		
 		//Save it
-		//startState.save();
+		startState.save();
 	},	
 
 	initToolbox : function() {
@@ -126,12 +129,15 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 	},
 	
 	connectionDropped : function(oEvent) {
+		this.connectionList.push(new Connection(oEvent.sourceId, oEvent.targetId, oEvent.connection.id));
 		return true;
 	},
 	
 	createStateId : function() {
-		this.stateIdCount++;
-		return this.stateId + this.stateIdCount;
+		//this.stateIdCount++;
+		//return this.stateId + this.stateIdCount;
+		this.gameModel.StateIdCount++;
+		return this.stateId + this.gameModel.StateIdCount;
 	},
 	
 	createTransitionId : function() {
@@ -158,7 +164,28 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 	},
 	
 	loadGame : function() {
-
+		var fragment = sap.ui.xmlfragment("wlcpfrontend.fragments.GameEditor.LoadGame", sap.ui.controller("wlcpfrontend.controllers.CreateLoadGame"));
+		fragment.setModel(this.oModel);
+		fragment.open();
+	},
+	
+	loadGame2() {
+		//Open the busy dialog
+		this.busy = new sap.m.BusyDialog();
+		//this.busy.open();
+		
+		//Init jsPlumb
+		this.initJsPlumb();
+		
+		//Setup the toolbox drag and drop
+		this.initToolbox();
+		
+		//Setup some FSM variables
+		this.loadCount = 0;
+		this.type = "STATE";
+		
+		//Kick off the save
+		State.load();
 	},
 	
 	initLoadedGame : function() {
@@ -174,6 +201,10 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		//Setup some FSM variables
 		this.saveCount = 0;
 		this.type = "STATE";
+		
+		//Update the state count
+		//this.gameModel.StateIdCount = this.stateIdCount;
+		sap.ui.getCore().getModel("odata").update("/Games('" + this.gameModel.GameId + "')", this.gameModel);
 		
 		//Kick off the save
 		this.stateList[this.saveCount].save();
@@ -192,10 +223,24 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 			}
 			break;
 		case "CONNECTION":
-			this.busy.close();
-			sap.m.MessageToast.show("Game Saved Successfully!");
+			if(this.connectionList[this.saveCount] != null) {
+				this.connectionList[this.saveCount].save();
+			} else {
+				this.busy.close();
+				sap.m.MessageToast.show("Game Saved Successfully!");
+			}
 			break;
 		}
+	},
+	
+	resetEditor : function() {
+		for(var i = 0; i < this.stateList.length; i++) {
+			document.getElementById('gameEditor--pad').removeChild(document.getElementById(this.stateList[i].htmlId));
+			this.jsPlumbInstance.remove(this.stateList[i].htmlId);
+		}
+		this.stateList = [];
+		this.saveCount = null;
+		this.type = null;
 	},
 	
 	loadDataModel : function() {
@@ -222,13 +267,13 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 				  
 				  //Wait for the inital DOM to render
 				  //Init jsPlumb
-				  this.initJsPlumb();
+				  //this.initJsPlumb();
 				  
 				  //Init the start state
-				  this.initStartState();
+				  //this.initStartState();
 				  
 				  //Setup the toolbox drag and drop
-				  this.initToolbox();
+				  //this.initToolbox();
 				  
 				  //ButtonPressTransition.doubleClick();
 			  }

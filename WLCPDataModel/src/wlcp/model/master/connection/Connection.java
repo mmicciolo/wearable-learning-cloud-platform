@@ -3,7 +3,7 @@ package wlcp.model.master.connection;
 import java.io.Serializable;
 import javax.persistence.*;
 
-import wlcp.model.master.state.State;
+import wlcp.model.master.Game;
 
 /**
  * Entity implementation class for Entity: Connection
@@ -22,8 +22,11 @@ public class Connection implements Serializable {
 	private Integer connectionId;
 	
 	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(name = "STATE")
-	private State state;
+	@JoinColumn(name = "GAME")
+	private Game game;
+	
+	@Column(length = 40, name = "GAME_CONNECTION_ID")
+	private String gameConnectionId;
 	
 	@Column(length = 40, name = "CONNECTION_FROM")
 	private String connectionFrom;
@@ -34,10 +37,11 @@ public class Connection implements Serializable {
 	public Connection() {
 		super();
 	}
-	
-	public Connection(State state, String connectionFrom, String connectionTo) {
+
+	public Connection(Game game, String gameConnectionId, String connectionFrom, String connectionTo) {
 		super();
-		this.state = state;
+		this.game = game;
+		this.gameConnectionId = gameConnectionId;
 		this.connectionFrom = connectionFrom;
 		this.connectionTo = connectionTo;
 	}
@@ -49,13 +53,21 @@ public class Connection implements Serializable {
 	public void setConnectionId(Integer connectionId) {
 		this.connectionId = connectionId;
 	}
-	
-	public State getState() {
-		return state;
+
+	public Game getGame() {
+		return game;
 	}
 
-	public void setState(State state) {
-		this.state = state;
+	public void setGame(Game game) {
+		this.game = game;
+	}
+
+	public String getGameConnectionId() {
+		return gameConnectionId;
+	}
+
+	public void setGameConnectionId(String gameConnectionId) {
+		this.gameConnectionId = gameConnectionId;
 	}
 
 	public String getConnectionFrom() {
@@ -73,5 +85,5 @@ public class Connection implements Serializable {
 	public void setConnectionTo(String connectionTo) {
 		this.connectionTo = connectionTo;
 	}
-   
+
 }

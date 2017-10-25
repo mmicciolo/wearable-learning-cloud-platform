@@ -1,6 +1,12 @@
 /**
  * 
  */
+
+var StateType = {
+		START_STATE : "START_STATE",
+		DISPLAY_TEXT_STATE : "DISPLAY_TEXT_STATE"
+}
+
 class State {
 	
 	constructor(topColorClass, bottomColorClass, text, htmlId, jsPlumbInstance) {
@@ -93,6 +99,29 @@ class State {
 		//Update the position
 		this.positionX = parseFloat(document.getElementById(this.htmlId).style.left.replace("px", ""));
 		this.positionY = parseFloat(document.getElementById(this.htmlId).style.top.replace("px", ""));
+	}
+	
+	static loadData(oData) {
+		return this;
+	}
+	
+	static load() {
+		var filters = [];
+		filters.push(new sap.ui.model.Filter({path: "Game", operator: sap.ui.model.FilterOperator.EQ, value1: sap.ui.getCore().byId("gameEditor").getController().gameModel.GameId}));
+		sap.ui.getCore().getModel("odata").read("/States", {filters: filters, success: $.proxy(this.loadSuccess, this), error: this.saveError});
+	}
+	
+	static loadSuccess(oData) {
+		for(var i = 0; i < oData.results.length; i++) {
+			switch(oData.results[i].StateType) {
+			case StateType.START_STATE:
+				StartState.loadData(oData.results[i]);
+				break;
+			case StateType.DISPLAY_TEXT_STATE:
+				DisplayState.loadData(oData.results[i]);
+				break;
+			}
+		}
 	}
 	
 	save(odataPath, saveSuccess, context) {

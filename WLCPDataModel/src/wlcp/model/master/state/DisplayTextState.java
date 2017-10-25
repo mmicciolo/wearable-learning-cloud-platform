@@ -20,6 +20,7 @@ public class DisplayTextState extends State implements Serializable {
 
 	public DisplayTextState() {
 		super();
+		setStateType(StateType.DISPLAY_TEXT_STATE);
 	}
 
 	public DisplayTextState(String displayText) {

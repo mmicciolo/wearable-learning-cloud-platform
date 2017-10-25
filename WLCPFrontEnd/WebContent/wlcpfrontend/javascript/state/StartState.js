@@ -24,8 +24,22 @@ class StartState extends State {
 		this.jsPlumbInstance.addEndpoint(this.stateDiv.id, { anchor:"Bottom", paintStyle:{ fill: "#5E696E" } }, this.outputEndPoint);
 	}
 	
+	static loadData(oData) {
+		//Create a new start state
+		var startState = new StartState("startStateTopColor", "startStateBottomColor", "Start State" , oData.GameStateId, sap.ui.getCore().byId("gameEditor").getController().jsPlumbInstance);
+		
+		//Set the position
+		startState.setPositionX(oData.PositionX); startState.setPositionY(oData.PositionY);
+		
+		//Redraw it
+		startState.draw();
+		
+		//Push back the state
+		sap.ui.getCore().byId("gameEditor").getController().stateList.push(startState);
+	}
+	
 	save() {
-		super.save("/States", this.saveState, this);
+		super.save("/StartStates", this.saveState, this);
 	}
 
 	saveState(oData) {
@@ -42,7 +56,7 @@ class StartState extends State {
 			}
 		}
 		
-		super.saveState(oData, "/States", saveData);
+		super.saveState(oData, "/StartStates", saveData);
 		
 //		//Save our connections
 //		var inputConnections = this.jsPlumbInstance.getConnections({target : this.htmlId});

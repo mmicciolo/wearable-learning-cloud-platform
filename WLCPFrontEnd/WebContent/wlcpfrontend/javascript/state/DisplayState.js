@@ -43,6 +43,20 @@ class DisplayState extends State {
 		dialog.open();
 	}
 	
+	static loadData(oData) {
+		//Create a new dispaly state
+		var displayState = new DisplayState("toolboxDisplayStateTopColor", "toolboxDisplayStateBottomColor", "Display Text", oData.GameStateId, sap.ui.getCore().byId("gameEditor").getController().jsPlumbInstance);
+		
+		//Set the position
+		displayState.setPositionX(oData.PositionX); displayState.setPositionY(oData.PositionY);
+		
+		//Redraw it
+		displayState.draw();
+		
+		//Push back the state
+		sap.ui.getCore().byId("gameEditor").getController().stateList.push(displayState);
+	}
+	
 	save() {
 		super.save("/DisplayTextStates", this.saveState, this);
 	}

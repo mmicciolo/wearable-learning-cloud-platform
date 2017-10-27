@@ -70,7 +70,7 @@ class DisplayState extends State {
 			PositionY : this.positionY,
 			GameDetails : {
 				__metadata : {
-		             uri : "http://localhost:8080/WLCPWebApp/WLCPOData.svc/Games('" + sap.ui.getCore().byId("gameEditor").getController().gameModel.GameId + "')"
+		             uri : ODataModel.getODataModelURL() + "/Games('" + sap.ui.getCore().byId("gameEditor").getController().gameModel.GameId + "')"
 		         }
 			},
 			DisplayText : "TEXT"

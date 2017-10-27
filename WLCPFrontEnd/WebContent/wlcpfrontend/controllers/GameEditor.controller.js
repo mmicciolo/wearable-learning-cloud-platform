@@ -9,7 +9,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		StateIdCount : 0,
 		UsernameDetails : {
 			__metadata : {
-	             uri : "http://localhost:8080/WLCPWebApp/WLCPOData.svc/Usernames('mmicciolo')"
+	             uri : ODataModel.getODataModelURL() + "/Usernames('mmicciolo')"
 	         }
 		},
 		Visibility : true
@@ -165,7 +165,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 	
 	loadGame : function() {
 		var fragment = sap.ui.xmlfragment("wlcpfrontend.fragments.GameEditor.LoadGame", sap.ui.controller("wlcpfrontend.controllers.CreateLoadGame"));
-		fragment.setModel(this.oModel);
+		fragment.setModel(ODataModel.getODataModel());
 		fragment.open();
 	},
 	
@@ -204,7 +204,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		
 		//Update the state count
 		//this.gameModel.StateIdCount = this.stateIdCount;
-		sap.ui.getCore().getModel("odata").update("/Games('" + this.gameModel.GameId + "')", this.gameModel);
+		ODataModel.getODataModel().update("/Games('" + this.gameModel.GameId + "')", this.gameModel);
 		
 		//Kick off the save
 		this.stateList[this.saveCount].save();
@@ -246,12 +246,13 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 	
 	loadDataModel : function() {
 	  	//Load the main data model
-		if(window.location.href.includes("localhost")) {
-			this.oModel = new sap.ui.model.odata.v2.ODataModel("http://localhost:8080/WLCPWebApp/WLCPOData.svc");
-		} else {
-			this.oModel = new sap.ui.model.odata.v2.ODataModel("http://mmicciolo.tk:8080/WLCPWebApp/WLCPOData.svc");
-		}
-		sap.ui.getCore().setModel(this.oModel, "odata");
+//		if(window.location.href.includes("localhost")) {
+//			this.oModel = new sap.ui.model.odata.v2.ODataModel("http://localhost:8080/WLCPWebApp/WLCPOData.svc");
+//		} else {
+//			this.oModel = new sap.ui.model.odata.v2.ODataModel("http://mmicciolo.tk:8080/WLCPWebApp/WLCPOData.svc");
+//		}
+//		sap.ui.getCore().setModel(this.oModel, "odata");
+		ODataModel.setupODataModel();
 	},
 	
 /**

@@ -51,35 +51,11 @@ class StartState extends State {
 			PositionY : this.positionY,
 			GameDetails : {
 				__metadata : {
-		             uri : "http://localhost:8080/WLCPWebApp/WLCPOData.svc/Games('" + sap.ui.getCore().byId("gameEditor").getController().gameModel.GameId + "')"
+		             uri : ODataModel.getODataModelURL() + "/Games('" + sap.ui.getCore().byId("gameEditor").getController().gameModel.GameId + "')"
 		         }
 			}
 		}
 		
 		super.saveState(oData, "/StartStates", saveData);
-		
-//		//Save our connections
-//		var inputConnections = this.jsPlumbInstance.getConnections({target : this.htmlId});
-//		var outputConnections = this.jsPlumbInstance.getConnections({source : this.htmlId});
-//		
-//		//Loop through and save input connections
-//		if(inputConnections.length > 0) {
-//			
-//		}
-//		
-//		//Loop through and save output connections
-//		for(var i = 0; i < outputConnections.length; i++) {
-//			var connection = {
-//					ConnectionId : 0,
-//					StateDetails : {
-//						__metadata : {
-//				             uri : "http://localhost:8080/WLCPWebApp/WLCPOData.svc/States('" + this.gameName + "')"
-//				         }
-//					},
-//					ConnectionFrom : this.htmlId,
-//					ConnectionTo : outputConnections[i].target.id
-//				}
-//			sap.ui.getCore().getModel("odata").create("/Connections", connection);
-//		}
 	}
 }

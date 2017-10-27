@@ -14,7 +14,7 @@ var model = {
 		data : []
 }
 
-class ButtonPressTransition extends GameEditor.Transition {
+class ButtonPressTransition extends Transition {
 	
 	constructor(cssClass, connection, overlayId, gameEditor) {
 		super(cssClass, connection, overlayId, gameEditor);

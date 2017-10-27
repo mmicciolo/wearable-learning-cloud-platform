@@ -73,6 +73,7 @@ class State {
 		
 		//Make it draggable
 		this.jsPlumbInstance.draggable(this.stateDiv.id, {containment : true, stop : $.proxy(this.moved, this)});
+		//$("#" + this.stateDiv.id).draggable({containment : "parent", stop : $.proxy(this.moved, this)});
 		
 		if(this.stateDiv.id != "start") {
 			//Make delete clickable
@@ -108,7 +109,7 @@ class State {
 	static load() {
 		var filters = [];
 		filters.push(new sap.ui.model.Filter({path: "Game", operator: sap.ui.model.FilterOperator.EQ, value1: sap.ui.getCore().byId("gameEditor").getController().gameModel.GameId}));
-		sap.ui.getCore().getModel("odata").read("/States", {filters: filters, success: $.proxy(this.loadSuccess, this), error: this.saveError});
+		ODataModel.getODataModel().read("/States", {filters: filters, success: $.proxy(this.loadSuccess, this), error: this.saveError});
 	}
 	
 	static loadSuccess(oData) {
@@ -133,19 +134,19 @@ class State {
 		filters.push(new sap.ui.model.Filter({path: "GameStateId", operator: sap.ui.model.FilterOperator.EQ, value1: this.htmlId}));
 		
 		//Read in the state data
-		sap.ui.getCore().getModel("odata").read(odataPath, {filters: filters, success: $.proxy(saveSuccess, context), error: this.saveError});
+		ODataModel.getODataModel().read(odataPath, {filters: filters, success: $.proxy(saveSuccess, context), error: this.saveError});
 	}
 	
 	saveState(oData, odataPath, saveData) {
 		if(oData.results.length == 1) {
 			
 			//We need to update the entry
-			sap.ui.getCore().getModel("odata").update(odataPath + "(" + oData.results[0].StateId + ")", saveData, {success: this.saveSuccess, error: this.saveError});
+			ODataModel.getODataModel().update(odataPath + "(" + oData.results[0].StateId + ")", saveData, {success: this.saveSuccess, error: this.saveError});
 				
 		} else if(oData.results.length == 0) {
 			
 			//We need to create the entry
-			sap.ui.getCore().getModel("odata").create(odataPath, saveData, {success: this.saveSuccess, error: this.saveError});
+			ODataModel.getODataModel().create(odataPath, saveData, {success: this.saveSuccess, error: this.saveError});
 
 		} else {
 			//Something went terribly wrong...

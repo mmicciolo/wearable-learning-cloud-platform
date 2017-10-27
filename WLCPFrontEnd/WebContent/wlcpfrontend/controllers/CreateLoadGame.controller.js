@@ -30,13 +30,13 @@ sap.ui.controller("wlcpfrontend.controllers.CreateLoadGame", {
 	 * Dialog. If it succeeds, createGameSuccess will be called.
 	 */
 	createGame : function() {
-		sap.ui.getCore().getModel("odata").create("/Games", sap.ui.getCore().byId("gameEditor").getController().newGameModel, {success : this.createGameSuccess, error: this.createGameError});
+		ODataModel.getODataModel().create("/Games", sap.ui.getCore().byId("gameEditor").getController().newGameModel, {success : this.createGameSuccess, error: this.createGameError});
 	},
 	
 	loadGame : function() {
 		var filters = [];
 		filters.push(new sap.ui.model.Filter({path: "GameId", operator: sap.ui.model.FilterOperator.EQ, value1: sap.ui.getCore().byId("loadGameComboBox").getSelectedKey()}));
-		sap.ui.getCore().getModel("odata").read("/Games", {filters : filters, success : this.loadGameSuccess, error: this.loadGameError});
+		ODataModel.getODataModel().read("/Games", {filters : filters, success : this.loadGameSuccess, error: this.loadGameError});
 		this.cancelLoadGame();
 	},
 	

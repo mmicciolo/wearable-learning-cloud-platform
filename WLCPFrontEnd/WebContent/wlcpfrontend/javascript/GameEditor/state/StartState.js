@@ -26,7 +26,7 @@ class StartState extends State {
 	
 	static loadData(oData) {
 		//Create a new start state
-		var startState = new StartState("startStateTopColor", "startStateBottomColor", "Start State" , oData.GameStateId, sap.ui.getCore().byId("gameEditor").getController().jsPlumbInstance);
+		var startState = new StartState("startStateTopColor", "startStateBottomColor", "Start State" , oData.GameStateId, GameEditor.getEditorController().jsPlumbInstance);
 		
 		//Set the position
 		startState.setPositionX(oData.PositionX); startState.setPositionY(oData.PositionY);
@@ -35,7 +35,7 @@ class StartState extends State {
 		startState.draw();
 		
 		//Push back the state
-		sap.ui.getCore().byId("gameEditor").getController().stateList.push(startState);
+		GameEditor.getEditorController().stateList.push(startState);
 	}
 	
 	save() {
@@ -51,7 +51,7 @@ class StartState extends State {
 			PositionY : this.positionY,
 			GameDetails : {
 				__metadata : {
-		             uri : ODataModel.getODataModelURL() + "/Games('" + sap.ui.getCore().byId("gameEditor").getController().gameModel.GameId + "')"
+		             uri : ODataModel.getODataModelURL() + "/Games('" + GameEditor.getEditorController().gameModel.GameId + "')"
 		         }
 			}
 		}

@@ -30,7 +30,7 @@ sap.ui.controller("wlcpfrontend.controllers.CreateLoadGame", {
 	 * Dialog. If it succeeds, createGameSuccess will be called.
 	 */
 	createGame : function() {
-		ODataModel.getODataModel().create("/Games", sap.ui.getCore().byId("gameEditor").getController().newGameModel, {success : this.createGameSuccess, error: this.createGameError});
+		ODataModel.getODataModel().create("/Games", GameEditor.getEditorController().newGameModel, {success : this.createGameSuccess, error: this.createGameError});
 	},
 	
 	loadGame : function() {
@@ -61,17 +61,17 @@ sap.ui.controller("wlcpfrontend.controllers.CreateLoadGame", {
 	 * The dialog will be closed and a success message shown.
 	 */
 	createGameSuccess : function(oSuccess) {
-		sap.ui.getCore().byId("gameEditor").getController().resetEditor();
-		if(sap.ui.getCore().byId("gameEditor") != null) {
-			sap.ui.getCore().byId("gameEditor").getController().gameModel.GameId = sap.ui.getCore().byId("gameEditor").getController().newGameModel.GameId;
-			sap.ui.getCore().byId("gameEditor").getController().gameModel.TeamCount = sap.ui.getCore().byId("gameEditor").getController().newGameModel.TeamCount;
-			sap.ui.getCore().byId("gameEditor").getController().gameModel.PlayersPerTeam = sap.ui.getCore().byId("gameEditor").getController().newGameModel.PlayersPerTeam;
-			sap.ui.getCore().byId("gameEditor").getController().gameModel.Visibility = sap.ui.getCore().byId("gameEditor").getController().newGameModel.Visibility;
-			sap.ui.getCore().byId("gameEditor").getController().newGameModel.GameId = "";
-			sap.ui.getCore().byId("gameEditor").getController().newGameModel.TeamCount = 0;
-			sap.ui.getCore().byId("gameEditor").getController().newGameModel.PlayersPerTeam = 0;
-			sap.ui.getCore().byId("gameEditor").getController().newGameModel.Visibility = true;
-			sap.ui.getCore().byId("gameEditor").getController().initNewGame();
+		GameEditor.getEditorController().resetEditor();
+		if(GameEditor.getEditor() != null) {
+			GameEditor.getEditorController().gameModel.GameId = GameEditor.getEditorController().newGameModel.GameId;
+			GameEditor.getEditorController().gameModel.TeamCount = GameEditor.getEditorController().newGameModel.TeamCount;
+			GameEditor.getEditorController().gameModel.PlayersPerTeam = GameEditor.getEditorController().newGameModel.PlayersPerTeam;
+			GameEditor.getEditorController().gameModel.Visibility = GameEditor.getEditorController().newGameModel.Visibility;
+			GameEditor.getEditorController().newGameModel.GameId = "";
+			GameEditor.getEditorController().newGameModel.TeamCount = 0;
+			GameEditor.getEditorController().newGameModel.PlayersPerTeam = 0;
+			GameEditor.getEditorController().newGameModel.Visibility = true;
+			GameEditor.getEditorController().initNewGame();
 		}
 		sap.ui.getCore().byId("createGame").close();
 		sap.ui.getCore().byId("createGame").destroy();
@@ -79,13 +79,13 @@ sap.ui.controller("wlcpfrontend.controllers.CreateLoadGame", {
 	},
 	
 	loadGameSuccess : function(oData) {
-		sap.ui.getCore().byId("gameEditor").getController().resetEditor();
-		sap.ui.getCore().byId("gameEditor").getController().gameModel.GameId = oData.results[0].GameId;
-		sap.ui.getCore().byId("gameEditor").getController().gameModel.TeamCount = oData.results[0].TeamCount;
-		sap.ui.getCore().byId("gameEditor").getController().gameModel.PlayersPerTeam = oData.results[0].PlayersPerTeam;
-		sap.ui.getCore().byId("gameEditor").getController().gameModel.Visibility = oData.results[0].Visibility;
-		sap.ui.getCore().byId("gameEditor").getController().gameModel.StateIdCount = oData.results[0].StateIdCount;
-		sap.ui.getCore().byId("gameEditor").getController().loadGame2();
+		GameEditor.getEditorController().resetEditor();
+		GameEditor.getEditorController().gameModel.GameId = oData.results[0].GameId;
+		GameEditor.getEditorController().gameModel.TeamCount = oData.results[0].TeamCount;
+		GameEditor.getEditorController().gameModel.PlayersPerTeam = oData.results[0].PlayersPerTeam;
+		GameEditor.getEditorController().gameModel.Visibility = oData.results[0].Visibility;
+		GameEditor.getEditorController().gameModel.StateIdCount = oData.results[0].StateIdCount;
+		GameEditor.getEditorController().loadGame2();
 	},
 	
 	loadGameError : function() {

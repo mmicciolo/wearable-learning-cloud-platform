@@ -11,29 +11,29 @@ class Connection {
 	
 	static load() {
 		var filters = [];
-		filters.push(new sap.ui.model.Filter({path: "Game", operator: sap.ui.model.FilterOperator.EQ, value1: sap.ui.getCore().byId("gameEditor").getController().gameModel.GameId}));
+		filters.push(new sap.ui.model.Filter({path: "Game", operator: sap.ui.model.FilterOperator.EQ, value1: GameEditor.getEditorController().gameModel.GameId}));
 		ODataModel.getODataModel().read("/Connections", {filters: filters, success: $.proxy(this.loadSuccess, this), error: this.saveError});
 	}
 	
 	static loadSuccess(oData) {
 		for(var i = 0; i < oData.results.length; i++) {
 			if(oData.results[i].ConnectionFrom == "start") {
-				var ep1 = sap.ui.getCore().byId("gameEditor").getController().jsPlumbInstance.selectEndpoints({element : oData.results[i].ConnectionFrom}).get(0);
-				var ep2 = sap.ui.getCore().byId("gameEditor").getController().jsPlumbInstance.selectEndpoints({element : oData.results[i].ConnectionTo}).get(0);
-				sap.ui.getCore().byId("gameEditor").getController().jsPlumbInstance.connect({source: ep1 , target: ep2});
+				var ep1 = GameEditor.getEditorController().jsPlumbInstance.selectEndpoints({element : oData.results[i].ConnectionFrom}).get(0);
+				var ep2 = GameEditor.getEditorController().jsPlumbInstance.selectEndpoints({element : oData.results[i].ConnectionTo}).get(0);
+				GameEditor.getEditorController().jsPlumbInstance.connect({source: ep1 , target: ep2});
 			} else {
-				var ep1 = sap.ui.getCore().byId("gameEditor").getController().jsPlumbInstance.selectEndpoints({element : oData.results[i].ConnectionFrom}).get(1);
-				var ep2 = sap.ui.getCore().byId("gameEditor").getController().jsPlumbInstance.selectEndpoints({element : oData.results[i].ConnectionTo}).get(0);
-				sap.ui.getCore().byId("gameEditor").getController().jsPlumbInstance.connect({source: ep1 , target: ep2});
+				var ep1 = GameEditor.getEditorController().jsPlumbInstance.selectEndpoints({element : oData.results[i].ConnectionFrom}).get(1);
+				var ep2 = GameEditor.getEditorController().jsPlumbInstance.selectEndpoints({element : oData.results[i].ConnectionTo}).get(0);
+				GameEditor.getEditorController().jsPlumbInstance.connect({source: ep1 , target: ep2});
 			}
 		}
-		sap.ui.getCore().byId("gameEditor").getController().busy.close();
+		GameEditor.getEditorController().busy.close();
 		sap.m.MessageToast.show("Game Loaded Successfully!");
 	}
 	
 	save() {
 		var filters = [];
-		filters.push(new sap.ui.model.Filter({path: "Game", operator: sap.ui.model.FilterOperator.EQ, value1: sap.ui.getCore().byId("gameEditor").getController().gameModel.GameId}));
+		filters.push(new sap.ui.model.Filter({path: "Game", operator: sap.ui.model.FilterOperator.EQ, value1: GameEditor.getEditorController().gameModel.GameId}));
 		filters.push(new sap.ui.model.Filter({path: "GameConnectionId", operator: sap.ui.model.FilterOperator.EQ, value1: this.gameConnectionId}));
 		
 		//Read in the state data
@@ -48,7 +48,7 @@ class Connection {
 			ConnectionTo : this.connectionTo,
 			GameDetails : {
 				__metadata : {
-		             uri : ODataModel.getODataModelURL() + "/Games('" + sap.ui.getCore().byId("gameEditor").getController().gameModel.GameId + "')"
+		             uri : ODataModel.getODataModelURL() + "/Games('" + GameEditor.getEditorController().gameModel.GameId + "')"
 		         }
 			}
 		}
@@ -69,7 +69,7 @@ class Connection {
 	}
 	
 	saveSuccess() {
-		sap.ui.getCore().byId("gameEditor").getController().saveFSM();
+		GameEditor.getEditorController().saveFSM();
 	}
 	
 	saveError() {

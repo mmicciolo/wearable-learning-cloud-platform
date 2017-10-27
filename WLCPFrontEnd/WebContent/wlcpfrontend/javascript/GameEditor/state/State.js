@@ -108,7 +108,7 @@ class State {
 	
 	static load() {
 		var filters = [];
-		filters.push(new sap.ui.model.Filter({path: "Game", operator: sap.ui.model.FilterOperator.EQ, value1: sap.ui.getCore().byId("gameEditor").getController().gameModel.GameId}));
+		filters.push(new sap.ui.model.Filter({path: "Game", operator: sap.ui.model.FilterOperator.EQ, value1: GameEditor.getEditorController().gameModel.GameId}));
 		ODataModel.getODataModel().read("/States", {filters: filters, success: $.proxy(this.loadSuccess, this), error: this.saveError});
 	}
 	
@@ -130,7 +130,7 @@ class State {
 	
 	save(odataPath, saveSuccess, context) {
 		var filters = [];
-		filters.push(new sap.ui.model.Filter({path: "Game", operator: sap.ui.model.FilterOperator.EQ, value1: sap.ui.getCore().byId("gameEditor").getController().gameModel.GameId}));
+		filters.push(new sap.ui.model.Filter({path: "Game", operator: sap.ui.model.FilterOperator.EQ, value1: GameEditor.getEditorController().gameModel.GameId}));
 		filters.push(new sap.ui.model.Filter({path: "GameStateId", operator: sap.ui.model.FilterOperator.EQ, value1: this.htmlId}));
 		
 		//Read in the state data
@@ -154,12 +154,12 @@ class State {
 	}
 	
 	saveSuccess() {
-		sap.ui.getCore().byId("gameEditor").getController().saveFSM();
+		GameEditor.getEditorController().saveFSM();
 	}
 	
 	saveError() {
 		sap.m.MessageBox.error("There was an error saving the game.");
-		sap.ui.getCore().byId("gameEditor").getController().busy.close();
+		GameEditor.getEditorController().busy.close();
 	}
 	
 	getPositionX() {

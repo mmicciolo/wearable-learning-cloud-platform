@@ -45,7 +45,7 @@ class DisplayState extends State {
 	
 	static loadData(oData) {
 		//Create a new dispaly state
-		var displayState = new DisplayState("toolboxDisplayStateTopColor", "toolboxDisplayStateBottomColor", "Display Text", oData.GameStateId, sap.ui.getCore().byId("gameEditor").getController().jsPlumbInstance);
+		var displayState = new DisplayState("toolboxDisplayStateTopColor", "toolboxDisplayStateBottomColor", "Display Text", oData.GameStateId, GameEditor.getEditorController().jsPlumbInstance);
 		
 		//Set the position
 		displayState.setPositionX(oData.PositionX); displayState.setPositionY(oData.PositionY);
@@ -54,7 +54,7 @@ class DisplayState extends State {
 		displayState.draw();
 		
 		//Push back the state
-		sap.ui.getCore().byId("gameEditor").getController().stateList.push(displayState);
+		GameEditor.getEditorController().stateList.push(displayState);
 	}
 	
 	save() {
@@ -70,7 +70,7 @@ class DisplayState extends State {
 			PositionY : this.positionY,
 			GameDetails : {
 				__metadata : {
-		             uri : ODataModel.getODataModelURL() + "/Games('" + sap.ui.getCore().byId("gameEditor").getController().gameModel.GameId + "')"
+		             uri : ODataModel.getODataModelURL() + "/Games('" + GameEditor.getEditorController().gameModel.GameId + "')"
 		         }
 			},
 			DisplayText : "TEXT"

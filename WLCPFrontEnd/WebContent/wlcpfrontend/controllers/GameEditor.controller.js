@@ -134,8 +134,6 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 	},
 	
 	createStateId : function() {
-		//this.stateIdCount++;
-		//return this.stateId + this.stateIdCount;
 		this.gameModel.StateIdCount++;
 		return this.stateId + this.gameModel.StateIdCount;
 	},
@@ -236,23 +234,11 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 	resetEditor : function() {
 		for(var i = 0; i < this.stateList.length; i++) {
 			this.jsPlumbInstance.remove(this.stateList[i].htmlId);
-			//document.getElementById('gameEditor--pad').removeChild(document.getElementById(this.stateList[i].htmlId));
 		}
 		this.stateList = [];
 		this.connectionList = [];
 		this.saveCount = null;
 		this.type = null;
-	},
-	
-	loadDataModel : function() {
-	  	//Load the main data model
-//		if(window.location.href.includes("localhost")) {
-//			this.oModel = new sap.ui.model.odata.v2.ODataModel("http://localhost:8080/WLCPWebApp/WLCPOData.svc");
-//		} else {
-//			this.oModel = new sap.ui.model.odata.v2.ODataModel("http://mmicciolo.tk:8080/WLCPWebApp/WLCPOData.svc");
-//		}
-//		sap.ui.getCore().setModel(this.oModel, "odata");
-		ODataModel.setupODataModel();
 	},
 	
 /**
@@ -261,11 +247,11 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 * @memberOf wlcpfrontend.views.GameEditor
 */
 	onInit: function() {
-		this.getView().byId("gameEditor").addEventDelegate({
+		GameEditor.getEditor().addEventDelegate({
 			  onAfterRendering: function(){
 				  
 				  //Load the data model
-				  this.loadDataModel();
+				  ODataModel.setupODataModel();
 				  
 				  //Wait for the inital DOM to render
 				  //Init jsPlumb

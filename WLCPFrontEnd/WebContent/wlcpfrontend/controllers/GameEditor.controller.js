@@ -23,7 +23,6 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		Visibility : true
 	},
 	
-	pageId : "gameEditor",
 	stateId : "state",
 	stateIdCount : 0,
 	transitionIdCount : 0,
@@ -67,7 +66,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 	},	
 
 	initToolbox : function() {
-		$("#gameEditor--toolboxDisplayState").draggable({ revert: false, helper: "clone", start : this.dragStart, stop : $.proxy(this.stateDragStop, this)});
+		$("#gameEditor--toolboxDisplayTextState").draggable({ revert: false, helper: "clone", start : this.dragStart, stop : $.proxy(this.stateDragStop, this)});
 		$("#gameEditor--toolboxBuzzerState").draggable({ revert: false, helper: "clone", start : this.dragStart, stop : $.proxy(this.stateDragStop, this)});
 		$("#gameEditor--toolboxLEDState").draggable({ revert: false, helper: "clone", start : this.dragStart, stop : $.proxy(this.stateDragStop, this)});
 	},
@@ -94,11 +93,11 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		document.getElementById("gameEditor--toolbox").style["overflow-y"] = "auto";
 		
 		switch(ui.helper[0].childNodes[1].className) {
-			case "toolboxDisplayStateTopColor":
-				var displayState = new DisplayState("toolboxDisplayStateTopColor", "toolboxDisplayStateBottomColor", "Display Text" , this.createStateId(), this.jsPlumbInstance);
-				displayState.setPositionX(displayState.absoluteToRelativeX(ui.position.left)); displayState.setPositionY(displayState.absoluteToRelativeY(ui.position.top));
-				displayState.draw();
-				this.stateList.push(displayState);
+			case "toolboxDisplayTextStateTopColor":
+				var displayTextState = new DisplayTextState("toolboxDisplayTextStateTopColor", "toolboxDisplayTextStateBottomColor", "Display Text" , this.createStateId(), this.jsPlumbInstance);
+				displayTextState.setPositionX(displayTextState.absoluteToRelativeX(ui.position.left)); displayTextState.setPositionY(displayTextState.absoluteToRelativeY(ui.position.top));
+				displayTextState.draw();
+				this.stateList.push(displayTextState);
 				break;
 			case "toolboxBuzzerStateTopColor":
 				var buzzerState = new BuzzerState("toolboxBuzzerStateTopColor", "toolboxBuzzerStateBottomColor", "Buzzer Sound" , this.createStateId(), this.jsPlumbInstance);
@@ -167,7 +166,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		fragment.open();
 	},
 	
-	loadGame2() {
+	loadFSM() {
 		//Open the busy dialog
 		this.busy = new sap.m.BusyDialog();
 		this.busy.open();

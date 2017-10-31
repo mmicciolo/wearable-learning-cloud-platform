@@ -119,7 +119,7 @@ class State {
 				StartState.loadData(oData.results[i]);
 				break;
 			case StateType.DISPLAY_TEXT_STATE:
-				DisplayState.loadData(oData.results[i]);
+				DisplayTextState.loadData(oData.results[i]);
 				break;
 			}
 		}

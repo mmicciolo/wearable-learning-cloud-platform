@@ -137,14 +137,14 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
 }
 
 /* Display State ToolBox */
-.toolboxDisplayStateTopColor {
+.toolboxDisplayTextStateTopColor {
 	height : 100px;
 	width : 150px;
 	background-color: #D3D7D9;
 	border-radius : 15px 15px 0px 0px;
 }
 
-.toolboxDisplayStateBottomColor {
+.toolboxDisplayTextStateBottomColor {
 	height : 25px;
 	width : 150px;
 	background-color: #678BC7;

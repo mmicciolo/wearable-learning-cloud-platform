@@ -2,7 +2,7 @@
  * 
  */
 
-class DisplayState extends State {
+class DisplayTextState extends State {
 	
 	constructor(topColorClass, bottomColorClass, text, htmlId, jsPlumbInstance) {
 		super(topColorClass, bottomColorClass, text, htmlId, jsPlumbInstance);
@@ -44,17 +44,17 @@ class DisplayState extends State {
 	}
 	
 	static loadData(oData) {
-		//Create a new dispaly state
-		var displayState = new DisplayState("toolboxDisplayStateTopColor", "toolboxDisplayStateBottomColor", "Display Text", oData.GameStateId, GameEditor.getEditorController().jsPlumbInstance);
+		//Create a new display state
+		var displayTextState = new DisplayTextState("toolboxDisplayTextStateTopColor", "toolboxDisplayTextStateBottomColor", "Display Text", oData.GameStateId, GameEditor.getEditorController().jsPlumbInstance);
 		
 		//Set the position
-		displayState.setPositionX(oData.PositionX); displayState.setPositionY(oData.PositionY);
+		displayTextState.setPositionX(oData.PositionX); displayTextState.setPositionY(oData.PositionY);
 		
 		//Redraw it
-		displayState.draw();
+		displayTextState.draw();
 		
 		//Push back the state
-		GameEditor.getEditorController().stateList.push(displayState);
+		GameEditor.getEditorController().stateList.push(displayTextState);
 	}
 	
 	save() {

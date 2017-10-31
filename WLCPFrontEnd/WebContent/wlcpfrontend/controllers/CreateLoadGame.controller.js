@@ -85,7 +85,7 @@ sap.ui.controller("wlcpfrontend.controllers.CreateLoadGame", {
 		GameEditor.getEditorController().gameModel.PlayersPerTeam = oData.results[0].PlayersPerTeam;
 		GameEditor.getEditorController().gameModel.Visibility = oData.results[0].Visibility;
 		GameEditor.getEditorController().gameModel.StateIdCount = oData.results[0].StateIdCount;
-		GameEditor.getEditorController().loadGame2();
+		GameEditor.getEditorController().loadFSM();
 	},
 	
 	loadGameError : function() {

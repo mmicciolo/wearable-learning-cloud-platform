@@ -61,9 +61,9 @@
 					<items>
 						<TabContainerItem name="States" editable="false">
 							<content>
-								<html:div id="toolboxDisplayState" class="state centerToolboxState stateBorderShadow">
-									<html:div class="toolboxDisplayStateTopColor"><html:div class="centerStateText">Display Text</html:div></html:div>
-									<html:div class="toolboxDisplayStateBottomColor"></html:div>
+								<html:div id="toolboxDisplayTextState" class="state centerToolboxState stateBorderShadow">
+									<html:div class="toolboxDisplayTextStateTopColor"><html:div class="centerStateText">Display Text</html:div></html:div>
+									<html:div class="toolboxDisplayTextStateBottomColor"></html:div>
 								</html:div>
 <!-- 								<html:div id="toolboxButtonPressState" class="state centerToolboxState stateBorderShadow" style="top:150px;"> -->
 <!-- 									<html:div class="toolboxButtonPressStateTopColor"><html:div class="centerStateText">Button Input</html:div></html:div> -->

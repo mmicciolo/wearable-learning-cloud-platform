@@ -61,21 +61,9 @@
 					<items>
 						<TabContainerItem name="States" editable="false">
 							<content>
-								<html:div id="toolboxDisplayTextState" class="state centerToolboxState stateBorderShadow">
-									<html:div class="toolboxDisplayTextStateTopColor"><html:div class="centerStateText">Display Text</html:div></html:div>
-									<html:div class="toolboxDisplayTextStateBottomColor"></html:div>
-								</html:div>
-<!-- 								<html:div id="toolboxButtonPressState" class="state centerToolboxState stateBorderShadow" style="top:150px;"> -->
-<!-- 									<html:div class="toolboxButtonPressStateTopColor"><html:div class="centerStateText">Button Input</html:div></html:div> -->
-<!-- 									<html:div class="toolboxButtonPressStateBottomColor"></html:div> -->
-<!-- 								</html:div> -->
-								<html:div id="toolboxBuzzerState" class="state centerToolboxState stateBorderShadow" style="top:150px;">
-									<html:div class="toolboxBuzzerStateTopColor"><html:div class="centerStateText">Buzzer</html:div></html:div>
-									<html:div class="toolboxBuzzerStateBottomColor"></html:div>
-								</html:div>
-								<html:div id="toolboxLEDState" class="state centerToolboxState stateBorderShadow" style="top:300px;">
-									<html:div class="toolboxLEDStateTopColor"><html:div class="centerStateText">LED</html:div></html:div>
-									<html:div class="toolboxLEDStateBottomColor"></html:div>
+								<html:div id="toolboxOutputState" class="state centerToolboxState stateBorderShadow">
+									<html:div class="toolboxOutputStateTopColor"><html:div class="centerStateText">Output State</html:div></html:div>
+									<html:div class="toolboxOutputStateBottomColor"></html:div>
 								</html:div>
 							</content>
 						</TabContainerItem>

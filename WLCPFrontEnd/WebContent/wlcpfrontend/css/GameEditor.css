@@ -41,13 +41,6 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
     user-select: none;    
 }
 
-#__container0--tabstrip {
-	margin-bottom:0px;
-}
-#__container0--tabstrip-tabsContainer {
-	width:100%;
-}
-
 #__dialog0-scrollCont {
 	padding:0rem;
 }
@@ -147,15 +140,15 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
 	border-radius : 0px 0px 15px 15px;
 }
 
-/* Display State ToolBox */
-.toolboxDisplayTextStateTopColor {
+/* Output State ToolBox */
+.toolboxOutputStateTopColor {
 	height : 100px;
 	width : 150px;
 	background-color: #D3D7D9;
 	border-radius : 15px 15px 0px 0px;
 }
 
-.toolboxDisplayTextStateBottomColor {
+.toolboxOutputStateBottomColor {
 	height : 25px;
 	width : 150px;
 	background-color: #678BC7;
@@ -174,35 +167,5 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
 	height : 25px;
 	width : 150px;
 	background-color: #0092D1;
-	border-radius : 0px 0px 15px 15px;
-}
-
-/* Buzzer State ToolBox */
-.toolboxBuzzerStateTopColor {
-	height : 100px;
-	width : 150px;
-	background-color: #D3D7D9;
-	border-radius : 15px 15px 0px 0px;
-}
-
-.toolboxBuzzerStateBottomColor {
-	height : 25px;
-	width : 150px;
-	background-color: #0092D1;
-	border-radius : 0px 0px 15px 15px;
-}
-
-/* LED State ToolBox */
-.toolboxLEDStateTopColor {
-	height : 100px;
-	width : 150px;
-	background-color: #D3D7D9;
-	border-radius : 15px 15px 0px 0px;
-}
-
-.toolboxLEDStateBottomColor {
-	height : 25px;
-	width : 150px;
-	background-color: #1A9898;
 	border-radius : 0px 0px 15px 15px;
 }

@@ -66,9 +66,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 	},	
 
 	initToolbox : function() {
-		$("#gameEditor--toolboxDisplayTextState").draggable({ revert: false, helper: "clone", start : this.dragStart, stop : $.proxy(this.stateDragStop, this)});
-		$("#gameEditor--toolboxBuzzerState").draggable({ revert: false, helper: "clone", start : this.dragStart, stop : $.proxy(this.stateDragStop, this)});
-		$("#gameEditor--toolboxLEDState").draggable({ revert: false, helper: "clone", start : this.dragStart, stop : $.proxy(this.stateDragStop, this)});
+		$("#gameEditor--toolboxOutputState").draggable({ revert: false, helper: "clone", start : this.dragStart, stop : $.proxy(this.stateDragStop, this)});
 	},
 	
 	initToolbox2 : function() {
@@ -93,21 +91,11 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		document.getElementById("gameEditor--toolbox").style["overflow-y"] = "auto";
 		
 		switch(ui.helper[0].childNodes[1].className) {
-			case "toolboxDisplayTextStateTopColor":
-				var displayTextState = new DisplayTextState("toolboxDisplayTextStateTopColor", "toolboxDisplayTextStateBottomColor", "Display Text" , this.createStateId(), this.jsPlumbInstance);
-				displayTextState.setPositionX(displayTextState.absoluteToRelativeX(ui.position.left)); displayTextState.setPositionY(displayTextState.absoluteToRelativeY(ui.position.top));
-				displayTextState.draw();
-				this.stateList.push(displayTextState);
-				break;
-			case "toolboxBuzzerStateTopColor":
-				var buzzerState = new BuzzerState("toolboxBuzzerStateTopColor", "toolboxBuzzerStateBottomColor", "Buzzer Sound" , this.createStateId(), this.jsPlumbInstance);
-				buzzerState.setPositionX(buzzerState.absoluteToRelativeX(ui.position.left)); buzzerState.setPositionY(buzzerState.absoluteToRelativeY(ui.position.top));
-				buzzerState.draw();
-				break;
-			case "toolboxLEDStateTopColor":
-				var ledState = new LEDState("toolboxLEDStateTopColor", "toolboxLEDStateBottomColor", "LED" , this.createStateId(), this.jsPlumbInstance);
-				ledState.setPositionX(ledState.absoluteToRelativeX(ui.position.left)); ledState.setPositionY(ledState.absoluteToRelativeY(ui.position.top));
-				ledState.draw();
+			case "toolboxOutputStateTopColor":
+				var outputState = new OutputState("toolboxOutputStateTopColor", "toolboxOutputStateBottomColor", "Output State" , this.createStateId(), this.jsPlumbInstance);
+				outputState.setPositionX(outputState.absoluteToRelativeX(ui.position.left)); outputState.setPositionY(outputState.absoluteToRelativeY(ui.position.top));
+				outputState.draw();
+				this.stateList.push(outputState);
 				break;
 		}
 	},
@@ -252,19 +240,19 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 				  //Load the data model
 				  ODataModel.setupODataModel();
 				  
-					var fragment = sap.ui.xmlfragment("wlcpfrontend.fragments.test2", sap.ui.controller("wlcpfrontend.controllers.test2"));
+					//var fragment = sap.ui.xmlfragment("wlcpfrontend.fragments.test2", sap.ui.controller("wlcpfrontend.controllers.test2"));
 					//fragment.setModel(ODataModel.getODataModel());
-					fragment.open();
+					//fragment.open();
 				  
 				  //Wait for the inital DOM to render
 				  //Init jsPlumb
-				  //this.initJsPlumb();
+				  this.initJsPlumb();
 				  
 				  //Init the start state
-				  //this.initStartState();
+				  this.initStartState();
 				  
 				  //Setup the toolbox drag and drop
-				  //this.initToolbox();
+				  this.initToolbox();
 				  
 				  //ButtonPressTransition.doubleClick();
 			  }

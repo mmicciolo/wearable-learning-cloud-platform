@@ -8,5 +8,6 @@
 		<class>wlcp.model.master.state.DisplayTextState</class>
 		<class>wlcp.model.master.connection.Connection</class>
 		<class>wlcp.model.master.state.StartState</class>
+		<class>wlcp.model.master.state.DisplayTextStateMap</class>
 	</persistence-unit>
 </persistence>

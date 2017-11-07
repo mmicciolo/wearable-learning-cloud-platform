@@ -43,13 +43,13 @@ public class State implements Serializable {
 	@Column(name = "POSITION_Y")
 	private Float positionY;
 	
-	@JoinTable(name = "STATE_INPUT_CONNECTIONS", joinColumns = @JoinColumn(name = "STATE_ID", referencedColumnName = "STATE_ID"), inverseJoinColumns = @JoinColumn(name = "CONNECTION_ID", referencedColumnName = "CONNECTION_ID"))
-	@OneToMany(orphanRemoval = true)
-	private List<Connection> inputConnections = new ArrayList<Connection>();
-	
-	@JoinTable(name = "STATE_OUTPUT_CONNECTIONS", joinColumns = @JoinColumn(name = "STATE_ID", referencedColumnName = "STATE_ID"), inverseJoinColumns = @JoinColumn(name = "CONNECTION_ID", referencedColumnName = "CONNECTION_ID"))
-	@OneToMany(orphanRemoval = true)
-	private List<Connection> outputConnections = new ArrayList<Connection>();
+//	@JoinTable(name = "STATE_INPUT_CONNECTIONS", joinColumns = @JoinColumn(name = "STATE_ID", referencedColumnName = "STATE_ID"), inverseJoinColumns = @JoinColumn(name = "CONNECTION_ID", referencedColumnName = "CONNECTION_ID"))
+//	@OneToMany(orphanRemoval = true)
+//	private List<Connection> inputConnections = new ArrayList<Connection>();
+//	
+//	@JoinTable(name = "STATE_OUTPUT_CONNECTIONS", joinColumns = @JoinColumn(name = "STATE_ID", referencedColumnName = "STATE_ID"), inverseJoinColumns = @JoinColumn(name = "CONNECTION_ID", referencedColumnName = "CONNECTION_ID"))
+//	@OneToMany(orphanRemoval = true)
+//	private List<Connection> outputConnections = new ArrayList<Connection>();
 
 	public State() {
 		super();
@@ -111,20 +111,20 @@ public class State implements Serializable {
 		this.positionY = positionY;
 	}
 
-	public List<Connection> getInputConnections() {
-		return inputConnections;
-	}
-
-	public void setInputConnections(List<Connection> inputConnections) {
-		this.inputConnections = inputConnections;
-	}
-
-	public List<Connection> getOutputConnections() {
-		return outputConnections;
-	}
-
-	public void setOutputConnections(List<Connection> outputConnections) {
-		this.outputConnections = outputConnections;
-	}
+//	public List<Connection> getInputConnections() {
+//		return inputConnections;
+//	}
+//
+//	public void setInputConnections(List<Connection> inputConnections) {
+//		this.inputConnections = inputConnections;
+//	}
+//
+//	public List<Connection> getOutputConnections() {
+//		return outputConnections;
+//	}
+//
+//	public void setOutputConnections(List<Connection> outputConnections) {
+//		this.outputConnections = outputConnections;
+//	}
 
 }

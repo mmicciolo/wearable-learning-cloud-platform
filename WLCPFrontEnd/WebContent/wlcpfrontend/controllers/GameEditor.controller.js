@@ -252,6 +252,10 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 				  //Load the data model
 				  ODataModel.setupODataModel();
 				  
+					var fragment = sap.ui.xmlfragment("wlcpfrontend.fragments.test2", sap.ui.controller("wlcpfrontend.controllers.test2"));
+					//fragment.setModel(ODataModel.getODataModel());
+					fragment.open();
+				  
 				  //Wait for the inital DOM to render
 				  //Init jsPlumb
 				  //this.initJsPlumb();

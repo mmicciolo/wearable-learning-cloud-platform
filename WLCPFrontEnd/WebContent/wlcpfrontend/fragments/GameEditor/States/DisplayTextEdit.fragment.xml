@@ -1,0 +1,37 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:t="sap.ui.table"
+	xmlns:core="sap.ui.core">
+	
+	<Dialog title = "Edit Display Text">
+		<buttons>
+			<Button text="Accept" type="Accept"/>
+			<Button text="Close" type="Reject" press="closeDialog"/>
+		</buttons>
+<!-- 		<List headerText="Display Text" items="{/data}"> -->
+<!-- 			<InputListItem label="{scope}"> -->
+<!-- 				<Input placeholder="Text to display..."/> -->
+<!-- 			</InputListItem> -->
+<!-- 		</List> -->
+		<FlexBox alignItems="Start" justifyContent="End">
+				<Button text="Add Text" type="Accept" press="addTextRow"></Button>
+		</FlexBox>
+		<t:Table id="displayTextTable" rows="{/data}" selectionMode="None">
+			<t:columns>
+				<t:Column hAlign="Center">
+					<Label text="Scope"/>
+					<t:template>
+<!-- 						<Label text="{scope}" design="Bold"/> -->
+						<MultiComboBox items="{row/scope}" selectionChange="handleSelectionChange"><core:Item key="{t}" text="{t}"></core:Item></MultiComboBox>
+					</t:template>
+				</t:Column>
+				<t:Column hAlign="Center">
+					<Label text="Text" />
+					<t:template>
+						<Input placeHolder="Text to display..."/>
+					</t:template>
+				</t:Column>
+			</t:columns>
+		</t:Table>
+	</Dialog>
+</core:FragmentDefinition>

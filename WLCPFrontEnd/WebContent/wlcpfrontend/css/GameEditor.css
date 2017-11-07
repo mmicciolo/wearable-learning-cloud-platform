@@ -41,6 +41,17 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
     user-select: none;    
 }
 
+#__container0--tabstrip {
+	margin-bottom:0px;
+}
+#__container0--tabstrip-tabsContainer {
+	width:100%;
+}
+
+#__dialog0-scrollCont {
+	padding:0rem;
+}
+
 [class*='close-'] {
   color: #777;
   font: 14px/100% arial, sans-serif;

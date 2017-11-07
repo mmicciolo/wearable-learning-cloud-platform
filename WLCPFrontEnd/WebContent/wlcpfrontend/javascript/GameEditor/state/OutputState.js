@@ -41,39 +41,51 @@ class OutputState extends State {
 	doubleClick() {
 		
 		//Create an instance of the dialog
-		this.dialog = sap.ui.xmlfragment("wlcpfrontend.fragments.GameEditor.States.DisplayTextEdit", this);
+		this.dialog = sap.ui.xmlfragment("wlcpfrontend.fragments.test2", this);
 		
 		//Open the dialog
 		//this.getView().addDependent(this.dialog);
-		if(this.fragModel == null) {
-			this.fragModel = new sap.ui.model.json.JSONModel(this.model);
-		}
-		
-		this.dialog.setModel(this.fragModel);
+//		if(this.fragModel == null) {
+//			this.fragModel = new sap.ui.model.json.JSONModel(this.model);
+//		}
+//		
+//		this.dialog.setModel(this.fragModel);
 			
 		this.dialog.open();
 		
-		for(var i = 0; i < this.model.data.length; i++) {
-			sap.ui.getCore().byId("displayTextTable").getRows()[i].getCells()[0].setSelectedKeys(this.model.data[i].row.selected);
-		}
+//		for(var i = 0; i < this.model.data.length; i++) {
+//			sap.ui.getCore().byId("displayTextTable").getRows()[i].getCells()[0].setSelectedKeys(this.model.data[i].row.selected);
+//		}
+	}
+	
+	closeDialog() {
+		this.dialog.close();
+		this.dialog.destroy();
+	}
+	
+	navigationSelected(oEvent) {
+		var key = oEvent.getParameter("item").getKey();
+		var navContainer = sap.ui.getCore().byId("outputStateNavContainer");
+		var nextPage = sap.ui.getCore().byId(key);
+		navContainer.to(nextPage);
 	}
 	
 	static loadData(oData) {
 		//Create a new display state
-		var displayTextState = new DisplayTextState("toolboxDisplayTextStateTopColor", "toolboxDisplayTextStateBottomColor", "Display Text", oData.GameStateId, GameEditor.getEditorController().jsPlumbInstance);
+		var outputState = new OutputState("toolboxOutputStateTopColor", "toolboxOutputStateBottomColor", "Output State", oData.GameStateId, GameEditor.getEditorController().jsPlumbInstance);
 		
 		//Set the position
-		displayTextState.setPositionX(oData.PositionX); displayTextState.setPositionY(oData.PositionY);
+		outputState.setPositionX(oData.PositionX); outputState.setPositionY(oData.PositionY);
 		
 		//Redraw it
-		displayTextState.draw();
+		outputState.draw();
 		
 		//Push back the state
-		GameEditor.getEditorController().stateList.push(displayTextState);
+		GameEditor.getEditorController().stateList.push(outputState);
 	}
 	
 	save() {
-		super.save("/DisplayTextStates", this.saveState, this);
+		super.save("/OutputStates", this.saveState, this);
 	}
 
 	saveState(oData) {
@@ -88,10 +100,9 @@ class OutputState extends State {
 		             uri : ODataModel.getODataModelURL() + "/Games('" + GameEditor.getEditorController().gameModel.GameId + "')"
 		         }
 			},
-			DisplayText : "TEXT"
 		}
 		
-		super.saveState(oData, "/DisplayTextStates", saveData);
+		super.saveState(oData, "/OutputStates", saveData);
 	}
 	
 	closeDialog() {

@@ -5,9 +5,8 @@
 		<class>wlcp.model.master.GameLobby</class>
 		<class>wlcp.model.master.Game</class>
 		<class>wlcp.model.master.state.State</class>
-		<class>wlcp.model.master.state.DisplayTextState</class>
 		<class>wlcp.model.master.connection.Connection</class>
 		<class>wlcp.model.master.state.StartState</class>
-		<class>wlcp.model.master.state.DisplayTextStateMap</class>
+		<class>wlcp.model.master.state.OutputState</class>
 	</persistence-unit>
 </persistence>

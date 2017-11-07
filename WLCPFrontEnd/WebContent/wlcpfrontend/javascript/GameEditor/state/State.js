@@ -4,7 +4,7 @@
 
 var StateType = {
 		START_STATE : "START_STATE",
-		DISPLAY_TEXT_STATE : "DISPLAY_TEXT_STATE"
+		OUTPUT_STATE : "OUTPUT_STATE"
 }
 
 class State {
@@ -118,8 +118,8 @@ class State {
 			case StateType.START_STATE:
 				StartState.loadData(oData.results[i]);
 				break;
-			case StateType.DISPLAY_TEXT_STATE:
-				DisplayTextState.loadData(oData.results[i]);
+			case StateType.OUTPUT_STATE:
+				OutputState.loadData(oData.results[i]);
 				break;
 			}
 		}

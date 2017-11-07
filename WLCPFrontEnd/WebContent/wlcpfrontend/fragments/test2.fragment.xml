@@ -12,7 +12,7 @@
 		</buttons>
 		<FlexBox alignItems="Start" justifyContent="Start">
 			<items>
-				<html:div style="height:526px;width:250px;border-style:solid;border-width:2px;border-color:#3f5161;border-top-style:none;border-left-style:none;border-bottom-style:none;">
+				<html:div style="height:500px;width:200px;border-style:solid;border-width:2px;border-color:#3f5161;border-top-style:none;border-left-style:none;border-bottom-style:none;">
 					<tnt:NavigationList id="navigationList">
 						<tnt:NavigationListItem text="Display Text" icon="sap-icon://discussion-2" select="navigationSelected" key="displayTextPage"/>
 						<tnt:NavigationListItem text="Display Image" icon="sap-icon://background" select="navigationSelected" key="displayImagePage"/>
@@ -20,19 +20,18 @@
 						<tnt:NavigationListItem text="Light" icon="sap-icon://lightbulb" select="navigationSelected"/>
 					</tnt:NavigationList>
 				</html:div>
-				<html:div style="height:500px;width:500px;">
+				<html:div style="height:500px;width:550px;">
 					<NavContainer id="outputStateNavContainer">
 						<Page id="displayTextPage" title="Display Text">
 							<FlexBox alignItems="Start" justifyContent="End">
 								<Button text="Add Text" type="Accept" press="addTextRow"></Button>
 							</FlexBox>
-							<t:Table id="displayTextTable" rows="{/data}" selectionMode="None">
+							<t:Table id="displayTextTable" rows="{/displayTextData}" selectionMode="None">
 								<t:columns>
 									<t:Column hAlign="Center">
 										<Label text="Scope"/>
 										<t:template>
-					<!-- 						<Label text="{scope}" design="Bold"/> -->
-											<MultiComboBox items="{row/scope}" selectionChange="handleSelectionChange"><core:Item key="{t}" text="{t}"></core:Item></MultiComboBox>
+											<MultiComboBox items="{row/scope}" selectionChange="handleSelectionChange"><core:Item key="{text}" text="{text}"></core:Item></MultiComboBox>
 										</t:template>
 									</t:Column>
 									<t:Column hAlign="Center">

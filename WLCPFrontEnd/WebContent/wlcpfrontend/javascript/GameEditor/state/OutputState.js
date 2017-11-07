@@ -18,11 +18,11 @@ class OutputState extends State {
 				 isSource:true,
 				 maxConnections: -1,
 			};
-		this.model = {
-				data : []
+		this.modelJSON = {
+				displayTextData : []
 		}
 		this.create();
-		this.fragModel = null;
+		this.model = null;
 	}
 	
 	create() {
@@ -43,19 +43,89 @@ class OutputState extends State {
 		//Create an instance of the dialog
 		this.dialog = sap.ui.xmlfragment("wlcpfrontend.fragments.test2", this);
 		
-		//Open the dialog
-		//this.getView().addDependent(this.dialog);
-//		if(this.fragModel == null) {
-//			this.fragModel = new sap.ui.model.json.JSONModel(this.model);
-//		}
-//		
-//		this.dialog.setModel(this.fragModel);
+		if(this.model == null) {
+			this.model = new sap.ui.model.json.JSONModel(this.modelJSON);
+		}
+		
+		this.dialog.setModel(this.model);
 			
+		//Open the dialog
 		this.dialog.open();
 		
-//		for(var i = 0; i < this.model.data.length; i++) {
-//			sap.ui.getCore().byId("displayTextTable").getRows()[i].getCells()[0].setSelectedKeys(this.model.data[i].row.selected);
+		for(var i = 0; i < this.modelJSON.displayTextData.length; i++) {
+			sap.ui.getCore().byId("displayTextTable").getRows()[i].getCells()[0].setSelectedKeys(this.modelJSON.displayTextData[i].row.selected);
+		}
+	}
+	
+	createData() {
+		return {
+			row : {
+				scope : [],
+				selected : [],
+				text : ""
+			}
+		}
+	}
+	
+	generateData(teams, playersPerTeam) {
+		
+		//Create a new object to store the data
+		var baseData = this.createData();
+
+		//Add game wide
+		baseData.row.scope.push({text : "Game Wide"});
+		
+		//Add the teams
+		for(var i = 0; i < teams; i++) {
+			baseData.row.scope.push({text : "Team " + (i + 1)});
+		}
+		
+		//Add the players
+		for(var i = 0; i < teams; i++) {
+			for(var n = 0; n < playersPerTeam; n++) {
+				baseData.row.scope.push({text : "Team " + (i + 1) + " Player " + (n + 1)});
+			}
+		}
+		
+		return baseData;
+	}
+
+	addTextRow() {
+//		//We need a connection to a parent
+//		if(true) {}
+//		
+//		//Get the already selected items
+//		var alreadySelected = this.getSurroundingSelections();
+//		
+//		//Only make the following checks if there is data in the model
+//		if(this.model.data.length > 0) {
+//			//You cannot add a row if you have not selected anything in the current row
+//			if(sap.ui.getCore().byId("displayTextTable").getRows()[this.model.data.length - 1].getCells()[0].getSelectedKeys().length == 0) {
+//				return;
+//			}
+//			//You cannot add a row if game wide is selected
+//			else if(alreadySelected.indexOf("Game Wide") != -1) { 
+//				return;
+//			}
 //		}
+		
+		//Generate possible selections based off of this
+		var baseData = this.generateData(3, 3);
+		
+		//Update the model
+		this.modelJSON.displayTextData.push(baseData);
+		this.model.setData(this.modelJSON);
+	}
+	
+	handleSelectionChange(oEvent) {
+		var changedItem = oEvent.getParameter("changedItem");
+		var isSelected = oEvent.getParameter("selected");
+		
+		if(isSelected) {
+			this.modelJSON.displayTextData[oEvent.oSource.getParent().getIndex()].row.selected.push(changedItem.getKey());
+		} else {
+			this.modelJSON.displayTextData[oEvent.oSource.getParent().getIndex()].row.selected.splice(this.modelJSON.displayTextData[oEvent.oSource.getParent().getIndex()].row.selected.indexOf(changedItem.getKey()), 1);
+		}
 	}
 	
 	closeDialog() {

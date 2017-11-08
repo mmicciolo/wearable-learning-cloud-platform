@@ -144,7 +144,7 @@ class State {
 		ODataModel.getODataModel().read(odataPath, {filters: filters, success: $.proxy(saveSuccess, context), error: this.saveError});
 	}
 	
-	saveState(oData, odataPath, saveData) {
+	saveState(oData, saveSuccess, odataPath, saveData) {
 		if(oData.results.length == 1) {
 			
 			//We need to update the entry
@@ -153,7 +153,7 @@ class State {
 		} else if(oData.results.length == 0) {
 			
 			//We need to create the entry
-			ODataModel.getODataModel().create(odataPath, saveData, {success: this.saveSuccess, error: this.saveError});
+			ODataModel.getODataModel().create(odataPath, saveData, {success: saveSuccess, error: this.saveError});
 
 		} else {
 			//Something went terribly wrong...

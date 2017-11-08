@@ -56,6 +56,6 @@ class StartState extends State {
 			}
 		}
 		
-		super.saveState(oData, "/StartStates", saveData);
+		super.saveState(oData, super.saveSuccess, "/StartStates", saveData);
 	}
 }

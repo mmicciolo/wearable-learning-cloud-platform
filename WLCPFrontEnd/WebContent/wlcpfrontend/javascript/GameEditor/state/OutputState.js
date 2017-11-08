@@ -121,7 +121,67 @@ class OutputState extends State {
 		GameEditor.getEditorController().stateList.push(outputState);
 	}
 	
+	saveFSM() {
+		this.saveCount++;
+		switch(this.type) {
+		case "DISPLAY_TEXT":
+			if(this.modelJSON.iconTabs.length != this.saveCount) {
+				if(this.modelJSON.iconTabs[this.saveCount].displayText != "") {
+					this.saveDisplayText();
+				} else {
+					this.saveFSM();
+				}
+			} else {
+				this.saveCount = -1;
+				this.type = "NULL";
+				this.saveFSM();
+			}
+			break;
+		}
+	}
+	
+	saveDisplayText() {
+		var filters = [];
+		filters.push(new sap.ui.model.Filter({path: "Game", operator: sap.ui.model.FilterOperator.EQ, value1: GameEditor.getEditorController().gameModel.GameId}));
+		filters.push(new sap.ui.model.Filter({path: "GameStateId", operator: sap.ui.model.FilterOperator.EQ, value1: this.htmlId}));
+		filters.push(new sap.ui.model.Filter({path: "Scope", operator: sap.ui.model.FilterOperator.EQ, value1: this.modelJSON.iconTabs[this.saveCount].scope}));
+		
+		//Read in the state data
+		ODataModel.getODataModel().read("/DisplayTextStateMaps", {filters: filters, success: $.proxy(this.saveDisplayTextSuccess, this), error: super.saveError});
+	}
+	
+	saveDisplayTextSuccess(oData) {
+		if(oData.results.length == 1) {
+			
+			//We need to update the entry
+			ODataModel.getODataModel().update("/DisplayTextStateMaps" + "(" + oData.results[0].DisplayTextStateMapId + ")", {DisplayText : this.modelJSON.iconTabs[this.saveCount].displayText}, {success: $.proxy(this.saveFSM, this), error: super.saveError});
+				
+		} else if(oData.results.length == 0) {
+			
+			var saveData = {
+					DisplayTextStateMapId : 0, 
+					GameStateId : this.htmlId, 
+					GameDetails : {
+						__metadata : {
+				             uri : ODataModel.getODataModelURL() + "/Games('" + GameEditor.getEditorController().gameModel.GameId + "')"
+						}
+					},
+					DisplayText : this.modelJSON.iconTabs[this.saveCount].displayText, 
+					Scope : this.modelJSON.iconTabs[this.saveCount].scope
+			}
+			
+			//We need to create the entry
+			ODataModel.getODataModel().create("/DisplayTextStateMaps", saveData, {success: $.proxy(this.saveFSM, this), error: super.saveError});
+
+		} else {
+			//Something went terribly wrong...
+		}
+	}
+	
 	save() {
+		this.saveCount = -1;
+		this.type = "DISPLAY_TEXT";
+		this.saveFSM();
 		super.save("/OutputStates", this.saveState, this);
 	}
 
@@ -139,7 +199,7 @@ class OutputState extends State {
 			},
 		}
 		
-		super.saveState(oData, "/OutputStates", saveData);
+		super.saveState(oData, super.saveSuccess, "/OutputStates", saveData);
 	}
 	
 	closeDialog() {

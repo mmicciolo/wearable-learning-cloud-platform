@@ -45,12 +45,9 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
 	padding:0rem;
 }
 
-#gameEditor--pageSplitter-splitbar-0 {
-	height : 0;
-}
-
-#gameEditor--mainSplitter-splitbar-0 {
-	width : 0;
+.sapUiLoSplitterNoResize {
+	width : 0 !important;
+	height : 0 !important;
 }
 
 .sapMITBFilter .sapMITBText {

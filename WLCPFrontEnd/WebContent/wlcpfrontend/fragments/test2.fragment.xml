@@ -15,7 +15,7 @@
 			<items>
 				<IconTabFilter icon="{icon}" text="{scope}">
 					<content>
-						<l:Splitter>					
+						<l:Splitter id="outputStateDialogSplitter">					
 							<tnt:NavigationList class="navList">
 								<tnt:layoutData><l:SplitterLayoutData size="202px" resizable="false"/></tnt:layoutData>
 								<tnt:NavigationListItem text="Display Text" icon="sap-icon://discussion-2" select="navigationSelected" key="displayTextPage"/>

@@ -242,13 +242,13 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 				  
 				  //Wait for the inital DOM to render
 				  //Init jsPlumb
-				  this.initJsPlumb();
+				  //this.initJsPlumb();
 				  
 				  //Init the start state
-				  this.initStartState();
+				  //this.initStartState();
 				  
 				  //Setup the toolbox drag and drop
-				  this.initToolbox();
+				  //this.initToolbox();
 				  
 				  //ButtonPressTransition.doubleClick();
 			  }

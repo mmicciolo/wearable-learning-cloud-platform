@@ -2,7 +2,7 @@
 		controllerName="wlcpfrontend.controllers.GameEditor" xmlns:html="http://www.w3.org/1999/xhtml">
 	<Page id="gameEditor" title="Title" showHeader="false" enableScrolling="false">
 		<content>
-			<l:Splitter id="pageSplitter" orientation="Vertical">
+			<l:Splitter orientation="Vertical">
 				<tnt:ToolHeader>
 					<tnt:layoutData>
 						<l:SplitterLayoutData size="48px" resizable="false"/>

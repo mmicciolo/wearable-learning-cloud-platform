@@ -72,7 +72,7 @@ class State {
 		this.height = this.stateDiv.getBoundingClientRect().height;
 		
 		//Make it draggable
-		this.jsPlumbInstance.draggable(this.stateDiv.id, {containment : true, stop : $.proxy(this.moved, this)});
+		this.jsPlumbInstance.draggable(this.stateDiv.id, {containment : true, drag : $.proxy(this.moved, this), stop : $.proxy(this.moved, this)});
 		//$("#" + this.stateDiv.id).draggable({containment : "parent", stop : $.proxy(this.moved, this)});
 		
 		if(this.stateDiv.id != "start") {
@@ -100,6 +100,13 @@ class State {
 		//Update the position
 		this.positionX = parseFloat(document.getElementById(this.htmlId).style.left.replace("px", ""));
 		this.positionY = parseFloat(document.getElementById(this.htmlId).style.top.replace("px", ""));
+		
+		if((this.positionX + this.width + 50) >= document.getElementById("gameEditor--pad").getBoundingClientRect().width) {
+			document.getElementById("gameEditor--pad").style.width = (document.getElementById("gameEditor--pad").getBoundingClientRect().width + 500) + "px";
+		}
+		if((this.positionY + this.height + 50) >= document.getElementById("gameEditor--pad").getBoundingClientRect().height) {
+			document.getElementById("gameEditor--pad").style.height = (document.getElementById("gameEditor--pad").getBoundingClientRect().height + 500) + "px";
+		}
 	}
 	
 	static loadData(oData) {

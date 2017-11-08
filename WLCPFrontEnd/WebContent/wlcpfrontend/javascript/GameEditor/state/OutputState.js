@@ -19,7 +19,7 @@ class OutputState extends State {
 				 maxConnections: -1,
 			};
 		this.modelJSON = {
-				displayTextData : []
+				iconTabs : []
 		}
 		this.create();
 		this.model = null;
@@ -43,6 +43,8 @@ class OutputState extends State {
 		//Create an instance of the dialog
 		this.dialog = sap.ui.xmlfragment("wlcpfrontend.fragments.test2", this);
 		
+		this.modelJSON.iconTabs = this.generateData(3,3);
+		
 		if(this.model == null) {
 			this.model = new sap.ui.model.json.JSONModel(this.modelJSON);
 		}
@@ -52,38 +54,44 @@ class OutputState extends State {
 		//Open the dialog
 		this.dialog.open();
 		
-		for(var i = 0; i < this.modelJSON.displayTextData.length; i++) {
-			sap.ui.getCore().byId("displayTextTable").getRows()[i].getCells()[0].setSelectedKeys(this.modelJSON.displayTextData[i].row.selected);
-		}
+//		for(var i = 0; i < this.modelJSON.displayTextData.length; i++) {
+//			sap.ui.getCore().byId("displayTextTable").getRows()[i].getCells()[0].setSelectedKeys(this.modelJSON.displayTextData[i].row.selected);
+//		}
 	}
 	
 	createData() {
 		return {
-			row : {
-				scope : [],
-				selected : [],
-				text : ""
-			}
+			icon : "",
+			scope : ""
 		}
 	}
 	
 	generateData(teams, playersPerTeam) {
 		
 		//Create a new object to store the data
-		var baseData = this.createData();
+		var baseData = [];
 
 		//Add game wide
-		baseData.row.scope.push({text : "Game Wide"});
+		var data = this.createData();
+		data.icon = "sap-icon://globe";
+		data.scope = "Game Wide";
+		baseData.push(data);
 		
 		//Add the teams
 		for(var i = 0; i < teams; i++) {
-			baseData.row.scope.push({text : "Team " + (i + 1)});
+			data = this.createData();
+			data.icon = "sap-icon://group";
+			data.scope = "Team " + (i + 1);
+			baseData.push(data);
 		}
 		
 		//Add the players
 		for(var i = 0; i < teams; i++) {
 			for(var n = 0; n < playersPerTeam; n++) {
-				baseData.row.scope.push({text : "Team " + (i + 1) + " Player " + (n + 1)});
+				data = this.createData();
+				data.icon = "sap-icon://employee";
+				data.scope = "Team " + (i + 1) + " Player " + (n + 1);
+				baseData.push(data);
 			}
 		}
 		

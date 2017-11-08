@@ -2,83 +2,88 @@
 		controllerName="wlcpfrontend.controllers.GameEditor" xmlns:html="http://www.w3.org/1999/xhtml">
 	<Page id="gameEditor" title="Title" showHeader="false" enableScrolling="false">
 		<content>
-			<tnt:ToolHeader>
-				<Button id="sideNavigationToggleButton" icon="sap-icon://menu2" type="Transparent" press="onSideNavButtonPress">
+			<l:Splitter id="pageSplitter" orientation="Vertical">
+				<tnt:ToolHeader>
+					<tnt:layoutData>
+						<l:SplitterLayoutData size="48px" resizable="false"/>
+					</tnt:layoutData>
+					<Button id="sideNavigationToggleButton" icon="sap-icon://menu2" type="Transparent" press="onSideNavButtonPress">
+						<layoutData>
+							<OverflowToolbarLayoutData priority="NeverOverflow" />
+						</layoutData>
+					</Button>
+					<ToolbarSpacer width="180px"/>
+					<Button text="New" type="Transparent" icon="sap-icon://create" press="newGame">
+						<layoutData>
+							<OverflowToolbarLayoutData priority="Low" />
+						</layoutData>
+					</Button>
+					<Button text="Load" type="Transparent" icon="sap-icon://open-folder" press="loadGame">
+						<layoutData>
+							<OverflowToolbarLayoutData priority="Low" />
+						</layoutData>
+					</Button>
+					<Button text="Save" type="Transparent" icon="sap-icon://save" press="saveGame">
+						<layoutData>
+							<OverflowToolbarLayoutData priority="Low" />
+						</layoutData>
+					</Button>
+					<Button text="Compile" type="Transparent" icon="sap-icon://database">
+						<layoutData>
+							<OverflowToolbarLayoutData priority="Low" />
+						</layoutData>
+					</Button>
+					<Button text="Run" type="Transparent" icon="sap-icon://begin">
+						<layoutData>
+							<OverflowToolbarLayoutData priority="Low" />
+						</layoutData>
+					</Button>
+					<ToolbarSpacer width="12.5%"/>
+					<Title level = "H3" text = "Wearable Learning Cloud Platform" textAlign="Center">
+						<layoutData>
+							<OverflowToolbarLayoutData priority="NeverOverflow" />
+						</layoutData>
+					</Title>
+					<tnt:ToolHeaderUtilitySeparator />
+					<ToolbarSpacer>
+						<layoutData>
+							<OverflowToolbarLayoutData priority="NeverOverflow" minWidth="20px" />
+						</layoutData>
+					</ToolbarSpacer>
+					<f:Avatar displaySize="XS" initials="MM" press="handleAvatarPress"/>
+					<Button icon = "sap-icon://user-settings" type="Transparent">
+					</Button>
+					<Button icon = "sap-icon://log" type="Transparent">
+					</Button>
+				</tnt:ToolHeader>
+				<l:Splitter id="mainSplitter">
+				<ScrollContainer id="toolbox" height="100%" width="240px" horizontal="false" vertical="true" focusable="true" class="scroll">
 					<layoutData>
-						<OverflowToolbarLayoutData priority="NeverOverflow" />
+						<l:SplitterLayoutData size="240px" resizable="false"/>
 					</layoutData>
-				</Button>
-				<ToolbarSpacer width="180px"/>
-				<Button text="New" type="Transparent" icon="sap-icon://create" press="newGame">
-					<layoutData>
-						<OverflowToolbarLayoutData priority="Low" />
-					</layoutData>
-				</Button>
-				<Button text="Load" type="Transparent" icon="sap-icon://open-folder" press="loadGame">
-					<layoutData>
-						<OverflowToolbarLayoutData priority="Low" />
-					</layoutData>
-				</Button>
-				<Button text="Save" type="Transparent" icon="sap-icon://save" press="saveGame">
-					<layoutData>
-						<OverflowToolbarLayoutData priority="Low" />
-					</layoutData>
-				</Button>
-				<Button text="Compile" type="Transparent" icon="sap-icon://database">
-					<layoutData>
-						<OverflowToolbarLayoutData priority="Low" />
-					</layoutData>
-				</Button>
-				<Button text="Run" type="Transparent" icon="sap-icon://begin">
-					<layoutData>
-						<OverflowToolbarLayoutData priority="Low" />
-					</layoutData>
-				</Button>
-				<ToolbarSpacer width="12.5%"/>
-				<Title level = "H3" text = "Wearable Learning Cloud Platform" textAlign="Center">
-					<layoutData>
-						<OverflowToolbarLayoutData priority="NeverOverflow" />
-					</layoutData>
-				</Title>
-				<tnt:ToolHeaderUtilitySeparator />
-				<ToolbarSpacer>
-					<layoutData>
-						<OverflowToolbarLayoutData priority="NeverOverflow" minWidth="20px" />
-					</layoutData>
-				</ToolbarSpacer>
-				<f:Avatar displaySize="XS" initials="MM" press="handleAvatarPress"/>
-				<Button icon = "sap-icon://user-settings" type="Transparent">
-				</Button>
-				<Button icon = "sap-icon://log" type="Transparent">
-				</Button>
-			</tnt:ToolHeader>
-			<l:Splitter id="mainSplitter" height="100%" width="100%">
-			<ScrollContainer id="toolbox" height="100%" width="240px" horizontal="false" vertical="true" focusable="true" class="scroll">
-				<layoutData>
-					<l:SplitterLayoutData size="240px" resizable="false"/>
-				</layoutData>
-				<TabContainer id="toolboxTabContainer" itemSelect="onItemSelect">
-					<items>
-						<TabContainerItem name="States" editable="false">
-							<content>
-								<html:div id="toolboxOutputState" class="state centerToolboxState stateBorderShadow">
-									<html:div class="toolboxOutputStateTopColor"><html:div class="centerStateText">Output State</html:div></html:div>
-									<html:div class="toolboxOutputStateBottomColor"></html:div>
-								</html:div>
-							</content>
-						</TabContainerItem>
-						<TabContainerItem name="Transitions" editable="false">
-							<content>
-								<html:div id="buttonPressTransition" class="transition buttonPressTransition centerToolboxTransition">
-									<html:div class="centerTransitionText"><html:div>Button</html:div><html:div>Press</html:div></html:div>
-								</html:div>
-							</content>
-						</TabContainerItem>
-					</items>
-				</TabContainer>
-			</ScrollContainer>
-			<ScrollContainer id="pad" height="95%" horizontal="true" vertical="true" focusable="true">
-			</ScrollContainer>
+					<TabContainer id="toolboxTabContainer" itemSelect="onItemSelect">
+						<items>
+							<TabContainerItem name="States" editable="false">
+								<content>
+									<html:div id="toolboxOutputState" class="state centerToolboxState stateBorderShadow">
+										<html:div class="toolboxOutputStateTopColor"><html:div class="centerStateText">Output State</html:div></html:div>
+										<html:div class="toolboxOutputStateBottomColor"></html:div>
+									</html:div>
+								</content>
+							</TabContainerItem>
+							<TabContainerItem name="Transitions" editable="false">
+								<content>
+									<html:div id="buttonPressTransition" class="transition buttonPressTransition centerToolboxTransition">
+										<html:div class="centerTransitionText"><html:div>Button</html:div><html:div>Press</html:div></html:div>
+									</html:div>
+								</content>
+							</TabContainerItem>
+						</items>
+					</TabContainer>
+				</ScrollContainer>
+				<ScrollContainer id="pad" height="100%" width="100%" horizontal="true" vertical="true" focusable="true">
+				</ScrollContainer>
+				</l:Splitter>
 			</l:Splitter>
 		</content>
 	</Page>

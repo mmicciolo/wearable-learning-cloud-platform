@@ -41,8 +41,31 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
     user-select: none;    
 }
 
-#__dialog1-scrollCont {
+#outputStateDialog-scrollCont {
 	padding:0rem;
+}
+
+#gameEditor--pageSplitter-splitbar-0 {
+	height : 0;
+}
+
+#gameEditor--mainSplitter-splitbar-0 {
+	width : 0;
+}
+
+.sapMITBFilter .sapMITBText {
+	text-overflow: inherit;
+}
+
+.navList {
+	height:500px;
+	width:200px;
+	border-style:solid;
+	border-width:2px;
+	border-color:#3f5161;
+	border-top-style:none;
+	border-left-style:none;
+	border-bottom-style:none;
 }
 
 [class*='close-'] {

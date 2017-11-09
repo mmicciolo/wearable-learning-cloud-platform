@@ -23,6 +23,14 @@ var ODataModel = {
 		}
 	},
 	
+	getWebAppURL : function() {
+		if(window.location.host.includes("www")) {
+			return "http://" + window.location.host.replace("www.", "") + "/WLCPWebApp";
+		} else {
+			return "http://" + window.location.host + "/WLCPWebApp";
+		}
+	},
+	
 	success : function() {
 		
 	},

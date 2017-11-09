@@ -160,13 +160,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		this.busy = new sap.m.BusyDialog();
 		this.busy.open();
 		
-		$.ajax({
-	        url: 'http://localhost:8080/WLCPWebApp/LoadGame',
-	        type: 'POST', 
-	        dataType: 'application/json',
-	        data: 'gameId=' + this.gameModel.GameId,
-	        complete: $.proxy(this.loadSuccess, this)
-	        });
+		$.ajax({url: ODataModel.getWebAppURL() + "/LoadGame", type: 'POST',  dataType: 'application/json', data: 'gameId=' + this.gameModel.GameId, complete: $.proxy(this.loadSuccess, this)});
 	},
 	
 	loadSuccess(data) {
@@ -229,16 +223,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 			saveJSON.connections.push(this.connectionList[i].save());
 		}
 		
-		console.log(JSON.stringify(saveJSON));
-		console.log(JSON.stringify(saveJSON).length);
-		
-		$.ajax({
-		     url: 'http://localhost:8080/WLCPWebApp/SaveGame',
-		     type: 'POST', 
-		     dataType: 'text',
-		     data: 'saveData=' + JSON.stringify(saveJSON),
-		     success : $.proxy(this.saveSuccess, this)
-		});
+		$.ajax({url: ODataModel.getWebAppURL() + "/SaveGame", type: 'POST', dataType: 'text', data: 'saveData=' + JSON.stringify(saveJSON), success : $.proxy(this.saveSuccess, this)});
 	},
 	
 	saveSuccess : function() {

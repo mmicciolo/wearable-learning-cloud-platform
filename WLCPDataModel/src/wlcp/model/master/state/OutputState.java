@@ -19,7 +19,7 @@ public class OutputState extends State implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@JoinTable(name = "DISPLAY_TEXT_MAP", joinColumns = @JoinColumn(name = "STATE_ID", referencedColumnName = "STATE_ID"), inverseJoinColumns = @JoinColumn(name = "DISPLAY_TEXT_STATE_MAP_ID", referencedColumnName = "DISPLAY_TEXT_STATE_MAP_ID"))
-	@OneToMany(orphanRemoval = true)
+	@OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true)
 	private List<DisplayTextStateMap> displayTextStateMap = new ArrayList<DisplayTextStateMap>();
 
 	public OutputState() {

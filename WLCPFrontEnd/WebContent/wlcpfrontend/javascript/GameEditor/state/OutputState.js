@@ -107,6 +107,33 @@ class OutputState extends State {
 		}
 	}
 	
+	static load(loadData) {
+		//Create a new display state
+		var outputState = new OutputState("toolboxOutputStateTopColor", "toolboxOutputStateBottomColor", "Output State", loadData.stateId, GameEditor.getEditorController().jsPlumbInstance);
+		
+		//Set the position
+		outputState.setPositionX(loadData.positionX); outputState.setPositionY(loadData.positionY);
+		
+		//Redraw it
+		outputState.draw();
+		
+		//Push back the state
+		GameEditor.getEditorController().stateList.push(outputState);
+		
+		//Load the states components
+		outputState.loadComponents(loadData);
+	}
+	
+	loadComponents(loadData) {
+		for(var i = 0; i < loadData.displayTextStateMap.length; i++) {
+			for(var n = 0; n < this.modelJSON.iconTabs.length; n++) {
+				if(loadData.displayTextStateMap[i].scope == this.modelJSON.iconTabs[n].scope) {
+					this.modelJSON.iconTabs[n].displayText = loadData.displayTextStateMap[i].displayText;
+				}
+			}
+		}
+	}
+	
 	save() {
 		var outputStateData = [];
 		for(var i = 0; i < this.modelJSON.iconTabs.length; i++) {

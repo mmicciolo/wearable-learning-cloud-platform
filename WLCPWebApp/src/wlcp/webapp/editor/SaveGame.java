@@ -2,7 +2,6 @@ package wlcp.webapp.editor;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
@@ -17,15 +16,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.eclipse.persistence.config.PersistenceUnitProperties;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import wlcp.model.master.Game;
 import wlcp.model.master.connection.Connection;
 import wlcp.model.master.state.OutputState;
 import wlcp.model.master.state.StartState;
-import wlcp.model.master.state.State;
 import wlcp.model.master.state.StateType;
 /**
  * Servlet implementation class SaveGame
@@ -58,15 +53,8 @@ public class SaveGame extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String text = request.getParameter("saveData");
 		Gson gson = new Gson();
-		JsonParser parser = new JsonParser();
-		JsonObject saveData = (JsonObject)parser.parse(text);
-		JsonObject game = (JsonObject)saveData.get("game");
-		JsonArray states = (JsonArray)saveData.get("states");
-		JsonArray connections = (JsonArray)saveData.get("connections");
-		GameJSON gameJSON = gson.fromJson(game, GameJSON.class);
-		StateJSON[] stateJSON = gson.fromJson(states, StateJSON[].class);
-		ConnectionJSON[] connectionJSON = gson.fromJson(connections, ConnectionJSON[].class);
-		saveGame(gameJSON, stateJSON, connectionJSON);
+		LoadSaveDataJSON saveData = gson.fromJson(text, LoadSaveDataJSON.class);
+		saveGame(saveData);
 		response.setContentType("text/plain");
 		response.setStatus(HttpServletResponse.SC_OK);
 		// TODO Auto-generated method stub
@@ -89,42 +77,48 @@ public class SaveGame extends HttpServlet {
         entityManager = entityManagerFactory.createEntityManager();
 	}
 	
-	private void saveGame(GameJSON gameJSON, StateJSON[] stateJSON, ConnectionJSON[] connectionJSON) {
+	private void saveGame(LoadSaveDataJSON saveData) {
 		
 		//Init JPA
 		initJPA();
 		
-		Game game = entityManager.find(Game.class, gameJSON.GameId);
+		Game game = entityManager.find(Game.class, saveData.game.GameId);
 		
 		//Loop through and save all of the states
-		for(int i = 0; i < stateJSON.length; i++) {
-			switch(stateJSON[i].stateType) {
+		for(int i = 0; i < saveData.states.length; i++) {
+			switch(saveData.states[i].stateType) {
 			case "START_STATE":
 				entityManager.getTransaction().begin();
-				entityManager.merge(new StartState(stateJSON[i].stateId, game, StateType.START_STATE, stateJSON[i].positionX, stateJSON[i].positionY));
+				entityManager.merge(new StartState(saveData.states[i].stateId, game, StateType.START_STATE, saveData.states[i].positionX, saveData.states[i].positionY));
 				entityManager.getTransaction().commit();
 				break;
 			case "OUTPUT_STATE":
 				Map<String, String> displayText = new HashMap<String, String>();
-				for(int n = 0; n < stateJSON[i].displayTextStateMap.length; n++) {
-					displayText.put(stateJSON[i].displayTextStateMap[n].scope, stateJSON[i].displayTextStateMap[n].displayText);
+				for(int n = 0; n < saveData.states[i].displayTextStateMap.length; n++) {
+					displayText.put(saveData.states[i].displayTextStateMap[n].scope, saveData.states[i].displayTextStateMap[n].displayText);
 				}
 				entityManager.getTransaction().begin();
-				entityManager.merge(new OutputState(stateJSON[i].stateId, game, StateType.START_STATE, stateJSON[i].positionX, stateJSON[i].positionY, displayText));
+				entityManager.merge(new OutputState(saveData.states[i].stateId, game, StateType.START_STATE, saveData.states[i].positionX, saveData.states[i].positionY, displayText));
 				entityManager.getTransaction().commit();
 				break;
 			}
 		}
 		
 		//Loop through all of the connections
-		for(int i = 0; i < connectionJSON.length; i++) {
+		for(int i = 0; i < saveData.connections.length; i++) {
 			entityManager.getTransaction().begin();
-			entityManager.merge(new Connection(game, connectionJSON[i].gameConnectionId, connectionJSON[i].connectionFrom, connectionJSON[i].connectionTo));
+			entityManager.merge(new Connection(game, saveData.connections[i].gameConnectionId, saveData.connections[i].connectionFrom, saveData.connections[i].connectionTo));
 			entityManager.getTransaction().commit();
 		}
 		
 	}
 
+}
+
+class LoadSaveDataJSON {
+	GameJSON game;
+	StateJSON [] states;
+	ConnectionJSON [] connections;
 }
 
 class GameJSON {

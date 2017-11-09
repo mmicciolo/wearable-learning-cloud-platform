@@ -62,7 +62,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		this.stateList.push(startState);
 		
 		//Save it
-		//startState.save();
+		this.saveGame();
 	},	
 
 	initToolbox : function() {
@@ -152,6 +152,49 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		var fragment = sap.ui.xmlfragment("wlcpfrontend.fragments.GameEditor.LoadGame", sap.ui.controller("wlcpfrontend.controllers.CreateLoadGame"));
 		fragment.setModel(ODataModel.getODataModel());
 		fragment.open();
+	},
+	
+	load : function() {
+		
+		//Open the busy dialog
+		this.busy = new sap.m.BusyDialog();
+		this.busy.open();
+		
+		$.ajax({
+	        url: 'http://localhost:8080/WLCPWebApp/LoadGame',
+	        type: 'POST', 
+	        dataType: 'application/json',
+	        data: 'gameId=' + this.gameModel.GameId,
+	        complete: $.proxy(this.loadSuccess, this)
+	        });
+	},
+	
+	loadSuccess(data) {
+		
+		var loadedData = JSON.parse(data.responseText);
+		
+		//Init jsPlumb
+		this.initJsPlumb();
+		
+		//Setup the toolbox drag and drop
+		this.initToolbox();
+		
+		//Load the states
+		for(var i = 0; i < loadedData.states.length; i++) {
+			switch(loadedData.states[i].stateType) {
+			case "START_STATE":
+				StartState.load(loadedData.states[i]);
+				break;
+			case "OUTPUT_STATE":
+				OutputState.load(loadedData.states[i]);
+				break;
+			}
+		}
+		
+		//Load the connections
+		Connection.load(loadedData.connections);
+		
+		this.busy.close();
 	},
 
 	saveGame : function() {

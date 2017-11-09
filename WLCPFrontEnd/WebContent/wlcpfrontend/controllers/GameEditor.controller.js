@@ -50,7 +50,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 	initStartState : function() {
 		
 		//Create a new start state
-		var startState = new StartState("startStateTopColor", "startStateBottomColor", "Start State" , "start", this.jsPlumbInstance);
+		var startState = new StartState("startStateTopColor", "startStateBottomColor", "Start State" , this.gameModel.GameId + "_start", this.jsPlumbInstance);
 		
 		//Set the position
 		startState.setPositionX(((document.getElementById("gameEditor--pad").offsetWidth / 2) - (150 / 2))); startState.setPositionY(100);
@@ -62,7 +62,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		this.stateList.push(startState);
 		
 		//Save it
-		startState.save();
+		//startState.save();
 	},	
 
 	initToolbox : function() {
@@ -122,7 +122,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 	
 	createStateId : function() {
 		this.gameModel.StateIdCount++;
-		return this.stateId + this.gameModel.StateIdCount;
+		return this.gameModel.GameId + "_" + this.stateId + "_" + this.gameModel.StateIdCount;
 	},
 	
 	createTransitionId : function() {
@@ -153,69 +153,53 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		fragment.setModel(ODataModel.getODataModel());
 		fragment.open();
 	},
-	
-	loadFSM() {
-		//Open the busy dialog
-		this.busy = new sap.m.BusyDialog();
-		this.busy.open();
-		
-		//Init jsPlumb
-		this.initJsPlumb();
-		
-		//Setup the toolbox drag and drop
-		this.initToolbox();
-		
-		//Setup some FSM variables
-		this.loadCount = 0;
-		this.type = "STATE";
-		
-		//Kick off the save
-		State.load();
-	},
-	
-	initLoadedGame : function() {
-		
-	},
-	
+
 	saveGame : function() {
 		
 		//Open the busy dialog
 		this.busy = new sap.m.BusyDialog();
 		this.busy.open();
-		
-		//Setup some FSM variables
-		this.saveCount = 0;
-		this.type = "STATE";
-		
-		//Update the state count
-		//this.gameModel.StateIdCount = this.stateIdCount;
+
+		//Update the game model
 		ODataModel.getODataModel().update("/Games('" + this.gameModel.GameId + "')", this.gameModel);
-		
-		//Kick off the save
-		this.stateList[this.saveCount].save();
+
+		//Save the game
+		this.save();
 	},
 	
-	saveFSM() {
-		this.saveCount++;
-		switch(this.type) {
-		case "STATE":
-			if(this.stateList[this.saveCount] != null) {
-				this.stateList[this.saveCount].save();
-			} else {
-				this.saveCount = -1;
-				this.type = "CONNECTION";
-				this.saveFSM();
-			}
-			break;
-		case "CONNECTION":
-			if(this.connectionList[this.saveCount] != null) {
-				this.connectionList[this.saveCount].save();
-			} else {
-				this.busy.close();
-				sap.m.MessageToast.show("Game Saved Successfully!");
-			}
-			break;
+	save : function() {
+		
+		//Container for all of the data to be sent
+		var saveJSON = {
+				game : this.gameModel,
+				states : [],
+				connections : []
 		}
+		
+		//Loop through and save all of the states
+		for(var i = 0; i < this.stateList.length; i++) {
+			saveJSON.states.push(this.stateList[i].save());
+		}
+		
+		//Loop through and save all of the connections
+		for(var i = 0; i < this.connectionList.length; i++) {
+			saveJSON.connections.push(this.connectionList[i].save());
+		}
+		
+		console.log(JSON.stringify(saveJSON));
+		console.log(JSON.stringify(saveJSON).length);
+		
+		$.ajax({
+		     url: 'http://localhost:8080/WLCPWebApp/SaveGame',
+		     type: 'POST', 
+		     dataType: 'text',
+		     data: 'saveData=' + JSON.stringify(saveJSON),
+		     success : $.proxy(this.saveSuccess, this)
+		});
+	},
+	
+	saveSuccess : function() {
+		this.busy.close();
 	},
 	
 	resetEditor : function() {

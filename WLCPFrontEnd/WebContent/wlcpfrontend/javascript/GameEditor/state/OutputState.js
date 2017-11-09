@@ -24,7 +24,6 @@ class OutputState extends State {
 		this.modelJSON.iconTabs = this.generateData(3,3);
 		this.model = new sap.ui.model.json.JSONModel(this.modelJSON);
 		this.create();
-		this.displayTextCreated = [];
 	}
 	
 	create() {
@@ -108,150 +107,27 @@ class OutputState extends State {
 		}
 	}
 	
-	static loadData(oData) {
-		//Create a new display state
-		var outputState = new OutputState("toolboxOutputStateTopColor", "toolboxOutputStateBottomColor", "Output State", oData.GameStateId, GameEditor.getEditorController().jsPlumbInstance);
-		
-		//Set the position
-		outputState.setPositionX(oData.PositionX); outputState.setPositionY(oData.PositionY);
-		
-		//Redraw it
-		outputState.draw();
-		
-		//Push back the state
-		GameEditor.getEditorController().stateList.push(outputState);
-		
-		//Load its components
-		//outputState.loadComponents(oData);
-	}
-	
-	loadComponents(oData) {
-		this.loadDisplayText(oData);
-	}
-	
-	loadDisplayText(oData) {
-		ODataModel.getODataModel().read("/OutputStates" + "(" + oData.StateId + ")/DisplayTextStateMapDetails", {success : $.proxy(this.loadDisplayTextSuccess, this, oData), error : super.saveError});
-	}
-	
-	loadDisplayTextSuccess(origOData, oData) {
-		for(var i = 0; i < oData.results.length; i++) {
-			for(var n = 0; n < this.modelJSON.iconTabs.length; n++) {
-				if(oData.results[i].Scope == this.modelJSON.iconTabs[n].scope) {
-					this.modelJSON.iconTabs[n].displayText = oData.results[i].DisplayText;
-				}
-			}
-		}
-	}
-	
-	saveFSM() {
-		this.saveCount++;
-		switch(this.type) {
-		case "DISPLAY_TEXT":
-			if(this.modelJSON.iconTabs.length != this.saveCount) {
-				if(this.modelJSON.iconTabs[this.saveCount].displayText != "") {
-					this.saveDisplayText();
-				} else {
-					this.saveFSM();
-				}
-			} else {
-				this.saveCount = -1;
-				this.type = "NULL";
-				this.displayTextCreated = [];
-				this.saveFSM();
-			}
-			break;
-		}
-	}
-	
-	saveDisplayText() {
-		
-		var filters = [];
-		filters.push(new sap.ui.model.Filter({path: "Game", operator: sap.ui.model.FilterOperator.EQ, value1: GameEditor.getEditorController().gameModel.GameId}));
-		filters.push(new sap.ui.model.Filter({path: "GameStateId", operator: sap.ui.model.FilterOperator.EQ, value1: this.htmlId}));
-		filters.push(new sap.ui.model.Filter({path: "Scope", operator: sap.ui.model.FilterOperator.EQ, value1: this.modelJSON.iconTabs[this.saveCount].scope}));
-		
-		//Read in the state data
-		ODataModel.getODataModel().read("/DisplayTextStateMaps", {filters: filters, success: $.proxy(this.saveDisplayTextSuccess, this), error: super.saveError});
-	}
-	
-	saveDisplayTextSuccess(oData) {
-		if(oData.results.length == 1) {
-			
-			//We need to update the entry
-			ODataModel.getODataModel().update("/DisplayTextStateMaps" + "(" + oData.results[0].DisplayTextStateMapId + ")", {DisplayText : this.modelJSON.iconTabs[this.saveCount].displayText}, {success: $.proxy(this.saveFSM, this), error: super.saveError});
-				
-		} else if(oData.results.length == 0) {
-			
-			var saveData = {
-				DisplayTextStateMapId : 0, 
-				GameStateId : this.htmlId, 
-				GameDetails : {
-					__metadata : {
-			             uri : ODataModel.getODataModelURL() + "/Games('" + GameEditor.getEditorController().gameModel.GameId + "')"
-					}
-				},
-				DisplayText : this.modelJSON.iconTabs[this.saveCount].displayText, 
-				Scope : this.modelJSON.iconTabs[this.saveCount].scope
-			}
-			
-			//We need to create the entry
-			ODataModel.getODataModel().create("/DisplayTextStateMaps", saveData, {success: $.proxy(this.createDisplayTextSuccess, this), error: super.saveError});
-
-		} else {
-			//Something went terribly wrong...
-		}
-	}
-	
-	createDisplayTextSuccess(oData, response) {
-		var filters = [];
-		filters.push(new sap.ui.model.Filter({path: "Game", operator: sap.ui.model.FilterOperator.EQ, value1: oData.Game}));
-		filters.push(new sap.ui.model.Filter({path: "GameStateId", operator: sap.ui.model.FilterOperator.EQ, value1: oData.GameStateId}));
-		filters.push(new sap.ui.model.Filter({path: "Scope", operator: sap.ui.model.FilterOperator.EQ, value1: oData.Scope}));
-		
-		//Read in the state data
-		ODataModel.getODataModel().read("/DisplayTextStateMaps", {filters: filters, success: $.proxy(this.saveCreatedDisplayText, this), error: super.saveError});
-	}
-	
-	saveCreatedDisplayText(oData) {
-		this.displayTextCreated.push(oData.results[0].DisplayTextStateMapId);
-		this.saveFSM();
-	}
-	
 	save() {
-		this.saveCount = -1;
-		this.type = "DISPLAY_TEXT";
-		this.saveFSM();
-		super.save("/OutputStates", this.saveState, this);
-	}
-
-	saveState(oData) {
-		
-		var displayText = [];
-		
-		for(var i = 0; i < this.displayTextCreated.length; i++) {
-			displayText.push({__metadata : {
-		             uri : ODataModel.getODataModelURL() + "/DisplayTextStateMaps(" + this.displayTextCreated[i] + ")"
-		         }});
+		var outputStateData = [];
+		for(var i = 0; i < this.modelJSON.iconTabs.length; i++) {
+			if(this.modelJSON.iconTabs[i].displayText != "") {
+				var data = {
+						scope : this.modelJSON.iconTabs[i].scope,
+						displayText : this.modelJSON.iconTabs[i].displayText
+					}
+				outputStateData.push(data);
+			}
 		}
 		
 		var saveData = {
-			StateId : 0,
-			GameStateId : this.htmlId,
-			PositionX : this.positionX,
-			PositionY : this.positionY,
-			GameDetails : {
-				__metadata : {
-		             uri : ODataModel.getODataModelURL() + "/Games('" + GameEditor.getEditorController().gameModel.GameId + "')"
-		         }
-			},
-			DisplayTextStateMapDetails : displayText
+			stateId : this.htmlId,
+			positionX : this.positionX,
+			positionY : this.positionY,
+			game : GameEditor.getEditorController().gameModel.GameId,
+			stateType : "OUTPUT_STATE",
+			displayTextStateMap : outputStateData,
 		}
 		
-		super.saveState(oData, super.saveSuccess, "/OutputStates", saveData);
-	}
-	
-	closeDialog() {
-		this.dialog.close();
-		this.dialog.destroy();
+		return saveData;
 	}
 }

@@ -22,16 +22,12 @@ public class State implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "STATE_ID")
-	private Integer stateId;
+	private String stateId;
 	
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "GAME")
 	private Game game;
-	
-	@Column(length = 40, name = "GAME_STATE_ID")
-	private String gameStateId;
 	
 	@Enumerated(EnumType.ORDINAL)
 	@Column(name = "STATE_TYPE")
@@ -42,32 +38,25 @@ public class State implements Serializable {
 	
 	@Column(name = "POSITION_Y")
 	private Float positionY;
-	
-//	@JoinTable(name = "STATE_INPUT_CONNECTIONS", joinColumns = @JoinColumn(name = "STATE_ID", referencedColumnName = "STATE_ID"), inverseJoinColumns = @JoinColumn(name = "CONNECTION_ID", referencedColumnName = "CONNECTION_ID"))
-//	@OneToMany(orphanRemoval = true)
-//	private List<Connection> inputConnections = new ArrayList<Connection>();
-//	
-//	@JoinTable(name = "STATE_OUTPUT_CONNECTIONS", joinColumns = @JoinColumn(name = "STATE_ID", referencedColumnName = "STATE_ID"), inverseJoinColumns = @JoinColumn(name = "CONNECTION_ID", referencedColumnName = "CONNECTION_ID"))
-//	@OneToMany(orphanRemoval = true)
-//	private List<Connection> outputConnections = new ArrayList<Connection>();
 
 	public State() {
 		super();
 	}
-
-	public State(Game game, String gameStateId, Float positionX, Float positionY) {
+	
+	public State(String stateId, Game game, StateType stateType, Float positionX, Float positionY) {
 		super();
+		this.stateId = stateId;
 		this.game = game;
-		this.gameStateId = gameStateId;
+		this.stateType = stateType;
 		this.positionX = positionX;
 		this.positionY = positionY;
 	}
 
-	public Integer getStateId() {
+	public String getStateId() {
 		return stateId;
 	}
 
-	public void setStateId(Integer stateId) {
+	public void setStateId(String stateId) {
 		this.stateId = stateId;
 	}
 
@@ -77,14 +66,6 @@ public class State implements Serializable {
 
 	public void setGame(Game game) {
 		this.game = game;
-	}
-
-	public String getGameStateId() {
-		return gameStateId;
-	}
-
-	public void setGameStateId(String gameStateId) {
-		this.gameStateId = gameStateId;
 	}
 
 	public StateType getStateType() {
@@ -110,21 +91,5 @@ public class State implements Serializable {
 	public void setPositionY(Float positionY) {
 		this.positionY = positionY;
 	}
-
-//	public List<Connection> getInputConnections() {
-//		return inputConnections;
-//	}
-//
-//	public void setInputConnections(List<Connection> inputConnections) {
-//		this.inputConnections = inputConnections;
-//	}
-//
-//	public List<Connection> getOutputConnections() {
-//		return outputConnections;
-//	}
-//
-//	public void setOutputConnections(List<Connection> outputConnections) {
-//		this.outputConnections = outputConnections;
-//	}
 
 }

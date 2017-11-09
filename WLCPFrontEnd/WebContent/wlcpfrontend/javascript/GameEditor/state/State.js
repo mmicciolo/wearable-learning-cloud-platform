@@ -109,64 +109,8 @@ class State {
 		}
 	}
 	
-	static loadData(oData) {
-		return this;
-	}
-	
-	static load() {
-		var filters = [];
-		filters.push(new sap.ui.model.Filter({path: "Game", operator: sap.ui.model.FilterOperator.EQ, value1: GameEditor.getEditorController().gameModel.GameId}));
-		ODataModel.getODataModel().read("/States", {filters: filters, success: $.proxy(this.loadSuccess, this), error: this.saveError});
-	}
-	
-	static loadSuccess(oData) {
-		for(var i = 0; i < oData.results.length; i++) {
-			switch(oData.results[i].StateType) {
-			case StateType.START_STATE:
-				StartState.loadData(oData.results[i]);
-				break;
-			case StateType.OUTPUT_STATE:
-				OutputState.loadData(oData.results[i]);
-				break;
-			}
-		}
-		
-		//Load Connections
-		Connection.load();
-	}
-	
-	save(odataPath, saveSuccess, context) {
-		var filters = [];
-		filters.push(new sap.ui.model.Filter({path: "Game", operator: sap.ui.model.FilterOperator.EQ, value1: GameEditor.getEditorController().gameModel.GameId}));
-		filters.push(new sap.ui.model.Filter({path: "GameStateId", operator: sap.ui.model.FilterOperator.EQ, value1: this.htmlId}));
-		
-		//Read in the state data
-		ODataModel.getODataModel().read(odataPath, {filters: filters, success: $.proxy(saveSuccess, context), error: this.saveError});
-	}
-	
-	saveState(oData, saveSuccess, odataPath, saveData) {
-		if(oData.results.length == 1) {
-			
-			//We need to update the entry
-			ODataModel.getODataModel().update(odataPath + "(" + oData.results[0].StateId + ")", saveData, {success: this.saveSuccess, error: this.saveError});
-				
-		} else if(oData.results.length == 0) {
-			
-			//We need to create the entry
-			ODataModel.getODataModel().create(odataPath, saveData, {success: saveSuccess, error: this.saveError});
-
-		} else {
-			//Something went terribly wrong...
-		}
-	}
-	
-	saveSuccess() {
-		GameEditor.getEditorController().saveFSM();
-	}
-	
-	saveError() {
-		sap.m.MessageBox.error("There was an error saving the game.");
-		GameEditor.getEditorController().busy.close();
+	save() {
+		return [];
 	}
 	
 	getPositionX() {

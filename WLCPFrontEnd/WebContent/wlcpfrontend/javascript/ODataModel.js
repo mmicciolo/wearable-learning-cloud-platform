@@ -17,9 +17,17 @@ var ODataModel = {
 	
 	getODataModelURL : function() {
 		if(window.location.host.includes("www")) {
-			return "http://" + window.location.host.replace("www.", "") + "/WLCPWebApp/WLCPOData.svc";
+			if(window.location.host.includes(":")) {
+				return "http://" + window.location.host.replace("www.", "") + "/WLCPWebApp/WLCPOData.svc";
+			} else {
+				return "http://" + window.location.host.replace("www.", "") + ":80" + "/WLCPWebApp/WLCPOData.svc";
+			}
 		} else {
-			return "http://" + window.location.host + "/WLCPWebApp/WLCPOData.svc";
+			if(window.location.host.includes(":")) {
+				return "http://" + window.location.host + "/WLCPWebApp/WLCPOData.svc";
+			} else {
+				return "http://" + window.location.host + ":80" + "/WLCPWebApp/WLCPOData.svc";
+			}
 		}
 	},
 	

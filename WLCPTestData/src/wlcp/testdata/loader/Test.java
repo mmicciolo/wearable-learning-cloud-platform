@@ -22,8 +22,8 @@ public class Test {
 		Map<String, String> TEST_CONFIG_LOCALHOST = new HashMap<String, String>();
 		TEST_CONFIG_LOCALHOST.put(PersistenceUnitProperties.JDBC_URL, "jdbc:mysql://localhost/test");
 		TEST_CONFIG_LOCALHOST.put(PersistenceUnitProperties.JDBC_DRIVER, "com.mysql.jdbc.Driver");
-		TEST_CONFIG_LOCALHOST.put(PersistenceUnitProperties.JDBC_USER, "root");
-		TEST_CONFIG_LOCALHOST.put(PersistenceUnitProperties.JDBC_PASSWORD, "");
+		TEST_CONFIG_LOCALHOST.put(PersistenceUnitProperties.JDBC_USER, "wlcp");
+		TEST_CONFIG_LOCALHOST.put(PersistenceUnitProperties.JDBC_PASSWORD, "wlcp");
 		TEST_CONFIG_LOCALHOST.put("eclipselink.ddl-generation", "drop-and-create-tables");
 		TEST_CONFIG_LOCALHOST.put("eclipselink.target-database", "MySQL");
 		

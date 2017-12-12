@@ -20,6 +20,12 @@
         <version>3.0.0</version>
         <configuration>
           <warSourceDirectory>WebContent</warSourceDirectory>
+          <webResources>
+          	<resource>
+          		<directory>TestData</directory>
+          		<targetPath>TestData</targetPath>
+          	</resource>
+          </webResources>
         </configuration>
       </plugin>
     </plugins>

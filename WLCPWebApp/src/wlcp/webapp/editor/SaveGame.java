@@ -65,8 +65,8 @@ public class SaveGame extends HttpServlet {
 		Map<Object, Object> properties = new HashMap<Object, Object>();
 		properties.put(PersistenceUnitProperties.JDBC_URL, "jdbc:mysql://localhost/test");
 		properties.put(PersistenceUnitProperties.JDBC_DRIVER, "com.mysql.jdbc.Driver");
-		properties.put(PersistenceUnitProperties.JDBC_USER, "root");
-		properties.put(PersistenceUnitProperties.JDBC_PASSWORD, "");
+		properties.put(PersistenceUnitProperties.JDBC_USER, "wlcp");
+		properties.put(PersistenceUnitProperties.JDBC_PASSWORD, "wlcp");
 		properties.put("eclipselink.ddl-generation", "none");
 		properties.put("eclipselink.target-database", "MySQL");
         

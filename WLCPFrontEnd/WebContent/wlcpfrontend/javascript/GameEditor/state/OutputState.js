@@ -125,24 +125,33 @@ class OutputState extends State {
 	}
 	
 	loadComponents(loadData) {
-		for(var i = 0; i < loadData.displayTextStateMap.length; i++) {
+		for(var key in loadData.displayText) {
 			for(var n = 0; n < this.modelJSON.iconTabs.length; n++) {
-				if(loadData.displayTextStateMap[i].scope == this.modelJSON.iconTabs[n].scope) {
-					this.modelJSON.iconTabs[n].displayText = loadData.displayTextStateMap[i].displayText;
+				if(key == this.modelJSON.iconTabs[n].scope) {
+					this.modelJSON.iconTabs[n].displayText = loadData.displayText[key];
 				}
 			}
 		}
+//		for(var i = 0; i < loadData.displayTextStateMap.length; i++) {
+//			for(var n = 0; n < this.modelJSON.iconTabs.length; n++) {
+//				if(loadData.displayTextStateMap[i].scope == this.modelJSON.iconTabs[n].scope) {
+//					this.modelJSON.iconTabs[n].displayText = loadData.displayTextStateMap[i].displayText;
+//				}
+//			}
+//		}
 	}
 	
 	save() {
-		var outputStateData = [];
+		//var outputStateData = [];
+		var outputStateData = {};
 		for(var i = 0; i < this.modelJSON.iconTabs.length; i++) {
 			if(this.modelJSON.iconTabs[i].displayText != "") {
-				var data = {
-						scope : this.modelJSON.iconTabs[i].scope,
-						displayText : this.modelJSON.iconTabs[i].displayText
-					}
-				outputStateData.push(data);
+//				var data = {
+//						scope : this.modelJSON.iconTabs[i].scope,
+//						displayText : this.modelJSON.iconTabs[i].displayText
+//					}
+//				outputStateData.push(data);
+				outputStateData[this.modelJSON.iconTabs[i].scope] = this.modelJSON.iconTabs[i].displayText;
 			}
 		}
 		
@@ -150,9 +159,10 @@ class OutputState extends State {
 			stateId : this.htmlId,
 			positionX : this.positionX,
 			positionY : this.positionY,
-			game : GameEditor.getEditorController().gameModel.GameId,
+			//game : GameEditor.getEditorController().gameModel.GameId,
 			stateType : "OUTPUT_STATE",
-			displayTextStateMap : outputStateData,
+			//displayTextStateMap : outputStateData,
+			displayText : outputStateData
 		}
 		
 		return saveData;

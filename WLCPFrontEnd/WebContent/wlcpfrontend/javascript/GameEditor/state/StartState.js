@@ -43,7 +43,7 @@ class StartState extends State {
 			stateId : this.htmlId,
 			positionX : this.positionX,
 			positionY : this.positionY,
-			game : GameEditor.getEditorController().gameModel.GameId,
+			//game : GameEditor.getEditorController().gameModel.GameId,
 			stateType : "START_STATE"
 		}
 		return saveData;

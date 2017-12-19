@@ -82,23 +82,24 @@ public class SaveGame extends HttpServlet {
 		//Init JPA
 		initJPA();
 		
-		Game game = entityManager.find(Game.class, saveData.game.GameId);
+		//Game game = entityManager.find(Game.class, saveData.game.GameId);
+		saveData.game = entityManager.find(Game.class, saveData.game.getGameId());
 		
 		//Loop through and save all of the states
 		for(int i = 0; i < saveData.states.length; i++) {
-			switch(saveData.states[i].stateType) {
-			case "START_STATE":
+			switch(saveData.states[i].getStateType()) {
+			case START_STATE:
 				entityManager.getTransaction().begin();
-				entityManager.merge(new StartState(saveData.states[i].stateId, game, StateType.START_STATE, saveData.states[i].positionX, saveData.states[i].positionY));
+				entityManager.merge(new StartState(saveData.states[i].getStateId(), saveData.game, StateType.START_STATE, saveData.states[i].getPositionX(), saveData.states[i].getPositionY()));
 				entityManager.getTransaction().commit();
 				break;
-			case "OUTPUT_STATE":
+			case OUTPUT_STATE:
 				Map<String, String> displayText = new HashMap<String, String>();
-				for(int n = 0; n < saveData.states[i].displayTextStateMap.length; n++) {
-					displayText.put(saveData.states[i].displayTextStateMap[n].scope, saveData.states[i].displayTextStateMap[n].displayText);
+				for(Map.Entry<String, String> entry : saveData.states[i].getDisplayText().entrySet()) {
+					displayText.put(entry.getKey(), entry.getValue());
 				}
 				entityManager.getTransaction().begin();
-				entityManager.merge(new OutputState(saveData.states[i].stateId, game, StateType.START_STATE, saveData.states[i].positionX, saveData.states[i].positionY, displayText));
+				entityManager.merge(new OutputState(saveData.states[i].getStateId(), saveData.game, StateType.OUTPUT_STATE, saveData.states[i].getPositionX(), saveData.states[i].getPositionY(), displayText));
 				entityManager.getTransaction().commit();
 				break;
 			}
@@ -107,7 +108,7 @@ public class SaveGame extends HttpServlet {
 		//Loop through all of the connections
 		for(int i = 0; i < saveData.connections.length; i++) {
 			entityManager.getTransaction().begin();
-			entityManager.merge(new Connection(game, saveData.connections[i].gameConnectionId, saveData.connections[i].connectionFrom, saveData.connections[i].connectionTo));
+			entityManager.merge(new Connection(saveData.game, saveData.connections[i].getGameConnectionId(), saveData.connections[i].getConnectionFrom(), saveData.connections[i].getConnectionTo()));
 			entityManager.getTransaction().commit();
 		}
 		
@@ -116,37 +117,7 @@ public class SaveGame extends HttpServlet {
 }
 
 class LoadSaveDataJSON {
-	GameJSON game;
-	StateJSON [] states;
-	ConnectionJSON [] connections;
-}
-
-class GameJSON {
-	String GameId;
-	Integer TeamCount;
-	Integer PlayersPerTeam;
-	Integer StateIdCount;
-	Boolean Visibility;
-}
-
-class StateJSON {
-	String stateId;
-	Float positionX;
-	Float positionY;
-	String game;
-	String stateType;
-	DisplayTextStateMapJSON[] displayTextStateMap;
-	
-}
-
-class DisplayTextStateMapJSON {
-	String scope;
-	String displayText;
-}
-
-class ConnectionJSON {
-	String gameConnectionId;
-	String connectionFrom;
-	String connectionTo;
-	String gameDetails;
+	Game game;
+	OutputState [] states;
+	Connection [] connections;
 }

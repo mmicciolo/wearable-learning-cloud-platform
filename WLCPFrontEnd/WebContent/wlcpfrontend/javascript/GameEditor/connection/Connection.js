@@ -28,7 +28,7 @@ class Connection {
 			gameConnectionId : this.gameConnectionId,
 			connectionFrom : this.connectionFrom,
 			connectionTo : this.connectionTo,
-			gameDetails : GameEditor.getEditorController().gameModel.GameId
+			//gameDetails : GameEditor.getEditorController().gameModel.GameId
 		}
 		return saveData;
 	}

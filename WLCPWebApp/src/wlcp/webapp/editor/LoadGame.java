@@ -22,6 +22,7 @@ import wlcp.model.master.Game;
 import wlcp.model.master.connection.Connection;
 import wlcp.model.master.state.OutputState;
 import wlcp.model.master.state.StartState;
+import wlcp.model.master.state.StateType;
 
 /**
  * Servlet implementation class LoadGame
@@ -91,44 +92,28 @@ public class LoadGame extends HttpServlet {
 		List<OutputState> outputStates = entityManager.createQuery("SELECT s FROM OutputState s WHERE s.game.gameId = '" + game.getGameId() + "'", OutputState.class).getResultList();
 		List<Connection> connections = entityManager.createQuery("SELECT s FROM Connection s WHERE s.game.gameId = '" + game.getGameId() + "'", Connection.class).getResultList();
 		
-		StateJSON[] stateJSON = new StateJSON[startStates.size() + outputStates.size()];
-		ConnectionJSON[] connectionJSON = new ConnectionJSON[connections.size()];
-		
 		for(StartState state : startStates) {
-			stateJSON[startStates.indexOf(state)] = new StateJSON();
-			stateJSON[startStates.indexOf(state)].stateId = state.getStateId();
-			stateJSON[startStates.indexOf(state)].game = state.getGame().getGameId();
-			stateJSON[startStates.indexOf(state)].positionX = state.getPositionX();
-			stateJSON[startStates.indexOf(state)].positionY = state.getPositionY();
-			stateJSON[startStates.indexOf(state)].stateType = "START_STATE";
+			state.setGame(null);
 		}
 		
 		for(OutputState state : outputStates) {
-			stateJSON[outputStates.indexOf(state) + 1] = new StateJSON();
-			stateJSON[outputStates.indexOf(state) + 1].stateId = state.getStateId();
-			stateJSON[outputStates.indexOf(state) + 1].game = state.getGame().getGameId();
-			stateJSON[outputStates.indexOf(state) + 1].positionX = state.getPositionX();
-			stateJSON[outputStates.indexOf(state) + 1].positionY = state.getPositionY();
-			stateJSON[outputStates.indexOf(state) + 1].stateType = "OUTPUT_STATE";
-			stateJSON[outputStates.indexOf(state) + 1].displayTextStateMap = new DisplayTextStateMapJSON[state.getDisplayText().size()];
-			for(int i = 0; i < state.getDisplayText().size(); i++) {
-				stateJSON[outputStates.indexOf(state) + 1].displayTextStateMap[i] = new DisplayTextStateMapJSON();
-				stateJSON[outputStates.indexOf(state) + 1].displayTextStateMap[i].scope = (String)state.getDisplayText().keySet().toArray()[i];
-				stateJSON[outputStates.indexOf(state) + 1].displayTextStateMap[i].displayText = (String)state.getDisplayText().values().toArray()[i];
-			}
+			state.setGame(null);
 		}
 		
 		for(Connection connection : connections) {
-			connectionJSON[connections.indexOf(connection)] = new ConnectionJSON();
-			connectionJSON[connections.indexOf(connection)].gameConnectionId = connection.getGameConnectionId();
-			connectionJSON[connections.indexOf(connection)].connectionFrom = connection.getConnectionFrom();
-			connectionJSON[connections.indexOf(connection)].connectionTo = connection.getConnectionTo();
-			connectionJSON[connections.indexOf(connection)].gameDetails = connection.getGame().getGameId();
+			connection.setGame(null);
 		}
 		
+		OutputState[] outputStateArray = new OutputState[startStates.size() + outputStates.size()];
+		outputStateArray = outputStates.toArray(outputStateArray);
+		outputStateArray[outputStateArray.length - 1] = new OutputState(startStates.get(0).getStateId(), startStates.get(0).getGame(), StateType.START_STATE, startStates.get(0).getPositionX(), startStates.get(0).getPositionY(), null);
+		
+		Connection[] connectionArray = new Connection[connections.size()];
+		connectionArray = connections.toArray(connectionArray);
+		
 		LoadSaveDataJSON loadData = new LoadSaveDataJSON();
-		loadData.states = stateJSON;
-		loadData.connections = connectionJSON;
+		loadData.states = outputStateArray;
+		loadData.connections = connectionArray;
 		
 		return gson.toJson(loadData, LoadSaveDataJSON.class);
 	}

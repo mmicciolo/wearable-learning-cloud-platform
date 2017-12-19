@@ -208,7 +208,13 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		
 		//Container for all of the data to be sent
 		var saveJSON = {
-				game : this.gameModel,
+				game : {
+					gameId : this.gameModel.GameId,
+					teamCount : this.gameModel.TeamCount,
+					playersPerTeam : this.gameModel.PlayersPerTeam,
+					stateIdCount : this.gameModel.StateIdCount,
+					visibility : this.gameModel.Visibility,
+				},
 				states : [],
 				connections : []
 		}

@@ -190,12 +190,14 @@ sap.ui.controller("wlcpfrontend.controllers.MainToolpage", {
 		sap.ui.getCore().byId(this.getView().getId() + "--pageContainer").to(this.currentPage.getId());
 		
 		//Load the main data model
-		if(window.location.href.includes("localhost")) {
-			this.oModel = new sap.ui.model.odata.v2.ODataModel("http://localhost:8080/WLCPWebApp/WLCPOData.svc");
-		} else {
-			this.oModel = new sap.ui.model.odata.v2.ODataModel("http://mmicciolo.tk:8080/WLCPWebApp/WLCPOData.svc");
-		}
-		sap.ui.getCore().setModel(this.oModel, "odata");
+		ODataModel.setupODataModel();
+		//this.oModel = ODataModel.getODataModel();
+//		if(window.location.href.includes("localhost")) {
+//			this.oModel = new sap.ui.model.odata.v2.ODataModel("http://localhost:8080/WLCPWebApp/WLCPOData.svc");
+//		} else {
+//			this.oModel = new sap.ui.model.odata.v2.ODataModel("http://mmicciolo.tk:8080/WLCPWebApp/WLCPOData.svc");
+//		}
+		//sap.ui.getCore().setModel(this.oModel, "odata");
 	},
 
 /**

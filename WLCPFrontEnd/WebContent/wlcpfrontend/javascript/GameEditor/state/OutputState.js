@@ -132,25 +132,12 @@ class OutputState extends State {
 				}
 			}
 		}
-//		for(var i = 0; i < loadData.displayTextStateMap.length; i++) {
-//			for(var n = 0; n < this.modelJSON.iconTabs.length; n++) {
-//				if(loadData.displayTextStateMap[i].scope == this.modelJSON.iconTabs[n].scope) {
-//					this.modelJSON.iconTabs[n].displayText = loadData.displayTextStateMap[i].displayText;
-//				}
-//			}
-//		}
 	}
 	
 	save() {
-		//var outputStateData = [];
 		var outputStateData = {};
 		for(var i = 0; i < this.modelJSON.iconTabs.length; i++) {
 			if(this.modelJSON.iconTabs[i].displayText != "") {
-//				var data = {
-//						scope : this.modelJSON.iconTabs[i].scope,
-//						displayText : this.modelJSON.iconTabs[i].displayText
-//					}
-//				outputStateData.push(data);
 				outputStateData[this.modelJSON.iconTabs[i].scope] = this.modelJSON.iconTabs[i].displayText;
 			}
 		}
@@ -159,9 +146,7 @@ class OutputState extends State {
 			stateId : this.htmlId,
 			positionX : this.positionX,
 			positionY : this.positionY,
-			//game : GameEditor.getEditorController().gameModel.GameId,
 			stateType : "OUTPUT_STATE",
-			//displayTextStateMap : outputStateData,
 			displayText : outputStateData
 		}
 		

@@ -194,6 +194,9 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		//Load the connections
 		Connection.load(loadedData.connections);
 		
+		//Load the transitions
+		Transition.load(loadedData.transitions);
+		
 		this.busy.close();
 	},
 
@@ -222,7 +225,8 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 					visibility : this.gameModel.Visibility,
 				},
 				states : [],
-				connections : []
+				connections : [],
+				transitions :[]
 		}
 		
 		//Loop through and save all of the states
@@ -233,6 +237,11 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		//Loop through and save all of the connections
 		for(var i = 0; i < this.connectionList.length; i++) {
 			saveJSON.connections.push(this.connectionList[i].save());
+		}
+		
+		//Loop through all of the transition
+		for(var i = 0; i < this.transitionList.length; i++) {
+			saveJSON.transitions.push(this.transitionList[i].save());
 		}
 		
 		$.ajax({url: ODataModel.getWebAppURL() + "/SaveGame", type: 'POST', dataType: 'text', data: 'saveData=' + JSON.stringify(saveJSON), success : $.proxy(this.saveSuccess, this)});

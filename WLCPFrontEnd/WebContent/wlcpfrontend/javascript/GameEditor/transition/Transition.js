@@ -27,6 +27,20 @@ class Transition {
 		return this;
 	}
 	
+	static load(loadData) {
+		for(var i = 0; i < loadData.length; i++) {
+			var connection = null;
+			for(var n = 0; n < GameEditor.getEditorController().jsPlumbInstance.getConnections().length; n++) {
+				if(GameEditor.getEditorController().jsPlumbInstance.getConnections()[n].id == loadData[i].connection) {
+					connection = GameEditor.getEditorController().jsPlumbInstance.getConnections()[n];
+					break;
+				}
+			}
+			var inputTransition = new InputTransition("transition", connection, loadData[i].transitionId, this);
+			GameEditor.getEditorController().transitionList.push(inputTransition);
+		}
+	}
+	
 	save() {
 		return [];
 	}

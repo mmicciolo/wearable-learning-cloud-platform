@@ -22,6 +22,7 @@ import wlcp.model.master.connection.Connection;
 import wlcp.model.master.state.OutputState;
 import wlcp.model.master.state.StartState;
 import wlcp.model.master.state.StateType;
+import wlcp.model.master.transition.Transition;
 /**
  * Servlet implementation class SaveGame
  */
@@ -112,6 +113,13 @@ public class SaveGame extends HttpServlet {
 			entityManager.getTransaction().commit();
 		}
 		
+		//Loop through all of the transitions
+		for(int i = 0; i < saveData.transitions.length; i++) {
+			entityManager.getTransaction().begin();
+			entityManager.merge(new Transition(saveData.transitions[i].getTransitionId(), saveData.game, saveData.transitions[i].getConnection()));
+			entityManager.getTransaction().commit();
+		}
+		
 	}
 
 }
@@ -120,4 +128,5 @@ class LoadSaveDataJSON {
 	Game game;
 	OutputState [] states;
 	Connection [] connections;
+	Transition[] transitions;
 }

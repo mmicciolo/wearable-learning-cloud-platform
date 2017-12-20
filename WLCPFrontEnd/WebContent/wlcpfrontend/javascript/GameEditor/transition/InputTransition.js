@@ -28,11 +28,11 @@ class InputTransition extends Transition {
 	
 	save() {
 		var saveData = {
-			transitionId : overlayId,
-			connection : {
-				
-			}
+			transitionId : this.overlayId,
+			connection : this.connection.id
 		}
+		
+		return saveData;
 	}
 	
 	doubleClick() {

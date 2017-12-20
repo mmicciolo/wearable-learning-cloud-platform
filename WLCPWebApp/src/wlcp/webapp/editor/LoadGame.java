@@ -23,6 +23,7 @@ import wlcp.model.master.connection.Connection;
 import wlcp.model.master.state.OutputState;
 import wlcp.model.master.state.StartState;
 import wlcp.model.master.state.StateType;
+import wlcp.model.master.transition.Transition;
 
 /**
  * Servlet implementation class LoadGame
@@ -91,6 +92,7 @@ public class LoadGame extends HttpServlet {
 		List<StartState> startStates = entityManager.createQuery("SELECT s FROM StartState s WHERE s.game.gameId = '" + game.getGameId() + "'", StartState.class).getResultList();
 		List<OutputState> outputStates = entityManager.createQuery("SELECT s FROM OutputState s WHERE s.game.gameId = '" + game.getGameId() + "'", OutputState.class).getResultList();
 		List<Connection> connections = entityManager.createQuery("SELECT s FROM Connection s WHERE s.game.gameId = '" + game.getGameId() + "'", Connection.class).getResultList();
+		List<Transition> transitions = entityManager.createQuery("SELECT s FROM Transition s WHERE s.game.gameId = '" + game.getGameId() + "'", Transition.class).getResultList();
 		
 		for(StartState state : startStates) {
 			state.setGame(null);
@@ -104,6 +106,10 @@ public class LoadGame extends HttpServlet {
 			connection.setGame(null);
 		}
 		
+		for(Transition transition : transitions) {
+			transition.setGame(null);
+		}
+		
 		OutputState[] outputStateArray = new OutputState[startStates.size() + outputStates.size()];
 		outputStateArray = outputStates.toArray(outputStateArray);
 		outputStateArray[outputStateArray.length - 1] = new OutputState(startStates.get(0).getStateId(), startStates.get(0).getGame(), StateType.START_STATE, startStates.get(0).getPositionX(), startStates.get(0).getPositionY(), null);
@@ -111,9 +117,13 @@ public class LoadGame extends HttpServlet {
 		Connection[] connectionArray = new Connection[connections.size()];
 		connectionArray = connections.toArray(connectionArray);
 		
+		Transition[] transitionArray = new Transition[transitions.size()];
+		transitionArray = transitions.toArray(transitionArray);
+		
 		LoadSaveDataJSON loadData = new LoadSaveDataJSON();
 		loadData.states = outputStateArray;
 		loadData.connections = connectionArray;
+		loadData.transitions = transitionArray;
 		
 		return gson.toJson(loadData, LoadSaveDataJSON.class);
 	}

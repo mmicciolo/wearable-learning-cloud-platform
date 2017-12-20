@@ -25,15 +25,14 @@ public class Transition implements Serializable {
 	@JoinColumn(name = "GAME")
 	private Game game;
 	
-	@OneToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(name = "CONNECTION_ID")
-	private Connection connection;
+	@Column(name = "CONNECTION")
+	private String connection;
 
 	public Transition() {
 		super();
 	}
 	
-	public Transition(String transitionId, Game game, Connection connection) {
+	public Transition(String transitionId, Game game, String connection) {
 		super();
 		this.transitionId = transitionId;
 		this.game = game;
@@ -56,11 +55,11 @@ public class Transition implements Serializable {
 		this.game = game;
 	}
 
-	public Connection getConnection() {
+	public String getConnection() {
 		return connection;
 	}
 
-	public void setConnection(Connection connection) {
+	public void setConnection(String connection) {
 		this.connection = connection;
 	}
    

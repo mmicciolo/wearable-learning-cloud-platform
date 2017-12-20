@@ -27,6 +27,10 @@ class Transition {
 		return this;
 	}
 	
+	save() {
+		return [];
+	}
+
 	static getClosestConnection(positionX, positionY, jsPlumbInstance) {
 		
 		//Get the position of the transition

@@ -33,6 +33,12 @@ public class Game implements Serializable {
 	
 	@Column(name = "STATE_ID_COUNT")
 	private Integer stateIdCount;
+	
+	@Column(name = "TRANSITION_ID_COUNT")
+	private Integer transitionIdCount;
+	
+	@Column(name = "CONNECTION_ID_COUNT")
+	private Integer connectionIdCount;
 
 	public Game() {
 		super();
@@ -94,6 +100,22 @@ public class Game implements Serializable {
 
 	public void setStateIdCount(Integer stateIdCount) {
 		this.stateIdCount = stateIdCount;
+	}
+
+	public Integer getTransitionIdCount() {
+		return transitionIdCount;
+	}
+
+	public void setTransitionIdCount(Integer transitionIdCount) {
+		this.transitionIdCount = transitionIdCount;
+	}
+
+	public Integer getConnectionIdCount() {
+		return connectionIdCount;
+	}
+
+	public void setConnectionIdCount(Integer connectionIdCount) {
+		this.connectionIdCount = connectionIdCount;
 	}
 	
 }

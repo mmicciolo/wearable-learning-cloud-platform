@@ -7,6 +7,8 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		TeamCount : 0,
 		PlayersPerTeam : 0,
 		StateIdCount : 0,
+		TransitionIdCount : 0,
+		ConnectionIdCount : 0,
 		UsernameDetails : {
 			__metadata : {
 	             uri : ODataModel.getODataModelURL() + "/Usernames('mmicciolo')"
@@ -20,16 +22,14 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		TeamCount : 0,
 		PlayersPerTeam : 0,
 		StateIdCount : 0,
+		TransitionIdCount : 0,
+		ConnectionIdCount : 0,
 		Visibility : true
 	},
 	
-	stateId : "state",
-	stateIdCount : 0,
-	transitionIdCount : 0,
-	
 	stateList : [],
+	transitionList : [],
 	connectionList : [],
-	transitionMap : new Map(),
 	
 	jsPlumbInstance : null,
 	
@@ -108,27 +108,32 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		
 		var connection = Transition.getClosestConnection(ui.position.left, ui.position.top, this.jsPlumbInstance);
 		if(connection != null) {
-			if(ui.helper[0].className.includes("buttonPressTransition")) {
-				var transitionId = "buttonPressTransition" + this.createTransitionId();
-				var inputTransition = new InputTransition("transition", connection, transitionId, this);
-				this.transitionMap.set(transitionId, inputTransition);
-			}
+			var inputTransition = new InputTransition("transition", connection, this.createTransitionId(), this);
+			this.transitionList.push(inputTransition);
+		} else {
+			sap.m.MessageBox.error("A transition already exists there!");
 		}
 	},
 	
 	connectionDropped : function(oEvent) {
+		oEvent.connection.id = this.createConnectionId();
 		this.connectionList.push(new Connection(oEvent.sourceId, oEvent.targetId, oEvent.connection.id));
 		return true;
 	},
 	
 	createStateId : function() {
 		this.gameModel.StateIdCount++;
-		return this.gameModel.GameId + "_" + this.stateId + "_" + this.gameModel.StateIdCount;
+		return this.gameModel.GameId + "_state_" + this.gameModel.StateIdCount;
 	},
 	
 	createTransitionId : function() {
-		this.transitionIdCount++;
-		return this.transitionIdCount;
+		this.gameModel.TransitionIdCount++;
+		return this.gameModel.GameId + "_transition_" + this.gameModel.TransitionIdCount;
+	},
+	
+	createConnectionId : function() {
+		this.gameModel.ConnectionIdCount++;
+		return this.gameModel.GameId + "_connection_" + this.gameModel.ConnectionIdCount;
 	},
 	
 	newGame : function() {

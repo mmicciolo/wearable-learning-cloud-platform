@@ -108,7 +108,7 @@ public class SaveGame extends HttpServlet {
 		//Loop through all of the connections
 		for(int i = 0; i < saveData.connections.length; i++) {
 			entityManager.getTransaction().begin();
-			entityManager.merge(new Connection(saveData.game, saveData.connections[i].getGameConnectionId(), saveData.connections[i].getConnectionFrom(), saveData.connections[i].getConnectionTo()));
+			entityManager.merge(new Connection(saveData.connections[i].getConnectionId(), saveData.game, saveData.connections[i].getConnectionFrom(), saveData.connections[i].getConnectionTo()));
 			entityManager.getTransaction().commit();
 		}
 		

@@ -9,29 +9,6 @@ class InputTransition extends Transition {
 		this.create();
 	}
 	
-	verify() {
-		
-		//Get the connections of the state the transitions originates from
-		var connections = this.jsPlumbInstance.getConnections({source : this.connection.source.id});
-		
-		//Loop through all of the connections
-		for(var i = 0; i < connections.length; i++) {
-			
-			//Loop through the overlays in the connections
-			for(var key in connections[i].getOverlays()) {
-				
-				//If its a label we are interested
-				if(connections[i].getOverlays()[key].id.includes("buttonPressTransition")) {
-					var buttonPressTransition = this.gameEditor.transitionMap.get(connections[i].getOverlays()[key].id);
-					if(buttonPressTransition.getButtonColor() == ButtonColor.ANY) {
-						console.log("Cannot add");
-					}
-				}
-			}
-		}
-
-	}
-	
 	create() {
 		
 		//Add the overlay
@@ -49,7 +26,23 @@ class InputTransition extends Transition {
 		$("#"+this.htmlId).dblclick($.proxy(this.doubleClick, this));
 	}
 	
+	save() {
+		var saveData = {
+			transitionId : overlayId,
+			connection : {
+				
+			}
+		}
+	}
+	
 	doubleClick() {
-
+		//Create an instance of the dialog
+		this.dialog = sap.ui.xmlfragment("wlcpfrontend.fragments.GameEditor.Transitions.InputTransition", this);
+		
+		//Set the model for the dialog
+		//this.dialog.setModel(this.model);
+			
+		//Open the dialog
+		this.dialog.open();
 	}
 }

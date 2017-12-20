@@ -45,6 +45,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
             }]
         ]});
 		this.jsPlumbInstance.bind("beforeDrop", $.proxy(this.connectionDropped, this));
+		this.jsPlumbInstance.bind("beforeDetach", $.proxy(this.connectionDetached, this));
 	},
 	
 	initStartState : function() {
@@ -119,6 +120,15 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		oEvent.connection.id = this.createConnectionId();
 		this.connectionList.push(new Connection(oEvent.sourceId, oEvent.targetId, oEvent.connection.id));
 		return true;
+	},
+	
+	connectionDetached : function(oEvent) {
+		for(var i = 0; i < this.connectionList.length; i++) {
+			if(this.connectionList[i].connectionId == oEvent.id) {
+				this.connectionList[i].detach();
+				break;
+			}
+		}
 	},
 	
 	createStateId : function() {

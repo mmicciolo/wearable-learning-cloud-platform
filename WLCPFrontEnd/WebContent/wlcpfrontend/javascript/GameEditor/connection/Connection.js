@@ -26,6 +26,24 @@ class Connection {
 		}
 	}
 	
+	detach() {
+		
+		//Loop through all of the transitions
+		for(var i = 0; i < GameEditor.getEditorController().transitionList.length; i++) {
+			
+			//If we found the transition on this connection remove it
+			if(GameEditor.getEditorController().transitionList[i].connection.id == this.connectionId) {
+				
+				//Remove it
+				GameEditor.getEditorController().transitionList[i].removeTransition(sap.m.MessageBox.Action.OK);
+				break;
+			}
+		}
+		
+		//Remove ourself from the connection list
+		GameEditor.getEditorController().connectionList.splice(GameEditor.getEditorController().connectionList.indexOf(this), 1);
+	}
+	
 	save() {
 		var saveData = {
 			connectionId : this.connectionId,

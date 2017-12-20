@@ -48,7 +48,7 @@ class State {
 		topColorText.innerHTML = this.text;
 		topColorDiv.appendChild(topColorText);
 		
-		if(this.stateDiv.id != "start") {
+		if(!this.stateDiv.id.includes("start")) {
 			//Delete Button
 			var deleteButton = document.createElement('div');
 			deleteButton.id = this.htmlId + "delete";
@@ -75,14 +75,32 @@ class State {
 		this.jsPlumbInstance.draggable(this.stateDiv.id, {containment : true, drag : $.proxy(this.moved, this), stop : $.proxy(this.moved, this)});
 		//$("#" + this.stateDiv.id).draggable({containment : "parent", stop : $.proxy(this.moved, this)});
 		
-		if(this.stateDiv.id != "start") {
+		if(!this.stateDiv.id.includes("start")) {
 			//Make delete clickable
 			$("#" + deleteButton.id).click($.proxy(this.remove, this));
 		}
 	}
 	
 	remove() {
-		console.log("clcik");
+		
+		//Open a dialog so the user can confirm the delete
+		sap.m.MessageBox.confirm("Are you sure you want to delete this state?", {onClose : $.proxy(this.removeState, this)});
+	}
+	
+	removeState(oAction) {
+		
+		//If they click OK, delete
+		if(oAction == sap.m.MessageBox.Action.OK) {
+			
+			//Remove all connections
+			this.jsPlumbInstance.deleteConnectionsForElement(this.htmlId);
+			
+			//Remove the state element
+			this.jsPlumbInstance.remove(this.htmlId);
+			
+			//Remove ourself from the connection list
+			GameEditor.getEditorController().stateList.splice(GameEditor.getEditorController().stateList.indexOf(this), 1);
+		}
 	}
 	
 	draw() {

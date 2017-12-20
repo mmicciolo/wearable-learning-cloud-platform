@@ -12,7 +12,7 @@ class InputTransition extends Transition {
 	create() {
 		
 		//Add the overlay
-		this.connection.addOverlay([ "Label", {id : this.overlayId, label: "<div class=\"centerTransitionText\"/><div>Input</div><div>Transition</div></div>", cssClass : this.cssClass + " jtk-drag-select"}]);
+		this.connection.addOverlay([ "Label", {id : this.overlayId, label: "<div id=" + "\"" + this.overlayId + "_delete\"" + "class=\"close2-thik\"></div><div class=\"centerTransitionText\"/><div>Input</div><div>Transition</div></div>", cssClass : this.cssClass + " jtk-drag-select"}]);
 		
 		//Store the id
 		for(var key in this.connection.getOverlays()) {
@@ -24,6 +24,9 @@ class InputTransition extends Transition {
 		
 		//Setup double click
 		$("#"+this.htmlId).dblclick($.proxy(this.doubleClick, this));
+		
+		//Setup delete click
+		$("#" + this.overlayId + "_delete").click($.proxy(this.remove, this));
 	}
 	
 	save() {
@@ -36,6 +39,7 @@ class InputTransition extends Transition {
 	}
 	
 	doubleClick() {
+		
 		//Create an instance of the dialog
 		this.dialog = sap.ui.xmlfragment("wlcpfrontend.fragments.GameEditor.Transitions.InputTransition", this);
 		
@@ -45,4 +49,24 @@ class InputTransition extends Transition {
 		//Open the dialog
 		this.dialog.open();
 	}
+	
+	remove() {
+		
+		//Open a dialog so the user can confirm the delete
+		sap.m.MessageBox.confirm("Are you sure you want to delete this transition?", {onClose : $.proxy(this.removeTransition, this)});
+	}
+	
+	removeTransition(oAction) {
+		
+		//If they click OK, delete
+		if(oAction == sap.m.MessageBox.Action.OK) {
+			
+			//Remove the overlay
+			this.connection.removeOverlay(this.overlayId);
+			
+			//Remove it from the list
+			GameEditor.getEditorController().transitionList.splice(GameEditor.getEditorController().transitionList.indexOf(this), 1);
+		}
+	}
+	
 }

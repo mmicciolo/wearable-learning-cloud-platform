@@ -7,6 +7,11 @@ class InputTransition extends Transition {
 	constructor(cssClass, connection, overlayId, gameEditor) {
 		super(cssClass, connection, overlayId, gameEditor);
 		this.create();
+		this.modelJSON = {
+				iconTabs : []
+		}
+		this.modelJSON.iconTabs = this.generateData(3,3);
+		this.model = new sap.ui.model.json.JSONModel(this.modelJSON);
 	}
 	
 	create() {
@@ -29,10 +34,53 @@ class InputTransition extends Transition {
 		$("#" + this.overlayId + "_delete").click($.proxy(this.remove, this));
 	}
 	
+	static load(loadData) {
+		
+		//Loop through all of the load data
+		for(var i = 0; i < loadData.length; i++) {
+			var connection = null;
+			
+			//Get the connection is transition should be placed on
+			for(var n = 0; n < GameEditor.getEditorController().jsPlumbInstance.getConnections().length; n++) {
+				if(GameEditor.getEditorController().jsPlumbInstance.getConnections()[n].id == loadData[i].connection) {
+					connection = GameEditor.getEditorController().jsPlumbInstance.getConnections()[n];
+					break;
+				}
+			}
+			
+			//Place the transition
+			var inputTransition = new InputTransition("transition", connection, loadData[i].transitionId, this);
+			GameEditor.getEditorController().transitionList.push(inputTransition);
+		}
+		
+		//Load the component data
+		this.loadComponents(loadData);
+	}
+	
+	loadComponents(loadData) {
+		
+	}
+	
 	save() {
+		
+		var singleButtonPresses = [];
+		for(var i = 0; i < this.modelJSON.iconTabs.length; i++) {
+			if(this.modelJSON.iconTabs[i].singlePress.button1 || this.modelJSON.iconTabs[i].singlePress.button2
+			 ||this.modelJSON.iconTabs[i].singlePress.button3 || this.modelJSON.iconTabs[i].singlePress.button4) {
+				singleButtonPresses.push({
+					scope : this.modelJSON.iconTabs[i].scope,
+					button1 : this.modelJSON.iconTabs[i].singlePress.button1,
+					button2 : this.modelJSON.iconTabs[i].singlePress.button2,
+					button3 : this.modelJSON.iconTabs[i].singlePress.button3,
+					button4 : this.modelJSON.iconTabs[i].singlePress.button4
+				});
+			}
+		}
+		
 		var saveData = {
 			transitionId : this.overlayId,
-			connection : this.connection.id
+			connection : this.connection.id,
+			singleButtonPresses : singleButtonPresses
 		}
 		
 		return saveData;
@@ -44,10 +92,70 @@ class InputTransition extends Transition {
 		this.dialog = sap.ui.xmlfragment("wlcpfrontend.fragments.GameEditor.Transitions.InputTransition", this);
 		
 		//Set the model for the dialog
-		//this.dialog.setModel(this.model);
+		this.dialog.setModel(this.model);
 			
 		//Open the dialog
 		this.dialog.open();
+	}
+	
+	createData() {
+		return {
+			icon : "",
+			scope : "",
+			singlePress : {
+				button1 : false,
+				button2 : false,
+				button3 : false,
+				button4 : false
+			}
+		}
+	}
+	
+	generateData(teams, playersPerTeam) {
+		
+		//Create a new object to store the data
+		var baseData = [];
+
+		//Add game wide
+		var data = this.createData();
+		data.icon = "sap-icon://globe";
+		data.scope = "Game Wide";
+		baseData.push(data);
+		
+		//Add the teams
+		for(var i = 0; i < teams; i++) {
+			data = this.createData();
+			data.icon = "sap-icon://group";
+			data.scope = "Team " + (i + 1);
+			baseData.push(data);
+		}
+		
+		//Add the players
+		for(var i = 0; i < teams; i++) {
+			for(var n = 0; n < playersPerTeam; n++) {
+				data = this.createData();
+				data.icon = "sap-icon://employee";
+				data.scope = "Team " + (i + 1) + " Player " + (n + 1);
+				baseData.push(data);
+			}
+		}
+		
+		return baseData;
+	}
+	
+	transitionTypeSelected(oEvent, oParam) {
+		var navContainer = oEvent.oSource.getParent().getContentAreas()[1];
+		for(var i = 0; i < navContainer.getPages().length; i++) {
+			if(navContainer.getPages()[i].getTitle().includes(oEvent.getParameters().listItem.getTitle())) {
+				navContainer.to(navContainer.getPages()[i]);
+				break;
+			}
+		}
+	}
+	
+	closeDialog() {
+		this.dialog.close();
+		this.dialog.destroy();
 	}
 	
 	remove() {

@@ -117,7 +117,7 @@ public class SaveGame extends HttpServlet {
 		//Loop through all of the transitions
 		for(int i = 0; i < saveData.transitions.length; i++) {
 			entityManager.getTransaction().begin();
-			entityManager.merge(new Transition(saveData.transitions[i].getTransitionId(), saveData.game, saveData.transitions[i].getConnection()));
+			entityManager.merge(new Transition(saveData.transitions[i].getTransitionId(), saveData.game, saveData.transitions[i].getConnection(), saveData.transitions[i].getSingleButtonPresses()));
 			entityManager.getTransaction().commit();
 		}
 		

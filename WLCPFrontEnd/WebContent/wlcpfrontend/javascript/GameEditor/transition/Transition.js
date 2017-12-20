@@ -27,26 +27,6 @@ class Transition {
 		return this;
 	}
 	
-	static load(loadData) {
-		
-		//Loop through all of the load data
-		for(var i = 0; i < loadData.length; i++) {
-			var connection = null;
-			
-			//Get the connection is transition should be placed on
-			for(var n = 0; n < GameEditor.getEditorController().jsPlumbInstance.getConnections().length; n++) {
-				if(GameEditor.getEditorController().jsPlumbInstance.getConnections()[n].id == loadData[i].connection) {
-					connection = GameEditor.getEditorController().jsPlumbInstance.getConnections()[n];
-					break;
-				}
-			}
-			
-			//Place the transition
-			var inputTransition = new InputTransition("transition", connection, loadData[i].transitionId, this);
-			GameEditor.getEditorController().transitionList.push(inputTransition);
-		}
-	}
-	
 	save() {
 		return [];
 	}

@@ -12,5 +12,38 @@
 			<Button text="Accept" type="Accept"/>
 			<Button text="Close" type="Reject" press="closeDialog"/>
 		</buttons>
+		<IconTabBar id="outputStateDialogIconTabBar" items="{/iconTabs}" showOverflowSelectList="false" applyContentPadding="false">
+			<items>
+				<IconTabFilter icon="{icon}" text="{scope}">
+					<content>
+						<l:Splitter>
+							<List class="navList" mode="SingleSelectLeft" headerText="Select the Transition Type" selectionChange="transitionTypeSelected"> 
+								<layoutData><l:SplitterLayoutData size="250px" resizable="false"/></layoutData>
+								<items>
+									<StandardListItem title="Single Button Press" icon="sap-icon://touch" selected="true"/>
+									<StandardListItem title="Sequence Button Press" icon="sap-icon://multiselect-none"/>
+								</items>
+							</List>
+							<NavContainer width="100%" height="500px">
+								<Page title="{scope} Single Button Press">
+									<FlexBox alignItems="Start" justifyContent="Center">
+										<items>
+											<VBox>
+												<CheckBox text="Button 1" selected="{singlePress/button1}"></CheckBox>
+												<CheckBox text="Button 2" selected="{singlePress/button2}"></CheckBox>
+												<CheckBox text="Button 3" selected="{singlePress/button3}"></CheckBox>
+												<CheckBox text="Button 4" selected="{singlePress/button4}"></CheckBox>
+											</VBox>
+										</items>
+									</FlexBox>
+								</Page>
+								<Page title="{scope} Sequence Button Press">
+								</Page>
+							</NavContainer>
+						</l:Splitter>
+					</content>
+				</IconTabFilter>
+			</items>
+		</IconTabBar>
 	</Dialog>
 </core:FragmentDefinition>

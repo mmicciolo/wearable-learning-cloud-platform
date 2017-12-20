@@ -205,7 +205,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		Connection.load(loadedData.connections);
 		
 		//Load the transitions
-		Transition.load(loadedData.transitions);
+		InputTransition.load(loadedData.transitions);
 		
 		this.busy.close();
 	},

@@ -2,6 +2,7 @@ package wlcp.webapp.editor;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.EntityManager;
@@ -118,6 +119,57 @@ public class SaveGame extends HttpServlet {
 			entityManager.getTransaction().begin();
 			entityManager.merge(new Transition(saveData.transitions[i].getTransitionId(), saveData.game, saveData.transitions[i].getConnection()));
 			entityManager.getTransaction().commit();
+		}
+		
+		//Check if any states were deleted
+		List<OutputState> outputStates = entityManager.createQuery("SELECT s FROM OutputState s WHERE s.game.gameId = '" + saveData.game.getGameId() + "'", OutputState.class).getResultList();
+		for(OutputState state : outputStates) {
+			boolean found = false;
+			for(OutputState s : saveData.states) {
+				if(state.getStateId() == s.getStateId()) {
+					found = true;
+				}
+			}
+			if(!found) {
+				//delete
+				entityManager.getTransaction().begin();
+				entityManager.remove(entityManager.find(OutputState.class, state.getStateId()));
+				entityManager.getTransaction().commit();
+			}
+		}
+		
+		//Check if any connections were deleted
+		List<Connection> connections = entityManager.createQuery("SELECT s FROM Connection s WHERE s.game.gameId = '" + saveData.game.getGameId() + "'", Connection.class).getResultList();
+		for(Connection connection : connections) {
+			boolean found = false;
+			for(Connection c : saveData.connections) {
+				if(connection.getConnectionId() == c.getConnectionId()) {
+					found = true;
+				}
+			}
+			if(!found) {
+				//delete
+				entityManager.getTransaction().begin();
+				entityManager.remove(entityManager.find(Connection.class, connection.getConnectionId()));
+				entityManager.getTransaction().commit();
+			}
+		}
+		
+		//Check if any transitions were deleted
+		List<Transition> transitions = entityManager.createQuery("SELECT s FROM Transition s WHERE s.game.gameId = '" + saveData.game.getGameId() + "'", Transition.class).getResultList();
+		for(Transition transition : transitions) {
+			boolean found = false;
+			for(Transition t : saveData.transitions) {
+				if(transition.getTransitionId() == t.getTransitionId()) {
+					found = true;
+				}
+			}
+			if(!found) {
+				//delete
+				entityManager.getTransaction().begin();
+				entityManager.remove(entityManager.find(Transition.class, transition.getTransitionId()));
+				entityManager.getTransaction().commit();
+			}
 		}
 		
 	}

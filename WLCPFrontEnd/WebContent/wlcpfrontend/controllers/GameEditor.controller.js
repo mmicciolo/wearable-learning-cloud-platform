@@ -267,6 +267,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		}
 		this.stateList = [];
 		this.connectionList = [];
+		this.transitionList = [];
 		this.saveCount = null;
 		this.type = null;
 	},

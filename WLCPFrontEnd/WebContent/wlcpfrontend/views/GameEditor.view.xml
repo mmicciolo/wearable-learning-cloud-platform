@@ -61,25 +61,14 @@
 					<layoutData>
 						<l:SplitterLayoutData size="240px" resizable="false"/>
 					</layoutData>
-					<TabContainer id="toolboxTabContainer" itemSelect="onItemSelect">
-						<items>
-							<TabContainerItem name="States" editable="false">
-								<content>
-									<html:div id="toolboxOutputState" class="state centerToolboxState stateBorderShadow">
-										<html:div class="toolboxOutputStateTopColor"><html:div class="centerStateText">Output State</html:div></html:div>
-										<html:div class="toolboxOutputStateBottomColor"></html:div>
-									</html:div>
-								</content>
-							</TabContainerItem>
-							<TabContainerItem name="Transitions" editable="false">
-								<content>
-									<html:div id="buttonPressTransition" class="transition buttonPressTransition centerToolboxTransition">
-										<html:div class="centerTransitionText"><html:div>Button</html:div><html:div>Press</html:div></html:div>
-									</html:div>
-								</content>
-							</TabContainerItem>
-						</items>
-					</TabContainer>
+					<html:div style="background:#3f5161;position:relative;top:10px;text-align:center;color:white;">Toolbox</html:div>
+					<html:div id="toolboxOutputState" class="state centerToolboxState stateBorderShadow" style="top:50px;">
+						<html:div class="toolboxOutputStateTopColor"><html:div class="centerStateText">Output State</html:div></html:div>
+						<html:div class="toolboxOutputStateBottomColor"></html:div>
+					</html:div>
+					<html:div id="toolboxTransition" class="transition buttonPressTransition centerToolboxTransition" style="top:200px;">
+						<html:div class="centerTransitionText"><html:div>Input</html:div><html:div>Transition</html:div></html:div>
+					</html:div>
 				</ScrollContainer>
 				<ScrollContainer id="pad" height="100%" width="100%" horizontal="true" vertical="true" focusable="true">
 				</ScrollContainer>

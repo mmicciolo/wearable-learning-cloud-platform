@@ -67,6 +67,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 
 	initToolbox : function() {
 		$("#gameEditor--toolboxOutputState").draggable({ revert: false, helper: "clone", start : this.dragStart, stop : $.proxy(this.stateDragStop, this)});
+		$("#gameEditor--toolboxTransition").draggable({ revert: false, helper: "clone", start : this.dragStart, stop : $.proxy(this.transitionDragStop, this)});
 	},
 	
 	initToolbox2 : function() {
@@ -109,8 +110,8 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		if(connection != null) {
 			if(ui.helper[0].className.includes("buttonPressTransition")) {
 				var transitionId = "buttonPressTransition" + this.createTransitionId();
-				var buttonPressTransition = new ButtonPressTransition("transition", connection, transitionId, this);
-				this.transitionMap.set(transitionId, buttonPressTransition);
+				var inputTransition = new InputTransition("transition", connection, transitionId, this);
+				this.transitionMap.set(transitionId, inputTransition);
 			}
 		}
 	},

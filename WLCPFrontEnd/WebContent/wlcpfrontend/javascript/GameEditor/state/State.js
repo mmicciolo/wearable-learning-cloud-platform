@@ -29,7 +29,7 @@ class State {
 	};
 	
 	absoluteToRelativeY(absoluteY) {
-		return absoluteY + document.getElementById("gameEditor--toolbox-scroll").offsetHeight;
+		return absoluteY + document.getElementById("gameEditor--toolbox-scroll").offsetHeight - 20;
 	};
 	
 	create() {

@@ -20,7 +20,7 @@ class Transition {
 	}
 	
 	static absoluteToRelativeY(absoluteY) {
-		return absoluteY + document.getElementById("gameEditor--toolbox-scroll").offsetHeight;
+		return absoluteY;// + document.getElementById("gameEditor--toolbox-scroll").offsetHeight;
 	}
 	
 	create() {

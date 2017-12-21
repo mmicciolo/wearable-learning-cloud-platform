@@ -36,29 +36,35 @@ class InputTransition extends Transition {
 	
 	static load(loadData) {
 		
-		//Loop through all of the load data
-		for(var i = 0; i < loadData.length; i++) {
-			var connection = null;
-			
-			//Get the connection is transition should be placed on
-			for(var n = 0; n < GameEditor.getEditorController().jsPlumbInstance.getConnections().length; n++) {
-				if(GameEditor.getEditorController().jsPlumbInstance.getConnections()[n].id == loadData[i].connection) {
-					connection = GameEditor.getEditorController().jsPlumbInstance.getConnections()[n];
-					break;
-				}
+		var connection = null;
+		
+		//Get the connection is transition should be placed on
+		for(var n = 0; n < GameEditor.getEditorController().jsPlumbInstance.getConnections().length; n++) {
+			if(GameEditor.getEditorController().jsPlumbInstance.getConnections()[n].id == loadData.connection) {
+				connection = GameEditor.getEditorController().jsPlumbInstance.getConnections()[n];
+				break;
 			}
-			
-			//Place the transition
-			var inputTransition = new InputTransition("transition", connection, loadData[i].transitionId, this);
-			GameEditor.getEditorController().transitionList.push(inputTransition);
 		}
 		
+		//Place the transition
+		var inputTransition = new InputTransition("transition", connection, loadData.transitionId, this);
+		GameEditor.getEditorController().transitionList.push(inputTransition);
+		
 		//Load the component data
-		this.loadComponents(loadData);
+		inputTransition.loadComponents(loadData);
 	}
 	
 	loadComponents(loadData) {
-		
+		for(var i = 0; i < loadData.singleButtonPresses.length; i++) {
+			for(var n = 0; n < this.modelJSON.iconTabs.length; n++) {
+				if(loadData.singleButtonPresses[i].scope == this.modelJSON.iconTabs[n].scope) {
+					this.modelJSON.iconTabs[n].singlePress.button1 = loadData.singleButtonPresses[i].button1;
+					this.modelJSON.iconTabs[n].singlePress.button2 = loadData.singleButtonPresses[i].button2;
+					this.modelJSON.iconTabs[n].singlePress.button3 = loadData.singleButtonPresses[i].button3;
+					this.modelJSON.iconTabs[n].singlePress.button4 = loadData.singleButtonPresses[i].button4;
+				}
+			}
+		}
 	}
 	
 	save() {

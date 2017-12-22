@@ -2,7 +2,9 @@ package wlcp.model.master.transition;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.*;
 
@@ -32,15 +34,17 @@ public class Transition implements Serializable {
 	@Column(name = "CONNECTION")
 	private String connection;
 	
-	@JoinTable(name = "TRANSITION_SINGLE_PRESS", joinColumns = @JoinColumn(name = "TRANSITION_ID", referencedColumnName = "TRANSITION_ID"), inverseJoinColumns = @JoinColumn(name = "SINGLE_BUTTON_PRESS_ID", referencedColumnName = "SINGLE_BUTTON_PRESS_ID"))
-	@OneToMany(orphanRemoval = true)
-	private List<SingleButtonPress> singleButtonPresses = new ArrayList<SingleButtonPress>();
+	@ElementCollection
+    @CollectionTable(name = "SINGLE_BUTTON_PRESS")
+    @MapKeyColumn(name = "SCOPE")
+	private Map<String, SingleButtonPress> singleButtonPresses = new HashMap<String, SingleButtonPress>();
 
 	public Transition() {
 		super();
 	}
 	
-	public Transition(String transitionId, Game game, String connection, List<SingleButtonPress> singleButtonPresses) {
+	public Transition(String transitionId, Game game, String connection,
+			Map<String, SingleButtonPress> singleButtonPresses) {
 		super();
 		this.transitionId = transitionId;
 		this.game = game;
@@ -72,12 +76,12 @@ public class Transition implements Serializable {
 		this.connection = connection;
 	}
 
-	public List<SingleButtonPress> getSingleButtonPresses() {
+	public Map<String, SingleButtonPress> getSingleButtonPresses() {
 		return singleButtonPresses;
 	}
 
-	public void setSingleButtonPresses(List<SingleButtonPress> singleButtonPresses) {
+	public void setSingleButtonPresses(Map<String, SingleButtonPress> singleButtonPresses) {
 		this.singleButtonPresses = singleButtonPresses;
 	}
-   
+
 }

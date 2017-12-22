@@ -7,20 +7,11 @@ import javax.persistence.*;
  * Entity implementation class for Entity: SingleButtonPress
  *
  */
-@Entity
-@Table(name = "SINGLE_BUTTON_PRESS")
+@Embeddable
 public class SingleButtonPress implements Serializable {
 
 	
 	private static final long serialVersionUID = 1L;
-	
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name = "SINGLE_BUTTON_PRESS_ID")
-	private int singleButtonPressId;
-	
-	@Column(name = "SCOPE")
-	private String scope;
 	
 	@Column(name = "BUTTON_1")
 	private Boolean button1;
@@ -37,30 +28,13 @@ public class SingleButtonPress implements Serializable {
 	public SingleButtonPress() {
 		super();
 	}
-
-	public SingleButtonPress(String scope, Boolean button1, Boolean button2, Boolean button3, Boolean button4) {
+	
+	public SingleButtonPress(Boolean button1, Boolean button2, Boolean button3, Boolean button4) {
 		super();
-		this.scope = scope;
 		this.button1 = button1;
 		this.button2 = button2;
 		this.button3 = button3;
 		this.button4 = button4;
-	}
-
-	public String getScope() {
-		return scope;
-	}
-
-	public void setScope(String scope) {
-		this.scope = scope;
-	}
-
-	public int getSingleButtonPressId() {
-		return singleButtonPressId;
-	}
-
-	public void setSingleButtonPressId(int singleButtonPressId) {
-		this.singleButtonPressId = singleButtonPressId;
 	}
 
 	public Boolean getButton1() {

@@ -55,13 +55,23 @@ class InputTransition extends Transition {
 	}
 	
 	loadComponents(loadData) {
-		for(var i = 0; i < loadData.singleButtonPresses.length; i++) {
+//		for(var i = 0; i < loadData.singleButtonPresses.length; i++) {
+//			for(var n = 0; n < this.modelJSON.iconTabs.length; n++) {
+//				if(loadData.singleButtonPresses[i].scope == this.modelJSON.iconTabs[n].scope) {
+//					this.modelJSON.iconTabs[n].singlePress.button1 = loadData.singleButtonPresses[i].button1;
+//					this.modelJSON.iconTabs[n].singlePress.button2 = loadData.singleButtonPresses[i].button2;
+//					this.modelJSON.iconTabs[n].singlePress.button3 = loadData.singleButtonPresses[i].button3;
+//					this.modelJSON.iconTabs[n].singlePress.button4 = loadData.singleButtonPresses[i].button4;
+//				}
+//			}
+//		}
+		for(var key in loadData.singleButtonPresses) {
 			for(var n = 0; n < this.modelJSON.iconTabs.length; n++) {
-				if(loadData.singleButtonPresses[i].scope == this.modelJSON.iconTabs[n].scope) {
-					this.modelJSON.iconTabs[n].singlePress.button1 = loadData.singleButtonPresses[i].button1;
-					this.modelJSON.iconTabs[n].singlePress.button2 = loadData.singleButtonPresses[i].button2;
-					this.modelJSON.iconTabs[n].singlePress.button3 = loadData.singleButtonPresses[i].button3;
-					this.modelJSON.iconTabs[n].singlePress.button4 = loadData.singleButtonPresses[i].button4;
+				if(key == this.modelJSON.iconTabs[n].scope) {
+					this.modelJSON.iconTabs[n].singlePress.button1 = loadData.singleButtonPresses[key].button1;
+					this.modelJSON.iconTabs[n].singlePress.button2 = loadData.singleButtonPresses[key].button2;
+					this.modelJSON.iconTabs[n].singlePress.button3 = loadData.singleButtonPresses[key].button3;
+					this.modelJSON.iconTabs[n].singlePress.button4 = loadData.singleButtonPresses[key].button4;
 				}
 			}
 		}
@@ -69,17 +79,30 @@ class InputTransition extends Transition {
 	
 	save() {
 		
-		var singleButtonPresses = [];
+//		var singleButtonPresses = [];
+//		for(var i = 0; i < this.modelJSON.iconTabs.length; i++) {
+//			if(this.modelJSON.iconTabs[i].singlePress.button1 || this.modelJSON.iconTabs[i].singlePress.button2
+//			 ||this.modelJSON.iconTabs[i].singlePress.button3 || this.modelJSON.iconTabs[i].singlePress.button4) {
+//				singleButtonPresses.push({
+//					scope : this.modelJSON.iconTabs[i].scope,
+//					button1 : this.modelJSON.iconTabs[i].singlePress.button1,
+//					button2 : this.modelJSON.iconTabs[i].singlePress.button2,
+//					button3 : this.modelJSON.iconTabs[i].singlePress.button3,
+//					button4 : this.modelJSON.iconTabs[i].singlePress.button4
+//				});
+//			}
+//		}
+		
+		var singleButtonPresses = {};
 		for(var i = 0; i < this.modelJSON.iconTabs.length; i++) {
 			if(this.modelJSON.iconTabs[i].singlePress.button1 || this.modelJSON.iconTabs[i].singlePress.button2
 			 ||this.modelJSON.iconTabs[i].singlePress.button3 || this.modelJSON.iconTabs[i].singlePress.button4) {
-				singleButtonPresses.push({
-					scope : this.modelJSON.iconTabs[i].scope,
-					button1 : this.modelJSON.iconTabs[i].singlePress.button1,
-					button2 : this.modelJSON.iconTabs[i].singlePress.button2,
-					button3 : this.modelJSON.iconTabs[i].singlePress.button3,
-					button4 : this.modelJSON.iconTabs[i].singlePress.button4
-				});
+				singleButtonPresses[this.modelJSON.iconTabs[i].scope] = {
+						button1 : this.modelJSON.iconTabs[i].singlePress.button1,
+						button2 : this.modelJSON.iconTabs[i].singlePress.button2,
+						button3 : this.modelJSON.iconTabs[i].singlePress.button3,
+						button4 : this.modelJSON.iconTabs[i].singlePress.button4	
+				}
 			}
 		}
 		

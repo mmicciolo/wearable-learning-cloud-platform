@@ -148,6 +148,15 @@ public class JavaScriptTranspiler {
 		return null;
 	}
 	
+	private State GetToState(Connection connection) {
+		for(State state : outputStates) {
+			if(state.getStateId().equals(connection.getConnectionTo())) {
+				return state;
+			}
+		}
+		return null;
+	}
+	
 	private void GenerateFunctions(State state) {
 		
 		//Get a list of connections for that state
@@ -165,23 +174,29 @@ public class JavaScriptTranspiler {
 				GenerateSingleConnectionNoTransition(state, fromConnections.get(0));
 			} else {
 				//Else generate the transition conditional
-				//GenerateSingleConnectionSingleTransition(state, fromConnections.get(0));
+				GenerateSingleConnectionSingleTransition(state, fromConnections.get(0), transition);
 			}
 			
 		} else if(fromConnections.size() > 1) { //If there is more than one connection
 		
-//			//Loop through the connections
-//			for(Connection connection : fromConnections) {
-//				Transition transition;
-//				if((transition = GetConnectionTransition(connection)) != null) {
-//					
-//					//If the connection has a transition...
-//				} else {
-//					
-//					//If there are no transitions on the connection
-//					//We need to look ahead at the state
-//				}
-//			}
+			List<Connection> withoutTransitions = new ArrayList<Connection>();
+			List<Connection> withTransitions = new ArrayList<Connection>();
+			GenerateMethodSignature(state);
+			GenerateOutputState(state);
+
+			//Loop through the connections
+			for(Connection connection : fromConnections) {
+				Transition transition;
+				if((transition = GetConnectionTransition(connection)) != null) {
+					
+					//If the connection has a transition...
+				} else {
+					
+					//If there are no transitions on the connection
+					//We need to look ahead at the state
+					GenerateMultipleConnectionsNoTransition(connection);
+				}
+			}
 		}
 	}
 	
@@ -224,7 +239,14 @@ public class JavaScriptTranspiler {
 	}
 	
 	private void GenerateTransition(Transition transition) {
-		
+		for(String s : GenerateScope(3,3)) {
+//			if(transition.getSingleButtonPresses().containsKey(s)) {
+//				GenerateStateConditional(s);
+//				GenerateOutputStateDisplayText(s, outputState.getDisplayText());
+//				GenerateEndStateConditional(s);
+//			}
+		}
+		stringBuilder.append("      " + "if(SingleButtonPress(" + ")) {\n");
 	}
 	
 	private void GenerateMethodSignature(State state) {
@@ -244,13 +266,29 @@ public class JavaScriptTranspiler {
 		stringBuilder.append("   " + "},\n\n");
 	}
 	
-	private void GenerateSingleConnectionSingleTransition(State state, Connection connection) {
+	private void GenerateSingleConnectionSingleTransition(State state, Connection connection, Transition transition) {
 		GenerateMethodSignature(state);
 		GenerateOutputState(state);
+		GenerateTransition(transition);
+		stringBuilder.append("   " + "},\n\n");
 	}
 	
-	private void GenerateMultipleConnectionsNoTransition(State state, Connection connection) {
-		GenerateMethodSignature(state);
+	private void GenerateMultipleConnectionsNoTransition(Connection connection) {
+		OutputState nextState = (OutputState) GetToState(connection);
+		for(String s : GenerateScope(3,3)) {
+			if(stateContainsScope(s, nextState)) {
+				GenerateStateConditional(s);
+				stringBuilder.append("         " + "this.state = states." + nextState.getStateId() + ";\n");
+				GenerateEndStateConditional(s);
+			}
+		}
+	}
+	
+	private boolean stateContainsScope(String scope, OutputState state) {
+		if(state.getDisplayText().containsKey(scope)) {
+			return true;
+		}
+		return false;
 	}
 	
 	private List<String> GenerateScope(int teams, int playersPerTeam) {

@@ -73,10 +73,10 @@ class InputTransition extends Transition {
 			if(this.modelJSON.iconTabs[i].singlePress.button1 || this.modelJSON.iconTabs[i].singlePress.button2
 			 ||this.modelJSON.iconTabs[i].singlePress.button3 || this.modelJSON.iconTabs[i].singlePress.button4) {
 				singleButtonPresses[this.modelJSON.iconTabs[i].scope] = {
-						button1 : this.modelJSON.iconTabs[i].singlePress.button1,
-						button2 : this.modelJSON.iconTabs[i].singlePress.button2,
-						button3 : this.modelJSON.iconTabs[i].singlePress.button3,
-						button4 : this.modelJSON.iconTabs[i].singlePress.button4	
+					button1 : this.modelJSON.iconTabs[i].singlePress.button1,
+					button2 : this.modelJSON.iconTabs[i].singlePress.button2,
+					button3 : this.modelJSON.iconTabs[i].singlePress.button3,
+					button4 : this.modelJSON.iconTabs[i].singlePress.button4	
 				}
 			}
 		}

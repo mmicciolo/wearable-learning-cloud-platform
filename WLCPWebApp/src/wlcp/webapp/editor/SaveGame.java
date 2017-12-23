@@ -88,6 +88,8 @@ public class SaveGame extends HttpServlet {
 		//Game game = entityManager.find(Game.class, saveData.game.GameId);
 		saveData.game = entityManager.find(Game.class, saveData.game.getGameId());
 		
+		Transition t2 = entityManager.find(Transition.class, "test_transition_1");
+		
 		//Loop through and save all of the states
 		for(int i = 0; i < saveData.states.length; i++) {
 			switch(saveData.states[i].getStateType()) {
@@ -122,6 +124,8 @@ public class SaveGame extends HttpServlet {
 				singleButtonPresses.put(entry.getKey(), entry.getValue());
 			}
 			entityManager.getTransaction().begin();
+			entityManager.merge(new Transition(saveData.transitions[i].getTransitionId(), saveData.game, saveData.transitions[i].getConnection(), new HashMap<String, SingleButtonPress>()));
+			entityManager.flush();
 			entityManager.merge(new Transition(saveData.transitions[i].getTransitionId(), saveData.game, saveData.transitions[i].getConnection(), singleButtonPresses));
 			entityManager.getTransaction().commit();
 		}
@@ -175,8 +179,7 @@ public class SaveGame extends HttpServlet {
 				entityManager.remove(entityManager.find(Transition.class, transition.getTransitionId()));
 				entityManager.getTransaction().commit();
 			}
-		}
-		
+		}	
 	}
 
 }

@@ -179,8 +179,6 @@ public class JavaScriptTranspiler {
 			
 		} else if(fromConnections.size() > 1) { //If there is more than one connection
 		
-			List<Connection> withoutTransitions = new ArrayList<Connection>();
-			List<Connection> withTransitions = new ArrayList<Connection>();
 			GenerateMethodSignature(state);
 			GenerateOutputState(state);
 
@@ -190,6 +188,7 @@ public class JavaScriptTranspiler {
 				if((transition = GetConnectionTransition(connection)) != null) {
 					
 					//If the connection has a transition...
+					GenerateMultipleConnectionsSingleTransition(state, connection, transition);
 				} else {
 					
 					//If there are no transitions on the connection
@@ -197,6 +196,8 @@ public class JavaScriptTranspiler {
 					GenerateMultipleConnectionsNoTransition(connection);
 				}
 			}
+			
+			stringBuilder.append("   " + "},\n\n");
 		}
 	}
 	
@@ -212,14 +213,6 @@ public class JavaScriptTranspiler {
 		}
 	}
 	
-	private void GenerateOutputStateDisplayText(String scope, Map<String, String> displayText) {
-		if(scope.equals("Game Wide")) {
-			stringBuilder.append("      " + "DisplayText(this.team, this.player, " + "\"" + displayText.get(scope) + "\"" + ");\n");
-		} else {
-			stringBuilder.append("         " + "DisplayText(this.team, this.player, " + "\"" + displayText.get(scope) + "\"" + ");\n");
-		}
-	}
-	
 	private void GenerateStateConditional(String scope) {
 		if(!scope.equals("Game Wide")) {
 			if(scope.contains("Team") && !scope.contains("Player")) {
@@ -232,21 +225,72 @@ public class JavaScriptTranspiler {
 		}
 	}
 	
+	private void GenerateOutputStateDisplayText(String scope, Map<String, String> displayText) {
+		if(scope.equals("Game Wide")) {
+			stringBuilder.append("      " + "DisplayText(this.team, this.player, " + "\"" + displayText.get(scope) + "\"" + ");\n");
+		} else {
+			stringBuilder.append("         " + "DisplayText(this.team, this.player, " + "\"" + displayText.get(scope) + "\"" + ");\n");
+		}
+	}
+	
 	private void GenerateEndStateConditional(String scope) {
 		if(!scope.equals("Game Wide")) {
 			stringBuilder.append("      " + "}\n");
 		}
 	}
 	
-	private void GenerateTransition(Transition transition) {
+	private void GenerateTransition(Transition transition, Connection connection) {
 		for(String s : GenerateScope(3,3)) {
-//			if(transition.getSingleButtonPresses().containsKey(s)) {
-//				GenerateStateConditional(s);
-//				GenerateOutputStateDisplayText(s, outputState.getDisplayText());
-//				GenerateEndStateConditional(s);
-//			}
+			if(transition.getSingleButtonPresses().containsKey(s)) {
+				GenerateTransitionConditional(s, transition);
+				GenerateTransitionStateChange(s, connection);
+				GenerateTransitionEndConditional(s);
+			}
 		}
-		stringBuilder.append("      " + "if(SingleButtonPress(" + ")) {\n");
+	}
+	
+	private void GenerateTransitionConditional(String scope, Transition transition) {
+		if(scope.equals("Game Wide")) {
+			GenerateTransitionSingleButtonPress(scope, transition);
+		} else if(scope.contains("Team") && !scope.contains("Player")) {
+			String[] split = scope.split(" ");
+			stringBuilder.append("      " + "if(this.team == " + split[1] + ") {\n");
+			GenerateTransitionSingleButtonPress(scope, transition);
+		} else {
+			String[] split = scope.split(" ");
+			stringBuilder.append("      " + "if(this.team == " + split[1] + " && " + "this.player == " + split[3] + ") {\n");
+			GenerateTransitionSingleButtonPress(scope, transition);
+		}
+	}
+	
+	private void GenerateTransitionStateChange(String scope, Connection connection) {
+		if(scope.equals("Game Wide")) {
+			stringBuilder.append("         " + "this.state = states." + connection.getConnectionTo() + ";\n");
+		} else {
+			stringBuilder.append("            " + "this.state = states." + connection.getConnectionTo() + ";\n");
+		}
+	}
+	
+	private void GenerateTransitionSingleButtonPress( String scope, Transition transition) {
+		StringBuilder buttonBuilder = new StringBuilder();
+		if(transition.getSingleButtonPresses().get(scope).getButton1()) {buttonBuilder.append("1");}
+		if(transition.getSingleButtonPresses().get(scope).getButton2()) {buttonBuilder.append("2");}
+		if(transition.getSingleButtonPresses().get(scope).getButton3()) {buttonBuilder.append("3");}
+		if(transition.getSingleButtonPresses().get(scope).getButton4()) {buttonBuilder.append("4");}
+		if(scope.equals("Game Wide")) {
+			stringBuilder.append("      " + "if(SingleButtonPress(" + buttonBuilder.toString() + ")) {\n");
+		} else {
+			stringBuilder.append("         " + "if(SingleButtonPress(" + buttonBuilder.toString() + ")) {\n");
+		}
+	}
+	
+	private void GenerateTransitionEndConditional(String scope) {
+		if(scope.equals("Game Wide")) {
+			stringBuilder.append("      " + "}\n");
+		} else {
+			stringBuilder.append("         " + "}\n");
+			stringBuilder.append("      " + "}\n");
+		}
 	}
 	
 	private void GenerateMethodSignature(State state) {
@@ -269,7 +313,7 @@ public class JavaScriptTranspiler {
 	private void GenerateSingleConnectionSingleTransition(State state, Connection connection, Transition transition) {
 		GenerateMethodSignature(state);
 		GenerateOutputState(state);
-		GenerateTransition(transition);
+		GenerateTransition(transition, connection);
 		stringBuilder.append("   " + "},\n\n");
 	}
 	
@@ -282,6 +326,11 @@ public class JavaScriptTranspiler {
 				GenerateEndStateConditional(s);
 			}
 		}
+	}
+	
+	private void GenerateMultipleConnectionsSingleTransition(State state, Connection connection, Transition transition) {
+		GenerateTransition(transition, connection);
+		//stringBuilder.append("   " + "},\n\n");
 	}
 	
 	private boolean stateContainsScope(String scope, OutputState state) {

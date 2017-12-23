@@ -34,7 +34,7 @@ public class Transition implements Serializable {
 	@Column(name = "CONNECTION")
 	private String connection;
 	
-	@ElementCollection
+	@ElementCollection()
     @CollectionTable(name = "SINGLE_BUTTON_PRESS")
     @MapKeyColumn(name = "SCOPE")
 	private Map<String, SingleButtonPress> singleButtonPresses = new HashMap<String, SingleButtonPress>();

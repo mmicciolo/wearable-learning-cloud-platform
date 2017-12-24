@@ -13,12 +13,12 @@ public class TranspilerTest {
 	
 	private static EntityManagerFactory entityManagerFactory = null;
 	private static EntityManager entityManager = null;
-	private static JavaScriptTranspiler transpiler = null;
+	private static JavaScriptTranspiler2 transpiler = null;
 	
 	public static void main(String[] args) {
 		initJPA();
 		
-		transpiler = new JavaScriptTranspiler(entityManager);
+		transpiler = new JavaScriptTranspiler2(entityManager);
 		transpiler.Transpile("test");
 	}
 	

@@ -35,7 +35,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 	
 	initJsPlumb : function() {
 		this.jsPlumbInstance = jsPlumb.getInstance();
-		this.jsPlumbInstance.importDefaults({Connector: ["Bezier"], ConnectionOverlays: [
+		this.jsPlumbInstance.importDefaults({Connector: ["Flowchart", {cornerRadius : 50}], ConnectionOverlays: [
             [ "Arrow", {
                 location: 1,
                 id: "arrow",
@@ -112,7 +112,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 			var inputTransition = new InputTransition("transition", connection, this.createTransitionId(), this);
 			this.transitionList.push(inputTransition);
 		} else {
-			sap.m.MessageBox.error("A transition already exists there!");
+			//sap.m.MessageBox.error("A transition already exists there!");
 		}
 	},
 	
@@ -297,6 +297,11 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 				  //this.initToolbox();
 				  
 				  //ButtonPressTransition.doubleClick();
+				  
+//				  document.onmousemove = function(e) {
+//					  document.getElementById("gameEditor--posx").innerHTML = "POS_X: " + e.clientX;
+//					  document.getElementById("gameEditor--posy").innerHTML = "POS_Y: " + e.clientY;
+//				  }
 			  }
 			}, this);
 	},

@@ -69,6 +69,8 @@
 					<html:div id="toolboxTransition" class="transition buttonPressTransition centerToolboxTransition" style="top:200px;">
 						<html:div class="centerTransitionText"><html:div>Input</html:div><html:div>Transition</html:div></html:div>
 					</html:div>
+<!-- 					<html:div id="posx" style="position:relative;top:400px"></html:div>
+					<html:div id="posy" style="position:relative;top:420px"></html:div> -->
 				</ScrollContainer>
 				<ScrollContainer id="pad" height="100%" width="100%" horizontal="true" vertical="true" focusable="true">
 				</ScrollContainer>

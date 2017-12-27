@@ -13154,6 +13154,35 @@
                                 dim = {"x": "height", "y": "width"}[axis],
                                 comparator = pi["is" + axis.toUpperCase() + "GreaterThanStubTimes2"];
 
+                            if(params.sourceEndpoint.element.offsetLeft <= params.targetEndpoint.element.offsetLeft && params.sourceEndpoint.element.offsetTop >  params.targetEndpoint.element.offsetTop) {
+                            	//var _val = oss + ((1 - params.sourceEndpoint.anchor[otherAxis]) * params.sourceInfo[dim]) + _super.maxStub;
+                            	var _val = oss - ((1 - params.sourceEndpoint.anchor[otherAxis]) * params.sourceInfo[dim]) - _super.maxStub - 50;
+                            	//var _val = -params.sourceInfo[dim];
+                                return {
+                                    "x": [
+                                        [ ss, _val ],
+                                        [ es, _val ]
+                                    ],
+                                    "y": [
+                                        [ _val, ss ],
+                                        [ _val, es ]
+                                    ]
+                                }[axis];
+                            } 
+                            else if(params.sourceEndpoint.element.offsetLeft >= params.targetEndpoint.element.offsetLeft && params.sourceEndpoint.element.offsetTop >  params.targetEndpoint.element.offsetTop) {
+                            	var _val = oss + ((1 - params.sourceEndpoint.anchor[otherAxis]) * params.sourceInfo[dim]) + _super.maxStub + 50;
+                            	//var _val = params.sourceInfo[dim];
+                                return {
+                                    "x": [
+                                        [ ss, _val ],
+                                        [ es, _val ]
+                                    ],
+                                    "y": [
+                                        [ _val, ss ],
+                                        [ _val, es ]
+                                    ]
+                                }[axis];
+                            } else
                             if (params.sourceEndpoint.elementId === params.targetEndpoint.elementId) {
                                 var _val = oss + ((1 - params.sourceEndpoint.anchor[otherAxis]) * params.sourceInfo[dim]) + _super.maxStub;
                                 return {

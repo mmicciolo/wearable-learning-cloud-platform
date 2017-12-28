@@ -24,11 +24,11 @@ var State = class State {
 		this.outputConnections = [];
 	}
 	
-	absoluteToRelativeX(absoluteX) {
-		return absoluteX - (document.getElementById("gameEditor--toolbox").getBoundingClientRect().width + document.getElementById("gameEditor--mainSplitter-splitbar-0").getBoundingClientRect().width + (this.width / 2));
+	static absoluteToRelativeX(absoluteX, width) {
+		return absoluteX - (document.getElementById("gameEditor--toolbox").getBoundingClientRect().width + document.getElementById("gameEditor--mainSplitter-splitbar-0").getBoundingClientRect().width + (width / 2));
 	};
 	
-	absoluteToRelativeY(absoluteY) {
+	static absoluteToRelativeY(absoluteY) {
 		return absoluteY + document.getElementById("gameEditor--toolbox-scroll").offsetHeight - 20;
 	};
 	

@@ -139,14 +139,14 @@ var Transition = class Transition {
 					bbh = 10;
 				}
 				
-				var div = document.createElement('div');
-				div.style.position = "absolute";
-				div.style.backgroundColor = "black";
-				div.style.top = bby + "px";
-				div.style.left = bbx + "px";
-				div.style.width = bbw + "px";
-				div.style.height = bbh + "px";
-				document.getElementById('gameEditor--pad').appendChild(div);
+//				var div = document.createElement('div');
+//				div.style.position = "absolute";
+//				div.style.backgroundColor = "black";
+//				div.style.top = bby + "px";
+//				div.style.left = bbx + "px";
+//				div.style.width = bbw + "px";
+//				div.style.height = bbh + "px";
+//				document.getElementById('gameEditor--pad').appendChild(div);
 				
 				//Calculate the center of the bb
 				var centerX = bbx + (bbw / 2);

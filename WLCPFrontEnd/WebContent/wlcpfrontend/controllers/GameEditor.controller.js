@@ -94,8 +94,9 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		
 		switch(ui.helper[0].childNodes[1].className) {
 			case "toolboxOutputStateTopColor":
+				if(State.absoluteToRelativeX(ui.position.left, 150) + GameEditor.getScrollLeftOffset() < 0 || State.absoluteToRelativeY(ui.position.top) + GameEditor.getScrollTopOffset() < 0) {sap.m.MessageBox.error("A state could not be placed there!"); return;}
 				var outputState = new OutputState("toolboxOutputStateTopColor", "toolboxOutputStateBottomColor", "Output State" , this.createStateId(), this.jsPlumbInstance);
-				outputState.setPositionX(outputState.absoluteToRelativeX(ui.position.left) + GameEditor.getScrollLeftOffset()); outputState.setPositionY(outputState.absoluteToRelativeY(ui.position.top) + GameEditor.getScrollTopOffset());
+				outputState.setPositionX(State.absoluteToRelativeX(ui.position.left, 150) + GameEditor.getScrollLeftOffset()); outputState.setPositionY(State.absoluteToRelativeY(ui.position.top) + GameEditor.getScrollTopOffset());
 				outputState.draw();
 				this.stateList.push(outputState);
 				break;

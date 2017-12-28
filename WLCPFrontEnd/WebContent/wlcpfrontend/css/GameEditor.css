@@ -50,10 +50,6 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
 	height : 0 !important;
 }
 
-.sapMITBFilter .sapMITBText {
-	text-overflow: inherit;
-}
-
 .navList {
 	height:500px;
 	width:200px;

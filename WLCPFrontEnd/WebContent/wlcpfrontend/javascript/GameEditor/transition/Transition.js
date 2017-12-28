@@ -32,28 +32,11 @@ class Transition {
 	}
 	
 	static getClosestConnection(positionX, positionY, jsPlumbInstance) {
-		var start = new Date().getTime();
-//		//Loop through all bounding boxes of connections and select ones the transition falls within
-//		for(var i = 0; i < jsPlumbInstance.getConnections().length; i++) {
-//			var path = jsPlumbInstance.getConnections()[i].canvas.firstChild;
-//			
-//			for(var n = 0; n < path.getTotalLength(); n++) {
-//				//console.log(path.getPointAtLength(n));
-//			}
-//		}
-//		console.log(new Date().getTime() - start);
 		
-		//Get the position of the transition
+		var start = new Date().getTime();
+		
 		var localX = this.absoluteToRelativeX(positionX, 75);
 		var localY = this.absoluteToRelativeY(positionY);
-		console.log({x : positionX, y : positionY});
-		
-		var offsetX = -193;
-		var offsetY = 17.5;
-		
-		var newX = positionX + offsetX;
-		var newY = positionY + offsetY;
-		console.log({x : newX, y : newY});
 		
 		//Place holder for found connections
 		var connections = [];
@@ -69,9 +52,7 @@ class Transition {
 			
 			//Check if the transition is within the bounding box
 			if(((localX < (x + w)) && ((localX + 75) > x)) && (((localY < (y + h)) && ((localY + 62.5) > y)))) {
-				
-				console.log("Collision");
-				
+
 				//Check if the connection already has a label
 				var hasLabel = false;
 				for(var key in jsPlumbInstance.getConnections()[i].getOverlays()) {
@@ -94,19 +75,87 @@ class Transition {
 		//Loop through the connections
 		for(var i = 0; i < connections.length; i++) {
 			
+			//Get the svg segments
 			var segments = connections[i].canvas.firstChild.pathSegList;
-			for(var n = 0; n < segments.length; n++) {
+			
+			//Loop through and calculate all of bounding boxes for the segments
+			for(var n = 0; n < segments.length; n = n + 2) {
 				
-				var pt = connections[i].canvas.createSVGPoint();
-				pt.x = segments[n].x;
-				pt.y = segments[n].y;
-				pt = pt.matrixTransform(connections[i].canvas.getScreenCTM());
+				//Get segment 1 and transform it to pad space
+				var seg1 = connections[i].canvas.createSVGPoint();
+				seg1.x = segments[n].x; 
+				seg1.y = segments[n].y;
+				seg1 = seg1.matrixTransform(connections[i].canvas.firstChild.transform.baseVal[0].matrix);
+				
+				//Get segment 1 and transform it to pad space
+				var seg2 = connections[i].canvas.createSVGPoint();
+				seg2.x = segments[n + 1].x; 
+				seg2.y = segments[n + 1].y;
+				seg2 = seg2.matrixTransform(connections[i].canvas.firstChild.transform.baseVal[0].matrix);
+				
+				//Add the offset of the connection bounding box
+				seg1.x += parseFloat(connections[i].canvas.style.left.replace("px", ""));
+				seg1.y += parseFloat(connections[i].canvas.style.top.replace("px", ""));
+				seg2.x += parseFloat(connections[i].canvas.style.left.replace("px", ""));
+				seg2.y += parseFloat(connections[i].canvas.style.top.replace("px", ""));
+				
+				//Local variables for bounding box calculation
+				var minX, maxX, minY, maxY;
+				
+				//Find the minX and maxX for bb
+				if(seg1.x > seg2.x) {
+					maxX = seg1.x;
+					minX = seg2.x;
+				} else {
+					maxX = seg2.x;
+					minX = seg1.x;
+				}
+				
+				//Find the minY and maxY for bb
+				if(seg1.y > seg2.y) {
+					maxY = seg1.y;
+					minY = seg2.y;
+				} else {
+					maxY = seg2.y;
+					minY = seg1.y;
+				}
+				
+				//Local variables for width and height calculation
+				var bbx = minX;
+				var bby = minY;
+				var bbw, bbh;
+				
+				//If the width is zero set it to 10
+				if((maxX - minX) != 0) {
+					bbw = maxX - minX;
+				} else {
+					bbw = 10;
+				}
+				
+				//If the height is zero set it to 10
+				if((maxY - minY) != 0) {
+					bbh = maxY - minY;
+				} else {
+					bbh = 10;
+				}
+				
+//				var div = document.createElement('div');
+//				div.style.position = "absolute";
+//				div.style.backgroundColor = "black";
+//				div.style.top = bby + "px";
+//				div.style.left = bbx + "px";
+//				div.style.width = bbw + "px";
+//				div.style.height = bbh + "px";
+//				document.getElementById('gameEditor--pad').appendChild(div);
+				
+				//Calculate the center of the bb
+				var centerX = bbx + (bbw / 2);
+				var centerY = bby + (bbh / 2);
 				
 				//Calculate the distance from the transition to the center of the bounding box of the connection
-				var distance = Math.sqrt(Math.pow((pt.x - (newX + 75)), 2) + Math.pow((pt.y - (newY + 62.5)), 2));
+				var distance = Math.sqrt(Math.pow((centerX - (localX + 75)), 2) + Math.pow((centerY - (localY + 62.5)), 2));
 				
-				console.log("Connection: " + i + " Distance: " + distance);
-				
+				//If its the first connection set up the variables
 				if(closestConnection == null) {
 					closestConnection = connections[i];
 					closestDistance = distance;
@@ -119,26 +168,12 @@ class Transition {
 						closestConnection = connections[i];
 						closestDistance = distance;
 					}
-				}
+				}	
 			}
-			
-			//var path = connections[i].canvas.firstChild;
-			//console.log(path.getTotalLength());
-			
-//			for(var n = 0; n < path.getTotalLength(); n = n + 50) {
-//				var point = path.getPointAtLength(n);
-//				var x = parseFloat(connections[i].endpoints[0].canvas.style.left.replace("px", "")) + point.x;
-//				var y = parseFloat(connections[i].endpoints[0].canvas.style.top.replace("px", "")) + point.y;
-//				var pt = connections[i].canvas.createSVGPoint();
-//				pt.x = point.x;
-//				pt.y = point.y;
-//				pt = pt.matrixTransform(connections[i].canvas.getScreenCTM());
-//				//console.log({x : pt.x + 155, y : pt.y + 30});
-//				console.log(point);
-//			}
 		}
 		
 		console.log(new Date().getTime() - start);
+		
 		return closestConnection;
 	}
 

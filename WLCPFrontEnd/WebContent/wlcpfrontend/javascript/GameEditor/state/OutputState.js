@@ -2,7 +2,7 @@
  * 
  */
 
-class OutputState extends State {
+var OutputState = class OutputState extends State {
 	
 	constructor(topColorClass, bottomColorClass, text, htmlId, jsPlumbInstance) {
 		super(topColorClass, bottomColorClass, text, htmlId, jsPlumbInstance);

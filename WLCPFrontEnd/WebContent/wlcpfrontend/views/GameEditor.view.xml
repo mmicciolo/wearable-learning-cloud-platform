@@ -13,27 +13,27 @@
 						</layoutData>
 					</Button>
 					<ToolbarSpacer width="180px"/>
-					<Button text="New" type="Transparent" icon="sap-icon://create" press="newGame">
+					<Button id="newButton" text="New" type="Transparent" icon="sap-icon://create" press="newGame">
 						<layoutData>
 							<OverflowToolbarLayoutData priority="Low" />
 						</layoutData>
 					</Button>
-					<Button text="Load" type="Transparent" icon="sap-icon://open-folder" press="loadGame">
+					<Button id="loadButton" text="Load" type="Transparent" icon="sap-icon://open-folder" press="loadGame">
 						<layoutData>
 							<OverflowToolbarLayoutData priority="Low" />
 						</layoutData>
 					</Button>
-					<Button text="Save" type="Transparent" icon="sap-icon://save" press="saveGame">
+					<Button id="saveButton" text="Save" type="Transparent" icon="sap-icon://save" press="saveGame" enabled="false">
 						<layoutData>
 							<OverflowToolbarLayoutData priority="Low" />
 						</layoutData>
 					</Button>
-					<Button text="Compile" type="Transparent" icon="sap-icon://database">
+					<Button id="compileButton" text="Compile" type="Transparent" icon="sap-icon://database" enabled="false">
 						<layoutData>
 							<OverflowToolbarLayoutData priority="Low" />
 						</layoutData>
 					</Button>
-					<Button text="Run" type="Transparent" icon="sap-icon://begin">
+					<Button id="runButton" text="Run" type="Transparent" icon="sap-icon://begin" enabled="false">
 						<layoutData>
 							<OverflowToolbarLayoutData priority="Low" />
 						</layoutData>
@@ -69,8 +69,6 @@
 					<html:div id="toolboxTransition" class="transition buttonPressTransition centerToolboxTransition" style="top:200px;">
 						<html:div class="centerTransitionText"><html:div>Input</html:div><html:div>Transition</html:div></html:div>
 					</html:div>
-<!-- 					<html:div id="posx" style="position:relative;top:400px"></html:div>
-					<html:div id="posy" style="position:relative;top:420px"></html:div> -->
 				</ScrollContainer>
 				<ScrollContainer id="pad" height="100%" width="100%" horizontal="true" vertical="true" focusable="true">
 				</ScrollContainer>

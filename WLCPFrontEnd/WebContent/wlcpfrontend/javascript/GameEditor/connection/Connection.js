@@ -2,7 +2,7 @@
  * 
  */
 
-class Connection {
+var Connection = class Connection {
 	constructor(connectionFrom, connectionTo, connectionId) {
 		this.connectionFrom = connectionFrom;
 		this.connectionTo = connectionTo;

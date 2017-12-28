@@ -1,7 +1,7 @@
 /**
  * 
  */
-class Transition {
+var Transition = class Transition {
 	
 	constructor(cssClass, connection, overlayId, gameEditor) {
 		this.cssClass = cssClass;
@@ -35,8 +35,8 @@ class Transition {
 		
 		var start = new Date().getTime();
 		
-		var localX = this.absoluteToRelativeX(positionX, 75);
-		var localY = this.absoluteToRelativeY(positionY);
+		var localX = this.absoluteToRelativeX(positionX, 75) + GameEditor.getScrollLeftOffset();
+		var localY = this.absoluteToRelativeY(positionY) + GameEditor.getScrollTopOffset();;
 		
 		//Place holder for found connections
 		var connections = [];
@@ -139,14 +139,14 @@ class Transition {
 					bbh = 10;
 				}
 				
-//				var div = document.createElement('div');
-//				div.style.position = "absolute";
-//				div.style.backgroundColor = "black";
-//				div.style.top = bby + "px";
-//				div.style.left = bbx + "px";
-//				div.style.width = bbw + "px";
-//				div.style.height = bbh + "px";
-//				document.getElementById('gameEditor--pad').appendChild(div);
+				var div = document.createElement('div');
+				div.style.position = "absolute";
+				div.style.backgroundColor = "black";
+				div.style.top = bby + "px";
+				div.style.left = bbx + "px";
+				div.style.width = bbw + "px";
+				div.style.height = bbh + "px";
+				document.getElementById('gameEditor--pad').appendChild(div);
 				
 				//Calculate the center of the bb
 				var centerX = bbx + (bbw / 2);
@@ -190,14 +190,10 @@ class Transition {
 		for(var i = 0; i < jsPlumbInstance.getConnections().length; i++) {
 			
 			//Get positions and size of bounding box
-//			var x = jsPlumbInstance.getConnections()[i].connector.x;
-//			var y = jsPlumbInstance.getConnections()[i].connector.y;
-//			var h = jsPlumbInstance.getConnections()[i].connector.h;
-//			var w = jsPlumbInstance.getConnections()[i].connector.w;
-			var x = parseFloat(jsPlumbInstance.getConnections()[i].canvas.style.left.replace("px", ""));
-			var y = parseFloat(jsPlumbInstance.getConnections()[i].canvas.style.top.replace("px", ""));
-			var h = jsPlumbInstance.getConnections()[i].canvas.getBoundingClientRect().height;
-			var w = jsPlumbInstance.getConnections()[i].canvas.getBoundingClientRect().width;
+			var x = jsPlumbInstance.getConnections()[i].connector.x;
+			var y = jsPlumbInstance.getConnections()[i].connector.y;
+			var h = jsPlumbInstance.getConnections()[i].connector.h;
+			var w = jsPlumbInstance.getConnections()[i].connector.w;
 			
 			//Check if the transition is within the bounding box
 			if(localX < x + w && localX + 75 > x && localY < y + h && localY + 62.5 > y) {
@@ -230,14 +226,10 @@ class Transition {
 			for(var i = 0; i < connections.length; i++) {
 				
 				//Get positions and size of bounding box
-//				var x = connections[i].connector.x;
-//				var y = connections[i].connector.y;
-//				var h = connections[i].connector.h;
-//				var w = connections[i].connector.w;
-				var x = parseFloat(jsPlumbInstance.getConnections()[i].canvas.style.left.replace("px", ""));
-				var y = parseFloat(jsPlumbInstance.getConnections()[i].canvas.style.top.replace("px", ""));
-				var h = jsPlumbInstance.getConnections()[i].canvas.getBoundingClientRect().height;
-				var w = jsPlumbInstance.getConnections()[i].canvas.getBoundingClientRect().width;
+				var x = connections[i].connector.x;
+				var y = connections[i].connector.y;
+				var h = connections[i].connector.h;
+				var w = connections[i].connector.w;
 				
 				//Get the center point of the box
 				var centerX = x + (w / 2);

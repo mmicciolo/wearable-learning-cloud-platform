@@ -2,7 +2,7 @@
  * 
  */
 
-class InputTransition extends Transition {
+var InputTransition = class InputTransition extends Transition {
 	
 	constructor(cssClass, connection, overlayId, gameEditor) {
 		super(cssClass, connection, overlayId, gameEditor);

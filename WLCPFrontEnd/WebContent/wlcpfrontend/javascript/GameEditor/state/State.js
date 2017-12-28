@@ -7,7 +7,7 @@ var StateType = {
 		OUTPUT_STATE : "OUTPUT_STATE"
 }
 
-class State {
+var State = class State {
 	
 	constructor(topColorClass, bottomColorClass, text, htmlId, jsPlumbInstance) {
 		this.topColorClass = topColorClass;

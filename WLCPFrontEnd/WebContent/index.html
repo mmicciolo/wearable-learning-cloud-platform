@@ -11,45 +11,11 @@
 				data-sap-ui-xx-bindingSyntax="complex">
 		</script>
 		<!-- only load the mobile lib "sap.m" and the "sap_bluecrystal" theme -->
-		
-		<link rel="stylesheet" href="/WLCPFrontEnd/wlcpfrontend/css/Login.css"/>
-		<link rel="stylesheet" href="/WLCPFrontEnd/wlcpfrontend/css/GameEditor.css"/>
-		
-<!-- 		<script src="https://jsplumbtoolkit.com/lib/jsplumb.js"></script> -->
-<!-- 		<script src="/WLCPFrontEnd/wlcpfrontend/javascript/jquery.ui.touch-punch.min.js"></script> -->
-			<script src="/WLCPFrontEnd/wlcpfrontend/javascript/jsplumb.js"></script>
-		
-		<script src="/WLCPFrontEnd/wlcpfrontend/javascript/GameEditor/state/State.js"></script>
-		<script src="/WLCPFrontEnd/wlcpfrontend/javascript/GameEditor/state/StartState.js"></script>
-		<script src="/WLCPFrontEnd/wlcpfrontend/javascript/GameEditor/state/OutputState.js"></script>
-<!-- 		<script src="/WLCPFrontEnd/wlcpfrontend/javascript/StateFactory.js"></script> -->
-		
-		<script src="/WLCPFrontEnd/wlcpfrontend/javascript/GameEditor/transition/Transition.js"></script>
-		<script src="/WLCPFrontEnd/wlcpfrontend/javascript/GameEditor/transition/InputTransition.js"></script>
-		<script src="/WLCPFrontEnd/wlcpfrontend/javascript/GameEditor/transition/ButtonPressTransition.js"></script>
-		
-		<script src="/WLCPFrontEnd/wlcpfrontend/javascript/GameEditor/connection/Connection.js"></script>
-		
-		<script src="/WLCPFrontEnd/wlcpfrontend/javascript/GameEditor/GameEditor.js"></script>
-		<script src="/WLCPFrontEnd/wlcpfrontend/javascript/ODataModel.js"></script>
 
+		<script src="/WLCPFrontEnd/index.js"></script>
 
 		<script>
-			    jQuery.sap.require('sap.ui.thirdparty.jqueryui.jquery-ui-core');
-			    jQuery.sap.require('sap.ui.thirdparty.jqueryui.jquery-ui-widget');
-			    jQuery.sap.require('sap.ui.thirdparty.jqueryui.jquery-ui-mouse');
-			    jQuery.sap.require('sap.ui.thirdparty.jqueryui.jquery-ui-droppable');
-			    jQuery.sap.require('sap.ui.thirdparty.jqueryui.jquery-ui-draggable');
-				jQuery.sap.require("sap.m.MessageBox");
-				//jQuery.sap.require("sap.m.MessageToast");
-				sap.ui.localResources("wlcpfrontend");
-				jQuery.sap.includeScript("wlcpfrontend/javascript/StateFactory.js");
-				var app = new sap.m.App({id:"app1", initialPage:"idView1"});
-				//var page = sap.ui.view({id:"idView1", viewName:"wlcpfrontend.views.Login", type:sap.ui.core.mvc.ViewType.XML});
-				var page = sap.ui.view({id:"gameEditor", viewName:"wlcpfrontend.views.GameEditor", type:sap.ui.core.mvc.ViewType.XML});
-				//page.addStyleClass("myBackgroundStyle");
-				app.addPage(page);
-				app.placeAt("content");
+			Index.main();
 		</script>
 
 	</head>

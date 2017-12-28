@@ -95,7 +95,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		switch(ui.helper[0].childNodes[1].className) {
 			case "toolboxOutputStateTopColor":
 				var outputState = new OutputState("toolboxOutputStateTopColor", "toolboxOutputStateBottomColor", "Output State" , this.createStateId(), this.jsPlumbInstance);
-				outputState.setPositionX(outputState.absoluteToRelativeX(ui.position.left)); outputState.setPositionY(outputState.absoluteToRelativeY(ui.position.top));
+				outputState.setPositionX(outputState.absoluteToRelativeX(ui.position.left) + GameEditor.getScrollLeftOffset()); outputState.setPositionY(outputState.absoluteToRelativeY(ui.position.top) + GameEditor.getScrollTopOffset());
 				outputState.draw();
 				this.stateList.push(outputState);
 				break;
@@ -112,7 +112,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 			var inputTransition = new InputTransition("transition", connection, this.createTransitionId(), this);
 			this.transitionList.push(inputTransition);
 		} else {
-			//sap.m.MessageBox.error("A transition already exists there!");
+			sap.m.MessageBox.error("A transition could not be placed there!");
 		}
 	},
 	
@@ -272,6 +272,10 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		this.transitionList = [];
 		this.saveCount = null;
 		this.type = null;
+		
+		sap.ui.getCore().byId("gameEditor--saveButton").setEnabled(true);
+		sap.ui.getCore().byId("gameEditor--compileButton").setEnabled(true)
+		sap.ui.getCore().byId("gameEditor--runButton").setEnabled(true)
 	},
 	
 /**
@@ -297,11 +301,6 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 				  //this.initToolbox();
 				  
 				  //ButtonPressTransition.doubleClick();
-				  
-//				  document.onmousemove = function(e) {
-//					  document.getElementById("gameEditor--posx").innerHTML = "POS_X: " + e.clientX;
-//					  document.getElementById("gameEditor--posy").innerHTML = "POS_Y: " + e.clientY;
-//				  }
 			  }
 			}, this);
 	},

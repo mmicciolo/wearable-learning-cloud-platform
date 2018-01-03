@@ -76,21 +76,21 @@ var Transition = class Transition {
 		for(var i = 0; i < connections.length; i++) {
 			
 			//Get the svg segments
-			var segments = connections[i].canvas.firstChild.pathSegList;
+			var segments = connections[i].canvas.firstChild.getPathData();
 			
 			//Loop through and calculate all of bounding boxes for the segments
 			for(var n = 0; n < segments.length; n = n + 2) {
 				
 				//Get segment 1 and transform it to pad space
 				var seg1 = connections[i].canvas.createSVGPoint();
-				seg1.x = segments[n].x; 
-				seg1.y = segments[n].y;
+				seg1.x = segments[n].values[segments[n].values.length - 2];
+				seg1.y = segments[n].values[segments[n].values.length - 1];
 				seg1 = seg1.matrixTransform(connections[i].canvas.firstChild.transform.baseVal[0].matrix);
 				
 				//Get segment 1 and transform it to pad space
 				var seg2 = connections[i].canvas.createSVGPoint();
-				seg2.x = segments[n + 1].x; 
-				seg2.y = segments[n + 1].y;
+				seg2.x = segments[n + 1].values[segments[n + 1].values.length - 2];
+				seg2.y = segments[n + 1].values[segments[n + 1].values.length - 1];
 				seg2 = seg2.matrixTransform(connections[i].canvas.firstChild.transform.baseVal[0].matrix);
 				
 				//Add the offset of the connection bounding box
@@ -148,33 +148,14 @@ var Transition = class Transition {
 //				div.style.height = bbh + "px";
 //				document.getElementById('gameEditor--pad').appendChild(div);
 				
-				//Calculate the center of the bb
-				var centerX = bbx + (bbw / 2);
-				var centerY = bby + (bbh / 2);
-				
-				//Calculate the distance from the transition to the center of the bounding box of the connection
-				var distance = Math.sqrt(Math.pow((centerX - (localX + 75)), 2) + Math.pow((centerY - (localY + 62.5)), 2));
-				
-				//If its the first connection set up the variables
-				if(closestConnection == null) {
-					closestConnection = connections[i];
-					closestDistance = distance;
-				} else { //If its not the first connection
-					
-					//Check to see if this connection is closer
-					if(distance < closestDistance) {
-						
-						//If it is, make it the new closest
-						closestConnection = connections[i];
-						closestDistance = distance;
-					}
+				//If the transition is in the segments bounding box, return the current connection
+				if(((localX < (bbx + bbw)) && ((localX + 75) > bbx)) && (((localY < (bby + bbh)) && ((localY + 62.5) > bby)))) {
+					return connections[i];
 				}	
 			}
 		}
 		
-		console.log(new Date().getTime() - start);
-		
-		return closestConnection;
+		return null;
 	}
 
 	static getClosestConnection2(positionX, positionY, jsPlumbInstance) {

@@ -19,7 +19,7 @@ public class TranspilerTest {
 		initJPA();
 		
 		transpiler = new JavaScriptTranspiler2(entityManager);
-		transpiler.Transpile("test2");
+		transpiler.Transpile("EstimateIt2");
 	}
 	
 	private static void initJPA() {

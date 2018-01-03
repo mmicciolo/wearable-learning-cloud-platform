@@ -1,5 +1,9 @@
 package wlcp.webapp.transpiler.transition;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import wlcp.model.master.connection.Connection;
 import wlcp.model.master.transition.Transition;
 import wlcp.webapp.transpiler.transition.TransitionType;
@@ -7,43 +11,69 @@ import wlcp.webapp.transpiler.transition.TransitionType;
 public class SingleButtonPressTransitionType extends TransitionType implements ITransitionType {
 
 	@Override
-	public String GenerateTranstion(String scope, Transition transition, Connection connection) {
+	public String GenerateTranstion(String scope, Map<Connection, Transition> connectionTransitions) {
 		StringBuilder stringBuilder = new StringBuilder();
-		if(transition.getSingleButtonPresses().containsKey(scope)) {
-			stringBuilder.append(this.GenerateTransitionConditional(scope, transition));
-			stringBuilder.append(GenerateTransitionStateChange(scope, connection));
+		Map<String, String> buttonMap = GenerateButtonMap(scope, connectionTransitions);
+		if(buttonMap.size() > 0) {
+			stringBuilder.append(GenerateTransitionConditional(scope));
+			stringBuilder.append(GenerateTransitionSingleButtonPress(scope, buttonMap));
 			stringBuilder.append(GenerateTransitionEndConditional(scope));
 		}
 		return stringBuilder.toString();
 	}
 	
-	private String GenerateTransitionConditional(String scope, Transition transition) {
+	public Map<String, String> GenerateButtonMap(String scope, Map<Connection, Transition> connectionTransitions) {
+		Map<String, String> buttonMap = new HashMap<String, String>();
+		for(Entry<Connection, Transition> entry : connectionTransitions.entrySet()) {
+			if(entry.getValue().getSingleButtonPresses().containsKey(scope)) {
+				if(entry.getValue().getSingleButtonPresses().get(scope).getButton1()) {
+					buttonMap.put("1", entry.getKey().getConnectionTo());
+				}
+				if(entry.getValue().getSingleButtonPresses().get(scope).getButton2()) {
+					buttonMap.put("2", entry.getKey().getConnectionTo());
+				}
+				if(entry.getValue().getSingleButtonPresses().get(scope).getButton3()) {
+					buttonMap.put("3", entry.getKey().getConnectionTo());
+				}
+				if(entry.getValue().getSingleButtonPresses().get(scope).getButton4()) {
+					buttonMap.put("4", entry.getKey().getConnectionTo());
+				}
+			}
+		}
+		return buttonMap;
+	}
+	
+	public String GenerateArrays(Map<String, String> buttonMap) {
 		StringBuilder stringBuilder = new StringBuilder();
-		if(scope.equals("Game Wide")) {
-			stringBuilder.append(GenerateTransitionSingleButtonPress(scope, transition));
-		} else if(scope.contains("Team") && !scope.contains("Player")) {
-			String[] split = scope.split(" ");
-			stringBuilder.append("      " + "if(this.team == " + split[1] + ") {\n");
-			stringBuilder.append(GenerateTransitionSingleButtonPress(scope, transition));
-		} else {
-			String[] split = scope.split(" ");
-			stringBuilder.append("      " + "if(this.team == " + split[1] + " && " + "this.player == " + split[3] + ") {\n");
-			stringBuilder.append(GenerateTransitionSingleButtonPress(scope, transition));
+		stringBuilder.append("[");
+		int count = 0;
+		for(Entry<String, String> entry : buttonMap.entrySet()) {
+			if(count == buttonMap.size() - 1) {
+				stringBuilder.append("\"" + entry.getKey() + "\"], [");
+			} else {
+				stringBuilder.append("\"" + entry.getKey() + "\", ");
+			}
+			count++;
+		}
+		count = 0;
+		for(Entry<String, String> entry : buttonMap.entrySet()) {
+			if(count == buttonMap.size() - 1) {
+				stringBuilder.append("states." + entry.getValue() + "]");
+			} else {
+				stringBuilder.append("states." + entry.getValue() + ", ");
+			}
+			count++;
 		}
 		return stringBuilder.toString();
 	}
 	
-	private String GenerateTransitionSingleButtonPress( String scope, Transition transition) {
+	private String GenerateTransitionSingleButtonPress(String scope, Map<String, String> buttonMap) {
 		StringBuilder stringBuilder = new StringBuilder();
-		StringBuilder buttonBuilder = new StringBuilder();
-		if(transition.getSingleButtonPresses().get(scope).getButton1()) {buttonBuilder.append("1");}
-		if(transition.getSingleButtonPresses().get(scope).getButton2()) {buttonBuilder.append("2");}
-		if(transition.getSingleButtonPresses().get(scope).getButton3()) {buttonBuilder.append("3");}
-		if(transition.getSingleButtonPresses().get(scope).getButton4()) {buttonBuilder.append("4");}
+		GenerateArrays(buttonMap);
 		if(scope.equals("Game Wide")) {
-			stringBuilder.append("      " + "if(SingleButtonPress(" + buttonBuilder.toString() + ")) {\n");
+			stringBuilder.append("      this.state = SingleButtonPress(" + GenerateArrays(buttonMap) + ");\n");
 		} else {
-			stringBuilder.append("         " + "if(SingleButtonPress(" + buttonBuilder.toString() + ")) {\n");
+			stringBuilder.append("         this.state = SingleButtonPress(" + GenerateArrays(buttonMap) + ");\n");
 		}
 		return stringBuilder.toString();
 	}

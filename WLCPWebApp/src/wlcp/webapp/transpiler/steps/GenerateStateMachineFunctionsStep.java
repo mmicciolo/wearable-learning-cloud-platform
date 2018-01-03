@@ -1,7 +1,9 @@
 package wlcp.webapp.transpiler.steps;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import wlcp.model.master.connection.Connection;
 import wlcp.model.master.state.OutputState;
@@ -78,23 +80,32 @@ public class GenerateStateMachineFunctionsStep implements ITranspilerStep {
 			}
 			
 		} else if(fromConnections.size() > 1) { //If there is more than one connection
-		
+			
+			Map<Connection, Transition> connectionTransitions = new HashMap<Connection, Transition>();
+			List<Connection> connectionsWithoutTransitions = new ArrayList<Connection>();
+			
+			//Loop through the connections and determine which have transitions and which don't
+			for(Connection connection : fromConnections) {
+				Transition transition = TranspilerHelpers.GetConnectionTransition(transitions, connection);
+				if(transition != null) {
+					connectionTransitions.put(connection, transition);
+				} else {
+					connectionsWithoutTransitions.add(connection);
+				}
+			}
+			
 			GenerateMethodSignature(state);
 			GenerateOutputState(state);
-
-			//Loop through the connections
-			for(Connection connection : fromConnections) {
-				Transition transition;
-				if((transition = TranspilerHelpers.GetConnectionTransition(transitions, connection)) != null) {
-					
-					//If the connection has a transition...
-					GenerateMultipleConnectionsSingleTransition(state, connection, transition);
-				} else {
-					
-					//If there are no transitions on the connection
-					//We need to look ahead at the state
-					GenerateMultipleConnectionsNoTransition(connection);
-				}
+			
+			//Generate connections with transitions
+			GenerateMultipleConnectionsSingleTransition(connectionTransitions);
+			
+			//Generate connections with no transitions
+			for(Connection connection : connectionsWithoutTransitions) {
+				
+				//If there are no transitions on the connection
+				//We need to look ahead at the state
+				GenerateMultipleConnectionsNoTransition(connection);
 			}
 			
 			stringBuilder.append("   " + "},\n\n");
@@ -117,7 +128,8 @@ public class GenerateStateMachineFunctionsStep implements ITranspilerStep {
 	private void GenerateSingleConnectionSingleTransition(State state, Connection connection, Transition transition) {
 		GenerateMethodSignature(state);
 		GenerateOutputState(state);
-		GenerateTransition(transition, connection);
+		Map<Connection, Transition> connectionTransitions = new HashMap<Connection, Transition>(); connectionTransitions.put(connection, transition);
+		GenerateTransition(connectionTransitions);
 		stringBuilder.append("   " + "},\n\n");
 	}
 	
@@ -132,8 +144,8 @@ public class GenerateStateMachineFunctionsStep implements ITranspilerStep {
 		}
 	}
 	
-	private void GenerateMultipleConnectionsSingleTransition(State state, Connection connection, Transition transition) {
-		GenerateTransition(transition, connection);
+	private void GenerateMultipleConnectionsSingleTransition(Map<Connection, Transition> connectionTransitions) {
+		GenerateTransition(connectionTransitions);
 	}
 	
 	private void GenerateOutputState(State state) {
@@ -145,10 +157,10 @@ public class GenerateStateMachineFunctionsStep implements ITranspilerStep {
 		}
 	}
 	
-	private void GenerateTransition(Transition transition, Connection connection) {
+	private void GenerateTransition(Map<Connection, Transition> connectionTransitions) {
 		for(String s : TranspilerHelpers.GenerateScope(3,3)) {
 			for(ITransitionType transitionType : transitionTypes) {
-				stringBuilder.append(transitionType.GenerateTranstion(s, transition, connection));
+				stringBuilder.append(transitionType.GenerateTranstion(s, connectionTransitions));
 			}
 		}
 	}

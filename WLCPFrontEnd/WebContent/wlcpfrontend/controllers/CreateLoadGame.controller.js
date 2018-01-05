@@ -68,8 +68,8 @@ sap.ui.controller("wlcpfrontend.controllers.CreateLoadGame", {
 			GameEditor.getEditorController().gameModel.PlayersPerTeam = GameEditor.getEditorController().newGameModel.PlayersPerTeam;
 			GameEditor.getEditorController().gameModel.Visibility = GameEditor.getEditorController().newGameModel.Visibility;
 			GameEditor.getEditorController().newGameModel.GameId = "";
-			GameEditor.getEditorController().newGameModel.TeamCount = 0;
-			GameEditor.getEditorController().newGameModel.PlayersPerTeam = 0;
+			GameEditor.getEditorController().newGameModel.TeamCount = 3;
+			GameEditor.getEditorController().newGameModel.PlayersPerTeam = 3;
 			GameEditor.getEditorController().newGameModel.Visibility = true;
 			GameEditor.getEditorController().initNewGame();
 		}

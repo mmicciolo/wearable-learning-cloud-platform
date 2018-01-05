@@ -4,8 +4,8 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 	
 	newGameModel : {
 		GameId : "",
-		TeamCount : 0,
-		PlayersPerTeam : 0,
+		TeamCount : 3,
+		PlayersPerTeam : 3,
 		StateIdCount : 0,
 		TransitionIdCount : 0,
 		ConnectionIdCount : 0,

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import wlcp.model.master.Game;
 import wlcp.model.master.connection.Connection;
 import wlcp.model.master.state.OutputState;
 import wlcp.model.master.state.StartState;
@@ -21,13 +22,15 @@ public class GenerateStateMachineFunctionsStep implements ITranspilerStep {
 	
 	private StringBuilder stringBuilder = new StringBuilder();
 	private StartState startState;
+	private Game game;
 	private List<OutputState> outputStates;
 	private List<Connection> connections;
 	private List<Transition> transitions;
 	private List<IStateType> stateTypes = new ArrayList<IStateType>();
 	private List<ITransitionType> transitionTypes = new ArrayList<ITransitionType>();
 	
-	public GenerateStateMachineFunctionsStep(StartState startState, List<OutputState> outputStates, List<Connection> connections, List<Transition> transitions) {
+	public GenerateStateMachineFunctionsStep(Game game, StartState startState, List<OutputState> outputStates, List<Connection> connections, List<Transition> transitions) {
+		this.game = game;
 		this.startState = startState;
 		this.outputStates = outputStates;
 		this.connections = connections;
@@ -135,7 +138,7 @@ public class GenerateStateMachineFunctionsStep implements ITranspilerStep {
 	
 	private void GenerateMultipleConnectionsNoTransition(Connection connection) {
 		OutputState nextState = (OutputState) TranspilerHelpers.GetToState(outputStates, connection);
-		for(String s : TranspilerHelpers.GenerateScope(3,3)) {
+		for(String s : TranspilerHelpers.GenerateScope(game.getTeamCount(), game.getPlayersPerTeam())) {
 			if(TranspilerHelpers.stateContainsScope(s, nextState)) {
 				stringBuilder.append(StateType.GenerateStateConditional(s));
 				stringBuilder.append("         " + "this.state = states." + nextState.getStateId() + ";\n");
@@ -150,7 +153,7 @@ public class GenerateStateMachineFunctionsStep implements ITranspilerStep {
 	
 	private void GenerateOutputState(State state) {
 		if(state instanceof StartState) {return;}
-		for(String s : TranspilerHelpers.GenerateScope(3,3)) {
+		for(String s : TranspilerHelpers.GenerateScope(game.getTeamCount(), game.getPlayersPerTeam())) {
 			for(IStateType stateType : stateTypes) {
 				stringBuilder.append(stateType.GenerateState(s, state));
 			}
@@ -158,7 +161,7 @@ public class GenerateStateMachineFunctionsStep implements ITranspilerStep {
 	}
 	
 	private void GenerateTransition(Map<Connection, Transition> connectionTransitions) {
-		for(String s : TranspilerHelpers.GenerateScope(3,3)) {
+		for(String s : TranspilerHelpers.GenerateScope(game.getTeamCount(), game.getPlayersPerTeam())) {
 			for(ITransitionType transitionType : transitionTypes) {
 				stringBuilder.append(transitionType.GenerateTranstion(s, connectionTransitions));
 			}

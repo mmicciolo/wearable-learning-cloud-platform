@@ -275,8 +275,10 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		this.type = null;
 		
 		sap.ui.getCore().byId("gameEditor--saveButton").setEnabled(true);
-		sap.ui.getCore().byId("gameEditor--compileButton").setEnabled(true)
-		sap.ui.getCore().byId("gameEditor--runButton").setEnabled(true)
+		sap.ui.getCore().byId("gameEditor--compileButton").setEnabled(true);
+		sap.ui.getCore().byId("gameEditor--runButton").setEnabled(true);
+		
+		GameEditor.resetScroll();
 	},
 	
 /**

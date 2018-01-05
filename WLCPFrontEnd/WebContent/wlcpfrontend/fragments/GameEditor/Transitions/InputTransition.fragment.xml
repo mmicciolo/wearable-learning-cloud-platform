@@ -25,6 +25,7 @@
 								</items>
 							</List>
 							<NavContainer width="100%" height="500px">
+								<layoutData><l:SplitterLayoutData minSize="500" resizable="false"/></layoutData>
 								<Page title="{scope} Single Button Press">
 									<FlexBox alignItems="Start" justifyContent="Center">
 										<items>

@@ -12,11 +12,11 @@
 		</VBox>
 		<VBox>
 			<Label text="Team Count:"/>
-			<StepInput min="0" max="10"/>
+			<StepInput min="1" max="10" value="{/TeamCount}"/>
 		</VBox>
 		<VBox>
 			<Label text="Players Per Team:"/>
-			<StepInput min="1" max="10"/>
+			<StepInput min="1" max="10" value="{/PlayersPerTeam}"/>
 		</VBox>
 		<VBox>
 			<Label text="Visibility:"/>

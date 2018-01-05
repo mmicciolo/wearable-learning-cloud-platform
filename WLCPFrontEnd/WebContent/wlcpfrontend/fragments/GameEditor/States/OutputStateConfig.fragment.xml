@@ -25,6 +25,7 @@
 								<tnt:NavigationListItem text="Light" icon="sap-icon://lightbulb" select="navigationSelected"/>
 							</tnt:NavigationList>
 							<NavContainer width="100%" height="500px">
+								<layoutData><l:SplitterLayoutData minSize="500" resizable="false"/></layoutData>
 								<Page title="{scope} Display Text">
 									<FlexBox alignItems="Start" justifyContent="Center">
 										<items>

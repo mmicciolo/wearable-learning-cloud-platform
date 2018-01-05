@@ -14,6 +14,11 @@ var GameEditor = {
 	
 	getScrollLeftOffset : function() {
 		return document.getElementById("gameEditor--mainSplitter-content-1").scrollLeft;
+	},
+	
+	resetScroll : function() {
+		document.getElementById("gameEditor--pad").style.width = "100%";
+		document.getElementById("gameEditor--pad").style.height = "100%";
 	}
 
 }

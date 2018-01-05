@@ -10,7 +10,7 @@ var InputTransition = class InputTransition extends Transition {
 		this.modelJSON = {
 				iconTabs : []
 		}
-		this.modelJSON.iconTabs = this.generateData(3,3);
+		this.modelJSON.iconTabs = this.generateData(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam);
 		this.model = new sap.ui.model.json.JSONModel(this.modelJSON);
 	}
 	

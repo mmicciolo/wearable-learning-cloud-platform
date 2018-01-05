@@ -64,7 +64,7 @@ public class JavaScriptTranspiler implements ITranspiler {
 		transpilerSteps.add(new GenerateNameSpaceAndVariablesStep(startState));
 		transpilerSteps.add(new GenerateStartFunctionStep());
 		transpilerSteps.add(new GenerateStateMachineStep(startState, outputStates));
-		transpilerSteps.add(new GenerateStateMachineFunctionsStep(startState, outputStates, connections, transitions));
+		transpilerSteps.add(new GenerateStateMachineFunctionsStep(game, startState, outputStates, connections, transitions));
 	}
 
 }

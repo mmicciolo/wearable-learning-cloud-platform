@@ -1,4 +1,4 @@
-package wlcp.webapp.transpiler.transition;
+package wlcp.transpiler.transition;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -6,7 +6,7 @@ import java.util.Map.Entry;
 
 import wlcp.model.master.connection.Connection;
 import wlcp.model.master.transition.Transition;
-import wlcp.webapp.transpiler.transition.TransitionType;
+import wlcp.transpiler.transition.TransitionType;
 
 public class SingleButtonPressTransitionType extends TransitionType implements ITransitionType {
 

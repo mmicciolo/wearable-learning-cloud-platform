@@ -1,4 +1,4 @@
-package wlcp.webapp.transpiler.steps;
+package wlcp.transpiler.steps;
 
 import java.util.List;
 

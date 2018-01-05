@@ -1,4 +1,4 @@
-package wlcp.webapp.transpiler.steps;
+package wlcp.transpiler.steps;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,12 +10,12 @@ import wlcp.model.master.state.OutputState;
 import wlcp.model.master.state.StartState;
 import wlcp.model.master.state.State;
 import wlcp.model.master.transition.Transition;
-import wlcp.webapp.transpiler.helper.TranspilerHelpers;
-import wlcp.webapp.transpiler.state.DisplayTextStateType;
-import wlcp.webapp.transpiler.state.IStateType;
-import wlcp.webapp.transpiler.state.StateType;
-import wlcp.webapp.transpiler.transition.ITransitionType;
-import wlcp.webapp.transpiler.transition.SingleButtonPressTransitionType;
+import wlcp.transpiler.helper.TranspilerHelpers;
+import wlcp.transpiler.state.DisplayTextStateType;
+import wlcp.transpiler.state.IStateType;
+import wlcp.transpiler.state.StateType;
+import wlcp.transpiler.transition.ITransitionType;
+import wlcp.transpiler.transition.SingleButtonPressTransitionType;
 
 public class GenerateStateMachineFunctionsStep implements ITranspilerStep {
 	

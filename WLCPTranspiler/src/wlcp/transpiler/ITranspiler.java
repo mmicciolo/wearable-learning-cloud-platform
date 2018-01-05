@@ -1,4 +1,4 @@
-package wlcp.webapp.transpiler;
+package wlcp.transpiler;
 
 public interface ITranspiler {
 	

@@ -1,4 +1,4 @@
-package wlcp.webapp.transpiler.state;
+package wlcp.transpiler.state;
 
 import wlcp.model.master.state.State;
 

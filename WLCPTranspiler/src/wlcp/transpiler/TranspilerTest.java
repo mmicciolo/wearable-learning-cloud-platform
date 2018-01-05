@@ -1,4 +1,4 @@
-package wlcp.webapp.transpiler;
+package wlcp.transpiler;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,8 +8,6 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 import org.eclipse.persistence.config.PersistenceUnitProperties;
-
-import wlcp.transpiler.JavaScriptTranspiler;
 
 public class TranspilerTest {
 	

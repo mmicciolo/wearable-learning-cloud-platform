@@ -1,4 +1,4 @@
-package wlcp.webapp.transpiler;
+package wlcp.transpiler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,7 @@ import wlcp.model.master.state.StartState;
 import wlcp.model.master.state.State;
 import wlcp.model.master.transition.Transition;
 
-public class JavaScriptTranspiler {
+public class JavaScriptTranspiler_orig {
 	
 	private StringBuilder stringBuilder = new StringBuilder();
 	private EntityManager entityManager = null;
@@ -24,7 +24,7 @@ public class JavaScriptTranspiler {
 	private List<Connection> connections;
 	private List<Transition> transitions;
 	
-	public JavaScriptTranspiler(EntityManager entityManager) {
+	public JavaScriptTranspiler_orig(EntityManager entityManager) {
 		this.entityManager = entityManager;
 	}
 	

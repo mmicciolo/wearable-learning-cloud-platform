@@ -1,4 +1,4 @@
-package wlcp.webapp.transpiler;
+package wlcp.transpiler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,14 +10,14 @@ import wlcp.model.master.connection.Connection;
 import wlcp.model.master.state.OutputState;
 import wlcp.model.master.state.StartState;
 import wlcp.model.master.transition.Transition;
-import wlcp.webapp.transpiler.steps.GenerateNameSpaceAndVariablesStep;
-import wlcp.webapp.transpiler.steps.GenerateStartFunctionStep;
-import wlcp.webapp.transpiler.steps.GenerateStateEnumStep;
-import wlcp.webapp.transpiler.steps.GenerateStateMachineFunctionsStep;
-import wlcp.webapp.transpiler.steps.GenerateStateMachineStep;
-import wlcp.webapp.transpiler.steps.ITranspilerStep;
+import wlcp.transpiler.steps.GenerateNameSpaceAndVariablesStep;
+import wlcp.transpiler.steps.GenerateStartFunctionStep;
+import wlcp.transpiler.steps.GenerateStateEnumStep;
+import wlcp.transpiler.steps.GenerateStateMachineFunctionsStep;
+import wlcp.transpiler.steps.GenerateStateMachineStep;
+import wlcp.transpiler.steps.ITranspilerStep;
 
-public class JavaScriptTranspiler2 implements ITranspiler {
+public class JavaScriptTranspiler implements ITranspiler {
 	
 	private EntityManager entityManager = null;
 	private StringBuilder stringBuilder = new StringBuilder();
@@ -29,7 +29,7 @@ public class JavaScriptTranspiler2 implements ITranspiler {
 	private List<Connection> connections;
 	private List<Transition> transitions;
 	
-	public JavaScriptTranspiler2(EntityManager entityManager) {
+	public JavaScriptTranspiler(EntityManager entityManager) {
 		this.entityManager = entityManager;
 	}
 

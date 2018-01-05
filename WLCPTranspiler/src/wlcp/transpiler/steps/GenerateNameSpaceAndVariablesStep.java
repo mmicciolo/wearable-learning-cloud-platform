@@ -1,4 +1,4 @@
-package wlcp.webapp.transpiler.steps;
+package wlcp.transpiler.steps;
 
 import wlcp.model.master.state.StartState;
 

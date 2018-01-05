@@ -1,4 +1,4 @@
-package wlcp.webapp.transpiler.transition;
+package wlcp.transpiler.transition;
 
 import java.util.Map;
 

@@ -119,8 +119,17 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 	
 	connectionDropped : function(oEvent) {
 		oEvent.connection.id = this.createConnectionId();
-		this.connectionList.push(new Connection(oEvent.sourceId, oEvent.targetId, oEvent.connection.id));
+		var connection = new Connection(oEvent.sourceId, oEvent.targetId, oEvent.connection.id);
+		this.connectionList.push(connection);
+		connection.validate();
 		return true;
+//		if(Connection.validate(oEvent)) {
+//			oEvent.connection.id = this.createConnectionId();
+//			this.connectionList.push(new Connection(oEvent.sourceId, oEvent.targetId, oEvent.connection.id));
+//			return true;
+//		} else {
+//			return false;
+//		}
 	},
 	
 	connectionDetached : function(oEvent) {

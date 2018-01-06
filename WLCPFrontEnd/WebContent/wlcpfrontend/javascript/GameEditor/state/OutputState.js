@@ -91,6 +91,16 @@ var OutputState = class OutputState extends State {
 		return baseData;
 	}
 	
+	getActiveScopes() {
+		var activeScopes = [];
+		for(var i = 0; i < this.modelJSON.iconTabs.length; i++) {
+			if(this.modelJSON.iconTabs[i].displayText != "") {
+				activeScopes.push(this.modelJSON.iconTabs[i].scope);
+			}
+		}
+		return activeScopes;
+	}
+	
 	closeDialog() {
 		this.dialog.close();
 		this.dialog.destroy();

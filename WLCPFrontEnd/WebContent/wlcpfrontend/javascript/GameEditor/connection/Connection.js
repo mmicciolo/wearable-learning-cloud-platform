@@ -7,6 +7,9 @@ var Connection = class Connection {
 		this.connectionFrom = connectionFrom;
 		this.connectionTo = connectionTo;
 		this.connectionId = connectionId;
+		this.validationCounter = -1;
+		this.validationRules = [];
+		this.setupValidationRules();
 	}
 	
 	static load(loadData) {
@@ -26,6 +29,34 @@ var Connection = class Connection {
 		}
 	}
 	
+//	static validate(validationData) {
+//		var validationRules = [];
+//		validationRules.push(new ConnectionGameWideValidationRule());
+//		validationRules.push(new ConnectionDroppedOnHigherScope());
+//		validationRules.push(new ConnectionScopeCountValidationRule());
+//		for(var i = 0; i < validationRules.length; i++) {
+//			if(!validationRules[i].validate(validationData)) {
+//				return false;
+//			}
+//		}
+//		return true;
+//	}
+	
+	validate() {
+		if(this.validationCounter != this.validationRules.length - 1) {
+			this.validationCounter++;
+			this.validationRules[this.validationCounter].validate(this);
+		} else {
+			this.validationCounter = -1;
+		}
+	}
+	
+	setupValidationRules() {
+		this.validationRules.push(new ConnectionGameWideValidationRule());
+		this.validationRules.push(new ConnectionDroppedOnHigherScope());
+		//this.validationRules.push(new ConnectionScopeCountValidationRule());
+	}
+
 	detach() {
 		
 		//Loop through all of the transitions

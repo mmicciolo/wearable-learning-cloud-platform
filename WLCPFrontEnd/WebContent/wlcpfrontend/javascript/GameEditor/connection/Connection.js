@@ -29,19 +29,6 @@ var Connection = class Connection {
 		}
 	}
 	
-//	static validate(validationData) {
-//		var validationRules = [];
-//		validationRules.push(new ConnectionGameWideValidationRule());
-//		validationRules.push(new ConnectionDroppedOnHigherScope());
-//		validationRules.push(new ConnectionScopeCountValidationRule());
-//		for(var i = 0; i < validationRules.length; i++) {
-//			if(!validationRules[i].validate(validationData)) {
-//				return false;
-//			}
-//		}
-//		return true;
-//	}
-	
 	validate() {
 		if(this.validationCounter != this.validationRules.length - 1) {
 			this.validationCounter++;

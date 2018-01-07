@@ -91,6 +91,95 @@ var OutputState = class OutputState extends State {
 		return baseData;
 	}
 	
+	validate() {
+		console.log("validating...");
+	}
+	
+	setScope(bitMask, teamCount, playersPerTeam) {
+	
+		var mask = bitMask;
+		var model = this.modelJSON.iconTabs;
+	
+		//Test gamewide
+		if(bitMask & 0x01) {
+			console.log("Game Wide!");
+			var gameWideExists = false;
+			for(var i = 0; i < model.length; i++) {
+				if(model[i].scope == "Game Wide") {
+					gameWideExists = true;
+					break
+				}
+			}
+			if(!gameWideExists) {
+				var data = this.createData();
+				data.icon = "sap-icon://globe";
+				data.scope = "Game Wide";
+				model.splice(0, 0, data);
+			}
+		} else {
+			for(var i = 0; i < model.length; i++) {
+				if(model[i].scope == "Game Wide") {
+					model.splice(i, 1);
+					break;
+				}
+			}
+		}
+		
+		mask = mask >> 1;
+		
+		for(var i = 0; i < teamCount; i++) {
+			if(mask & 0x01) {
+				console.log("Team " + (i + 1));
+			}
+			mask = mask >> 1;
+		}	
+		
+		for(var i = 0; i < teamCount; i++) {
+			for(var n = 0; n < playersPerTeam; n++) {
+				if(mask & 0x01) {
+					console.log("Team " + (i + 1) + " Player" + (n + 1));
+				}
+				mask = mask >> 1;
+			}
+		}
+		
+		this.model.setData(this.modelJSON);
+	}
+	
+	getActiveScopeMask(activeScopes, teamCount, playersPerTeam) {
+		var scopeMask = 0;
+		var maskCount = 0;
+		
+		if(activeScopes.includes("Game Wide")) {
+			scopeMask = this.setBit(scopeMask, maskCount);
+		}
+		maskCount++;
+		
+		for(var i = 0; i < teamCount; i++) {
+			if(activeScopes.includes("Team " + (i + 1))) {
+				scopeMask = this.setBit(scopeMask, maskCount);
+			}
+			maskCount++;
+		}
+		
+		for(var i = 0; i < teamCount; i++) {
+			for(var n = 0; n < playersPerTeam; n++) {
+				if(activeScopes.includes("Team " + (i + 1) + " Player " + (n + 1))) {
+					scopeMask = this.setBit(scopeMask, maskCount);
+				}
+				maskCount++;
+			}
+		}
+		
+		return scopeMask;
+	}
+	
+	setBit(number, bitNumber) {
+	    var tempBit = 1;
+	    tempBit = tempBit << bitNumber;
+	    return number | tempBit;
+	 }
+	
 	getActiveScopes() {
 		var activeScopes = [];
 		for(var i = 0; i < this.modelJSON.iconTabs.length; i++) {

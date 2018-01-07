@@ -12,18 +12,6 @@ var ConnectionGameWideValidationRule = class ConnectionGameWideValidationRule ex
 		} else {
 			connection.validate();
 		}
-//		if(previousStateConnections.length == 0) {
-//			return true;
-//		} else if(previousStateConnections.length == 1){
-//			if(this.getState(previousStateConnections[0].targetId).getActiveScopes().includes("Game Wide")) {
-//				sap.m.MessageBox.error("That source is already connected to a state that contains Game Wide Scope.", {title: "Connection could not be made"});
-//				return false;
-//			} else {
-//				return true;
-//			}
-//		} else {
-//			return true;
-//		}
 	}
 	
 	onClose(oAction) {

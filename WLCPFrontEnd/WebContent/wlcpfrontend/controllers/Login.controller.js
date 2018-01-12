@@ -42,6 +42,12 @@ sap.ui.controller("wlcpfrontend.controllers.Login", {
 			app.addPage(page);
 			app.to(page.getId());
 			break;
+		case "Player":
+			var app = sap.ui.getCore().byId("app1");
+			var page = sap.ui.view({id:"virtualDevice", viewName:"wlcpfrontend.views.VirtualDevice", type:sap.ui.core.mvc.ViewType.XML});
+			app.addPage(page);
+			app.to(page.getId());
+			break;
 		default:
 			break;
 		}

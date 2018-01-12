@@ -1,0 +1,51 @@
+<core:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:tnt="sap.tnt" xmlns:l="sap.ui.layout"
+		controllerName="wlcpfrontend.controllers.VirtualDevice" xmlns:html="http://www.w3.org/1999/xhtml">
+	<Page id="virtualDevice" showHeader="false" class="virtualDeviceBackground">
+		<content>
+			<tnt:ToolHeader>
+				<ToolbarSpacer />
+				<Text text="Virtual Device" wrapping="false">
+					<layoutData>
+						<OverflowToolbarLayoutData priority="Disappear" />
+					</layoutData>
+				</Text>
+				<ToolbarSpacer />
+<!-- 				<Button text="Username" type="Transparent" press="onUserNamePress">
+					<layoutData>
+						<OverflowToolbarLayoutData priority="NeverOverflow" />
+					</layoutData>
+				</Button>
+				<Button text="Log Off" type="Transparent" press="onUserNamePress">
+					<layoutData>
+						<OverflowToolbarLayoutData priority="NeverOverflow" />
+					</layoutData>
+				</Button> -->
+			</tnt:ToolHeader>
+			<l:Splitter id="mainSplitter" orientation="Vertical" height="100%" width="100%">
+				<NavContainer id="outputContainer">
+					<layoutData><l:SplitterLayoutData size="50%" resizable="false"/></layoutData>
+					<Page showHeader="false">
+						<FlexBox height="100%" alignItems="Center" justifyContent="Center">
+							<items>
+								<TextArea editable="false" value="Testing" rows="8" cols="100" />
+							</items>
+						</FlexBox>
+					</Page>
+				</NavContainer>
+				<NavContainer id="inputContainer">
+					<layoutData><l:SplitterLayoutData size="50%" resizable="false"/></layoutData>
+					<Page showHeader="false" enableScrolling="false">
+						<FlexBox height="100%" wrap="Wrap" alignItems="Center" justifyContent="Center">
+							<items>
+								<Button id="redButton" text="Red Button" class="buttonMargin" press="redButtonPressed"></Button>
+								<Button id="greenButton" text="Green Button" class="buttonMargin" press="greenButtonPressed"></Button>
+								<Button id="blueButton" text="Blue Button" class="buttonMargin" press="blueButtonPressed" ></Button>
+								<Button id="blackButton" text="Black Button" class="buttonMargin" press="blackButtonPressed"></Button>
+							</items>
+						</FlexBox>
+					</Page>
+				</NavContainer>
+			</l:Splitter>
+		</content>
+	</Page>
+</core:View>

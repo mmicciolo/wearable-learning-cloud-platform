@@ -1,0 +1,35 @@
+.virtualDeviceBackground {
+	background-color:#333333;
+}
+
+.buttonMargin {
+	margin-right:10px;
+}
+
+#virtualDevice--redButton-inner {
+	background-color: #BB0000 !important;
+	color: white !important;
+	text-shadow : inherit;
+	border: inherit;
+}
+
+#virtualDevice--greenButton-inner {
+	background-color: #2B7D2B !important;
+	color: white !important;
+	text-shadow : inherit;
+	border: inherit;
+}
+
+#virtualDevice--blueButton-inner {
+	background-color: #427CAC !important;
+	color: white !important;
+	text-shadow : inherit;
+	border: inherit;
+}
+
+#virtualDevice--blackButton-inner {
+	background-color: black !important;
+	color: white !important;
+	text-shadow : inherit;
+	border: inherit;
+}

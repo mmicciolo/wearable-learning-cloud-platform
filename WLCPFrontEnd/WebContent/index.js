@@ -40,6 +40,7 @@ var Index = {
 		
 		jQuery.sap.includeStyleSheet("wlcpfrontend/css/Login.css");
 		jQuery.sap.includeStyleSheet("wlcpfrontend/css/GameEditor.css");
+		jQuery.sap.includeStyleSheet("wlcpfrontend/css/VirtualDevice.css");
 	},
 	
 	loadPage : function() {
@@ -52,6 +53,8 @@ var Index = {
 			app = new sap.m.App({id:"app1", initialPage:"gameEditor"});
 			var page = sap.ui.view({id:"gameEditor", viewName:"wlcpfrontend.views.GameEditor", type:sap.ui.core.mvc.ViewType.XML});
 		}
+		//app = new sap.m.App({id:"app1", initialPage:"virtualDevice"});
+		//var page = sap.ui.view({id:"virtualDevice", viewName:"wlcpfrontend.views.VirtualDevice", type:sap.ui.core.mvc.ViewType.XML});
 		app.addPage(page);
 		app.placeAt("content");
 	},

@@ -24,6 +24,8 @@ var OutputState = class OutputState extends State {
 		this.modelJSON.iconTabs = this.generateData(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam);
 		this.model = new sap.ui.model.json.JSONModel(this.modelJSON);
 		this.create();
+		this.validationRules = [];
+		this.setupValidationRules();
 	}
 	
 	create() {
@@ -37,6 +39,10 @@ var OutputState = class OutputState extends State {
 		
 		//Setup double click
 		$("#"+this.stateDiv.id).dblclick($.proxy(this.doubleClick, this));
+	}
+	
+	setupValidationRules() {
+		this.validationRules.push(new StateScopeValidationRule());
 	}
 	
 	doubleClick() {
@@ -186,137 +192,11 @@ var OutputState = class OutputState extends State {
 		this.model.setData(this.modelJSON);
 	}
 	
-	getActiveScopeMask(activeScopes, teamCount, playersPerTeam) {
-		var scopeMask = 0;
-		var maskCount = 0;
-		
-		if(activeScopes.includes("Game Wide")) {
-			scopeMask = this.setBit(scopeMask, maskCount);
-		}
-		maskCount++;
-		
-		for(var i = 0; i < teamCount; i++) {
-			if(activeScopes.includes("Team " + (i + 1))) {
-				scopeMask = this.setBit(scopeMask, maskCount);
-			}
-			maskCount++;
-		}
-		
-		for(var i = 0; i < teamCount; i++) {
-			for(var n = 0; n < playersPerTeam; n++) {
-				if(activeScopes.includes("Team " + (i + 1) + " Player " + (n + 1))) {
-					scopeMask = this.setBit(scopeMask, maskCount);
-				}
-				maskCount++;
-			}
-		}
-		
-		return scopeMask;
-	}
-	
-	  getActiveScopeMasks2(teamCount, playersPerTeam, activeMask) {
-		    
-	    var scopeMasks = [];
-	    
-	    //Check for game wide
-	    if(this.getBit(activeMask, 0)) {
-	      console.log("Game Wide");
-	      scopeMasks.push(0x01);
-	    }
-	    
-	    //Check for team wide 
-	    for(var i = 1; i < teamCount + 1; i++) {
-	      if(this.getBit(activeMask, i) == 0x01) {
-	        console.log("Team " + i);
-	        var tempMask = 0;
-	        for(var n = 1; n < teamCount + (teamCount * playersPerTeam) + 1; n++) {
-	          if(!((n >= ((teamCount * i) + 1)) && (n < (teamCount * i) + 1 + playersPerTeam))) {
-	            tempMask = this.setBit(tempMask, n);
-	          }
-	        }
-	       scopeMasks.push(tempMask);
-	      }
-	    }
-	    
-	    //Check for player wide
-	    for(var i = 1; i < teamCount + 1; i++) {
-	      for(var n = 1; n < playersPerTeam + 1; n++) {
-	        if(this.getBit(activeMask, (teamCount * i) + n) == 0x01) {
-	          console.log("Team " + i + " Player " + n);
-	          var tempMask = 0;
-	          var found = false;
-	          for(var j = 1; j < teamCount + (teamCount * playersPerTeam) + 1; j++) {
-	            if(j != i) {
-	              tempMask = this.setBit(tempMask, j);
-	            } else {
-	              found = true;
-	            }
-	          }
-	          if(found) {
-	            scopeMasks.push(tempMask);
-	            break;
-	          }
-	        }
-	      }
-	    }
-	    
-	    return scopeMasks;
-	}
-	
-	setBit(number, bitNumber) {
-	    var tempBit = 1;
-	    tempBit = tempBit << bitNumber;
-	    return number | tempBit;
-	}
-	
-	getBit(number, bitNumber) {
-	    return (number >> bitNumber) & 1;
-	}
-	
-	getActiveScopes() {
-		var activeScopes = [];
-		for(var i = 0; i < this.modelJSON.iconTabs.length; i++) {
-			if(this.modelJSON.iconTabs[i].displayText != "") {
-				activeScopes.push(this.modelJSON.iconTabs[i].scope);
-			}
-		}
-		return activeScopes;
-	}
-	
-  andScopeMasks(teamCount, playersPerTeam, activeMask) {
-	    var scopes = this.getActiveScopeMasks2(teamCount, playersPerTeam, activeMask);
-	    var returnScope = 0xffffffff;
-	    for(var i = 0; i < scopes.length; i++) {
-	      returnScope = returnScope & scopes[i];
-	    }
-	    return returnScope;
-	}
-	
-	onChange(oEvent) {
-		var start = new Date().getTime();
-		var start2 = start;
-		//this.sleepFor(500);
-		var activeScopeMask = this.getActiveScopeMask(this.getActiveScopes(), 3, 3);
-		console.log("Get Active Scope Mask: " + (new Date().getTime() - start));
-		start = new Date().getTime();
-		var scopeMasks = this.getActiveScopeMasks2(3, 3, activeScopeMask);
-		console.log("Get Active Scope Mask 2: " + (new Date().getTime() - start));
-	    var returnScope = 0xffffffff;
-	    for(var i = 0; i < scopeMasks.length; i++) {
-	      returnScope = returnScope & scopeMasks[i];
-	    }
-	    start = new Date().getTime();
-	    this.setScope(returnScope, 3, 3);
-	    console.log("Set Scope: " + (new Date().getTime() - start));
-		console.log(new Date().getTime() - start2);
-		//console.log(activeScopeMask);
-		//console.log(scopeMasks);
-	}
-	
-	sleepFor( sleepDuration ){
-	    var now = new Date().getTime();
-	    while(new Date().getTime() < now + sleepDuration){ /* do nothing */ } 
-	}
+    onChange(oEvent) {
+    	for(var i = 0; i < this.validationRules.length; i++) {
+    		this.validationRules[i].validate(this);
+    	}
+    }
 	
 	closeDialog() {
 		this.dialog.close();

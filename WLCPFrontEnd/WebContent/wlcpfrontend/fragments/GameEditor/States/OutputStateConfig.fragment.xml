@@ -12,7 +12,7 @@
 			<Button text="Accept" type="Accept"/>
 			<Button text="Close" type="Reject" press="closeDialog"/>
 		</buttons>
-		<IconTabBar id="outputStateDialogIconTabBar" items="{/iconTabs}" showOverflowSelectList="false" applyContentPadding="false">
+		<IconTabBar id="outputStateDialogIconTabBar" items="{/iconTabs}" showOverflowSelectList="false" applyContentPadding="false" expandable="false">
 			<items>
 				<IconTabFilter icon="{icon}" text="{scope}" key="{scope}">
 					<content>

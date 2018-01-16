@@ -47,8 +47,27 @@ var OutputState = class OutputState extends State {
 		//Set the model for the dialog
 		this.dialog.setModel(this.model);
 			
+		this.dialog.getContent()[0].addEventDelegate({
+			onAfterRendering : $.proxy(this.tabRendered, this)
+		});
+		
 		//Open the dialog
 		this.dialog.open();
+	}
+
+	tabRendered() {
+		if(this.focus != null) {
+			for(var i = 0; i < this.dialog.getContent()[0].getItems().length; i++) {
+				if(this.dialog.getContent()[0].getItems()[i].getKey() == this.dialog.getContent()[0].getSelectedKey()) {
+					var info = this.dialog.getContent()[0].getItems()[i].getContent()[0].getContentAreas()[1].getCurrentPage().getContent()[1].getItems()[0].getFocusInfo();
+					info.selectionStart = this.dialog.getContent()[0].getItems()[i].getContent()[0].getContentAreas()[1].getCurrentPage().getContent()[1].getItems()[0].getValue().length;
+					info.selectionEnd = this.dialog.getContent()[0].getItems()[i].getContent()[0].getContentAreas()[1].getCurrentPage().getContent()[1].getItems()[0].getValue().length;
+					this.dialog.getContent()[0].getItems()[i].getContent()[0].getContentAreas()[1].getCurrentPage().getContent()[1].getItems()[0].applyFocusInfo(info);
+					this.focus = null;
+					break;
+				}
+			}
+		}
 	}
 	
 	createData() {
@@ -164,88 +183,6 @@ var OutputState = class OutputState extends State {
 		}
 		
 		this.modelJSON.iconTabs = newTabs;
-		this.model.setData(this.modelJSON);
-	}
-	
-	setScope2(bitMask, teamCount, playersPerTeam) {
-	
-		var mask = bitMask;
-		var model = this.modelJSON.iconTabs;
-	
-		//Test gamewide
-		if(bitMask & 0x01) {
-			console.log("Game Wide!");
-			var gameWideExists = false;
-			for(var i = 0; i < model.length; i++) {
-				if(model[i].scope == "Game Wide") {
-					gameWideExists = true;
-					break;
-				}
-			}
-			if(!gameWideExists) {
-				var data = this.createData();
-				data.icon = "sap-icon://globe";
-				data.scope = "Game Wide";
-				model.splice(0, 0, data);
-			}
-		} else {
-			for(var i = 0; i < model.length; i++) {
-				if(model[i].scope == "Game Wide") {
-					model.splice(i, 1);
-					break;
-				}
-			}
-		}
-		
-		mask = mask >> 1;
-		
-		for(var i = 0; i < teamCount; i++) {
-			if(mask & 0x01) {
-				console.log("Team " + (i + 1));
-				var teamExists = false;
-				for(var n = 0; n < model.length; n++) {
-					if(model[n].scope == "Team " + (i + 1)) {
-						teamExists = true;
-						break;
-					}
-				}
-				if(!teamExists) {
-					var data = this.createData();
-					data.icon = "sap-icon://globe";
-					data.scope = "Team " + (i + 1);
-					var teams = [];
-					for(var n = 0; n < model.length; n++) {
-						if(model[i].scope.includes("Team") && !model[i].scope.includes("Player")) {
-							teams.push({modelIndex : n, teamIndex : parseInt(model[i].scope.replace("Team", ""))});
-						}
-					}
-					if(teams.length == 0 ) {
-						model.splice(0, 0, data);
-					} else {
-						
-					}
-				}
-			} else {
-				for(var n = 0; n < model.length; n++) {
-					if(model[n].scope == "Team " + (i + 1)) {
-						model.splice(n, 1);
-						break;
-					}
-				}
-			}
-			
-			mask = mask >> 1;
-		}	
-		
-		for(var i = 0; i < teamCount; i++) {
-			for(var n = 0; n < playersPerTeam; n++) {
-				if(mask & 0x01) {
-					console.log("Team " + (i + 1) + " Player" + (n + 1));
-				}
-				mask = mask >> 1;
-			}
-		}
-		
 		this.model.setData(this.modelJSON);
 	}
 	

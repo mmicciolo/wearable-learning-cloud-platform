@@ -115,6 +115,7 @@ var OutputState = class OutputState extends State {
 	
 	validate() {
 		console.log("validating...");
+		this.onChange();
 	}
 	
 	setScope(bitMask, teamCount, playersPerTeam) {
@@ -193,6 +194,10 @@ var OutputState = class OutputState extends State {
     	for(var i = 0; i < this.validationRules.length; i++) {
     		this.validationRules[i].validate(this);
     	}
+    }
+    
+    revalidate(state) {
+    	
     }
 	
 	closeDialog() {

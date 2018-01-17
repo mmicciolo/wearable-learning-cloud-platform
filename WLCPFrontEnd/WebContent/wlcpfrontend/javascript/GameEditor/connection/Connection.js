@@ -35,12 +35,22 @@ var Connection = class Connection {
 			this.validationRules[this.validationCounter].validate(this);
 		} else {
 			this.validationCounter = -1;
+			
+			if(this.connectionFrom == (GameEditor.getEditorController().gameModel.GameId + "_start")) {
+				var ep1 = GameEditor.getEditorController().jsPlumbInstance.selectEndpoints({element : this.connectionFrom}).get(0);
+				var ep2 = GameEditor.getEditorController().jsPlumbInstance.selectEndpoints({element : this.connectionTo}).get(0);
+				var connection = GameEditor.getEditorController().jsPlumbInstance.connect({ source: ep1 , target: ep2});
+			} else {
+				var ep1 = GameEditor.getEditorController().jsPlumbInstance.selectEndpoints({element : this.connectionFrom}).get(1);
+				var ep2 = GameEditor.getEditorController().jsPlumbInstance.selectEndpoints({element : this.connectionTo}).get(0);
+				var connection = GameEditor.getEditorController().jsPlumbInstance.connect({source: ep1 , target: ep2});
+			}
 		}
 	}
 	
 	setupValidationRules() {
 		this.validationRules.push(new ConnectionGameWideValidationRule());
-		this.validationRules.push(new ConnectionDroppedOnHigherScope());
+		//this.validationRules.push(new ConnectionDroppedOnHigherScope());
 		//this.validationRules.push(new ConnectionScopeCountValidationRule());
 	}
 

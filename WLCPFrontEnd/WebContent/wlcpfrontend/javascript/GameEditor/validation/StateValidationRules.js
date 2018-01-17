@@ -2,20 +2,69 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 	
 	validate(state) {
 		
-		//Get the active scopes
-		var activeScopes = this.getActiveScopes(state.modelJSON);
+		//Get the connection going to this state
+		var connection = GameEditor.getJsPlumbInstance().getConnections({target : state.htmlId});
 		
-		//Get the active scope mask
-		var activeScopeMask = this.getActiveScopeMask(3, 3, activeScopes);
+		//Get the connections stemming of the source of this states connection
+		var allConnections = GameEditor.getJsPlumbInstance().getConnections({source : connection.sourceId});
 		
-		//Get the active scope masks
-		var activeScopeMasks = this.getActiveScopeMasks(3, 3, activeScopeMask);
+		//Maintain a list of states the previous one is connected to
+		var stateList = [];
+		
+		//Loop through all of these connections to get their active masks
+		for(var i = 0; i < allConnections.length; i++) {
+		
+			//Find the state that the connection points to
+			for(var n = 0; n < GameEditor.getEditorController().stateList.length; n++) {
+				if(allConnections[i].targetId == GameEditor.getEditorController().stateList[n].htmlId) {
+					stateList.push(GameEditor.getEditorController().stateList[n]);
+				}
+			}	
+		}
+		
+		var orMaskAll = 0;
+		
+		//Loop through and or all active masks that have the same parent
+		for(var i = 0; i < stateList.length; i++) {
+			
+			//Get the active scopes
+			var activeScopes = this.getActiveScopes(stateList[i].modelJSON);
+			
+			//Get the active scope mask
+			var activeScopeMask = this.getActiveScopeMask(3, 3, activeScopes);
+			
+			orMaskAll = orMaskAll | activeScopeMask;
+		}
+		
+		//Loop through all of the states and apply their scope
+		for(var i = 0; i < stateList.length; i++) {
+			
+			var orMaskNeighbors = 0;
+			
+			//Get the neighbor active scope mask
+			for(var n = 0; n < stateList.length; n++) {
+				
+				if(stateList[i].htmlId != stateList[n].htmlId) {
+					
+					//Get the active scopes
+					var activeScopes = this.getActiveScopes(stateList[n].modelJSON);
+					
+					//Get the active scope mask
+					var activeScopeMask = this.getActiveScopeMask(3, 3, activeScopes);
+					
+					orMaskNeighbors = orMaskNeighbors | activeScopeMask;
+				}
+			}
+			
+			//Get the active scope masks
+			var activeScopeMasks = this.getActiveScopeMasks(3, 3, orMaskAll);
 
-		//And all of the masks together to get our new scope mask
-		var newScopeMask = this.andScopeMasks(activeScopeMasks);
-		
-		//Set the new scopes
-		state.setScope(newScopeMask, 3, 3);
+			//And all of the masks together to get our new scope mask
+			var newScopeMask = this.andScopeMasks(activeScopeMasks);
+			
+			//Set the new scopes
+			stateList[i].setScope(newScopeMask & (~orMaskNeighbors), 3, 3);			
+		}	
 	}
 	
 	getActiveScopes(model) {

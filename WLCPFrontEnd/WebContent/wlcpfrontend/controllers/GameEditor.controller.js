@@ -121,9 +121,6 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		oEvent.connection.id = this.createConnectionId();
 		var connection = new Connection(oEvent.sourceId, oEvent.targetId, oEvent.connection.id);
 		this.connectionList.push(connection);
-		
-		//State.getStateById(oEvent.targetId).validate();
-		
 		connection.validate();
 		return false;
 	},

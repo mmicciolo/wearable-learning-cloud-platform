@@ -94,3 +94,32 @@ var ConnectionScopeCountValidationRule = class ConnectionScopeCountValidationRul
 		return true;
 	}
 }
+
+var ConnectionValidationSuccess = class ConnectionValidationSuccess extends ValidationRule {
+	
+	validate(validationData) {
+		
+		//Make the connection
+		if(validationData.connectionFrom == (GameEditor.getEditorController().gameModel.GameId + "_start")) {
+			var ep1 = GameEditor.getEditorController().jsPlumbInstance.selectEndpoints({element : validationData.connectionFrom}).get(0);
+			var ep2 = GameEditor.getEditorController().jsPlumbInstance.selectEndpoints({element : validationData.connectionTo}).get(0);
+			var connection = GameEditor.getEditorController().jsPlumbInstance.connect({ source: ep1 , target: ep2});
+		} else {
+			var ep1 = GameEditor.getEditorController().jsPlumbInstance.selectEndpoints({element : validationData.connectionFrom}).get(1);
+			var ep2 = GameEditor.getEditorController().jsPlumbInstance.selectEndpoints({element : validationData.connectionTo}).get(0);
+			var connection = GameEditor.getEditorController().jsPlumbInstance.connect({source: ep1 , target: ep2});
+		}
+		
+		//Tell the state to update
+		this.getState(validationData.connectionTo).onChange();
+		
+	}
+	
+	getState(stateId) {
+		for(var i = 0; i < GameEditor.getEditorController().stateList.length; i++) {
+			if(GameEditor.getEditorController().stateList[i].htmlId == stateId) {
+				return GameEditor.getEditorController().stateList[i];
+			}
+		}
+	}
+}

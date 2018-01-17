@@ -6,7 +6,7 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 		var connection = GameEditor.getJsPlumbInstance().getConnections({target : state.htmlId});
 		
 		//Get the connections stemming of the source of this states connection
-		var allConnections = GameEditor.getJsPlumbInstance().getConnections({source : connection.sourceId});
+		var allConnections = GameEditor.getJsPlumbInstance().getConnections({source : connection[0].sourceId});
 		
 		//Maintain a list of states the previous one is connected to
 		var stateList = [];

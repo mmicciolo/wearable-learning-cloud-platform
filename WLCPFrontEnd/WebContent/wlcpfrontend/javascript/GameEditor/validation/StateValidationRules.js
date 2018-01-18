@@ -2,21 +2,23 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 	
 	validate(state) {
 		
-		//Get the connection going to this state
-		var connection = GameEditor.getJsPlumbInstance().getConnections({target : state.htmlId});
+		//Get the connections going to this state
+		var connectionsToState = GameEditor.getJsPlumbInstance().getConnections({target : state.htmlId});
+		
+		//TODO: What if no connections?
 		
 		//Get the connections stemming of the source of this states connection
-		var allConnections = GameEditor.getJsPlumbInstance().getConnections({source : connection[0].sourceId});
+		var neighborConnections = GameEditor.getJsPlumbInstance().getConnections({source : connectionsToState[0].sourceId});
 		
 		//Maintain a list of states the previous one is connected to
 		var stateList = [];
 		
 		//Loop through all of these connections to get their active masks
-		for(var i = 0; i < allConnections.length; i++) {
+		for(var i = 0; i < neighborConnections.length; i++) {
 		
 			//Find the state that the connection points to
 			for(var n = 0; n < GameEditor.getEditorController().stateList.length; n++) {
-				if(allConnections[i].targetId == GameEditor.getEditorController().stateList[n].htmlId) {
+				if(neighborConnections[i].targetId == GameEditor.getEditorController().stateList[n].htmlId) {
 					stateList.push(GameEditor.getEditorController().stateList[n]);
 				}
 			}	
@@ -56,14 +58,77 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 				}
 			}
 			
-			//Get the active scope masks
-			var activeScopeMasks = this.getActiveScopeMasks(3, 3, orMaskAll);
-
-			//And all of the masks together to get our new scope mask
-			var newScopeMask = this.andScopeMasks(activeScopeMasks);
+			var parentMask = 0;
+			//Get parent state active scope masks
+			for(var n = 0; n < connectionsToState.length; n++) {
+				for(var j = 0; j < GameEditor.getEditorController().stateList.length; j++) {
+					if(connectionsToState[n].sourceId == GameEditor.getEditorController().stateList[j].htmlId && !GameEditor.getEditorController().stateList[j].htmlId.includes("start")) {
+						//Get the active scopes
+						var activeScopes = this.getActiveScopes(GameEditor.getEditorController().stateList[j].modelJSON);
+						
+						//Get the active scope mask
+						var activeScopeMask = this.getActiveScopeMask(3, 3, activeScopes);
+						
+						parentMask = parentMask | activeScopeMask;
+					}
+				}
+			}
 			
-			//Set the new scopes
-			stateList[i].setScope(newScopeMask & (~orMaskNeighbors), 3, 3);			
+			if(parentMask == 0) {
+				
+				//Get the active scope masks
+				var activeScopeMasks = this.getActiveScopeMasks(3, 3, orMaskAll);
+
+				//And all of the masks together to get our new scope mask
+				var newScopeMask = this.andScopeMasks(activeScopeMasks);
+				
+				//Set the new scopes
+				stateList[i].setScope(newScopeMask & (~orMaskNeighbors), 3, 3);		
+			} else {
+				
+			    var teamReturn = true;
+			    
+			    //Check for team to game wide
+			    for(var team = 1; team < 3 + 1; team++) {
+			      if(!this.getBit(parentMask, team) == 0x01) {
+			        teamReturn = false;
+			        break;
+			      }
+			    }
+			    
+			    if(teamReturn) { parentMask = 0xffffffff; }
+			    
+			    var playerReturn = true;
+			    var playerReturns = [];
+			    
+			    //Check for player wide to team wide
+			    for(var team = 1; team < 3 + 1; team++) {
+			    	for(var player = 1; player < 3 + 1; player++) {
+			    		if(!this.getBit(parentMask, (3 * team) + player) == 0x01) {
+			    			playerReturn = false;
+		    	            break;
+			    	    }
+			    	}
+			    	if(playerReturn) {
+			    		//parentMask = parseInt("0000001110010", 2);
+			    		playerReturns.push("Team " + team);
+			    		for(var player = 1; player < 3 + 1; player++) {
+			    			playerReturns.push("Team " + team + " Player " + player);
+			    		}
+			    	} else {
+			    		playerReturn = true;
+			    	}
+			    }
+			    
+			    if(playerReturns.length > 0) {
+					parentMask = parentMask | this.getActiveScopeMask(3, 3, playerReturns);
+			    }
+			    
+			    //Check for player wide to game wide
+			    
+				//Set the new scopes
+				stateList[i].setScope(parentMask & (~orMaskNeighbors), 3, 3);	
+			}	
 		}	
 	}
 	
@@ -113,6 +178,8 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 	    if(this.getBit(activeMask, 0)) {
 	      scopeMasks.push(0x01);
 	    }
+	    
+	    var teamReturn = true;
 	    
 	    //Check for team wide 
 	    for(var i = 1; i < teamCount + 1; i++) {

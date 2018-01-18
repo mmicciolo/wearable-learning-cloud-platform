@@ -86,6 +86,11 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 				stateList[i].setScope(newScopeMask & (~orMaskNeighbors), 3, 3);		
 			} else {
 				
+				//Check for game wide to game wide
+				if(this.getBit(parentMask, 0) == 0x01) {
+					parentMask = 0xffffffff;
+				}
+				
 				var teamList = [];
 				
 				//Check for game wide to team

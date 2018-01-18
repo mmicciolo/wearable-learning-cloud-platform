@@ -86,6 +86,25 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 				stateList[i].setScope(newScopeMask & (~orMaskNeighbors), 3, 3);		
 			} else {
 				
+				var teamList = [];
+				
+				//Check for game wide to team
+				for(var team = 1; team < 3 + 1; team++) {
+					if(this.getBit(parentMask, team) == 0x01) {
+						teamList.push("Team " + team);
+				      }
+				}
+				
+				if(teamList.length > 0) {
+					var l = [];
+					for(var g = 0; g < teamList.length; g++) {
+						for(var c = 1; c < 3 + 1; c++) {
+							l.push(teamList[g] + " Player " + c);
+						}
+					}
+					parentMask = parentMask | this.getActiveScopeMask(3, 3, l);
+				}
+				
 			    var teamReturn = true;
 			    
 			    //Check for team to game wide
@@ -125,6 +144,11 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 			    }
 			    
 			    //Check for player wide to game wide
+			  
+				//Get the active scope masks
+				var activeScopeMasks = this.getActiveScopeMasks(3, 3, orMaskAll);
+			    
+			    parentMask = parentMask & this.andScopeMasks(activeScopeMasks);
 			    
 				//Set the new scopes
 				stateList[i].setScope(parentMask & (~orMaskNeighbors), 3, 3);	

@@ -27,5 +27,10 @@ public enum Modules {
 	/**
 	 * Reads configuration data.
 	 */
-	CONFIGURATION
+	CONFIGURATION,
+	
+	/**
+	 * Async socket server
+	 */
+	SERVER
 }

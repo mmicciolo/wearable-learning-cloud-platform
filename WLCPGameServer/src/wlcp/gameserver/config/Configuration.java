@@ -7,15 +7,21 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.w3c.dom.Document;
 
+import wlcp.gameserver.module.ModuleManager;
+import wlcp.gameserver.module.Modules;
+import wlcp.gameserver.modules.LoggerModule;
+
 public class Configuration implements IConfiguration {
 	
+	private Configurations configuration;
 	protected File file;
 	protected DocumentBuilderFactory documentBuilderFactory;
 	protected DocumentBuilder documentBuilder;
 	protected Document document;
 
-	public Configuration(File file) {
+	public Configuration(File file, Configurations configuration) {
 		this.file = file;
+		this.configuration = configuration;
 		SetupXMLParser();
 	}
 	
@@ -26,14 +32,20 @@ public class Configuration implements IConfiguration {
 			document = documentBuilder.parse(file);
 			document.getDocumentElement().normalize();
 		} catch (Exception e) {
-			
+			LoggerModule logger = (LoggerModule) ModuleManager.getInstance().getModule(Modules.LOGGER);
+			logger.write("Could not open server configuration xml file...");
+			logger.write(e.getMessage());
+			ModuleManager.getInstance().FatallyTerminateServer();
 		}
 	}
 
 	@Override
 	public Configuration Parse() {
-		// TODO Auto-generated method stub
 		return this;
+	}
+	
+	public Configurations getConfiguration() {
+		return configuration;
 	}
 
 }

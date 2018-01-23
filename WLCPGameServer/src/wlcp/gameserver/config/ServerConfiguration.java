@@ -2,6 +2,10 @@ package wlcp.gameserver.config;
 
 import java.io.File;
 
+import wlcp.gameserver.module.ModuleManager;
+import wlcp.gameserver.module.Modules;
+import wlcp.gameserver.modules.LoggerModule;
+
 public class ServerConfiguration extends Configuration implements IConfiguration {
 	
 	private String gameServerHostName;
@@ -10,7 +14,7 @@ public class ServerConfiguration extends Configuration implements IConfiguration
 	private int debugServerPortNumber;
 	
 	public ServerConfiguration(File file) {
-		super(file);
+		super(file, Configurations.SERVER);
 		SetDefaults();
 	}
 
@@ -27,7 +31,13 @@ public class ServerConfiguration extends Configuration implements IConfiguration
 		gameServerPortNumber = Integer.parseInt(document.getElementsByTagName("GameServerPortNumber").item(0).getTextContent());
 		debugServerHostName = document.getElementsByTagName("DebugServerHostName").item(0).getTextContent();
 		debugServerPortNumber = Integer.parseInt(document.getElementsByTagName("DebugServerPortNumber").item(0).getTextContent());
-		// TODO Auto-generated method stub
+		
+		LoggerModule logger = (LoggerModule) ModuleManager.getInstance().getModule(Modules.LOGGER.LOGGER);
+		logger.write("Parsing Server Configuration...");
+		logger.write("Game Server Host Name: " + gameServerHostName);
+		logger.write("Game Server Port Number: " + gameServerPortNumber);
+		logger.write("Debug Server Host Name: " + debugServerHostName);
+		logger.write("Game Server Port Number: " + debugServerPortNumber);
 		return this;
 	}
 

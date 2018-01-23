@@ -1,6 +1,5 @@
 package wlcp.gameserver.server;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +8,7 @@ import wlcp.gameserver.module.ModuleManager;
 import wlcp.gameserver.module.Modules;
 import wlcp.gameserver.modules.ConfigurationModule;
 import wlcp.gameserver.modules.LoggerModule;
+import wlcp.gameserver.modules.GameServerModule;
 
 /**
  * Wearable Learning Cloud Platform Game Server
@@ -40,13 +40,10 @@ public class WLCPGameServer {
 
 			}
 		}
+		
+		ModuleManager.getInstance().CleanUp();
 	}
-	
-	private static void StartupMessage() {
-		LoggerModule logger = (LoggerModule) ModuleManager.getInstance().getModule(Modules.LOGGER);
-		logger.write("Starting WLCP Game Server...");
-	}
-	
+
 	private static void SetupModuleManager() {
 		
 		//Create an instance of the Module Manager
@@ -55,9 +52,7 @@ public class WLCPGameServer {
 		//Add the modules we want to use to a list
 		modules.add(new LoggerModule());
 		modules.add(new ConfigurationModule());
-		
-		//Display a start up message
-		StartupMessage();
+		modules.add(new GameServerModule());
 	}
 
 }

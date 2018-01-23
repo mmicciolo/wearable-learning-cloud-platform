@@ -58,6 +58,13 @@ public class ModuleManager {
 		}));
 	}
 	
+	public void FatallyTerminateServer() {
+		LoggerModule logger = (LoggerModule) instance.getModule(Modules.LOGGER);
+		logger.write("SERVER IS FATALLY SHUTTING DOWN...");
+		CleanUp();
+		System.exit(-1);
+	}
+	
 	/**
 	 * Add a module to the module manager list
 	 * @param m module to add

@@ -26,7 +26,9 @@ public class LoggerModule extends Module implements IModule {
 			file.createNewFile();
 			writer = new PrintWriter(file);
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("Could not open log file for writing...");
+			System.out.println("Server Time " + (serverTime.getElapsedTime() / 1000.0f) + ": " + e.getMessage());
+			ModuleManager.getInstance().FatallyTerminateServer();
 		}
 		serverTime = new ServerTime();
 		write("Starting Module Manager...");
@@ -48,11 +50,12 @@ public class LoggerModule extends Module implements IModule {
 			System.out.println(concat);
 			release();
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("Could write to log...");
+			System.out.println("Server Time " + (serverTime.getElapsedTime() / 1000.0f) + ": " + e.getMessage());
 		}
 	}
 	
 	private String ConcatLine(String output) {
-		return "Server Time " + serverTime.getElapsedTime() + ": " + output;
+		return "Server Time " + (serverTime.getElapsedTime() / 1000.0f) + ": " + output;
 	}
 }

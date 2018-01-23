@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import wlcp.gameserver.config.Configurations;
 import wlcp.gameserver.config.IConfiguration;
 import wlcp.gameserver.config.ServerConfiguration;
 import wlcp.gameserver.module.IModule;
@@ -22,6 +23,7 @@ public class ConfigurationModule extends Module implements IModule {
 	@Override
 	public void Setup() {
 		((LoggerModule) ModuleManager.getInstance().getModule(Modules.LOGGER)).write("Loading WLCP Game Server Configuration...");
+		ModuleManager.getInstance().addModule(this);
 		configurations = new ArrayList<IConfiguration>();
 		configurations.add(new ServerConfiguration(new File("configuration/ServerConfiguration.xml")));
 		ParseConfigurations();
@@ -31,5 +33,14 @@ public class ConfigurationModule extends Module implements IModule {
 		for(IConfiguration configuration : configurations) {
 			configuration.Parse();
 		}
+	}
+	
+	public IConfiguration getConfiguration(Configurations configuration) {
+		for(IConfiguration config : configurations) {
+			if(config.getConfiguration().equals(configuration)) {
+				return config;
+			}
+		}
+		return null;
 	}
 }

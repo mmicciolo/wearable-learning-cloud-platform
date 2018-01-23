@@ -26,6 +26,7 @@ var OutputState = class OutputState extends State {
 		this.create();
 		this.validationRules = [];
 		this.setupValidationRules();
+		this.scopeMask = 0xffffffff;
 	}
 	
 	create() {
@@ -120,6 +121,7 @@ var OutputState = class OutputState extends State {
 	
 	setScope(bitMask, teamCount, playersPerTeam) {
 		
+		this.scopeMask = bitMask;
 		var mask = bitMask;
 		var model = this.modelJSON.iconTabs;
 		var newTabs = [];

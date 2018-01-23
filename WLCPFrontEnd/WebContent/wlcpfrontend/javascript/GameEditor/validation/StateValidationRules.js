@@ -42,6 +42,7 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 		for(var i = 0; i < stateList.length; i++) {
 			
 			var orMaskNeighbors = 0;
+			var orScopeMask = 0;
 			
 			//Get the neighbor active scope mask
 			for(var n = 0; n < stateList.length; n++) {
@@ -55,10 +56,13 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 					var activeScopeMask = this.getActiveScopeMask(3, 3, activeScopes);
 					
 					orMaskNeighbors = orMaskNeighbors | activeScopeMask;
+					
+					orScopeMask = orScopeMask | stateList[i].scopeMask;
 				}
 			}
 			
 			var parentMask = 0;
+			var parentScopeMask = 0;
 			//Get parent state active scope masks
 			for(var n = 0; n < connectionsToState.length; n++) {
 				for(var j = 0; j < GameEditor.getEditorController().stateList.length; j++) {
@@ -70,6 +74,9 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 						var activeScopeMask = this.getActiveScopeMask(3, 3, activeScopes);
 						
 						parentMask = parentMask | activeScopeMask;
+						
+						parentScopeMask = parentScopeMask | GameEditor.getEditorController().stateList[j].scopeMask;
+						//parentMask = parentMask | GameEditor.getEditorController().stateList[j].scopeMask;
 					}
 				}
 			}
@@ -86,74 +93,84 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 				stateList[i].setScope(newScopeMask & (~orMaskNeighbors), 3, 3);		
 			} else {
 				
-				//Check for game wide to game wide
-				if(this.getBit(parentMask, 0) == 0x01) {
-					parentMask = 0xffffffff;
-				}
-				
-				var teamList = [];
-				
-				//Check for game wide to team
-				for(var team = 1; team < 3 + 1; team++) {
-					if(this.getBit(parentMask, team) == 0x01) {
-						teamList.push("Team " + team);
-				      }
-				}
-				
-				if(teamList.length > 0) {
-					var l = [];
-					for(var g = 0; g < teamList.length; g++) {
-						for(var c = 1; c < 3 + 1; c++) {
-							l.push(teamList[g] + " Player " + c);
-						}
-					}
-					parentMask = parentMask | this.getActiveScopeMask(3, 3, l);
-				}
-				
-			    var teamReturn = true;
-			    
-			    //Check for team to game wide
-			    for(var team = 1; team < 3 + 1; team++) {
-			      if(!this.getBit(parentMask, team) == 0x01) {
-			        teamReturn = false;
-			        break;
-			      }
-			    }
-			    
-			    if(teamReturn) { parentMask = 0xffffffff; }
-			    
-			    var playerReturn = true;
-			    var playerReturns = [];
-			    
-			    //Check for player wide to team wide
-			    for(var team = 1; team < 3 + 1; team++) {
-			    	for(var player = 1; player < 3 + 1; player++) {
-			    		if(!this.getBit(parentMask, (3 * team) + player) == 0x01) {
-			    			playerReturn = false;
-		    	            break;
-			    	    }
-			    	}
-			    	if(playerReturn) {
-			    		//parentMask = parseInt("0000001110010", 2);
-			    		playerReturns.push("Team " + team);
-			    		for(var player = 1; player < 3 + 1; player++) {
-			    			playerReturns.push("Team " + team + " Player " + player);
-			    		}
-			    	} else {
-			    		playerReturn = true;
-			    	}
-			    }
-			    
-			    if(playerReturns.length > 0) {
-					parentMask = parentMask | this.getActiveScopeMask(3, 3, playerReturns);
-			    }
+//				//Check for game wide to game wide
+//				if(this.getBit(parentMask, 0) == 0x01) {
+//					parentMask = 0xffffffff;
+//				}
+//				
+//				var teamList = [];
+//				
+//				//Check for game wide to team
+//				for(var team = 1; team < 3 + 1; team++) {
+//					if(this.getBit(parentMask, team) == 0x01) {
+//						teamList.push("Team " + team);
+//				      }
+//				}
+//				
+//				if(teamList.length > 0) {
+//					var l = [];
+//					for(var g = 0; g < teamList.length; g++) {
+//						for(var c = 1; c < 3 + 1; c++) {
+//							l.push(teamList[g] + " Player " + c);
+//						}
+//					}
+//					parentMask = parentMask | this.getActiveScopeMask(3, 3, l);
+//				}
+//				
+//			    var teamReturn = true;
+//			    
+//			    //Check for team to game wide
+//			    for(var team = 1; team < 3 + 1; team++) {
+//			      if(!this.getBit(parentMask, team) == 0x01) {
+//			        teamReturn = false;
+//			        break;
+//			      }
+//			    }
+//			    
+//			    if(teamReturn) { parentMask = 0xffffffff; }
+//			    
+//			    var playerReturn = true;
+//			    var playerReturns = [];
+//			    
+//			    //Check for player wide to team wide
+//			    for(var team = 1; team < 3 + 1; team++) {
+//			    	for(var player = 1; player < 3 + 1; player++) {
+//			    		if(!this.getBit(parentMask, (3 * team) + player) == 0x01) {
+//			    			playerReturn = false;
+//		    	            break;
+//			    	    }
+//			    	}
+//			    	if(playerReturn) {
+//			    		//parentMask = parseInt("0000001110010", 2);
+//			    		playerReturns.push("Team " + team);
+//			    		for(var player = 1; player < 3 + 1; player++) {
+//			    			playerReturns.push("Team " + team + " Player " + player);
+//			    		}
+//			    	} else {
+//			    		playerReturn = true;
+//			    	}
+//			    }
+//			    
+//			    if(playerReturns.length > 0) {
+//					parentMask = parentMask | this.getActiveScopeMask(3, 3, playerReturns);
+//			    }
 			    
 			    //Check for player wide to game wide
 			  
 				//Get the active scope masks
 				var activeScopeMasks = this.getActiveScopeMasks(3, 3, orMaskAll);
+				
+			    parentMask = parentMask | parentScopeMask;
 			    
 			    parentMask = parentMask & this.andScopeMasks(activeScopeMasks);
+			    
+			    //parentMask = parentMask | (parentScopeMask & this.andScopeMasks(activeScopeMasks));
+			    
+			    //parentMask = parentMask | (orScopeMask & this.andScopeMasks(activeScopeMasks));
+			    
+			    //parentMask = (parentMask | parentScopeMask) & this.andScopeMasks(activeScopeMasks);
+			    
+			   // parentMask = parentMask | ((parentScopeMask | orScopeMask) & this.andScopeMasks(activeScopeMasks));
 			    
 				//Set the new scopes
 				stateList[i].setScope(parentMask & (~orMaskNeighbors), 3, 3);	

@@ -32,5 +32,10 @@ public enum Modules {
 	/**
 	 * Async socket server
 	 */
-	SERVER
+	SERVER,
+	
+	/**
+	 * Handles multithreading
+	 */
+	TASK_MANAGER
 }

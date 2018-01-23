@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import wlcp.gameserver.module.IModule;
+import wlcp.gameserver.module.Module;
 import wlcp.gameserver.module.ModuleManager;
 import wlcp.gameserver.module.Modules;
 import wlcp.gameserver.modules.ConfigurationModule;
 import wlcp.gameserver.modules.LoggerModule;
+import wlcp.gameserver.modules.TaskManagerModule;
+import wlcp.gameserver.tasks.PacketDistributorTask;
 import wlcp.gameserver.modules.GameServerModule;
 
 /**
@@ -53,6 +56,14 @@ public class WLCPGameServer {
 		modules.add(new LoggerModule());
 		modules.add(new ConfigurationModule());
 		modules.add(new GameServerModule());
+		modules.add(new TaskManagerModule());
+		
+		//Setup the modules
+		for(IModule module : modules) {
+			module.Setup();
+			ModuleManager.getInstance().addModule((Module)module);
+		}
+		
+		((TaskManagerModule)ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).addTask(new PacketDistributorTask());
 	}
-
 }

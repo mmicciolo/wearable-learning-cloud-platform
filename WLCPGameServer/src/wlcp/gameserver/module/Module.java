@@ -30,7 +30,7 @@ public abstract class Module {
 	 */
 	public Module(Modules module) {
 		this.module = module;
-		Setup();
+		//Setup();
 	}
 	
 	/**

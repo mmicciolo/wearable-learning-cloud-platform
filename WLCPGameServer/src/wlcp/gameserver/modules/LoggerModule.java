@@ -33,7 +33,6 @@ public class LoggerModule extends Module implements IModule {
 		serverTime = new ServerTime();
 		write("Starting Module Manager...");
 		write("Module Manager Started...");
-		ModuleManager.getInstance().addModule(this);
 	}
 	
 	@Override

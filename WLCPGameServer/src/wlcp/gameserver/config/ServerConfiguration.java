@@ -37,7 +37,7 @@ public class ServerConfiguration extends Configuration implements IConfiguration
 		logger.write("Game Server Host Name: " + gameServerHostName);
 		logger.write("Game Server Port Number: " + gameServerPortNumber);
 		logger.write("Debug Server Host Name: " + debugServerHostName);
-		logger.write("Game Server Port Number: " + debugServerPortNumber);
+		logger.write("Debug Server Port Number: " + debugServerPortNumber);
 		return this;
 	}
 

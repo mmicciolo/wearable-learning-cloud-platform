@@ -11,6 +11,7 @@ import wlcp.gameserver.modules.ConfigurationModule;
 import wlcp.gameserver.modules.LoggerModule;
 import wlcp.gameserver.modules.TaskManagerModule;
 import wlcp.gameserver.tasks.PacketDistributorTask;
+import wlcp.gameserver.tasks.ServerPacketHandlerTask;
 import wlcp.gameserver.modules.GameServerModule;
 
 /**
@@ -65,5 +66,6 @@ public class WLCPGameServer {
 		}
 		
 		((TaskManagerModule)ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).addTask(new PacketDistributorTask());
+		((TaskManagerModule)ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).addTask(new ServerPacketHandlerTask());
 	}
 }

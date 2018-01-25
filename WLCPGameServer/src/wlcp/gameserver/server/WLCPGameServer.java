@@ -3,6 +3,9 @@ package wlcp.gameserver.server;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.persistence.jpa.JpaEntityManager;
+
+import wlcp.gameserver.common.JPAEntityManager;
 import wlcp.gameserver.module.IModule;
 import wlcp.gameserver.module.Module;
 import wlcp.gameserver.module.ModuleManager;
@@ -34,6 +37,13 @@ public class WLCPGameServer {
 	
 	public static void main(String[] args) {
 		
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			public void run() {
+				System.out.println("Shutdown");
+			}
+		});
+		
+		Setup();
 		SetupModuleManager();
 		
 		while(running) {
@@ -67,5 +77,13 @@ public class WLCPGameServer {
 		
 		((TaskManagerModule)ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).addTask(new PacketDistributorTask());
 		((TaskManagerModule)ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).addTask(new ServerPacketHandlerTask());
+	}
+	
+	private static void Setup() {
+		JPAEntityManager entityManager = new JPAEntityManager();
+		entityManager.getEntityManager().getTransaction().begin();
+		entityManager.getEntityManager().createQuery("DELETE FROM GameInstance").executeUpdate();
+		entityManager.getEntityManager().getTransaction().commit();
+		entityManager.CleanUp();
 	}
 }

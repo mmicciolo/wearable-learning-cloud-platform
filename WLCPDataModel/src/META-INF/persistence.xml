@@ -10,5 +10,6 @@
 		<class>wlcp.model.master.state.OutputState</class>
 		<class>wlcp.model.master.transition.Transition</class>
 		<class>wlcp.model.master.transition.SingleButtonPress</class>
+		<class>wlcp.model.master.GameInstance</class>
 	</persistence-unit>
 </persistence>

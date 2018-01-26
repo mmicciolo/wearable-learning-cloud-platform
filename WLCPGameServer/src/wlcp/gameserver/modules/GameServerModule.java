@@ -122,15 +122,6 @@ public class GameServerModule extends Module implements IModule {
 				packetDistributor.DataRecieved(clientData);
 				clientData.setBuffer(ByteBuffer.allocate(65535));
 				clientData.getClientSocket().read(clientData.getBuffer(), clientData, this);
-//				clientData.getBuffer().flip();
-//				System.out.println("Packet Here!");
-//				for(int i = 0; i < result; i++) {
-//					System.out.print(clientData.getBuffer().array()[i]);
-//				}
-//				//logger.write("Data Recieved " + StandardCharsets.UTF_8.decode(clientData.getBuffer()).toString());
-//				clientData.getBuffer().clear();
-//				clientData.getClientSocket().read(clientData.getBuffer(), clientData, this);
-//				clientData.getClientSocket().write(ByteBuffer.allocate(1));
 			} else if(result == -1) {
 				
 				logger.write("Client Disconnected...");

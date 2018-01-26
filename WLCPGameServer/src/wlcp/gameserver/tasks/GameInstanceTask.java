@@ -2,12 +2,15 @@ package wlcp.gameserver.tasks;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import wlcp.gameserver.common.JPAEntityManager;
 import wlcp.gameserver.common.PlayerVM;
+import wlcp.gameserver.common.UsernameClientData;
 import wlcp.gameserver.model.ClientData;
 import wlcp.gameserver.module.ModuleManager;
 import wlcp.gameserver.module.Modules;
@@ -21,14 +24,29 @@ import wlcp.model.master.GameLobby;
 import wlcp.model.master.Username;
 import wlcp.shared.packets.ConnectAcceptedPacket;
 import wlcp.shared.packets.ConnectPacket;
+import wlcp.shared.packets.SingleButtonPressPacket;
 
-class UsernameClientData {
-	public UsernameClientData(Username username, ClientData clientData) {
-		this.username = username;
-		this.clientData = clientData;
+
+class TeamPlayer {
+	int team;
+	int player;
+	
+	public TeamPlayer(int team, int player) {
+		this.team = team;
+		this.player = player;
 	}
-	public Username username;
-	public ClientData clientData;
+}
+
+class Player {
+	UsernameClientData usernameClientData;
+	TeamPlayer teamPlayer;
+	PlayerVM playerVM;
+	
+	public Player(UsernameClientData usernameClientData, TeamPlayer teamPlayer, PlayerVM playerVM) {
+		this.usernameClientData = usernameClientData;
+		this.teamPlayer = teamPlayer;
+		this.playerVM = playerVM;
+	}
 }
 
 public class GameInstanceTask extends Task implements ITask {
@@ -36,8 +54,7 @@ public class GameInstanceTask extends Task implements ITask {
 	private GameInstance gameInstance;
 	private Game game;
 	private GameLobby gameLobby;
-	private Map<UsernameClientData, Byte> usernameTeams;
-	private Map<UsernameClientData, PlayerVM> usernameVMs;
+	private List<Player> players;
 	
 	private LoggerModule logger;
 	private PacketDistributorTask packetDistributor;
@@ -53,8 +70,7 @@ public class GameInstanceTask extends Task implements ITask {
 		logger.write("Starting the game " + game.getGameId() + " instance id " + gameInstance.getGameInstanceId());
 		packetDistributor = (PacketDistributorTask) ((TaskManagerModule) ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).getTasks().get(0);
 		recievedPackets = new ConcurrentLinkedQueue<PacketClientData>();
-		usernameTeams = new HashMap<UsernameClientData, Byte>();
-		usernameVMs = new HashMap<UsernameClientData, PlayerVM>();
+		players = new ArrayList<Player>();
 		entityManager = new JPAEntityManager();
 	}
 	
@@ -74,9 +90,26 @@ public class GameInstanceTask extends Task implements ITask {
 		case CONNECT:
 			UserConnect(packetClientData);
 			break;
+		case SINGLE_BUTTON_PRESS:
+			System.out.println("Button");
+			SingleButtonPress(packetClientData);
+			break;
 		default:
 			break;
 		}
+	}
+	
+	private void SingleButtonPress(PacketClientData packetClientData) {
+		
+		//Get the single button press packet
+		SingleButtonPressPacket packet = (SingleButtonPressPacket) packetClientData.packet;
+		for(Player player : players) {
+			if(player.teamPlayer.team == packet.getTeam() && player.teamPlayer.player == packet.getPlayer()) {
+				player.playerVM.setBlockPacket(packet);
+				player.playerVM.setBlock(false);
+			}
+		}
+		
 	}
 	
 	private void UserConnect(PacketClientData packetClientData) {
@@ -88,35 +121,38 @@ public class GameInstanceTask extends Task implements ITask {
 		Username username = entityManager.getEntityManager().find(Username.class, connectPacket.getUsername());
 		
 		//Check to make sure the player doesnt already exist in the game
-		if(usernameTeams.containsKey(username)) {
-			//User already exists in the game, maybe they are trying to reconnect?
+		for(Player player : players) {
+			if(player.usernameClientData.username.getUsernameId().equals(username.getUsernameId())) {
+				//User already exists in the game, maybe they are trying to reconnect?
+			}
 		}
 		
 		//See if the team they are trying to join is full
-		int count = 0;
-		for(Byte team : usernameTeams.values()) {
-			if(team == connectPacket.getTeamNumber()) { count++; }
+		int count = 1;
+		for(Player player : players) {
+			if(player.teamPlayer.team == connectPacket.getTeamNumber()) { count++; }
 		}
-		if(count >= game.getTeamCount()) {
+		if(count >= game.getTeamCount() + 1) {
 			//Team is full, handle
 		}
 		
+		//They passed our tests, they can join
 		UsernameClientData usernameClientData = new UsernameClientData(username, packetClientData.clientData);
 		
-		//They passed our tests, they can join
-		usernameTeams.put(usernameClientData, connectPacket.getTeamNumber());
+		//Get the team palyer
+		TeamPlayer teamPlayer = new TeamPlayer(connectPacket.getTeamNumber(), count);
 		
-		//Send them a connection success
-		ConnectAcceptedPacket connectAccepted = new ConnectAcceptedPacket();
+		//Store the player data
+		Player player = new Player(usernameClientData, teamPlayer, StartPlayerVM(usernameClientData, teamPlayer));
 		
+		//Add the player to a list
+		players.add(player);
+
 		//Send the packet
-		packetDistributor.AddPacketToSend(connectAccepted, packetClientData.clientData);
-		
-		//Start the players VM
-		StartPlayerVM(usernameClientData);
+		packetDistributor.AddPacketToSend(new ConnectAcceptedPacket(getGameInstanceId(), player.teamPlayer.team, player.teamPlayer.player), packetClientData.clientData);
 	}
 	
-	private void StartPlayerVM(UsernameClientData usernameClientData) {
+	private PlayerVM StartPlayerVM(UsernameClientData usernameClientData, TeamPlayer teamPlayer) {
 		
 		FileReader fileReader = null;
 		
@@ -128,10 +164,12 @@ public class GameInstanceTask extends Task implements ITask {
 			e.printStackTrace();
 		}
 		
-		PlayerVM playerVM = new PlayerVM(this, fileReader, 1, 1);
+		PlayerVM playerVM = new PlayerVM(this, usernameClientData, fileReader, teamPlayer.team, teamPlayer.player);
 		playerVM.start();	
 		
-		usernameVMs.put(usernameClientData, playerVM);
+		return playerVM;
+		
+		//usernameVMs.put(usernameClientData, playerVM);
 	}
 	
 	@Override
@@ -165,6 +203,10 @@ public class GameInstanceTask extends Task implements ITask {
 
 	public String getGameId() {
 		return game.getGameId();
+	}
+
+	public PacketDistributorTask getPacketDistributor() {
+		return packetDistributor;
 	}
 	
 }

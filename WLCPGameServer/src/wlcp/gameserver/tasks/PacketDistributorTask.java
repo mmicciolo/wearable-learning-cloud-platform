@@ -2,6 +2,7 @@ package wlcp.gameserver.tasks;
 
 import java.nio.ByteBuffer;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.Future;
 
 import wlcp.gameserver.model.ClientData;
 import wlcp.gameserver.module.ModuleManager;
@@ -14,6 +15,7 @@ import wlcp.shared.packet.PacketTypes;
 import wlcp.shared.packets.ConnectPacket;
 import wlcp.shared.packets.GamePacket;
 import wlcp.shared.packets.ServerPacket;
+import wlcp.shared.packets.SingleButtonPressPacket;
 import wlcp.shared.packets.StartGameInstancePacket;
 
 class PacketClientData {
@@ -45,6 +47,9 @@ public class PacketDistributorTask extends Task implements ITask {
 			break;
 		case CONNECT:
 			AddPacket(new ConnectPacket(), clientData);
+			break;
+		case SINGLE_BUTTON_PRESS:
+			AddPacket(new SingleButtonPressPacket(), clientData);
 			break;
 		default:
 			break;
@@ -109,7 +114,8 @@ public class PacketDistributorTask extends Task implements ITask {
 		try {
 			accquire();
 			for(PacketClientData data : packetsToSend) {
-				data.clientData.getClientSocket().write(data.packet.assemblePacket());
+				Future<Integer> status = data.clientData.getClientSocket().write(data.packet.assemblePacket());
+				while(!status.isDone()) {}
 				packetsToSend.remove(data);
 			}
 			release();

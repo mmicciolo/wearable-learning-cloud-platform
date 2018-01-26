@@ -12,7 +12,7 @@ var states = {
 var FSMGame = {
 
    gameInstanceId : 0,
-   team : 1,
+   team : 0,
    player : 0,
 
    state : states.EstimateIt2_start,
@@ -102,7 +102,7 @@ var FSMGame = {
 
 var DisplayText = function(team, player, text) {
 	var vmClass = Java.type("wlcp.gameserver.vm.VirtualMachine");
-	vmClass.DisplayText(team, player, text);
+	vmClass.DisplayText(team, player, text + " id:" + FSMGame.team);
 }
 
 var SingleButtonPress = function(buttons, transitions) {

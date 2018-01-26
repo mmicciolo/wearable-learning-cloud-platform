@@ -1,10 +1,13 @@
 package wlcp.gameserver.tasks;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import wlcp.gameserver.common.JPAEntityManager;
+import wlcp.gameserver.common.PlayerVM;
 import wlcp.gameserver.model.ClientData;
 import wlcp.gameserver.module.ModuleManager;
 import wlcp.gameserver.module.Modules;
@@ -34,6 +37,7 @@ public class GameInstanceTask extends Task implements ITask {
 	private Game game;
 	private GameLobby gameLobby;
 	private Map<UsernameClientData, Byte> usernameTeams;
+	private Map<UsernameClientData, PlayerVM> usernameVMs;
 	
 	private LoggerModule logger;
 	private PacketDistributorTask packetDistributor;
@@ -50,6 +54,7 @@ public class GameInstanceTask extends Task implements ITask {
 		packetDistributor = (PacketDistributorTask) ((TaskManagerModule) ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).getTasks().get(0);
 		recievedPackets = new ConcurrentLinkedQueue<PacketClientData>();
 		usernameTeams = new HashMap<UsernameClientData, Byte>();
+		usernameVMs = new HashMap<UsernameClientData, PlayerVM>();
 		entityManager = new JPAEntityManager();
 	}
 	
@@ -96,8 +101,10 @@ public class GameInstanceTask extends Task implements ITask {
 			//Team is full, handle
 		}
 		
+		UsernameClientData usernameClientData = new UsernameClientData(username, packetClientData.clientData);
+		
 		//They passed our tests, they can join
-		usernameTeams.put(new UsernameClientData(username, packetClientData.clientData), connectPacket.getTeamNumber());
+		usernameTeams.put(usernameClientData, connectPacket.getTeamNumber());
 		
 		//Send them a connection success
 		ConnectAcceptedPacket connectAccepted = new ConnectAcceptedPacket();
@@ -105,6 +112,26 @@ public class GameInstanceTask extends Task implements ITask {
 		//Send the packet
 		packetDistributor.AddPacketToSend(connectAccepted, packetClientData.clientData);
 		
+		//Start the players VM
+		StartPlayerVM(usernameClientData);
+	}
+	
+	private void StartPlayerVM(UsernameClientData usernameClientData) {
+		
+		FileReader fileReader = null;
+		
+		//Get the filename of script for the game
+		try {
+			fileReader = new FileReader("programs/test2.js");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		PlayerVM playerVM = new PlayerVM(this, fileReader, 1, 1);
+		playerVM.start();	
+		
+		usernameVMs.put(usernameClientData, playerVM);
 	}
 	
 	@Override

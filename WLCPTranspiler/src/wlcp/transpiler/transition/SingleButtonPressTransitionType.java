@@ -71,9 +71,9 @@ public class SingleButtonPressTransitionType extends TransitionType implements I
 		StringBuilder stringBuilder = new StringBuilder();
 		GenerateArrays(buttonMap);
 		if(scope.equals("Game Wide")) {
-			stringBuilder.append("      this.state = SingleButtonPress(" + GenerateArrays(buttonMap) + ");\n");
+			stringBuilder.append("      this.state = this.playerVM.SingleButtonPress(" + GenerateArrays(buttonMap) + ");\n");
 		} else {
-			stringBuilder.append("         this.state = SingleButtonPress(" + GenerateArrays(buttonMap) + ");\n");
+			stringBuilder.append("         this.state = this.playerVM.SingleButtonPress(" + GenerateArrays(buttonMap) + ");\n");
 		}
 		return stringBuilder.toString();
 	}

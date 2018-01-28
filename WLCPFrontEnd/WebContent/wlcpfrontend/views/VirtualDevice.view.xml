@@ -2,6 +2,19 @@
 		controllerName="wlcpfrontend.controllers.VirtualDevice" xmlns:html="http://www.w3.org/1999/xhtml">
 	<Page id="virtualDevice" showHeader="false" class="virtualDeviceBackground">
 		<content>
+			<NavContainer>
+			<Page showHeader="false">
+				<VBox fitContainer="true" justifyContent="Center" alignItems="Center" alignContent="Center" class="box">
+				<items>
+					<Text text="Select a game lobby to join..." class="sapUiSmallMarginBottom"/>
+					<ComboBox width="12em" placeholder="Game Lobby" items="{/items}" value="{/mode}">
+						<core:Item key="{key}" text="{text}" />
+					</ComboBox>
+					<Button width="12em" text="Join" type="Emphasized" press="onLoginPress"></Button>
+				</items>
+			</VBox>
+			</Page>
+			<Page showHeader="false">
 			<tnt:ToolHeader>
 				<ToolbarSpacer />
 				<Text text="Virtual Device" wrapping="false">
@@ -46,6 +59,8 @@
 					</Page>
 				</NavContainer>
 			</l:Splitter>
+			</Page>
+			</NavContainer>
 		</content>
 	</Page>
 </core:View>

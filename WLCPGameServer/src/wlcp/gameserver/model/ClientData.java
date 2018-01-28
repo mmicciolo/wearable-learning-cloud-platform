@@ -12,6 +12,7 @@ public class ClientData {
 	private AsynchronousSocketChannel clientSocket;
 	private GameServerModule server;
 	private ByteBuffer buffer;
+	private boolean webSocket = false;
 	
 	public ClientData(AsynchronousServerSocketChannel serverSocket, GameServerModule server) {
 		this.serverSocket = serverSocket;
@@ -56,6 +57,14 @@ public class ClientData {
 
 	public void setBuffer(ByteBuffer buffer) {
 		this.buffer = buffer;
+	}
+
+	public boolean isWebSocket() {
+		return webSocket;
+	}
+
+	public void setWebSocket(boolean webSocket) {
+		this.webSocket = webSocket;
 	}
 	
 }

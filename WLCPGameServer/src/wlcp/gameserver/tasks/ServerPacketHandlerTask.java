@@ -1,6 +1,10 @@
 package wlcp.gameserver.tasks;
 
+import java.nio.ByteBuffer;
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
+
+import javax.persistence.Query;
 
 import wlcp.gameserver.common.JPAEntityManager;
 import wlcp.gameserver.module.ModuleManager;
@@ -11,18 +15,22 @@ import wlcp.gameserver.task.Task;
 import wlcp.model.master.Game;
 import wlcp.model.master.GameInstance;
 import wlcp.model.master.GameLobby;
+import wlcp.model.master.Username;
 import wlcp.shared.packet.IPacket;
+import wlcp.shared.packets.GameLobbiesPacket;
 import wlcp.shared.packets.StartGameInstancePacket;
 
 public class ServerPacketHandlerTask extends Task implements ITask {
 	
 	private ConcurrentLinkedQueue<PacketClientData> recievedPackets;
 	private JPAEntityManager entityManager;
+	private PacketDistributorTask packetDistributor;
 
 	public ServerPacketHandlerTask() {
 		super("Server Packet Handler");
 		recievedPackets = new ConcurrentLinkedQueue<PacketClientData>();
 		entityManager = new JPAEntityManager();
+		packetDistributor = (PacketDistributorTask) ((TaskManagerModule) ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).getTasks().get(0);
 	}
 	
 	public void DistributePacket(PacketClientData packetClientData) {
@@ -61,6 +69,9 @@ public class ServerPacketHandlerTask extends Task implements ITask {
 		case START_GAME_INSTANCE:
 			StartGameInstance(packetClientData);
 			break;
+		case GAME_LOBBIES:
+			GetGameLobbies(packetClientData);
+			break;
 		default:
 			break;
 		}
@@ -96,5 +107,28 @@ public class ServerPacketHandlerTask extends Task implements ITask {
 		
 		//5. Send back success
 	}
-
+	
+	private void GetGameLobbies(PacketClientData packetClientData) {
+		
+		//Get the packet
+		GameLobbiesPacket packet = (GameLobbiesPacket) packetClientData.packet;
+		
+		//Setup a query to join a game instance with a game lobby 
+		//and then see if the username requested is a part of the
+		//game lobby username list
+		Query query = entityManager.getEntityManager().createQuery("SELECT gi FROM GameInstance gi JOIN GameLobby l WHERE l = gi.gameLobby AND :username MEMBER OF l.gameLobbyUsers", GameInstance.class);
+		
+		//Get the username and set it as a variable in the query
+		query.setParameter("username", entityManager.getEntityManager().getReference(Username.class, packet.getUsername()));
+		
+		//Retrieve the results
+		List<GameInstance> gameInstances = query.getResultList();
+		
+		for(GameInstance gi : gameInstances) {
+			packet.getGames().add(gi.getGame().getGameId());
+		}
+		
+		//Send off the packet
+		packetDistributor.AddPacketToSend(packet, packetClientData.clientData);
+	}
 }

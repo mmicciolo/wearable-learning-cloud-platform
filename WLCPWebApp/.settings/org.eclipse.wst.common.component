@@ -9,6 +9,9 @@
         <dependent-module archiveName="WLCPTranspiler-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/WLCPTranspiler/WLCPTranspiler">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="WLCPShared-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/WLCPShared/WLCPShared">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <property name="context-root" value="WLCPWebApp"/>
         <property name="java-output-path" value="/WLCPWebApp/build/classes"/>
     </wb-module>

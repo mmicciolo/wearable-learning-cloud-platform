@@ -37,6 +37,7 @@ var Index = {
 		jQuery.sap.require("wlcpfrontend/javascript/jsplumb");
 		jQuery.sap.require("wlcpfrontend/javascript/jquery-ui-touch-punch-min");
 		jQuery.sap.require("wlcpfrontend/javascript/path-data-polyfill");
+		jQuery.sap.require("wlcpfrontend/javascript/bytebuffer");
 		
 		jQuery.sap.includeStyleSheet("wlcpfrontend/css/Login.css");
 		jQuery.sap.includeStyleSheet("wlcpfrontend/css/GameEditor.css");
@@ -45,16 +46,16 @@ var Index = {
 	
 	loadPage : function() {
 		var app;
-		if(this.showMainPage) {
-			app = new sap.m.App({id:"app1", initialPage:"idView1"});
-			var page = sap.ui.view({id:"idView1", viewName:"wlcpfrontend.views.Login", type:sap.ui.core.mvc.ViewType.XML});
-			page.addStyleClass("myBackgroundStyle");
-		} else {
-			app = new sap.m.App({id:"app1", initialPage:"gameEditor"});
-			var page = sap.ui.view({id:"gameEditor", viewName:"wlcpfrontend.views.GameEditor", type:sap.ui.core.mvc.ViewType.XML});
-		}
-		//app = new sap.m.App({id:"app1", initialPage:"virtualDevice"});
-		//var page = sap.ui.view({id:"virtualDevice", viewName:"wlcpfrontend.views.VirtualDevice", type:sap.ui.core.mvc.ViewType.XML});
+//		if(this.showMainPage) {
+//			app = new sap.m.App({id:"app1", initialPage:"idView1"});
+//			var page = sap.ui.view({id:"idView1", viewName:"wlcpfrontend.views.Login", type:sap.ui.core.mvc.ViewType.XML});
+//			page.addStyleClass("myBackgroundStyle");
+//		} else {
+//			app = new sap.m.App({id:"app1", initialPage:"gameEditor"});
+//			var page = sap.ui.view({id:"gameEditor", viewName:"wlcpfrontend.views.GameEditor", type:sap.ui.core.mvc.ViewType.XML});
+//		}
+		app = new sap.m.App({id:"app1", initialPage:"virtualDevice"});
+		var page = sap.ui.view({id:"virtualDevice", viewName:"wlcpfrontend.views.VirtualDevice", type:sap.ui.core.mvc.ViewType.XML});
 		app.addPage(page);
 		app.placeAt("content");
 	},

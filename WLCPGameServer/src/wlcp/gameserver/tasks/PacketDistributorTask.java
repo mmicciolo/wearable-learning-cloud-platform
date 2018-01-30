@@ -23,6 +23,7 @@ import wlcp.shared.packet.PacketTypes;
 import wlcp.shared.packets.ConnectPacket;
 import wlcp.shared.packets.GameLobbiesPacket;
 import wlcp.shared.packets.GamePacket;
+import wlcp.shared.packets.GameTeamsPacket;
 import wlcp.shared.packets.ServerPacket;
 import wlcp.shared.packets.SingleButtonPressPacket;
 import wlcp.shared.packets.StartGameInstancePacket;
@@ -63,6 +64,9 @@ public class PacketDistributorTask extends Task implements ITask {
 			break;
 		case GAME_LOBBIES:
 			AddPacket(new GameLobbiesPacket(), clientData);
+			break;
+		case GAME_TEAMS:
+			AddPacket(new GameTeamsPacket(), clientData);
 			break;
 		case CONNECT:
 			AddPacket(new ConnectPacket(), clientData);
@@ -114,7 +118,6 @@ public class PacketDistributorTask extends Task implements ITask {
 			//Actual Packet
 			if(clientData.getBuffer().get() == -126) {
 				byte lengthByte = (byte) (clientData.getBuffer().get() & 127);
-				System.out.println("Packet length: " + lengthByte);
 				byte[] masks = new byte[4];
 				ByteBuffer byteBuffer = ByteBuffer.allocate(65535);
 				for(int i = 0; i < 4; i++) {
@@ -185,15 +188,17 @@ public class PacketDistributorTask extends Task implements ITask {
 		
 		byte[] mask = {5, 28, -23, -67};
 		
-		bb.put((byte) ((byte)byteBuffer.limit() + (1 << 7)));
-		bb.put(mask[0]);
-		bb.put(mask[1]);
-		bb.put(mask[2]);
-		bb.put(mask[3]);
+		//bb.put((byte) ((byte)byteBuffer.limit() + (1 << 7)));
+		bb.put((byte) ((byte)byteBuffer.limit() & 127));
+		//bb.put(mask[0]);
+		//bb.put(mask[1]);
+		//bb.put(mask[2]);
+		//bb.put(mask[3]);
 		
 		for(int i = 0; i < byteBuffer.limit(); i++) {
-			byte data = (byte) (byteBuffer.get() ^ mask[i % 4]);
-			bb.put(data);
+			//byte data = (byte) (byteBuffer.get() ^ mask[i % 4]);
+			//bb.put(data);
+			bb.put(byteBuffer.get());
 		}
 		
 		bb.flip();

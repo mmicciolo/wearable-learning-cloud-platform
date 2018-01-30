@@ -1,5 +1,5 @@
 <Server>
-	<GameServerHostName>127.0.0.1</GameServerHostName>
+	<GameServerHostName>192.168.0.100</GameServerHostName>
 	<GameServerPortNumber>3333</GameServerPortNumber>
 	
 	<DebugServerHostName>127.0.0.1</DebugServerHostName>

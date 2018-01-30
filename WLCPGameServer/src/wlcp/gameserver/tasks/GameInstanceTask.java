@@ -24,6 +24,7 @@ import wlcp.model.master.GameLobby;
 import wlcp.model.master.Username;
 import wlcp.shared.packets.ConnectAcceptedPacket;
 import wlcp.shared.packets.ConnectPacket;
+import wlcp.shared.packets.GameTeamsPacket;
 import wlcp.shared.packets.SingleButtonPressPacket;
 
 
@@ -90,6 +91,9 @@ public class GameInstanceTask extends Task implements ITask {
 		case CONNECT:
 			UserConnect(packetClientData);
 			break;
+		case GAME_TEAMS:
+			GetTeams(packetClientData);
+			break;
 		case SINGLE_BUTTON_PRESS:
 			System.out.println("Button");
 			SingleButtonPress(packetClientData);
@@ -124,6 +128,10 @@ public class GameInstanceTask extends Task implements ITask {
 		for(Player player : players) {
 			if(player.usernameClientData.username.getUsernameId().equals(username.getUsernameId())) {
 				//User already exists in the game, maybe they are trying to reconnect?
+				UserReconnect(packetClientData, player);
+				//Send the packet
+				packetDistributor.AddPacketToSend(new ConnectAcceptedPacket(getGameInstanceId(), player.teamPlayer.team, player.teamPlayer.player), packetClientData.clientData);
+				return;
 			}
 		}
 		
@@ -150,6 +158,64 @@ public class GameInstanceTask extends Task implements ITask {
 
 		//Send the packet
 		packetDistributor.AddPacketToSend(new ConnectAcceptedPacket(getGameInstanceId(), player.teamPlayer.team, player.teamPlayer.player), packetClientData.clientData);
+	}
+	
+	private void UserReconnect(PacketClientData packetClientData, Player player) {
+		
+		//Log the reconnect
+		logger.write("Reconnect from: " + player.usernameClientData.username.getUsernameId());
+		
+		//Set the new client data
+		player.usernameClientData.clientData = packetClientData.clientData;
+		
+	}
+	
+	private void GetTeams(PacketClientData packetClientData) {
+		
+		//Get the packet
+		GameTeamsPacket teams = (GameTeamsPacket) packetClientData.packet;
+		
+		//Check to see if the username is already connected
+		//If it is this is a reconnect situation
+		for(Player player : players) {
+			if(player.usernameClientData.username.getUsernameId().equals(teams.getUsername())) {
+				
+				//Set the team to current team
+				List<Byte> teamNumbers = new ArrayList<Byte>();
+				teamNumbers.add((byte) ((byte)player.teamPlayer.team));
+				teams.setTeamNumbers(teamNumbers);
+				
+				//Send the packet
+				packetDistributor.AddPacketToSend(teams, packetClientData.clientData);
+				
+				//Return
+				return;
+			}
+		}
+		
+		//Loop through the teams
+		int[] playerArray = new int[game.getPlayersPerTeam()];
+		for(int i = 0; i < game.getTeamCount(); i++) {
+			for(Player p : players) {
+				if(p.teamPlayer.team == i) {
+					playerArray[p.teamPlayer.team - 1]++;
+				}
+			}
+		}
+		
+		//Add the teams
+		List<Byte> gameTeams = new ArrayList<Byte>();
+		for(int i = 0; i < playerArray.length; i++) {
+			if(playerArray[i] < game.getPlayersPerTeam()) {
+				gameTeams.add((byte)(i + 1));
+			}
+		}
+		
+		//Set the team numbers
+		teams.setTeamNumbers(gameTeams);
+		
+		//Send the packet
+		packetDistributor.AddPacketToSend(teams, packetClientData.clientData);
 	}
 	
 	private PlayerVM StartPlayerVM(UsernameClientData usernameClientData, TeamPlayer teamPlayer) {
@@ -207,6 +273,18 @@ public class GameInstanceTask extends Task implements ITask {
 
 	public PacketDistributorTask getPacketDistributor() {
 		return packetDistributor;
+	}
+
+	public GameInstance getGameInstance() {
+		return gameInstance;
+	}
+
+	public Game getGame() {
+		return game;
+	}
+
+	public GameLobby getGameLobby() {
+		return gameLobby;
 	}
 	
 }

@@ -9,6 +9,7 @@ import javax.persistence.Query;
 import wlcp.gameserver.common.JPAEntityManager;
 import wlcp.gameserver.module.ModuleManager;
 import wlcp.gameserver.module.Modules;
+import wlcp.gameserver.modules.LoggerModule;
 import wlcp.gameserver.modules.TaskManagerModule;
 import wlcp.gameserver.task.ITask;
 import wlcp.gameserver.task.Task;
@@ -18,6 +19,7 @@ import wlcp.model.master.GameLobby;
 import wlcp.model.master.Username;
 import wlcp.shared.packet.IPacket;
 import wlcp.shared.packets.GameLobbiesPacket;
+import wlcp.shared.packets.GameLobbyInfo;
 import wlcp.shared.packets.StartGameInstancePacket;
 
 public class ServerPacketHandlerTask extends Task implements ITask {
@@ -25,12 +27,14 @@ public class ServerPacketHandlerTask extends Task implements ITask {
 	private ConcurrentLinkedQueue<PacketClientData> recievedPackets;
 	private JPAEntityManager entityManager;
 	private PacketDistributorTask packetDistributor;
+	private LoggerModule logger;
 
 	public ServerPacketHandlerTask() {
 		super("Server Packet Handler");
 		recievedPackets = new ConcurrentLinkedQueue<PacketClientData>();
 		entityManager = new JPAEntityManager();
 		packetDistributor = (PacketDistributorTask) ((TaskManagerModule) ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).getTasks().get(0);
+		logger = (LoggerModule) ModuleManager.getInstance().getModule(Modules.LOGGER);
 	}
 	
 	public void DistributePacket(PacketClientData packetClientData) {
@@ -87,6 +91,14 @@ public class ServerPacketHandlerTask extends Task implements ITask {
 		
 		//2. Make sure the game lobby exists
 		//3. Make sure a game instance of the lobby has not already been started
+		for(Task task : ((TaskManagerModule)ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).getTasks()) {
+			if(task instanceof GameInstanceTask) {
+				if(((GameInstanceTask)task).getGameLobby().getGameLobbyId() == startGameInstancePacket.getGameLobbyId()) {
+					logger.write("Game " + game.getGameId() + " has already been started with lobby " + ((GameInstanceTask)task).getGameLobby().getGameLobbyName());
+					return;
+				}
+			}
+		}
 		//4. Create the instance
 		
 		//Add it to the database
@@ -125,7 +137,8 @@ public class ServerPacketHandlerTask extends Task implements ITask {
 		List<GameInstance> gameInstances = query.getResultList();
 		
 		for(GameInstance gi : gameInstances) {
-			packet.getGames().add(gi.getGame().getGameId());
+			//packet.getGames().add(gi.getGameLobby().getGameLobbyName() + " (" + gi.getGame().getGameId() + ")");
+			packet.getGameLobbyInfo().add(new GameLobbyInfo(gi.getGame().getGameId(), gi.getGameLobby().getGameLobbyName(), gi.getGameLobby().getGameLobbyId(), gi.getGameInstanceId()));
 		}
 		
 		//Send off the packet

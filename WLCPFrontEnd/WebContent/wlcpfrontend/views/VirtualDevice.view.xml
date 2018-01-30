@@ -1,28 +1,41 @@
-<core:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:tnt="sap.tnt" xmlns:l="sap.ui.layout"
+<core:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:tnt="sap.tnt" xmlns:l="sap.ui.layout" xmlns:f="sap.f"
 		controllerName="wlcpfrontend.controllers.VirtualDevice" xmlns:html="http://www.w3.org/1999/xhtml">
 	<Page id="virtualDevice" showHeader="false" class="virtualDeviceBackground">
 		<content>
-			<NavContainer>
-			<Page showHeader="false">
+			<NavContainer id="virtualDeviceNavContainer">
+			<Page id="selectGameLobby" showHeader="false">
 				<VBox fitContainer="true" justifyContent="Center" alignItems="Center" alignContent="Center" class="box">
-				<items>
-					<Text text="Select a game lobby to join..." class="sapUiSmallMarginBottom"/>
-					<ComboBox width="12em" placeholder="Game Lobby" items="{/items}" value="{/mode}">
-						<core:Item key="{key}" text="{text}" />
-					</ComboBox>
-					<Button width="12em" text="Join" type="Emphasized" press="onLoginPress"></Button>
-				</items>
-			</VBox>
+					<items>
+						<Text text="Select a game lobby (game) to join..." class="sapUiSmallMarginBottom"/>
+						<ComboBox width="12em" placeholder="Game Lobby (Game)" items="{/games}" value="{/mode}">
+							<core:Item key="{key}" text="{gameLobbyName} ({gameName})" />
+						</ComboBox>
+						<Button width="12em" text="Join" type="Emphasized" press="onLoginPress"></Button>
+					</items>
+				</VBox>
 			</Page>
-			<Page showHeader="false">
+			<Page id="selectTeam" showHeader="false">
+				<VBox fitContainer="true" justifyContent="Center" alignItems="Center" alignContent="Center" class="box">
+					<items>
+						<Text text="Select a team to join..." class="sapUiSmallMarginBottom"/>
+						<ComboBox width="12em" placeholder="Team" items="{/teams}" value="{/mode}">
+							<core:Item key="{key}" text="{teamNumber}" />
+						</ComboBox>
+						<Button width="12em" text="Join" type="Emphasized" press="onTeamJoinPress"></Button>
+					</items>
+				</VBox>
+			</Page>
+			<Page id="virtualDevicePage" showHeader="false">
 			<tnt:ToolHeader>
 				<ToolbarSpacer />
-				<Text text="Virtual Device" wrapping="false">
+				<Text text="Virtual Device" textAlign="Center" wrapping="false">
 					<layoutData>
 						<OverflowToolbarLayoutData priority="Disappear" />
 					</layoutData>
 				</Text>
 				<ToolbarSpacer />
+				<!-- <f:Avatar displaySize="XS" initials="MM" press="handleAvatarPress"/> -->
+				<Button text="Disconnect" icon="sap-icon://disconnected"></Button>
 <!-- 				<Button text="Username" type="Transparent" press="onUserNamePress">
 					<layoutData>
 						<OverflowToolbarLayoutData priority="NeverOverflow" />
@@ -40,7 +53,7 @@
 					<Page showHeader="false">
 						<FlexBox height="100%" alignItems="Center" justifyContent="Center">
 							<items>
-								<TextArea editable="false" value="Testing" rows="8" cols="100" />
+								<TextArea id="displayText" editable="false" value="Testing" rows="8" cols="100" />
 							</items>
 						</FlexBox>
 					</Page>

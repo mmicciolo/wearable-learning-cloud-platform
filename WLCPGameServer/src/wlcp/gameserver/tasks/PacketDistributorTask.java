@@ -46,9 +46,6 @@ class PacketClientData {
 
 public class PacketDistributorTask extends Task implements ITask {
 	
-	//private ConcurrentLinkedQueue<PacketClientData> recievedPackets;
-	//private ConcurrentLinkedQueue<PacketClientData> packetsToSend;
-	
 	private LinkedList<PacketClientData> recievedPackets;
 	private LinkedList<PacketClientData> packetsToSend;
 
@@ -56,8 +53,6 @@ public class PacketDistributorTask extends Task implements ITask {
 		super("Packet Distributor");
 		recievedPackets = new LinkedList<PacketClientData>();
 		packetsToSend = new LinkedList<PacketClientData>();
-		//recievedPackets = new ConcurrentLinkedQueue<PacketClientData>();
-		//packetsToSend = new ConcurrentLinkedQueue<PacketClientData>();
 	}
 	
 	public void DataRecieved(ClientData clientData) {

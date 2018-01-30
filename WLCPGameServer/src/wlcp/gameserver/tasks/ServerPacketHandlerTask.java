@@ -1,6 +1,7 @@
 package wlcp.gameserver.tasks;
 
 import java.nio.ByteBuffer;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -24,14 +25,14 @@ import wlcp.shared.packets.StartGameInstancePacket;
 
 public class ServerPacketHandlerTask extends Task implements ITask {
 	
-	private ConcurrentLinkedQueue<PacketClientData> recievedPackets;
+	private LinkedList<PacketClientData> recievedPackets;
 	private JPAEntityManager entityManager;
 	private PacketDistributorTask packetDistributor;
 	private LoggerModule logger;
 
 	public ServerPacketHandlerTask() {
 		super("Server Packet Handler");
-		recievedPackets = new ConcurrentLinkedQueue<PacketClientData>();
+		recievedPackets = new LinkedList<PacketClientData>();
 		entityManager = new JPAEntityManager();
 		packetDistributor = (PacketDistributorTask) ((TaskManagerModule) ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).getTasks().get(0);
 		logger = (LoggerModule) ModuleManager.getInstance().getModule(Modules.LOGGER);
@@ -52,9 +53,8 @@ public class ServerPacketHandlerTask extends Task implements ITask {
 	public void Update() {
 		try {
 			accquire();
-			for(PacketClientData packet : recievedPackets) {
-				HandlePacket(packet);
-				recievedPackets.remove(packet);
+			while(recievedPackets.size() > 0) {
+				HandlePacket(recievedPackets.remove());
 			}
 			release();
 		} catch (InterruptedException e) {

@@ -7,6 +7,9 @@ import java.nio.channels.CompletionHandler;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Future;
 import java.util.regex.Matcher;
@@ -43,13 +46,18 @@ class PacketClientData {
 
 public class PacketDistributorTask extends Task implements ITask {
 	
-	private ConcurrentLinkedQueue<PacketClientData> recievedPackets;
-	private ConcurrentLinkedQueue<PacketClientData> packetsToSend;
+	//private ConcurrentLinkedQueue<PacketClientData> recievedPackets;
+	//private ConcurrentLinkedQueue<PacketClientData> packetsToSend;
+	
+	private LinkedList<PacketClientData> recievedPackets;
+	private LinkedList<PacketClientData> packetsToSend;
 
 	public PacketDistributorTask() {
 		super("Packet Distributor");
-		recievedPackets = new ConcurrentLinkedQueue<PacketClientData>();
-		packetsToSend = new ConcurrentLinkedQueue<PacketClientData>();
+		recievedPackets = new LinkedList<PacketClientData>();
+		packetsToSend = new LinkedList<PacketClientData>();
+		//recievedPackets = new ConcurrentLinkedQueue<PacketClientData>();
+		//packetsToSend = new ConcurrentLinkedQueue<PacketClientData>();
 	}
 	
 	public void DataRecieved(ClientData clientData) {
@@ -247,17 +255,17 @@ public class PacketDistributorTask extends Task implements ITask {
 	
 	@Override
 	public void Update() {
-	
+		
 		//Loop through all of packets recieved
 		try {
 			accquire();
-			for(PacketClientData data : recievedPackets) {
+			while(recievedPackets.size() > 0) {
+				PacketClientData data = recievedPackets.removeFirst();
 				if(data.packet instanceof GamePacket) {
 					for(Task task : ((TaskManagerModule) ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).getTasks()) {
 						if(task instanceof GameInstanceTask) {
 							if(((GameInstanceTask) task).getGameInstanceId() == ((GamePacket) data.packet).getGameInstanceId()) {
 								((GameInstanceTask) task).DistributePacket(data);
-								recievedPackets.remove(data);
 							}
 						}
 					}
@@ -266,30 +274,30 @@ public class PacketDistributorTask extends Task implements ITask {
 					for(Task task : ((TaskManagerModule) ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).getTasks()) {
 						if(task instanceof ServerPacketHandlerTask) {
 							((ServerPacketHandlerTask) task).DistributePacket(data);
-							recievedPackets.remove(data);
 						}
 					}
 				}
 			}
 			release();
 		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		//Loop through packet to send
 		try {
 			accquire();
-			for(PacketClientData data : packetsToSend) {
+			while(packetsToSend.size() > 0) {
+				PacketClientData data = packetsToSend.removeFirst();
 				ByteBuffer buffer = data.packet.assemblePacket();
 				if(data.clientData.isWebSocket()) { 
 					buffer = HandleSocket(buffer);
 				}
 				Future<Integer> status = data.clientData.getClientSocket().write(buffer);
 				while(!status.isDone()) {}
-				packetsToSend.remove(data);
 			}
 			release();
-		} catch (InterruptedException e) {
+		} catch(InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

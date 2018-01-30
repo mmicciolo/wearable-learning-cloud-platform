@@ -7,6 +7,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
@@ -69,7 +70,8 @@ public class GameInstanceTask extends Task implements ITask {
 	
 	private LoggerModule logger;
 	private PacketDistributorTask packetDistributor;
-	private ConcurrentLinkedQueue<PacketClientData> recievedPackets;
+	private LinkedList<PacketClientData> recievedPackets;
+	
 	private JPAEntityManager entityManager;
 	
 	private Timer heartbeatTimer;
@@ -83,7 +85,7 @@ public class GameInstanceTask extends Task implements ITask {
 		logger = (LoggerModule) ModuleManager.getInstance().getModule(Modules.LOGGER);
 		logger.write("Starting the game " + game.getGameId() + " instance id " + gameInstance.getGameInstanceId());
 		packetDistributor = (PacketDistributorTask) ((TaskManagerModule) ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).getTasks().get(0);
-		recievedPackets = new ConcurrentLinkedQueue<PacketClientData>();
+		recievedPackets = new LinkedList<PacketClientData>();
 		players = new ArrayList<Player>();
 		entityManager = new JPAEntityManager();
 		heartbeatTimerTask = new TimerTask(){public void run() {SendHeartBeat();}};
@@ -289,9 +291,8 @@ public class GameInstanceTask extends Task implements ITask {
 	public void Update() {
 		try {
 			accquire();
-			for(PacketClientData packet : recievedPackets) {
-				HandlePacket(packet);
-				recievedPackets.remove(packet);
+			while(recievedPackets.size() > 0) {
+				HandlePacket(recievedPackets.remove());
 			}
 			release();
 		} catch (InterruptedException e) {
@@ -326,9 +327,6 @@ public class GameInstanceTask extends Task implements ITask {
 	
 	public void HandleHeartbeatTimeout(PlayerVM playerVM) {
 		
-		//Cancel the timer
-		playerVM.CancelHeartbeatTimeoutTimer();
-		
 		//Shutdown the VM
 		playerVM.shutdown();
 		
@@ -358,18 +356,6 @@ public class GameInstanceTask extends Task implements ITask {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
-	}
-	
-	public void RemovePlayerByVM(PlayerVM playerVM) {
-		List<Player> playersToRemove = new ArrayList<Player>();
-		for(Player player : players) {
-			if(player.playerVM.equals(playerVM)) {
-				playersToRemove.add(player);
-			}
-		}
-		for(Player player : playersToRemove) {
-			players.remove(player);
 		}
 	}
 	

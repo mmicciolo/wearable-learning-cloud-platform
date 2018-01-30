@@ -7,9 +7,23 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 			teams : []
 	},
 	model : new sap.ui.model.json.JSONModel(this.modelJSON),
+	gameInstanceId : 0,
+	team : 0,
+	player : 0,
+	transitionHandled : false,
 	
 	redButtonPressed : function() {
-		
+		if(!this.transitionHandled) {
+			var byteBuffer = new dcodeIO.ByteBuffer();
+			byteBuffer.writeByte(13);
+			byteBuffer.writeInt(this.gameInstanceId);
+			byteBuffer.writeInt(this.team);
+			byteBuffer.writeInt(this.player);
+			byteBuffer.writeInt(1);
+			byteBuffer.flip();
+			this.socket.send(byteBuffer.toArrayBuffer());
+			this.transitionHandled = true;
+		}
 	},
 	
 	greenButtonPressed : function() {
@@ -22,6 +36,17 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 	
 	blackButtonPressed : function() {
 		
+	},
+	
+	disconnectPressed : function() {
+		//this.socket.close();
+		var byteBuffer = new dcodeIO.ByteBuffer();
+		byteBuffer.writeByte(8);
+		byteBuffer.writeInt(this.gameInstanceId);
+		byteBuffer.writeInt(this.team);
+		byteBuffer.writeInt(this.player);
+		byteBuffer.flip();
+		this.socket.send(byteBuffer.toArrayBuffer());
 	},
 	
 	setupSocketConnect : function() {
@@ -51,10 +76,20 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 			this.handleGameTeams(byteBuffer);
 			break;
 		case 6:
-			this.joinedGame();
+			this.joinedGame(byteBuffer);
+			break;
+		case 9:
+			this.disconnectComplete();
+			break;
+		case 10:
+			console.log("Heart Beat!");
+			this.heartBeat();
 			break;
 		case 12:
 			this.displayText(byteBuffer);
+			break;
+		case 13:
+			this.singleButtonPress(byteBuffer);
 			break;
 		default:
 			break;
@@ -69,6 +104,20 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 		console.log("Error" + event);
 	},
 	
+	disconnectComplete : function() {
+		this.socket.close();
+	},
+	
+	heartBeat : function() {
+		var byteBuffer = new dcodeIO.ByteBuffer();
+		byteBuffer.writeByte(10);
+		byteBuffer.writeInt(this.gameInstanceId);
+		byteBuffer.writeInt(this.team);
+		byteBuffer.writeInt(this.player);
+		byteBuffer.flip();
+		this.socket.send(byteBuffer.toArrayBuffer());
+	},
+	
 	displayText : function(byteBuffer) {
 		//Switch the nav container to display text if it isnt already
 		
@@ -79,14 +128,20 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 	},
 	
 	singleButtonPress : function(byteBuffer) {
-		//Switch the nav container to single button press if it isnt already
-	},
+		this.transitionHandled = false;
+	}, 
 	
-	joinedGame : function() {
+	joinedGame : function(byteBuffer) {
 		//console.log("We have joined the game!");
 		//Switch pages
 		var navContainer = sap.ui.getCore().byId("virtualDevice--virtualDeviceNavContainer");
 		navContainer.to(sap.ui.getCore().byId("virtualDevice--virtualDevicePage"));	
+		
+		this.gameInstanceId = byteBuffer.readInt();
+		this.team = byteBuffer.readInt();
+		this.player = byteBuffer.readInt();
+		
+		this.heartBeat();
 	},
 
 	handleGameTeams : function(byteBuffer) {
@@ -217,7 +272,7 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 * @memberOf wlcpfrontend.views.VirtualDevice
 */
 //	onAfterRendering: function() {
-//		this.getActiveGameLobbies();
+//
 //	},
 
 /**

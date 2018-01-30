@@ -1,7 +1,9 @@
 package wlcp.gameserver.tasks;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
+import java.nio.channels.CompletionHandler;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -21,9 +23,11 @@ import wlcp.gameserver.task.Task;
 import wlcp.shared.packet.IPacket;
 import wlcp.shared.packet.PacketTypes;
 import wlcp.shared.packets.ConnectPacket;
+import wlcp.shared.packets.DisconnectPacket;
 import wlcp.shared.packets.GameLobbiesPacket;
 import wlcp.shared.packets.GamePacket;
 import wlcp.shared.packets.GameTeamsPacket;
+import wlcp.shared.packets.HeartBeatPacket;
 import wlcp.shared.packets.ServerPacket;
 import wlcp.shared.packets.SingleButtonPressPacket;
 import wlcp.shared.packets.StartGameInstancePacket;
@@ -70,6 +74,12 @@ public class PacketDistributorTask extends Task implements ITask {
 			break;
 		case CONNECT:
 			AddPacket(new ConnectPacket(), clientData);
+			break;
+		case DISCONNECT:
+			AddPacket(new DisconnectPacket(), clientData);
+			break;
+		case HEARTBEAT:
+			AddPacket(new HeartBeatPacket(), clientData);
 			break;
 		case SINGLE_BUTTON_PRESS:
 			AddPacket(new SingleButtonPressPacket(), clientData);
@@ -131,6 +141,13 @@ public class PacketDistributorTask extends Task implements ITask {
 				clientData.setBuffer(byteBuffer);
 				clientData.setWebSocket(true);
 				DataRecieved(clientData);
+			} else if(clientData.getBuffer().get(0) == -120) {
+				if(clientData.getBuffer().get(1) == -128) {
+					//disconnect
+					clientData.getBuffer().clear();
+					clientData.getClientSocket().write(clientData.getBuffer(), clientData, new ServerWriteHandler());
+					return;
+				}
 			}
 		}
 	}
@@ -285,6 +302,24 @@ public class PacketDistributorTask extends Task implements ITask {
 	
 	@Override 
 	public void ShutDown() {
+		
+	}
+}
+
+class ServerWriteHandler implements CompletionHandler<Integer, ClientData> {
+
+	@Override
+	public void completed(Integer result, ClientData clientData) {
+		try {
+			clientData.getClientSocket().close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void failed(Throwable exc, ClientData clientData) {
 		
 	}
 }

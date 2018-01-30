@@ -11,11 +11,12 @@ var FSMGame = {
    player : 0,
    playerVM : null,
 
+   running : true,
    state : states.servertest_start,
    oldState : null,
 
    start : function() {
-      while(true) {
+      while(this.running) {
          if(this.state != this.oldState) {
             this.oldState = this.state;
             this.stateMachine(this.state);
@@ -48,6 +49,8 @@ var FSMGame = {
 
    servertest_state_2 : function() {
       this.playerVM.DisplayText("Yay it worked!");
+      this.state = this.playerVM.SingleButtonPress(["1", "2", "3", "4"], [states.servertest_start, states.servertest_start, states.servertest_start, states.servertest_start]);
+      //this.running = false;
    },
 
 }

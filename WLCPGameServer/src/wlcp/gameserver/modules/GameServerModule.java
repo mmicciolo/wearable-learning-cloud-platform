@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
+import java.nio.channels.AsynchronousCloseException;
 import java.nio.channels.AsynchronousServerSocketChannel;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
@@ -124,7 +125,8 @@ public class GameServerModule extends Module implements IModule {
 				clientData.getClientSocket().read(clientData.getBuffer(), clientData, this);
 			} else if(result == -1) {
 				
-				logger.write("Client Disconnected...");
+				//This happens when the client shut downs without calling close
+				logger.write("Client Disconnected... (no close)");
 				
 				//Remove from the client list
 				clientData.getServer().getClients().remove(clientData);
@@ -142,23 +144,22 @@ public class GameServerModule extends Module implements IModule {
 		@Override
 		public void failed(Throwable exc, ClientData clientData) {
 			
-			//Some sort of reading error occured
-			logger.write("Reading error occured...");
-			logger.write(exc.getMessage());
-//			//If we get here, either the client disconnected or the client lost connection
-//			//Lets handle both situations the same way by removing them
-//			logger.write("Client Disconnected...");
-//			
-//			//Remove from the client list
-//			clientData.getServer().getClients().remove(clientData);
-//			
-//			//Close the connection
-//			try {
-//				clientData.getClientSocket().close();
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
+			if(exc instanceof AsynchronousCloseException) { 
+				//This happens when we call close on a client socket
+				logger.write("Client Disconnected... (async close)");
+				return;
+			} else if(exc instanceof IOException) {
+				//If we get this, the client terminated or called close
+				if(exc.getMessage().equals("The specified network name is no longer available.\r\n")) {
+					logger.write("Client Disconnected... (terminated or closed)");
+					return;
+				}
+			} else {
+				//Some sort of reading error occured
+				logger.write("Reading error occured...");
+				logger.write(exc.getMessage());
+				return;
+			}
 		}
 	}
 	

@@ -2,6 +2,8 @@ package wlcp.gameserver.common;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.script.Invocable;
 import javax.script.ScriptContext;
@@ -9,10 +11,13 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+import wlcp.gameserver.model.ClientData;
 import wlcp.gameserver.tasks.GameInstanceTask;
 import wlcp.shared.packet.IPacket;
 import wlcp.shared.packets.DisplayTextPacket;
 import wlcp.shared.packets.SingleButtonPressPacket;
+
+import jdk.nashorn.api.scripting.*;
 
 public class PlayerVM extends Thread {
 	
@@ -24,6 +29,11 @@ public class PlayerVM extends Thread {
 	private int player;
 	private IPacket blockPacket = null;
 	private boolean block = true;
+	private boolean reconnect = false;
+	private boolean shutdown = false;
+	private Timer heartbeatTimeoutTimer;
+	private TimerTask heartbeatTimeoutTimerTask;
+	private boolean heartbeatTimerRunning = false;
 
 	public PlayerVM(GameInstanceTask gameInstanceTask, UsernameClientData usernameClientData, FileReader fileReader, int team, int player) {
 		this.gameInstanceTask = gameInstanceTask;
@@ -35,7 +45,6 @@ public class PlayerVM extends Thread {
 	
 	@Override
 	public void run() {
-		
 		scriptEngine = new ScriptEngineManager().getEngineByName("nashorn");
 		try {
 			scriptEngine.eval(fileReader);
@@ -55,6 +64,74 @@ public class PlayerVM extends Thread {
 		}
 	}
 	
+	public void shutdown() {
+		
+		//Set the running variable to false
+		try {
+			scriptEngine.eval("FSMGame.running = false;");
+		} catch (ScriptException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		//Shutdown
+		shutdown = true;
+	}
+	
+	public void reconnect(ClientData clientData) {
+		this.usernameClientData.clientData = clientData;
+		reconnect = true;
+	}
+	
+	private int block() {
+		if(block) {
+			if(reconnect) {
+				unblock(null);
+				reconnect = false;
+				try {
+					scriptEngine.eval("FSMGame.oldState = FSMGame.oldState - 1");
+				} catch (ScriptException e) {
+					e.printStackTrace();
+				}
+				return (int) ((JSObject)scriptEngine.get("FSMGame")).getMember("state");
+			}
+			if(shutdown) {
+				return - 3;
+			}
+			try {
+				Thread.sleep(17);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			return -2;
+		}
+		return -1;
+	}
+	
+	public void unblock(IPacket packet) {
+		block = false;
+		blockPacket = packet;
+	}
+	
+	public void StartHeartbeatTimeoutTimer() {
+		PlayerVM that = this;
+		heartbeatTimeoutTimerTask = new TimerTask() {
+			public void run() {
+				gameInstanceTask.HandleHeartbeatTimeout(that);
+			}
+		};
+		heartbeatTimeoutTimer = new Timer("Timer");
+		heartbeatTimeoutTimer.schedule(heartbeatTimeoutTimerTask, 5000);
+		heartbeatTimerRunning = true;
+	}
+	
+	public void CancelHeartbeatTimeoutTimer() {
+		if(heartbeatTimerRunning) {
+			heartbeatTimeoutTimer.cancel();
+			heartbeatTimerRunning = false;
+		}
+	}
+	
 	public void DisplayText(String text) {
 		gameInstanceTask.getPacketDistributor().AddPacketToSend(new DisplayTextPacket(text), usernameClientData.clientData);
 	}
@@ -63,16 +140,12 @@ public class PlayerVM extends Thread {
 		System.out.println(text);
 	}
 	
-	public int SingleButtonPress(String[] buttons, int[] transitions) {
+	public int SingleButtonPress(String[] buttons, int[] transitions) throws ScriptException {
 		block = true;
 		gameInstanceTask.getPacketDistributor().AddPacketToSend(new SingleButtonPressPacket(gameInstanceTask.getGameInstanceId(), team, player, 0), usernameClientData.clientData);
-		while(block) { try {
-			Thread.sleep(17);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}}
-		System.out.println("Done Blocking");
+		int state;
+		while((state = block()) == -2) {}
+		if(state != -2 && state != -1) { return state; }
 		SingleButtonPressPacket packet = (SingleButtonPressPacket) blockPacket;
 		for(int i = 0; i < buttons.length; i++) {
 			if(buttons[i].equals(Integer.toString(packet.getButtonPress()))) {
@@ -109,7 +182,9 @@ public class PlayerVM extends Thread {
 	public void setBlock(boolean block) {
 		this.block = block;
 	}
-	
-	
-	
+
+	public boolean isHeartbeatTimerRunning() {
+		return heartbeatTimerRunning;
+	}
+
 }

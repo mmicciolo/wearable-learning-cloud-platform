@@ -2,10 +2,15 @@ package wlcp.gameserver.tasks;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import wlcp.gameserver.common.JPAEntityManager;
@@ -22,9 +27,14 @@ import wlcp.model.master.Game;
 import wlcp.model.master.GameInstance;
 import wlcp.model.master.GameLobby;
 import wlcp.model.master.Username;
+import wlcp.shared.packet.Packet;
+import wlcp.shared.packet.PacketTypes;
 import wlcp.shared.packets.ConnectAcceptedPacket;
 import wlcp.shared.packets.ConnectPacket;
+import wlcp.shared.packets.DisconnectCompletePacket;
+import wlcp.shared.packets.DisconnectPacket;
 import wlcp.shared.packets.GameTeamsPacket;
+import wlcp.shared.packets.HeartBeatPacket;
 import wlcp.shared.packets.SingleButtonPressPacket;
 
 
@@ -62,6 +72,9 @@ public class GameInstanceTask extends Task implements ITask {
 	private ConcurrentLinkedQueue<PacketClientData> recievedPackets;
 	private JPAEntityManager entityManager;
 	
+	private Timer heartbeatTimer;
+	private TimerTask heartbeatTimerTask; 
+	
 	public GameInstanceTask(GameInstance gameInstance, Game game, GameLobby gameLobby) {
 		super("Game Instance " + gameInstance.getGameInstanceId());
 		this.gameInstance = gameInstance;
@@ -73,6 +86,9 @@ public class GameInstanceTask extends Task implements ITask {
 		recievedPackets = new ConcurrentLinkedQueue<PacketClientData>();
 		players = new ArrayList<Player>();
 		entityManager = new JPAEntityManager();
+		heartbeatTimerTask = new TimerTask(){public void run() {SendHeartBeat();}};
+		heartbeatTimer = new Timer();
+		heartbeatTimer.scheduleAtFixedRate(heartbeatTimerTask, 5000, 5000);
 	}
 	
 	public void DistributePacket(PacketClientData packetClientData) {
@@ -91,11 +107,16 @@ public class GameInstanceTask extends Task implements ITask {
 		case CONNECT:
 			UserConnect(packetClientData);
 			break;
+		case DISCONNECT:
+			UserDisconnect(packetClientData);
+			break;
+		case HEARTBEAT:
+			this.RecieveHeartBeat(packetClientData);
+			break;
 		case GAME_TEAMS:
 			GetTeams(packetClientData);
 			break;
 		case SINGLE_BUTTON_PRESS:
-			System.out.println("Button");
 			SingleButtonPress(packetClientData);
 			break;
 		default:
@@ -109,11 +130,9 @@ public class GameInstanceTask extends Task implements ITask {
 		SingleButtonPressPacket packet = (SingleButtonPressPacket) packetClientData.packet;
 		for(Player player : players) {
 			if(player.teamPlayer.team == packet.getTeam() && player.teamPlayer.player == packet.getPlayer()) {
-				player.playerVM.setBlockPacket(packet);
-				player.playerVM.setBlock(false);
+				player.playerVM.unblock(packet);
 			}
 		}
-		
 	}
 	
 	private void UserConnect(PacketClientData packetClientData) {
@@ -129,6 +148,8 @@ public class GameInstanceTask extends Task implements ITask {
 			if(player.usernameClientData.username.getUsernameId().equals(username.getUsernameId())) {
 				//User already exists in the game, maybe they are trying to reconnect?
 				UserReconnect(packetClientData, player);
+				//Recall the current state function its in
+				player.playerVM.reconnect(packetClientData.clientData);
 				//Send the packet
 				packetDistributor.AddPacketToSend(new ConnectAcceptedPacket(getGameInstanceId(), player.teamPlayer.team, player.teamPlayer.player), packetClientData.clientData);
 				return;
@@ -155,6 +176,9 @@ public class GameInstanceTask extends Task implements ITask {
 		
 		//Add the player to a list
 		players.add(player);
+		
+		//Log the event
+		logger.write("user " + player.usernameClientData.username.getUsernameId() + " joined the lobby " + "\"" + gameLobby.getGameLobbyName() + "\"" + " playing " + "\"" + game.getGameId() + "\"");
 
 		//Send the packet
 		packetDistributor.AddPacketToSend(new ConnectAcceptedPacket(getGameInstanceId(), player.teamPlayer.team, player.teamPlayer.player), packetClientData.clientData);
@@ -167,7 +191,32 @@ public class GameInstanceTask extends Task implements ITask {
 		
 		//Set the new client data
 		player.usernameClientData.clientData = packetClientData.clientData;
+	}
+	
+	private void UserDisconnect(PacketClientData packetClientData) {
 		
+		//Get the packet
+		DisconnectPacket packet = (DisconnectPacket) packetClientData.packet;
+		
+		//Find the player
+		for(Player player : players) {
+			if(player.teamPlayer.team == packet.getTeam() && player.teamPlayer.player == packet.getPlayer()) {
+				
+				//Log the event
+				logger.write("User " + player.usernameClientData.username.getUsernameId() + " is disconnecting...");
+				
+				//Stop the VM's thread
+				player.playerVM.shutdown();
+				
+				//Remove us from players
+				players.remove(player);
+				
+				//Send a disconnect  complete
+				packetDistributor.AddPacketToSend(new DisconnectCompletePacket(), player.usernameClientData.clientData);
+				
+				break;
+			}
+		}
 	}
 	
 	private void GetTeams(PacketClientData packetClientData) {
@@ -234,8 +283,6 @@ public class GameInstanceTask extends Task implements ITask {
 		playerVM.start();	
 		
 		return playerVM;
-		
-		//usernameVMs.put(usernameClientData, playerVM);
 	}
 	
 	@Override
@@ -250,6 +297,79 @@ public class GameInstanceTask extends Task implements ITask {
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+	}
+	
+	public void SendHeartBeat() {
+		if(players.size() > 0) {
+			for(Player player : players) {
+				HeartBeatPacket packet = new HeartBeatPacket();
+				packetDistributor.AddPacketToSend(packet, player.usernameClientData.clientData);
+				player.playerVM.StartHeartbeatTimeoutTimer();
+			}
+			logger.write("Heart Beat");
+		}
+	}
+	
+	private void RecieveHeartBeat(PacketClientData packetClientData) {
+		
+		//Get the packet
+		HeartBeatPacket packet = (HeartBeatPacket) packetClientData.packet;
+		
+		//Loop through the players and update the time of the last heart beat
+		for(Player player : players) {
+			if(player.teamPlayer.team == packet.getTeam() && player.teamPlayer.player == packet.getPlayer()) {
+				player.playerVM.CancelHeartbeatTimeoutTimer();
+			}
+		}
+	}
+	
+	public void HandleHeartbeatTimeout(PlayerVM playerVM) {
+		
+		//Cancel the timer
+		playerVM.CancelHeartbeatTimeoutTimer();
+		
+		//Shutdown the VM
+		playerVM.shutdown();
+		
+		Player timeoutPlayer = null;
+		
+		//Remove the player
+		List<Player> playersToRemove = new ArrayList<Player>();
+		for(Player player : players) {
+			if(player.playerVM.equals(playerVM)) {
+				playersToRemove.add(player);
+				timeoutPlayer = player;
+			}
+		}
+		for(Player player : playersToRemove) {
+			players.remove(player);
+		}
+		
+		if(timeoutPlayer != null) {
+			
+			//Log the event
+			logger.write("User " + timeoutPlayer.usernameClientData.username.getUsernameId() + " playing in the lobby " + gameLobby.getGameLobbyName() + " timed out!");
+			
+			//Close the socket
+			try {
+				timeoutPlayer.usernameClientData.clientData.getClientSocket().close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void RemovePlayerByVM(PlayerVM playerVM) {
+		List<Player> playersToRemove = new ArrayList<Player>();
+		for(Player player : players) {
+			if(player.playerVM.equals(playerVM)) {
+				playersToRemove.add(player);
+			}
+		}
+		for(Player player : playersToRemove) {
+			players.remove(player);
 		}
 	}
 	
@@ -286,5 +406,4 @@ public class GameInstanceTask extends Task implements ITask {
 	public GameLobby getGameLobby() {
 		return gameLobby;
 	}
-	
 }

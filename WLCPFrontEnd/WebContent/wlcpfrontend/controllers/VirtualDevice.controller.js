@@ -1,7 +1,7 @@
 sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 	
 	socket : null,
-	username : "mmicciolo",
+	username : sap.ui.getCore().getModel("user").oData.username,
 	modelJSON : {
 			games : [],
 			teams : []

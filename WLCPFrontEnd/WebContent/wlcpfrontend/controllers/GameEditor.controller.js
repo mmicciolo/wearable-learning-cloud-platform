@@ -11,7 +11,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		ConnectionIdCount : 0,
 		UsernameDetails : {
 			__metadata : {
-	             uri : ODataModel.getODataModelURL() + "/Usernames('mmicciolo')"
+	             uri : ODataModel.getODataModelURL() + "/Usernames('" + sap.ui.getCore().getModel("user").oData.username + "')"
 	         }
 		},
 		Visibility : true

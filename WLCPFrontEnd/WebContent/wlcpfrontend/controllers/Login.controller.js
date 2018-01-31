@@ -23,12 +23,14 @@ sap.ui.controller("wlcpfrontend.controllers.Login", {
 	model : new sap.ui.model.json.JSONModel(),
 	
 	userModelData : {
-		username: "mmicciolo"
+		username: ""
 	},
 	
 	userModel : new sap.ui.model.json.JSONModel(),
 	
 	onLoginPress: function() {
+		this.userModelData.username = this.modelData.username;
+		this.userModel.setData(this.userModelData);
 		switch(this.modelData.mode) {
 		case "Game Manager": 
 			var app = sap.ui.getCore().byId("app1");

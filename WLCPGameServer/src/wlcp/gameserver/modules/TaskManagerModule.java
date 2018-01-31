@@ -1,12 +1,15 @@
 package wlcp.gameserver.modules;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import wlcp.gameserver.module.IModule;
 import wlcp.gameserver.module.Module;
 import wlcp.gameserver.module.ModuleManager;
 import wlcp.gameserver.module.Modules;
 import wlcp.gameserver.task.Task;
+import wlcp.gameserver.tasks.GameInstanceTask;
+import wlcp.gameserver.tasks.ServerPacketHandlerTask;
 
 public class TaskManagerModule extends Module implements IModule {
 	
@@ -20,7 +23,7 @@ public class TaskManagerModule extends Module implements IModule {
 	public void addTask(Task task) {
 		try {
 			new Thread(task).start();
-			release();
+			accquire();
 			tasks.add(task);
 			release();
 			logger.write("Task " + task.getTaskName() + " (" + task.getName() + ")" + " Added...");
@@ -62,7 +65,20 @@ public class TaskManagerModule extends Module implements IModule {
 		}
 	}
 	
-	public ArrayList<Task> getTasks() {
-		return this.tasks;
+	public List<Task> getTasksByType(Class<?> task) {
+		List<Task> returnList = new ArrayList<Task>();
+		try {
+			accquire();
+			for(Task t : tasks) {
+				if(task.isInstance(t)) {
+					returnList.add(t);
+				}
+			}
+			release();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return returnList;
 	}
 }

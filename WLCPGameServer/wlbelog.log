@@ -1,89 +1,38 @@
-Server Time 0.0: Starting Module Manager...
-Server Time 0.0: Module Manager Started...
-Server Time 0.0: Module LOGGER Added...
-Server Time 0.0: Loading WLCP Game Server Configuration...
-Server Time 0.0: Module CONFIGURATION Added...
-Server Time 0.008: Parsing Server Configuration...
-Server Time 0.008: Game Server Host Name: 192.168.0.100
-Server Time 0.008: Game Server Port Number: 3333
-Server Time 0.009: Debug Server Host Name: 127.0.0.1
-Server Time 0.009: Debug Server Port Number: 3334
-Server Time 0.009: Module CONFIGURATION Added...
-Server Time 0.009: Starting WLCP Game Server...
-Server Time 0.019: Server Binded To 192.168.0.100:3333
-Server Time 0.019: Listening for connections...
-Server Time 0.021: Module SERVER Added...
-Server Time 0.021: Setting up Task Manager...
-Server Time 0.021: Module TASK_MANAGER Added...
-Server Time 0.022: Task Packet Distributor (Thread-36) Added...
-Server Time 0.058: Task Server Packet Handler (Thread-38) Added...
-Server Time 7.107: Connection Accepted...
-Server Time 7.268: Starting the game servertest instance id 2
-Server Time 7.273: Task Game Instance 2 (Thread-41) Added...
-Server Time 12.119: user mmicciolo joined the lobby "Computer Science 1" playing "servertest"
-Server Time 12.273: Heart Beat
-Server Time 17.273: Heart Beat
-Server Time 22.274: Heart Beat
-Server Time 26.209: Connection Accepted...
-Server Time 26.252: Game servertest has already been started with lobby Computer Science 1
-Server Time 27.273: Heart Beat
-Server Time 31.055: user iarroyo joined the lobby "Computer Science 1" playing "servertest"
-Server Time 32.273: Heart Beat
-Server Time 37.273: Heart Beat
-Server Time 42.273: Heart Beat
-Server Time 47.273: Heart Beat
-Server Time 52.274: Heart Beat
-Server Time 57.273: Heart Beat
-Server Time 62.273: Heart Beat
-Server Time 67.273: Heart Beat
-Server Time 72.274: Heart Beat
-Server Time 77.273: Heart Beat
-Server Time 82.273: Heart Beat
-Server Time 87.273: Heart Beat
-Server Time 92.274: Heart Beat
-Server Time 97.273: Heart Beat
-Server Time 102.273: Heart Beat
-Server Time 107.273: Heart Beat
-Server Time 112.274: Heart Beat
-Server Time 117.273: Heart Beat
-Server Time 122.274: Heart Beat
-Server Time 127.273: Heart Beat
-Server Time 132.273: Heart Beat
-Server Time 137.273: Heart Beat
-Server Time 142.273: Heart Beat
-Server Time 147.273: Heart Beat
-Server Time 152.274: Heart Beat
-Server Time 157.273: Heart Beat
-Server Time 162.273: Heart Beat
-Server Time 167.273: Heart Beat
-Server Time 172.273: Heart Beat
-Server Time 177.274: Heart Beat
-Server Time 182.273: Heart Beat
-Server Time 187.273: Heart Beat
-Server Time 192.273: Heart Beat
-Server Time 197.274: Heart Beat
-Server Time 202.273: Heart Beat
-Server Time 207.273: Heart Beat
-Server Time 212.273: Heart Beat
-Server Time 217.274: Heart Beat
-Server Time 222.273: Heart Beat
-Server Time 227.274: Heart Beat
-Server Time 232.273: Heart Beat
-Server Time 237.273: Heart Beat
-Server Time 242.273: Heart Beat
-Server Time 247.274: Heart Beat
-Server Time 252.273: Heart Beat
-Server Time 257.273: Heart Beat
-Server Time 262.273: Heart Beat
-Server Time 267.273: Heart Beat
-Server Time 272.273: Heart Beat
-Server Time 274.608: Client Disconnected... (no close)
-Server Time 277.274: Heart Beat
-Server Time 282.273: Heart Beat
-Server Time 282.277: User iarroyo playing in the lobby Computer Science 1 timed out!
-Server Time 287.274: Heart Beat
-Server Time 292.274: Heart Beat
-Server Time 297.273: Heart Beat
-Server Time 302.273: Heart Beat
-Server Time 307.273: Heart Beat
-Server Time 312.273: Heart Beat
+Server Time 0.001: Starting Module Manager...
+Server Time 0.001: Module Manager Started...
+Server Time 0.001: Module LOGGER Added...
+Server Time 0.001: Loading WLCP Game Server Configuration...
+Server Time 0.001: Module CONFIGURATION Added...
+Server Time 0.009: Parsing Server Configuration...
+Server Time 0.009: Game Server Host Name: 192.168.0.100
+Server Time 0.01: Game Server Port Number: 3333
+Server Time 0.01: Debug Server Host Name: 127.0.0.1
+Server Time 0.01: Debug Server Port Number: 3334
+Server Time 0.01: Module CONFIGURATION Added...
+Server Time 0.01: Starting WLCP Game Server...
+Server Time 0.02: Server Binded To 192.168.0.100:3333
+Server Time 0.02: Listening for connections...
+Server Time 0.022: Module SERVER Added...
+Server Time 0.022: Setting up Task Manager...
+Server Time 0.022: Module TASK_MANAGER Added...
+Server Time 0.023: Task Packet Distributor (Thread-36) Added...
+Server Time 0.061: Task Server Packet Handler (Thread-38) Added...
+Server Time 9.745: Connection Accepted...
+Server Time 9.827: Starting the game servertest instance id 8
+Server Time 9.832: Task Game Instance 8 (Thread-41) Added...
+Server Time 14.253: user mmicciolo joined the lobby "Computer Science 1" playing "servertest"
+Server Time 14.832: Heart Beat
+Server Time 19.832: Heart Beat
+Server Time 24.832: Heart Beat
+Server Time 29.832: Heart Beat
+Server Time 34.832: Heart Beat
+Server Time 34.958: Connection Accepted...
+Server Time 35.003: Game servertest has already been started with lobby Computer Science 1
+Server Time 38.592: user iarroyo joined the lobby "Computer Science 1" playing "servertest"
+Server Time 39.833: Heart Beat
+Server Time 44.832: Heart Beat
+Server Time 49.832: Heart Beat
+Server Time 54.832: Heart Beat
+Server Time 54.868: User iarroyo is disconnecting...
+Server Time 54.887: Client Disconnected... (async close)
+Server Time 59.832: Heart Beat

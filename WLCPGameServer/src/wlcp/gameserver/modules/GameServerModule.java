@@ -119,7 +119,7 @@ public class GameServerModule extends Module implements IModule {
 		@Override
 		public void completed(Integer result, ClientData clientData) {
 			if(result > 0) {
-				PacketDistributorTask packetDistributor = (PacketDistributorTask) ((TaskManagerModule) ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).getTasks().get(0);
+				PacketDistributorTask packetDistributor = (PacketDistributorTask) ((TaskManagerModule) ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).getTasksByType(PacketDistributorTask.class).get(0);
 				packetDistributor.DataRecieved(clientData);
 				clientData.setBuffer(ByteBuffer.allocate(65535));
 				clientData.getClientSocket().read(clientData.getBuffer(), clientData, this);

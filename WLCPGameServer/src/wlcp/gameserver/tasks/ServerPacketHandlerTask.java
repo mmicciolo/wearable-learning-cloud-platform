@@ -34,7 +34,7 @@ public class ServerPacketHandlerTask extends Task implements ITask {
 		super("Server Packet Handler");
 		recievedPackets = new LinkedList<PacketClientData>();
 		entityManager = new JPAEntityManager();
-		packetDistributor = (PacketDistributorTask) ((TaskManagerModule) ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).getTasks().get(0);
+		packetDistributor = (PacketDistributorTask) ((TaskManagerModule) ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).getTasksByType(PacketDistributorTask.class).get(0);
 		logger = (LoggerModule) ModuleManager.getInstance().getModule(Modules.LOGGER);
 	}
 	
@@ -91,12 +91,10 @@ public class ServerPacketHandlerTask extends Task implements ITask {
 		
 		//2. Make sure the game lobby exists
 		//3. Make sure a game instance of the lobby has not already been started
-		for(Task task : ((TaskManagerModule)ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).getTasks()) {
-			if(task instanceof GameInstanceTask) {
-				if(((GameInstanceTask)task).getGameLobby().getGameLobbyId() == startGameInstancePacket.getGameLobbyId()) {
-					logger.write("Game " + game.getGameId() + " has already been started with lobby " + ((GameInstanceTask)task).getGameLobby().getGameLobbyName());
-					return;
-				}
+		for(Task task : ((TaskManagerModule) ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).getTasksByType(GameInstanceTask.class)) {
+			if(((GameInstanceTask)task).getGameLobby().getGameLobbyId() == startGameInstancePacket.getGameLobbyId()) {
+				logger.write("Game " + game.getGameId() + " has already been started with lobby " + ((GameInstanceTask)task).getGameLobby().getGameLobbyName());
+				return;
 			}
 		}
 		//4. Create the instance

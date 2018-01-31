@@ -257,19 +257,13 @@ public class PacketDistributorTask extends Task implements ITask {
 			while(recievedPackets.size() > 0) {
 				PacketClientData data = recievedPackets.removeFirst();
 				if(data.packet instanceof GamePacket) {
-					for(Task task : ((TaskManagerModule) ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).getTasks()) {
-						if(task instanceof GameInstanceTask) {
-							if(((GameInstanceTask) task).getGameInstanceId() == ((GamePacket) data.packet).getGameInstanceId()) {
-								((GameInstanceTask) task).DistributePacket(data);
-							}
-						}
+					for(Task task : ((TaskManagerModule) ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).getTasksByType(GameInstanceTask.class)) {
+						((GameInstanceTask) task).DistributePacket(data);
 					}
 				}
 				if(data.packet instanceof ServerPacket) {
-					for(Task task : ((TaskManagerModule) ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).getTasks()) {
-						if(task instanceof ServerPacketHandlerTask) {
-							((ServerPacketHandlerTask) task).DistributePacket(data);
-						}
+					for(Task task : ((TaskManagerModule) ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).getTasksByType(ServerPacketHandlerTask.class)) {
+						((ServerPacketHandlerTask) task).DistributePacket(data);
 					}
 				}
 			}

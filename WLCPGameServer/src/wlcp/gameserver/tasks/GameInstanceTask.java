@@ -84,7 +84,7 @@ public class GameInstanceTask extends Task implements ITask {
 		this.gameLobby = gameLobby;
 		logger = (LoggerModule) ModuleManager.getInstance().getModule(Modules.LOGGER);
 		logger.write("Starting the game " + game.getGameId() + " instance id " + gameInstance.getGameInstanceId());
-		packetDistributor = (PacketDistributorTask) ((TaskManagerModule) ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).getTasks().get(0);
+		packetDistributor = (PacketDistributorTask) ((TaskManagerModule) ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).getTasksByType(PacketDistributorTask.class).get(0);
 		recievedPackets = new LinkedList<PacketClientData>();
 		players = new ArrayList<Player>();
 		entityManager = new JPAEntityManager();

@@ -6,7 +6,7 @@ public class GenerateStartFunctionStep implements ITranspilerStep {
 	public String PerformStep() {
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append("   " + "start : function() {\n");
-		stringBuilder.append("      " + "while(true) {\n");
+		stringBuilder.append("      " + "while(this.running) {\n");
 		stringBuilder.append("         " + "if(this.state != this.oldState) {\n");
 		stringBuilder.append("            " + "this.oldState = this.state;\n");
 		stringBuilder.append("            " + "this.stateMachine(this.state);\n");

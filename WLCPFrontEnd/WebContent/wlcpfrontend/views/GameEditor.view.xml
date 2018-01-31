@@ -33,7 +33,7 @@
 							<OverflowToolbarLayoutData priority="Low" />
 						</layoutData>
 					</Button>
-					<Button id="runButton" text="Run" type="Transparent" icon="sap-icon://begin" enabled="false">
+					<Button id="runButton" text="Run" type="Transparent" icon="sap-icon://begin" enabled="false" press="runGame">
 						<layoutData>
 							<OverflowToolbarLayoutData priority="Low" />
 						</layoutData>

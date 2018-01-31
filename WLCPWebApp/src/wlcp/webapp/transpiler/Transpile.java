@@ -1,6 +1,8 @@
 package wlcp.webapp.transpiler;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,6 +17,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.persistence.config.PersistenceUnitProperties;
 
+import com.google.gson.Gson;
+
+import wlcp.transpiler.JavaScriptTranspiler;
+
 /**
  * Servlet implementation class Transpile
  */
@@ -24,7 +30,7 @@ public class Transpile extends HttpServlet {
 	
 	private EntityManagerFactory entityManagerFactory = null;
 	private EntityManager entityManager = null;
-	//private JavaScriptTranspiler transpiler = null;
+	private JavaScriptTranspiler transpiler = null;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -32,19 +38,25 @@ public class Transpile extends HttpServlet {
     public Transpile() {
         super();
         // TODO Auto-generated constructor stub
+		initJPA();
+        transpiler = new JavaScriptTranspiler(entityManager);
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
 		
-		initJPA();
+		String gameId = request.getParameter("gameId");
+	
+		String transpiledCode = transpiler.Transpile(gameId);
 		
-		//transpiler = new JavaScriptTranspiler(entityManager);
-		//transpiler.Transpile("test");
+		PrintWriter pw = new PrintWriter(new FileOutputStream("C:/Users/Matt/git/wearable-learning-cloud-platform/WLCPGameServer/programs/" + gameId + ".js", false));
+		pw.println(transpiledCode);
+		pw.close();
+		
+		response.setContentType("text/plain");
+		response.setStatus(HttpServletResponse.SC_OK);
 	}
 
 	/**

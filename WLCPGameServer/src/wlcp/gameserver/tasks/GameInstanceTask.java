@@ -275,7 +275,7 @@ public class GameInstanceTask extends Task implements ITask {
 		
 		//Get the filename of script for the game
 		try {
-			fileReader = new FileReader("programs/test2.js");
+			fileReader = new FileReader("programs/" + game.getGameId() + ".js");
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

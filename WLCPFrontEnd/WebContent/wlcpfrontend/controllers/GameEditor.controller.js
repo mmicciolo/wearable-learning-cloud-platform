@@ -264,6 +264,22 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		this.busy.close();
 	},
 	
+	runGame : function() {
+		//Open the busy dialog
+		this.busy = new sap.m.BusyDialog();
+		this.busy.open();
+		$.ajax({url: ODataModel.getWebAppURL() + "/Transpile", type: 'POST', dataType: 'text', data: 'gameId=' + this.gameModel.GameId, success : $.proxy(this.runSuccess, this), error : $.proxy(this.runError, this)});
+	},
+	
+	runSuccess : function() {
+		this.busy.close();
+	},
+	
+	runError : function() {
+		sap.m.MessageBox.error("There was an error running...");
+		this.busy.close();
+	},
+	
 	resetEditor : function() {
 		for(var i = 0; i < this.stateList.length; i++) {
 			this.jsPlumbInstance.remove(this.stateList[i].htmlId);

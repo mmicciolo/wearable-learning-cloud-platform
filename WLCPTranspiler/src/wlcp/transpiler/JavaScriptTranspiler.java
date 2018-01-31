@@ -11,6 +11,7 @@ import wlcp.model.master.state.OutputState;
 import wlcp.model.master.state.StartState;
 import wlcp.model.master.transition.Transition;
 import wlcp.transpiler.steps.GenerateNameSpaceAndVariablesStep;
+import wlcp.transpiler.steps.GenerateSetGameVariablesStep;
 import wlcp.transpiler.steps.GenerateStartFunctionStep;
 import wlcp.transpiler.steps.GenerateStateEnumStep;
 import wlcp.transpiler.steps.GenerateStateMachineFunctionsStep;
@@ -20,8 +21,8 @@ import wlcp.transpiler.steps.ITranspilerStep;
 public class JavaScriptTranspiler implements ITranspiler {
 	
 	private EntityManager entityManager = null;
-	private StringBuilder stringBuilder = new StringBuilder();
-	private List<ITranspilerStep> transpilerSteps = new ArrayList<ITranspilerStep>();
+	private StringBuilder stringBuilder;
+	private List<ITranspilerStep> transpilerSteps;
 	
 	private Game game;
 	private StartState startState;
@@ -43,7 +44,13 @@ public class JavaScriptTranspiler implements ITranspiler {
 	}
 
 	@Override
-	public void Transpile(String gameId) {
+	public String Transpile(String gameId) {
+		
+		//Clear the step list
+		transpilerSteps = new ArrayList<ITranspilerStep>();
+		
+		//Create a new string builder
+		stringBuilder = new StringBuilder();
 		
 		//Load the data
 		LoadData(gameId);
@@ -56,7 +63,8 @@ public class JavaScriptTranspiler implements ITranspiler {
 			stringBuilder.append(step.PerformStep());
 		}
 		
-		System.out.println(stringBuilder.toString());
+		return stringBuilder.toString();
+		//System.out.println(stringBuilder.toString());
 	}
 	
 	private void SetupTranspilerSteps() {
@@ -65,6 +73,7 @@ public class JavaScriptTranspiler implements ITranspiler {
 		transpilerSteps.add(new GenerateStartFunctionStep());
 		transpilerSteps.add(new GenerateStateMachineStep(startState, outputStates));
 		transpilerSteps.add(new GenerateStateMachineFunctionsStep(game, startState, outputStates, connections, transitions));
+		transpilerSteps.add(new GenerateSetGameVariablesStep());
 	}
 
 }

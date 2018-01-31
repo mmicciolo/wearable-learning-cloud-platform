@@ -4,6 +4,6 @@ public interface ITranspiler {
 	
 	public void LoadData(String gameId);
 	
-	public void Transpile(String gameId);
+	public String Transpile(String gameId);
 
 }

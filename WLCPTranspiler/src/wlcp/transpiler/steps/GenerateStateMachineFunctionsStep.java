@@ -53,7 +53,7 @@ public class GenerateStateMachineFunctionsStep implements ITranspilerStep {
 				GenerateFunctions(outputStates.get(stateCount - 1));
 			}
 		}
-		stringBuilder.append("}");
+		stringBuilder.append("};\n\n");
 		return stringBuilder.toString();
 	}
 	

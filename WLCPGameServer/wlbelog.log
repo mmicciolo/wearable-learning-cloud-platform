@@ -17,14 +17,29 @@ Server Time 0.023: Setting up Task Manager...
 Server Time 0.023: Module TASK_MANAGER Added...
 Server Time 0.024: Task Packet Distributor (Thread-36) Added...
 Server Time 0.063: Task Server Packet Handler (Thread-38) Added...
-Server Time 2.141: Connection Accepted...
-Server Time 2.199: Starting the game servertest instance id 115
-Server Time 2.203: Task Game Instance 115 (Thread-41) Added...
-Server Time 6.948: user mmicciolo joined the lobby "Computer Science 1" playing "servertest"
-Server Time 7.203: Heart Beat
-Server Time 12.203: Heart Beat
-Server Time 13.516: Connection Accepted...
-Server Time 13.557: Game servertest has already been started with lobby Computer Science 1
-Server Time 17.204: Heart Beat
-Server Time 17.207: User mmicciolo playing in the lobby Computer Science 1 timed out!
-Server Time 17.207: Client Disconnected... (async close)
+Server Time 2.361: Connection Accepted...
+Server Time 2.404: Starting the game servertest instance id 5
+Server Time 2.408: Task Game Instance 5 (Thread-41) Added...
+Server Time 9.099: user mmicciolo joined the lobby "Computer Science 1" playing "servertest"
+Server Time 12.408: Heart Beat
+Server Time 17.408: Heart Beat
+Server Time 22.408: Heart Beat
+Server Time 27.408: Heart Beat
+Server Time 32.408: Heart Beat
+Server Time 37.408: Heart Beat
+Server Time 42.408: Heart Beat
+Server Time 47.409: Heart Beat
+Server Time 52.408: Heart Beat
+Server Time 57.408: Heart Beat
+Server Time 62.409: Heart Beat
+Server Time 67.408: Heart Beat
+Server Time 72.408: Heart Beat
+Server Time 77.408: Heart Beat
+Server Time 82.408: Heart Beat
+Server Time 87.408: Heart Beat
+Server Time 92.408: Heart Beat
+Server Time 97.409: Heart Beat
+Server Time 102.408: Heart Beat
+Server Time 107.408: Heart Beat
+Server Time 112.409: Heart Beat
+Server Time 117.408: Heart Beat

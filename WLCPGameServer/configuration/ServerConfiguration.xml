@@ -4,4 +4,8 @@
 	
 	<DebugServerHostName>127.0.0.1</DebugServerHostName>
 	<DebugServerPortNumber>3334</DebugServerPortNumber>
+	
+	<ProgramDirectory></ProgramDirectory>
+	<HeartbeatTimeOut>30000</HeartbeatTimeOut>
+	
 </Server>

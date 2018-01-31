@@ -18,6 +18,7 @@ public class GenerateNameSpaceAndVariablesStep implements ITranspilerStep {
 		stringBuilder.append("   " + "team : 0,\n");
 		stringBuilder.append("   " + "player : 0,\n");
 		stringBuilder.append("   " + "playerVM : null,\n\n");
+		stringBuilder.append("   " + "running : true,\n");
 		stringBuilder.append("   " + "state : states." + startState.getStateId() + ",\n");
 		stringBuilder.append("   " + "oldState : null,\n\n");
 		return stringBuilder.toString();

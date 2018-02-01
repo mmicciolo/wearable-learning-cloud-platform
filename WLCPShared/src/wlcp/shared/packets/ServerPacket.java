@@ -25,6 +25,6 @@ public class ServerPacket extends Packet implements IPacket {
 		//Call the super method
 		super.assemblePacket();
 		
-		return byteBuffer;
+		return super.assembleOutputBytes();
 	}
 }

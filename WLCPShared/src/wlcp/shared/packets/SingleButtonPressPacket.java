@@ -28,7 +28,7 @@ public class SingleButtonPressPacket extends GamePacket implements IPacket {
 		super.populateData(byteBuffer);
 		
 		//Get the button press
-		buttonPress = byteBuffer.getInt();
+		buttonPress = getInt();
 	}
 
 	@Override
@@ -38,13 +38,10 @@ public class SingleButtonPressPacket extends GamePacket implements IPacket {
 		super.assemblePacket();
 		
 		//Put the button press
-		byteBuffer.putInt(buttonPress);
-
-		//Flip the buffer
-		byteBuffer.flip();
+		putInt(buttonPress);
 		
 		//Return the buffer
-		return byteBuffer;
+		return super.assembleOutputBytes();
 	}
 
 	public int getButtonPress() {

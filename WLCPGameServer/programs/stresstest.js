@@ -50,7 +50,7 @@ var FSMGame = {
    stresstest_state_2 : function() {
       this.playerVM.DisplayText("Yo!");
       this.state = states.stresstest_state_1;
-   },
+   }
 
 };
 

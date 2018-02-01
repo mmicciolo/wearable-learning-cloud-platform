@@ -23,13 +23,13 @@ public class GamePacket extends Packet implements IPacket {
 		super.populateData(byteBuffer);
 		
 		//Set the game instance id
-		gameInstanceId = byteBuffer.getInt();
+		gameInstanceId = getInt();
 		
 		//Get the team
-		team = byteBuffer.getInt();
+		team = getInt();
 		
 		//Get the player
-		player = byteBuffer.getInt();
+		player = getInt();
 	}
 
 	@Override
@@ -39,16 +39,16 @@ public class GamePacket extends Packet implements IPacket {
 		super.assemblePacket();
 		
 		//Put the game instance id
-		byteBuffer.putInt(gameInstanceId);
+		putInt(gameInstanceId);
 		
 		//Put the team
-		byteBuffer.putInt(team);
+		putInt(team);
 		
 		//Put the player
-		byteBuffer.putInt(player);
+		putInt(player);
 		
 		//Return the buffer
-		return byteBuffer;
+		return super.assembleOutputBytes();
 	}
 
 	public int getGameInstanceId() {

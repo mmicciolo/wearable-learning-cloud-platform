@@ -31,10 +31,7 @@ public class ConnectAcceptedPacket extends GamePacket implements IPacket {
 		//Call the super method
 		super.assemblePacket();
 		
-		//Flip the buffer
-		byteBuffer.flip();
-		
-		return byteBuffer;
+		return super.assembleOutputBytes();
 	}
 
 }

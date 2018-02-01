@@ -34,17 +34,11 @@ public class DisplayTextPacket extends GamePacket implements IPacket {
 		//Call the super method to put the type
 		super.assemblePacket();
 		
-		//Set the text length
-		byteBuffer.putInt(displayText.length());
-		
-		//Put the string
-		byteBuffer.put(displayText.getBytes());
-
-		//Flip the buffer
-		byteBuffer.flip();
+		//Put display text
+		putString(displayText);
 		
 		//Return the buffer
-		return byteBuffer;
+		return super.assembleOutputBytes();
 	}
 
 	public String getDisplayText() {

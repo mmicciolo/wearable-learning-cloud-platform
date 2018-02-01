@@ -26,7 +26,7 @@ public class GameInstanceStartedPacket extends Packet implements IPacket {
 		super.populateData(byteBuffer);
 		
 		//Get the game instance
-		gameInstanceId = byteBuffer.getInt();
+		gameInstanceId = getInt();
 	}
 
 	@Override
@@ -36,13 +36,10 @@ public class GameInstanceStartedPacket extends Packet implements IPacket {
 		super.assemblePacket();
 		
 		//Put the game instance
-		byteBuffer.putInt(gameInstanceId);
-
-		//Flip the buffer
-		byteBuffer.flip();
+		putInt(gameInstanceId);
 		
 		//Return the buffer
-		return byteBuffer;
+		return super.assembleOutputBytes();
 	}
 
 	public int getGameInstanceId() {

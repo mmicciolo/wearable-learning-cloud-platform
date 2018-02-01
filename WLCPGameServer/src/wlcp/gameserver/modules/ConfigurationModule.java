@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import wlcp.gameserver.config.Configurations;
+import wlcp.gameserver.config.HeartbeatConfiguration;
 import wlcp.gameserver.config.IConfiguration;
 import wlcp.gameserver.config.ServerConfiguration;
 import wlcp.gameserver.module.IModule;
@@ -26,6 +27,7 @@ public class ConfigurationModule extends Module implements IModule {
 		ModuleManager.getInstance().addModule(this);
 		configurations = new ArrayList<IConfiguration>();
 		configurations.add(new ServerConfiguration(new File("configuration/ServerConfiguration.xml")));
+		configurations.add(new HeartbeatConfiguration(new File("configuration/HeartbeatConfiguration.xml")));
 		ParseConfigurations();
 	}
 	

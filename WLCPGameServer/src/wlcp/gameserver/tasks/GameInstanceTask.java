@@ -17,9 +17,13 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import wlcp.gameserver.common.JPAEntityManager;
 import wlcp.gameserver.common.PlayerVM;
 import wlcp.gameserver.common.UsernameClientData;
+import wlcp.gameserver.config.Configurations;
+import wlcp.gameserver.config.Configurations.*;
+import wlcp.gameserver.config.HeartbeatConfiguration;
 import wlcp.gameserver.model.ClientData;
 import wlcp.gameserver.module.ModuleManager;
 import wlcp.gameserver.module.Modules;
+import wlcp.gameserver.modules.ConfigurationModule;
 import wlcp.gameserver.modules.LoggerModule;
 import wlcp.gameserver.modules.TaskManagerModule;
 import wlcp.gameserver.task.ITask;
@@ -75,7 +79,7 @@ public class GameInstanceTask extends Task implements ITask {
 	private JPAEntityManager entityManager;
 	
 	private Timer heartbeatTimer;
-	private TimerTask heartbeatTimerTask; 
+	private TimerTask heartbeatTimerTask;
 	
 	public GameInstanceTask(GameInstance gameInstance, Game game, GameLobby gameLobby) {
 		super("Game Instance " + gameInstance.getGameInstanceId());
@@ -88,9 +92,17 @@ public class GameInstanceTask extends Task implements ITask {
 		recievedPackets = new LinkedList<PacketClientData>();
 		players = new ArrayList<Player>();
 		entityManager = new JPAEntityManager();
-		heartbeatTimerTask = new TimerTask(){public void run() {SendHeartBeat();}};
-		heartbeatTimer = new Timer();
-		heartbeatTimer.scheduleAtFixedRate(heartbeatTimerTask, 5000, 5000);
+		CheckHeartbeatconfig();
+	}
+	
+	private void CheckHeartbeatconfig() {
+		ConfigurationModule config = (ConfigurationModule) ModuleManager.getInstance().getModule(Modules.CONFIGURATION);
+		HeartbeatConfiguration c = (HeartbeatConfiguration) config.getConfiguration(Configurations.HEARTBEAT);
+		if(c.isHeartBeatEnable()) {
+			heartbeatTimerTask = new TimerTask(){public void run() {SendHeartBeat();}};
+			heartbeatTimer = new Timer();
+			heartbeatTimer.scheduleAtFixedRate(heartbeatTimerTask, c.getHeartBeatTimeoutTime(), c.getHeartBeatTimeoutTime());
+		}
 	}
 	
 	public void DistributePacket(PacketClientData packetClientData) {

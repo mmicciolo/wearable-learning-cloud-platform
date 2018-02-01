@@ -1,11 +1,16 @@
 package wlcp.shared.packet;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 
 public class Packet implements IPacket{
 	
 	private PacketTypes packetType;
-	protected ByteBuffer byteBuffer;
+	//protected ByteBuffer byteBuffer;
+	protected ByteArrayOutputStream outputBytes;
+	protected ByteArrayInputStream inputBytes;
 	
 	public Packet(PacketTypes packetType) {
 		this.packetType = packetType;
@@ -13,15 +18,62 @@ public class Packet implements IPacket{
 
 	@Override
 	public void populateData(ByteBuffer byteBuffer) {
-		this.byteBuffer = byteBuffer;
-		packetType = PacketTypes.values()[byteBuffer.get()];
+		inputBytes = new ByteArrayInputStream(byteBuffer.array());
+		packetType = PacketTypes.values()[inputBytes.read()];
 	}
 
 	@Override
 	public ByteBuffer assemblePacket() {
-		byteBuffer = ByteBuffer.allocate(65535);
-		byteBuffer.put((byte)packetType.ordinal());
-		return byteBuffer;
+		outputBytes = new ByteArrayOutputStream();
+		outputBytes.write((byte)packetType.ordinal());
+		return assembleOutputBytes();
+	}
+	
+	public ByteBuffer assembleOutputBytes() {
+		ByteBuffer buffer = ByteBuffer.allocate(outputBytes.size());
+		buffer.put(outputBytes.toByteArray());
+		buffer.flip();
+		return buffer;
+	}
+	
+	public void putByte(byte b) {
+		outputBytes.write(b);
+	}
+	
+	public byte getByte() {
+		return (byte) inputBytes.read();
+	}
+	
+	public void putInt(int integer) {
+		outputBytes.write((integer >> 24) & 0xFF);
+		outputBytes.write((integer >> 16) & 0xFF);
+		outputBytes.write((integer >> 28) & 0xFF);
+		outputBytes.write(integer & 0xFF);
+	}
+	
+	public int getInt() {
+		byte[] bytes = new byte[4];
+		inputBytes.read(bytes, 0, 4);
+		return ByteBuffer.wrap(bytes).getInt();
+	}
+	
+	public void putString(String string) {
+		putInt(string.length());
+		try {
+			outputBytes.write(string.getBytes());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public String getString() {
+		String returnString = "";
+		int charCount = getInt();
+		for(int i = 0; i < charCount; i++) {
+			returnString += (char) inputBytes.read();
+		}
+		return returnString;
 	}
 	
 	/**
@@ -29,14 +81,14 @@ public class Packet implements IPacket{
 	 * @param buffer char buffer
 	 * @return string from char buffer
 	 */
-	public String getString() {
-		String returnString = "";
-		int charCount = byteBuffer.getInt();
-		for(int i = 0; i < charCount; i++) {
-			returnString += (char) byteBuffer.get();
-		}
-		return returnString;
-	}
+//	public String getString() {
+//		String returnString = "";
+//		int charCount = byteBuffer.getInt();
+//		for(int i = 0; i < charCount; i++) {
+//			returnString += (char) byteBuffer.get();
+//		}
+//		return returnString;
+//	}
 
 	@Override
 	public PacketTypes getType() {

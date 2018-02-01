@@ -37,11 +37,11 @@ public class GameLobbiesPacket extends ServerPacket implements IPacket {
 		username = getString();
 		
 		//Get the games count
-		int gamesCount = byteBuffer.getInt();
+		int gamesCount = getInt();
 		
 		//Loop through all of the games
 		for(int i = 0; i < gamesCount; i++) {
-			gameLobbyInfo.add(new GameLobbyInfo(getString(), getString(), byteBuffer.getInt(), byteBuffer.getInt()));
+			gameLobbyInfo.add(new GameLobbyInfo(getString(), getString(), getInt(), getInt()));
 		}
 	}
 
@@ -51,38 +51,30 @@ public class GameLobbiesPacket extends ServerPacket implements IPacket {
 		//Call the super method to put the type
 		super.assemblePacket();
 		
-		//Set username length
-		byteBuffer.putInt(username.length());
-	
-		//Put the username
-		byteBuffer.put(username.getBytes());
+		//Set username
+		putString(username);
 		
 		//Put the games count
-		byteBuffer.putInt(gameLobbyInfo.size());
+		putInt(gameLobbyInfo.size());
 		
 		//Loop through all of the games
 		for(GameLobbyInfo gli : gameLobbyInfo) {
 
 			//Put game name
-			byteBuffer.putInt(gli.gameName.length());
-			byteBuffer.put(gli.gameName.getBytes());
+			putString(gli.gameName);
 			
 			//Put game lobby name
-			byteBuffer.putInt(gli.gameLobbyName.length());
-			byteBuffer.put(gli.gameLobbyName.getBytes());
+			putString(gli.gameLobbyName);
 			
 			//Put game lobby id
-			byteBuffer.putInt(gli.gameLobbyId);
+			putInt(gli.gameLobbyId);
 			
 			//Put game instance id
-			byteBuffer.putInt(gli.gameInstanceId);
+			putInt(gli.gameInstanceId);
 		}
 		
-		//Flip the buffer
-		byteBuffer.flip();
-		
 		//Return the buffer
-		return byteBuffer;
+		return super.assembleOutputBytes();
 	}
 
 	public String getUsername() {

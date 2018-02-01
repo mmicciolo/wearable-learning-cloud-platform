@@ -34,10 +34,10 @@ public class ConnectPacket extends GamePacket implements IPacket {
 		username = getString();
 		
 		//Get the selected game lobby id
-		selectedGameLobbyId = byteBuffer.getInt();
+		selectedGameLobbyId = getInt();
 		
 		//Get the team number
-		teamNumber = byteBuffer.get();
+		teamNumber = getByte();
 	}
 
 	@Override
@@ -46,23 +46,17 @@ public class ConnectPacket extends GamePacket implements IPacket {
 		//Call the super method to put the type
 		super.assemblePacket();
 		
-		//Set username length
-		byteBuffer.putInt(username.length());
-	
-		//Put the username
-		byteBuffer.put(username.getBytes());
+		//Set username
+		putString(username);
 		
 		//Put the selected game lobby id
-		byteBuffer.putInt(selectedGameLobbyId);
+		putInt(selectedGameLobbyId);
 		
 		//Put the team number
-		byteBuffer.put(teamNumber);
-		
-		//Flip the buffer
-		byteBuffer.flip();
+		putByte(teamNumber);
 		
 		//Return the buffer
-		return byteBuffer;
+		return super.assembleOutputBytes();
 	}
 
 	public String getUsername() {

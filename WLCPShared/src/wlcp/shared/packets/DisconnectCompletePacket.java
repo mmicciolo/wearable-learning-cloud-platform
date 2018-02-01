@@ -25,10 +25,7 @@ public class DisconnectCompletePacket extends Packet implements IPacket {
 		//Call the super method to put the type
 		super.assemblePacket();
 		
-		//Flip the buffer
-		byteBuffer.flip();
-		
 		//Return the buffer
-		return byteBuffer;
+		return super.assembleOutputBytes();
 	}
 }

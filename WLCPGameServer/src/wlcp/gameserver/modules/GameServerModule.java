@@ -121,7 +121,8 @@ public class GameServerModule extends Module implements IModule {
 			if(result > 0) {
 				PacketDistributorTask packetDistributor = (PacketDistributorTask) ((TaskManagerModule) ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).getTasksByType(PacketDistributorTask.class).get(0);
 				packetDistributor.DataRecieved(clientData);
-				clientData.setBuffer(ByteBuffer.allocate(65535));
+				clientData.setBuffer(ByteBuffer.allocate(1000));
+				//clientData.getBuffer().clear();
 				clientData.getClientSocket().read(clientData.getBuffer(), clientData, this);
 			} else if(result == -1) {
 				
@@ -150,9 +151,11 @@ public class GameServerModule extends Module implements IModule {
 				return;
 			} else if(exc instanceof IOException) {
 				//If we get this, the client terminated or called close
-				if(exc.getMessage().equals("The specified network name is no longer available.\r\n")) {
-					logger.write("Client Disconnected... (terminated or closed)");
-					return;
+				if(exc.getMessage() != null) {
+					if(exc.getMessage().equals("The specified network name is no longer available.\r\n")) {
+						logger.write("Client Disconnected... (terminated or closed)");
+						return;
+					}
 				}
 			} else {
 				//Some sort of reading error occured

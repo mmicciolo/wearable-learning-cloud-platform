@@ -132,7 +132,7 @@ public class PacketDistributorTask extends Task implements ITask {
 			if(clientData.getBuffer().get() == -126) {
 				byte lengthByte = (byte) (clientData.getBuffer().get() & 127);
 				byte[] masks = new byte[4];
-				ByteBuffer byteBuffer = ByteBuffer.allocate(65535);
+				ByteBuffer byteBuffer = ByteBuffer.allocate((int)lengthByte);
 				for(int i = 0; i < 4; i++) {
 					masks[i] = clientData.getBuffer().get();
 				}
@@ -203,7 +203,7 @@ public class PacketDistributorTask extends Task implements ITask {
 	}
 	
 	public ByteBuffer HandleSocket(ByteBuffer byteBuffer) {
-		ByteBuffer bb = ByteBuffer.allocate(65535);
+		ByteBuffer bb = ByteBuffer.allocate(byteBuffer.array().length + 2);
 		bb.put((byte) -126);
 		
 		byte[] mask = {5, 28, -23, -67};

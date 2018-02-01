@@ -30,7 +30,7 @@ public class StartGameInstancePacket extends ServerPacket implements IPacket {
 		gameId = getString();
 		
 		//Populate the game lobby id
-		gameLobbyId = byteBuffer.getInt();
+		gameLobbyId = getInt();
 	}
 
 	@Override
@@ -39,19 +39,13 @@ public class StartGameInstancePacket extends ServerPacket implements IPacket {
 		//Call the super method
 		super.assemblePacket();
 		
-		//Put the string length
-		byteBuffer.putInt(gameId.length());
-		
 		//Put the game id
-		byteBuffer.put(gameId.getBytes());
+		putString(gameId);
 		
 		//Put the game lobby id
-		byteBuffer.putInt(gameLobbyId);
+		putInt(gameLobbyId);
 		
-		//Flip the buffer
-		byteBuffer.flip();
-		
-		return byteBuffer;
+		return super.assembleOutputBytes();
 	}
 
 	public String getGameId() {

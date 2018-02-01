@@ -11,7 +11,12 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+import wlcp.gameserver.config.Configurations;
+import wlcp.gameserver.config.HeartbeatConfiguration;
 import wlcp.gameserver.model.ClientData;
+import wlcp.gameserver.module.ModuleManager;
+import wlcp.gameserver.module.Modules;
+import wlcp.gameserver.modules.ConfigurationModule;
 import wlcp.gameserver.tasks.GameInstanceTask;
 import wlcp.shared.packet.IPacket;
 import wlcp.shared.packets.DisplayTextPacket;
@@ -121,7 +126,9 @@ public class PlayerVM extends Thread {
 			}
 		};
 		heartbeatTimeoutTimer = new Timer("Timer");
-		heartbeatTimeoutTimer.schedule(heartbeatTimeoutTimerTask, 5000);
+		ConfigurationModule config = (ConfigurationModule) ModuleManager.getInstance().getModule(Modules.CONFIGURATION);
+		HeartbeatConfiguration c = (HeartbeatConfiguration) config.getConfiguration(Configurations.HEARTBEAT);
+		heartbeatTimeoutTimer.schedule(heartbeatTimeoutTimerTask, c.getHeartBeatTimeoutTime());
 		heartbeatTimerRunning = true;
 	}
 	

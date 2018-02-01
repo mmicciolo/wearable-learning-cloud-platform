@@ -30,14 +30,14 @@ public class GameTeamsPacket extends GamePacket implements IPacket {
 		super.populateData(byteBuffer);
 		
 		//Get the game lobby id
-		gameLobbyId = byteBuffer.getInt();
+		gameLobbyId = getInt();
 		
 		//Get the username
 		username = getString();
 		
 		//Loop through the team numbers
-		for(int i = 0; i < byteBuffer.get(); i++) {
-			teamNumbers.add(byteBuffer.get());
+		for(int i = 0; i < getInt(); i++) {
+			teamNumbers.add(getByte());
 		}
 	}
 
@@ -48,27 +48,21 @@ public class GameTeamsPacket extends GamePacket implements IPacket {
 		super.assemblePacket();
 		
 		//Put the game lobby id
-		byteBuffer.putInt(gameLobbyId);
+		putInt(gameLobbyId);
 		
-		//Put the username length
-		byteBuffer.putInt(username.length());
-		
-		//Put the username
-		byteBuffer.put(username.getBytes());
+		//Put the username	
+		putString(username);
 		
 		//Put the team numbers list length
-		byteBuffer.putInt(teamNumbers.size());
+		putInt(teamNumbers.size());
 		
 		//Put the team numbers
 		for(Byte b : teamNumbers) {
-			byteBuffer.put(b);
+			putByte(b);
 		}
 		
-		//Flip the buffer
-		byteBuffer.flip();
-		
 		//Return the buffer
-		return byteBuffer;
+		return super.assembleOutputBytes();
 	}
 
 	public int getGameLobbyId() {

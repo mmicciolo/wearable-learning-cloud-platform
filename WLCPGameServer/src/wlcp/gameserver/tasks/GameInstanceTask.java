@@ -282,7 +282,7 @@ public class GameInstanceTask extends Task implements ITask {
 		}
 		
 		PlayerVM playerVM = new PlayerVM(this, usernameClientData, fileReader, teamPlayer.team, teamPlayer.player);
-		playerVM.start();	
+		new Thread(playerVM, "PlayerVM").start();	
 		
 		return playerVM;
 	}

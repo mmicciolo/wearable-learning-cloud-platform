@@ -19,6 +19,7 @@ import wlcp.model.master.GameInstance;
 import wlcp.model.master.GameLobby;
 import wlcp.model.master.Username;
 import wlcp.shared.packet.IPacket;
+import wlcp.shared.packets.GameInstanceStartedPacket;
 import wlcp.shared.packets.GameLobbiesPacket;
 import wlcp.shared.packets.GameLobbyInfo;
 import wlcp.shared.packets.StartGameInstancePacket;
@@ -116,6 +117,10 @@ public class ServerPacketHandlerTask extends Task implements ITask {
 		taskManager.addTask(newGameInstance);
 		
 		//5. Send back success
+		GameInstanceStartedPacket packet = new GameInstanceStartedPacket(newGameInstance.getGameInstanceId());
+		
+		//Send off the packet
+		packetDistributor.AddPacketToSend(packet, packetClientData.clientData);
 	}
 	
 	private void GetGameLobbies(PacketClientData packetClientData) {

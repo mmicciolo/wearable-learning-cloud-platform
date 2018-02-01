@@ -22,7 +22,7 @@ public class TaskManagerModule extends Module implements IModule {
 	
 	public void addTask(Task task) {
 		try {
-			new Thread(task).start();
+			new Thread(task, task.getTaskName()).start();
 			accquire();
 			tasks.add(task);
 			release();

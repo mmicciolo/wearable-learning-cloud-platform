@@ -1,5 +1,6 @@
 package wlcp.gameserver.task;
 
+import java.util.Date;
 import java.util.concurrent.Semaphore;
 
 /**
@@ -27,11 +28,16 @@ public abstract class Task extends Thread implements ITask {
 	 */
 	public void run() {
 		while(running) {
+			long start = new Date().getTime();
 			Update();
-			try {
-				Thread.sleep(17);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+			long end = new Date().getTime() - start;
+			if(end < 17) {
+				try {
+					//Thread.sleep(17);
+					Thread.sleep(17 - end);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 		CleanUp();

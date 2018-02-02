@@ -24,5 +24,7 @@ public interface IPacket {
 	 * @return PacketTypes.PacketType
 	 */
 	PacketTypes getType();
+	
+	int getPacketSize();
 
 }

@@ -8,6 +8,7 @@ import java.nio.ByteBuffer;
 public class Packet implements IPacket{
 	
 	private PacketTypes packetType;
+	private int packetSize;
 	//protected ByteBuffer byteBuffer;
 	protected ByteArrayOutputStream outputBytes;
 	protected ByteArrayInputStream inputBytes;
@@ -20,18 +21,25 @@ public class Packet implements IPacket{
 	public void populateData(ByteBuffer byteBuffer) {
 		inputBytes = new ByteArrayInputStream(byteBuffer.array());
 		packetType = PacketTypes.values()[inputBytes.read()];
+		packetSize = getInt();
 	}
 
 	@Override
 	public ByteBuffer assemblePacket() {
 		outputBytes = new ByteArrayOutputStream();
 		outputBytes.write((byte)packetType.ordinal());
+		putInt(packetSize);
 		return assembleOutputBytes();
 	}
 	
 	public ByteBuffer assembleOutputBytes() {
 		ByteBuffer buffer = ByteBuffer.allocate(outputBytes.size());
 		buffer.put(outputBytes.toByteArray());
+		packetSize = outputBytes.size();
+		int oldPos = buffer.position();
+		buffer.position(1);
+		buffer.putInt(outputBytes.size());
+		buffer.position(oldPos);
 		buffer.flip();
 		return buffer;
 	}
@@ -47,7 +55,7 @@ public class Packet implements IPacket{
 	public void putInt(int integer) {
 		outputBytes.write((integer >> 24) & 0xFF);
 		outputBytes.write((integer >> 16) & 0xFF);
-		outputBytes.write((integer >> 28) & 0xFF);
+		outputBytes.write((integer >> 8) & 0xFF);
 		outputBytes.write(integer & 0xFF);
 	}
 	
@@ -102,7 +110,9 @@ public class Packet implements IPacket{
 	public void setPacketType(PacketTypes packetType) {
 		this.packetType = packetType;
 	}
-	
-	
+
+	public int getPacketSize() {
+		return packetSize;
+	}
 
 }

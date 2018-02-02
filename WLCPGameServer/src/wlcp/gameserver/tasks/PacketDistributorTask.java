@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -284,8 +285,19 @@ public class PacketDistributorTask extends Task implements ITask {
 				if(data.clientData.isWebSocket()) { 
 					buffer = HandleSocket(buffer);
 				}
-				Future<Integer> status = data.clientData.getClientSocket().write(buffer);
-				while(!status.isDone()) {}
+
+				//We must write until all bytes of the packet have been written
+				//If this is not done, its possible not all data in the buffer is written
+				int bytesWritten = 0;
+				while(bytesWritten != data.packet.getPacketSize()) {
+					Future<Integer> status = data.clientData.getClientSocket().write(buffer);
+					while(!status.isDone()) { }
+					try {
+						bytesWritten += status.get();
+					} catch (ExecutionException e) {
+						e.printStackTrace();
+					}
+				}
 			}
 			release();
 		} catch(InterruptedException e) {

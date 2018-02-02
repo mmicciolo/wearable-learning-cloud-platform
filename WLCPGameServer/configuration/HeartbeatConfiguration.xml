@@ -1,6 +1,6 @@
 <Heartbeat>
 	
 	<HeartBeatTimeOut>true</HeartBeatTimeOut>
-	<HeartbeatTimeOutTime>30000</HeartbeatTimeOutTime>
+	<HeartbeatTimeOutTime>1000</HeartbeatTimeOutTime>
 	
 </Heartbeat>

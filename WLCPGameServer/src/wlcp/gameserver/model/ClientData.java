@@ -3,6 +3,7 @@ package wlcp.gameserver.model;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousServerSocketChannel;
 import java.nio.channels.AsynchronousSocketChannel;
+import java.util.LinkedList;
 
 import wlcp.gameserver.modules.GameServerModule;
 
@@ -13,6 +14,10 @@ public class ClientData {
 	private GameServerModule server;
 	private ByteBuffer buffer;
 	private boolean webSocket = false;
+	public LinkedList<Byte> inputBytes = new LinkedList<Byte>();
+	public int packetLength = 0;
+	public int recievedPacketAmount = 0;
+	public ByteBuffer byteBuffer;
 	
 	public ClientData(AsynchronousServerSocketChannel serverSocket, GameServerModule server) {
 		this.serverSocket = serverSocket;

@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -57,7 +58,9 @@ public class PacketDistributorTask extends Task implements ITask {
 	}
 	
 	public void DataRecieved(ClientData clientData) {
-		ByteBuffer byteBuffer = clientData.getBuffer();
+		//ByteBuffer byteBuffer = clientData.getBuffer();
+		//byteBuffer.flip();
+		ByteBuffer byteBuffer = clientData.byteBuffer;
 		byteBuffer.flip();
 		PacketTypes packetType = null;
 		try {
@@ -144,7 +147,7 @@ public class PacketDistributorTask extends Task implements ITask {
 				
 				clientData.setBuffer(byteBuffer);
 				clientData.setWebSocket(true);
-				DataRecieved(clientData);
+				//DataRecieved(clientData);
 			} else if(clientData.getBuffer().get(0) == -120) {
 				if(clientData.getBuffer().get(1) == -128) {
 					//disconnect
@@ -230,6 +233,7 @@ public class PacketDistributorTask extends Task implements ITask {
 		try {
 			accquire();
 			packet.populateData(clientData.getBuffer());
+			//packet.populateData(clientData.byteBuffer);
 			recievedPackets.add(new PacketClientData(packet, clientData));
 			release();
 		} catch (InterruptedException e) {
@@ -276,6 +280,8 @@ public class PacketDistributorTask extends Task implements ITask {
 			e.printStackTrace();
 		}
 		
+		int size = packetsToSend.size();
+		long start = new Date().getTime();
 		//Loop through packet to send
 		try {
 			accquire();
@@ -295,7 +301,7 @@ public class PacketDistributorTask extends Task implements ITask {
 					try {
 						bytesWritten += status.get();
 					} catch (ExecutionException e) {
-						e.printStackTrace();
+						//e.printStackTrace();
 					}
 				}
 			}
@@ -303,6 +309,11 @@ public class PacketDistributorTask extends Task implements ITask {
 		} catch(InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+		float time = ((new Date().getTime() - start) / 1000.0f);
+		if(time != 0.0f && size != 0) {
+			float rate = size / time;
+			//System.out.println("Packet rate: " + rate);
 		}
 	}
 	

@@ -118,14 +118,55 @@ public class GameServerModule extends Module implements IModule {
 
 		@Override
 		public void completed(Integer result, ClientData clientData) {
+			
+			//Check if we recieved more than 0 bytes
 			if(result > 0) {
-				PacketDistributorTask packetDistributor = (PacketDistributorTask) ((TaskManagerModule) ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).getTasksByType(PacketDistributorTask.class).get(0);
-				packetDistributor.DataRecieved(clientData);
-				clientData.setBuffer(ByteBuffer.allocate(1000));
-				//clientData.getBuffer().clear();
-				clientData.getClientSocket().read(clientData.getBuffer(), clientData, this);
+				//Flip the buffer
+			    clientData.getBuffer().flip();
+			  
+				//Add all of the new bytes to the linked list of bytes
+				for(int i = 0; i < result; i++) {
+					clientData.inputBytes.add(clientData.getBuffer().get());
+				}
+			  
+				//Clear the buffer so more data can be put into it
+				clientData.getBuffer().clear();
+				  
+				//We need to read until all bytes of the packet have been returned
+				//If we do not do this, full packets wont be read and data will get corrupt
+				while(true) {
+					
+			        //If we have atleast 5 bytes and already havent started reading another
+				    //packet with data we recieved from an earlier read.
+				    if(clientData.inputBytes.size() >= 5 && clientData.recievedPacketAmount == 0) {
+					    byte[] bytes = {clientData.inputBytes.get(1), clientData.inputBytes.get(2), clientData.inputBytes.get(3), clientData.inputBytes.get(4)};
+					    clientData.packetLength = ByteBuffer.wrap(bytes).getInt();
+					    clientData.recievedPacketAmount = clientData.packetLength;
+				    }
+				    
+					//If we have enough bytes to finish processing a packet
+					if(clientData.inputBytes.size() >= clientData.recievedPacketAmount && clientData.recievedPacketAmount != 0) {
+						clientData.byteBuffer = ByteBuffer.allocate(clientData.packetLength);
+						for(int i = 0; i < clientData.packetLength; i++) {
+							clientData.byteBuffer.put(clientData.inputBytes.removeFirst());
+						}
+						PacketDistributorTask packetDistributor = (PacketDistributorTask) ((TaskManagerModule) ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).getTasksByType(PacketDistributorTask.class).get(0);
+						packetDistributor.DataRecieved(clientData);
+						clientData.recievedPacketAmount = 0;
+						if(clientData.recievedPacketAmount == clientData.inputBytes.size()) {
+							clientData.getClientSocket().read(clientData.getBuffer(), clientData, this); 
+							break; 
+						} 
+					} else {
+						
+						//If we get here we havent recieved enough data, keep reading
+						if(clientData.recievedPacketAmount != 0 ) {clientData.recievedPacketAmount -= clientData.inputBytes.size();}
+						clientData.getClientSocket().read(clientData.getBuffer(), clientData, this);
+						break;
+					}
+
+				}
 			} else if(result == -1) {
-				
 				//This happens when the client shut downs without calling close
 				logger.write("Client Disconnected... (no close)");
 				

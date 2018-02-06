@@ -2,305 +2,145 @@ Server Time 0.0: Starting Module Manager...
 Server Time 0.0: Module Manager Started...
 Server Time 0.0: Module LOGGER Added...
 Server Time 0.0: Loading WLCP Game Server Configuration...
-Server Time 0.001: Module CONFIGURATION Added...
+Server Time 0.0: Module CONFIGURATION Added...
 Server Time 0.01: Parsing Server Configuration...
 Server Time 0.01: Game Server Host Name: 192.168.0.100
 Server Time 0.01: Game Server Port Number: 3333
 Server Time 0.01: Debug Server Host Name: 127.0.0.1
-Server Time 0.011: Debug Server Port Number: 3334
-Server Time 0.011: Parsing Heart Beat Configuration...
-Server Time 0.011: Heart Beat Enabled: true
-Server Time 0.011: Heart Beat Time Out Time: 1000
-Server Time 0.011: Module CONFIGURATION Added...
-Server Time 0.011: Starting WLCP Game Server...
-Server Time 0.022: Server Binded To 192.168.0.100:3333
-Server Time 0.022: Listening for connections...
-Server Time 0.024: Module SERVER Added...
-Server Time 0.024: Setting up Task Manager...
-Server Time 0.024: Module TASK_MANAGER Added...
-Server Time 0.025: Task Packet Distributor (Thread-36) Added...
-Server Time 0.064: Task Server Packet Handler (Thread-37) Added...
-Server Time 2.738: Connection Accepted...
-Server Time 2.739: Connection Accepted...
-Server Time 2.778: Starting the game stresstest instance id 306
-Server Time 2.782: Task Game Instance 306 (Thread-40) Added...
-Server Time 2.786: Starting the game stresstest instance id 307
-Server Time 2.788: Connection Accepted...
-Server Time 2.788: Connection Accepted...
-Server Time 2.788: Connection Accepted...
-Server Time 2.789: Connection Accepted...
-Server Time 2.789: Connection Accepted...
-Server Time 2.789: Connection Accepted...
-Server Time 2.79: Connection Accepted...
-Server Time 2.79: Connection Accepted...
-Server Time 2.79: Connection Accepted...
-Server Time 2.793: Task Game Instance 307 (Thread-42) Added...
-Server Time 2.804: Connection Accepted...
-Server Time 2.804: Connection Accepted...
-Server Time 2.804: Connection Accepted...
-Server Time 2.805: Connection Accepted...
-Server Time 2.805: Connection Accepted...
-Server Time 2.806: Connection Accepted...
-Server Time 2.806: Connection Accepted...
-Server Time 2.807: Connection Accepted...
-Server Time 2.807: Connection Accepted...
-Server Time 2.819: user test1 joined the lobby "Computer Science 1" playing "stresstest"
-Server Time 2.821: user test2 joined the lobby "Computer Science 1" playing "stresstest"
-Server Time 2.822: user aharrison joined the lobby "Computer Science 1" playing "stresstest"
-Server Time 2.823: user iarroyo joined the lobby "Computer Science 1" playing "stresstest"
-Server Time 2.825: user ataricco joined the lobby "Computer Science 1" playing "stresstest"
-Server Time 2.826: user thulse joined the lobby "Computer Science 1" playing "stresstest"
-Server Time 2.827: user rchantani joined the lobby "Computer Science 1" playing "stresstest"
-Server Time 2.827: user mmicciolo joined the lobby "Computer Science 1" playing "stresstest"
-Server Time 2.827: user mmicciolo joined the lobby "Computer Science 2" playing "stresstest"
-Server Time 2.828: user iarroyo joined the lobby "Computer Science 2" playing "stresstest"
-Server Time 2.828: user aharrison joined the lobby "Computer Science 2" playing "stresstest"
-Server Time 2.829: user eottmar joined the lobby "Computer Science 1" playing "stresstest"
-Server Time 2.829: user eottmar joined the lobby "Computer Science 2" playing "stresstest"
-Server Time 2.829: user test2 joined the lobby "Computer Science 2" playing "stresstest"
-Server Time 2.83: user test1 joined the lobby "Computer Science 2" playing "stresstest"
-Server Time 2.831: user rchantani joined the lobby "Computer Science 2" playing "stresstest"
-Server Time 2.831: user ataricco joined the lobby "Computer Science 2" playing "stresstest"
-Server Time 2.831: user thulse joined the lobby "Computer Science 2" playing "stresstest"
-Server Time 3.785: Heart Beat
-Server Time 3.847: Heart Beat
-Server Time 4.81: Heart Beat
-Server Time 4.81: Heart Beat
-Server Time 5.798: Heart Beat
-Server Time 5.799: Heart Beat
-Server Time 6.792: Heart Beat
-Server Time 6.794: Heart Beat
-Server Time 7.831: Heart Beat
-Server Time 7.832: Heart Beat
-Server Time 8.806: Heart Beat
-Server Time 8.807: Heart Beat
-Server Time 9.852: Heart Beat
-Server Time 9.853: Heart Beat
-Server Time 10.784: Heart Beat
-Server Time 10.854: Heart Beat
-Server Time 11.825: Heart Beat
-Server Time 11.826: Heart Beat
-Server Time 12.838: Heart Beat
-Server Time 12.838: Heart Beat
-Server Time 13.784: Heart Beat
-Server Time 13.856: Heart Beat
-Server Time 14.785: Heart Beat
-Server Time 14.794: Heart Beat
-Server Time 15.829: Heart Beat
-Server Time 15.829: Heart Beat
-Server Time 16.784: Heart Beat
-Server Time 16.795: Heart Beat
-Server Time 17.835: Heart Beat
-Server Time 17.835: Heart Beat
-Server Time 18.833: Heart Beat
-Server Time 18.833: Heart Beat
-Server Time 19.802: Heart Beat
-Server Time 19.802: Heart Beat
-Server Time 20.818: Heart Beat
-Server Time 20.818: Heart Beat
-Server Time 21.783: Heart Beat
-Server Time 21.834: Heart Beat
-Server Time 22.836: Heart Beat
-Server Time 22.836: Heart Beat
-Server Time 23.843: Heart Beat
-Server Time 23.844: Heart Beat
-Server Time 24.783: Heart Beat
-Server Time 24.854: Heart Beat
-Server Time 25.783: Heart Beat
-Server Time 25.859: Heart Beat
-Server Time 26.821: Heart Beat
-Server Time 26.821: Heart Beat
-Server Time 27.784: Heart Beat
-Server Time 27.851: Heart Beat
-Server Time 28.806: Heart Beat
-Server Time 28.806: Heart Beat
-Server Time 29.8: Heart Beat
-Server Time 29.8: Heart Beat
-Server Time 30.82: Heart Beat
-Server Time 30.82: Heart Beat
-Server Time 31.807: Heart Beat
-Server Time 31.807: Heart Beat
-Server Time 32.837: Heart Beat
-Server Time 32.837: Heart Beat
-Server Time 33.784: Heart Beat
-Server Time 33.795: Heart Beat
-Server Time 34.783: Heart Beat
-Server Time 34.81: Heart Beat
-Server Time 35.784: Heart Beat
-Server Time 35.794: Heart Beat
-Server Time 36.819: Heart Beat
-Server Time 36.819: Heart Beat
-Server Time 37.783: Heart Beat
-Server Time 37.794: Heart Beat
-Server Time 38.803: Heart Beat
-Server Time 38.803: Heart Beat
-Server Time 39.784: Heart Beat
-Server Time 39.85: Heart Beat
-Server Time 40.832: Heart Beat
-Server Time 40.832: Heart Beat
-Server Time 41.802: Heart Beat
-Server Time 41.802: Heart Beat
-Server Time 42.829: Heart Beat
-Server Time 42.829: Heart Beat
-Server Time 43.83: Heart Beat
-Server Time 43.83: Heart Beat
-Server Time 44.783: Heart Beat
-Server Time 44.815: Heart Beat
-Server Time 45.797: Heart Beat
-Server Time 45.797: Heart Beat
-Server Time 46.784: Heart Beat
-Server Time 46.849: Heart Beat
-Server Time 47.783: Heart Beat
-Server Time 47.846: Heart Beat
-Server Time 48.814: Heart Beat
-Server Time 48.814: Heart Beat
-Server Time 49.838: Heart Beat
-Server Time 49.838: Heart Beat
-Server Time 50.795: Heart Beat
-Server Time 50.796: Heart Beat
-Server Time 51.808: Heart Beat
-Server Time 51.808: Heart Beat
-Server Time 52.847: Heart Beat
-Server Time 52.847: Heart Beat
-Server Time 53.848: Heart Beat
-Server Time 53.848: Heart Beat
-Server Time 54.813: Heart Beat
-Server Time 54.814: Heart Beat
-Server Time 55.803: Heart Beat
-Server Time 55.804: Heart Beat
-Server Time 56.842: Heart Beat
-Server Time 56.842: Heart Beat
-Server Time 57.842: Heart Beat
-Server Time 57.842: Heart Beat
-Server Time 58.783: Heart Beat
-Server Time 58.794: Heart Beat
-Server Time 59.79: Heart Beat
-Server Time 59.795: Heart Beat
-Server Time 60.783: Heart Beat
-Server Time 60.855: Heart Beat
-Server Time 61.816: Heart Beat
-Server Time 61.816: Heart Beat
-Server Time 62.826: Heart Beat
-Server Time 62.826: Heart Beat
-Server Time 63.787: Heart Beat
-Server Time 63.794: Heart Beat
-Server Time 64.822: Heart Beat
-Server Time 64.822: Heart Beat
-Server Time 65.799: Heart Beat
-Server Time 65.799: Heart Beat
-Server Time 66.783: Heart Beat
-Server Time 66.848: Heart Beat
-Server Time 67.833: Heart Beat
-Server Time 67.833: Heart Beat
-Server Time 68.807: Heart Beat
-Server Time 68.807: Heart Beat
-Server Time 69.845: Heart Beat
-Server Time 69.845: Heart Beat
-Server Time 70.826: Heart Beat
-Server Time 70.826: Heart Beat
-Server Time 71.789: Heart Beat
-Server Time 71.794: Heart Beat
-Server Time 72.8: Heart Beat
-Server Time 72.801: Heart Beat
-Server Time 73.79: Heart Beat
-Server Time 73.794: Heart Beat
-Server Time 74.783: Heart Beat
-Server Time 74.859: Heart Beat
-Server Time 75.803: Heart Beat
-Server Time 75.803: Heart Beat
-Server Time 76.84: Heart Beat
-Server Time 76.841: Heart Beat
-Server Time 77.79: Heart Beat
-Server Time 77.794: Heart Beat
-Server Time 78.805: Heart Beat
-Server Time 78.805: Heart Beat
-Server Time 79.84: Heart Beat
-Server Time 79.84: Heart Beat
-Server Time 80.815: Heart Beat
-Server Time 80.816: Heart Beat
-Server Time 81.783: Heart Beat
-Server Time 81.794: Heart Beat
-Server Time 82.784: Heart Beat
-Server Time 82.794: Heart Beat
-Server Time 83.8: Heart Beat
-Server Time 83.8: Heart Beat
-Server Time 84.789: Heart Beat
-Server Time 84.795: Heart Beat
-Server Time 85.798: Heart Beat
-Server Time 85.798: Heart Beat
-Server Time 86.783: Heart Beat
-Server Time 86.794: Heart Beat
-Server Time 87.808: Heart Beat
-Server Time 87.808: Heart Beat
-Server Time 88.784: Heart Beat
-Server Time 88.862: Heart Beat
-Server Time 89.814: Heart Beat
-Server Time 89.814: Heart Beat
-Server Time 90.805: Heart Beat
-Server Time 90.806: Heart Beat
-Server Time 91.825: Heart Beat
-Server Time 91.825: Heart Beat
-Server Time 92.783: Heart Beat
-Server Time 92.857: Heart Beat
-Server Time 93.834: Heart Beat
-Server Time 93.834: Heart Beat
-Server Time 94.783: Heart Beat
-Server Time 94.857: Heart Beat
-Server Time 95.82: Heart Beat
-Server Time 95.82: Heart Beat
-Server Time 96.821: Heart Beat
-Server Time 96.821: Heart Beat
-Server Time 97.798: Heart Beat
-Server Time 97.798: Heart Beat
-Server Time 98.784: Heart Beat
-Server Time 98.795: Heart Beat
-Server Time 99.787: Heart Beat
-Server Time 99.794: Heart Beat
-Server Time 100.83: Heart Beat
-Server Time 100.83: Heart Beat
-Server Time 101.785: Heart Beat
-Server Time 101.795: Heart Beat
-Server Time 102.784: Heart Beat
-Server Time 102.794: Heart Beat
-Server Time 103.832: Heart Beat
-Server Time 103.832: Heart Beat
-Server Time 104.828: Heart Beat
-Server Time 104.828: Heart Beat
-Server Time 105.083: Client Disconnected... (terminated or closed)
-Server Time 105.083: Client Disconnected... (terminated or closed)
-Server Time 105.083: Client Disconnected... (terminated or closed)
-Server Time 105.083: Client Disconnected... (terminated or closed)
-Server Time 105.084: Client Disconnected... (terminated or closed)
-Server Time 105.084: Client Disconnected... (terminated or closed)
-Server Time 105.085: Client Disconnected... (terminated or closed)
-Server Time 105.085: Client Disconnected... (terminated or closed)
-Server Time 105.085: Client Disconnected... (terminated or closed)
-Server Time 105.086: Client Disconnected... (terminated or closed)
-Server Time 105.086: Client Disconnected... (terminated or closed)
-Server Time 105.087: Client Disconnected... (terminated or closed)
-Server Time 105.087: Client Disconnected... (terminated or closed)
-Server Time 105.088: Client Disconnected... (terminated or closed)
-Server Time 105.088: Client Disconnected... (terminated or closed)
-Server Time 105.089: Client Disconnected... (terminated or closed)
-Server Time 105.089: Client Disconnected... (terminated or closed)
-Server Time 105.089: Client Disconnected... (terminated or closed)
-Server Time 105.09: Client Disconnected... (terminated or closed)
-Server Time 105.091: Client Disconnected... (terminated or closed)
-Server Time 105.839: User ataricco playing in the lobby Computer Science 2 timed out!
-Server Time 105.839: User test2 playing in the lobby Computer Science 2 timed out!
-Server Time 105.84: User thulse playing in the lobby Computer Science 1 timed out!
-Server Time 105.84: User eottmar playing in the lobby Computer Science 2 timed out!
-Server Time 105.84: User test1 playing in the lobby Computer Science 1 timed out!
-Server Time 105.84: User test1 playing in the lobby Computer Science 2 timed out!
-Server Time 105.84: User rchantani playing in the lobby Computer Science 2 timed out!
-Server Time 105.841: User iarroyo playing in the lobby Computer Science 2 timed out!
-Server Time 105.841: User rchantani playing in the lobby Computer Science 1 timed out!
-Server Time 105.841: User aharrison playing in the lobby Computer Science 2 timed out!
-Server Time 105.841: User mmicciolo playing in the lobby Computer Science 2 timed out!
-Server Time 105.841: User test2 playing in the lobby Computer Science 1 timed out!
-Server Time 105.841: User aharrison playing in the lobby Computer Science 1 timed out!
-Server Time 105.841: User iarroyo playing in the lobby Computer Science 1 timed out!
-Server Time 105.842: User ataricco playing in the lobby Computer Science 1 timed out!
-Server Time 105.842: User mmicciolo playing in the lobby Computer Science 1 timed out!
-Server Time 105.842: User eottmar playing in the lobby Computer Science 1 timed out!
-Server Time 105.843: User thulse playing in the lobby Computer Science 2 timed out!
+Server Time 0.01: Debug Server Port Number: 3334
+Server Time 0.01: Parsing Heart Beat Configuration...
+Server Time 0.01: Heart Beat Enabled: true
+Server Time 0.01: Heart Beat Time Out Time: 1000
+Server Time 0.01: Module CONFIGURATION Added...
+Server Time 0.01: Starting WLCP Game Server...
+Server Time 0.02: Server Binded To 192.168.0.100:3333
+Server Time 0.02: Listening for connections...
+Server Time 0.022: Module SERVER Added...
+Server Time 0.022: Setting up Task Manager...
+Server Time 0.022: Module TASK_MANAGER Added...
+Server Time 0.031: Task Packet Distributor (Thread-36) Added...
+Server Time 0.069: Task Server Packet Handler (Thread-37) Added...
+Server Time 7.933: Connection Accepted...
+Server Time 7.965: Starting the game stresstest1 instance id 216
+Server Time 7.966: Connection Accepted...
+Server Time 7.969: Task Game Instance 216 (Thread-39) Added...
+Server Time 7.978: Connection Accepted...
+Server Time 7.979: Connection Accepted...
+Server Time 7.979: Connection Accepted...
+Server Time 7.98: Connection Accepted...
+Server Time 7.98: Connection Accepted...
+Server Time 7.981: Connection Accepted...
+Server Time 7.981: Connection Accepted...
+Server Time 7.982: Connection Accepted...
+Server Time 7.982: Connection Accepted...
+Server Time 7.99: Starting the game stresstest1 instance id 217
+Server Time 7.995: Task Game Instance 217 (Thread-41) Added...
+Server Time 8.007: user test1 joined the lobby "Computer Science 1" playing "stresstest1"
+Server Time 8.008: user iarroyo joined the lobby "Computer Science 1" playing "stresstest1"
+Server Time 8.01: user eottmar joined the lobby "Computer Science 1" playing "stresstest1"
+Server Time 8.01: Connection Accepted...
+Server Time 8.011: Connection Accepted...
+Server Time 8.012: Connection Accepted...
+Server Time 8.012: user thulse joined the lobby "Computer Science 1" playing "stresstest1"
+Server Time 8.012: Connection Accepted...
+Server Time 8.013: Connection Accepted...
+Server Time 8.013: Connection Accepted...
+Server Time 8.014: Connection Accepted...
+Server Time 8.014: user test2 joined the lobby "Computer Science 1" playing "stresstest1"
+Server Time 8.015: Connection Accepted...
+Server Time 8.016: Connection Accepted...
+Server Time 8.018: Connection Accepted...
+Server Time 8.019: user aharrison joined the lobby "Computer Science 1" playing "stresstest1"
+Server Time 8.021: user rchantani joined the lobby "Computer Science 1" playing "stresstest1"
+Server Time 8.021: user mmicciolo joined the lobby "Computer Science 1" playing "stresstest1"
+Server Time 8.022: user ataricco joined the lobby "Computer Science 1" playing "stresstest1"
+Server Time 8.03: user eottmar joined the lobby "Computer Science 2" playing "stresstest1"
+Server Time 8.03: user test1 joined the lobby "Computer Science 2" playing "stresstest1"
+Server Time 8.031: user aharrison joined the lobby "Computer Science 2" playing "stresstest1"
+Server Time 8.031: user rchantani joined the lobby "Computer Science 2" playing "stresstest1"
+Server Time 8.032: user test2 joined the lobby "Computer Science 2" playing "stresstest1"
+Server Time 8.033: user ataricco joined the lobby "Computer Science 2" playing "stresstest1"
+Server Time 8.033: user iarroyo joined the lobby "Computer Science 2" playing "stresstest1"
+Server Time 8.034: user mmicciolo joined the lobby "Computer Science 2" playing "stresstest1"
+Server Time 8.034: user thulse joined the lobby "Computer Science 2" playing "stresstest1"
+Server Time 8.042: Starting the game stresstest2 instance id 218
+Server Time 8.047: Task Game Instance 218 (Thread-62) Added...
+Server Time 8.062: Connection Accepted...
+Server Time 8.062: Connection Accepted...
+Server Time 8.063: Connection Accepted...
+Server Time 8.063: Connection Accepted...
+Server Time 8.063: Connection Accepted...
+Server Time 8.064: Connection Accepted...
+Server Time 8.064: Connection Accepted...
+Server Time 8.065: Connection Accepted...
+Server Time 8.066: Connection Accepted...
+Server Time 8.067: Connection Accepted...
+Server Time 8.082: user aharrison joined the lobby "Computer Science 3" playing "stresstest2"
+Server Time 8.082: user mmicciolo joined the lobby "Computer Science 3" playing "stresstest2"
+Server Time 8.083: user test1 joined the lobby "Computer Science 3" playing "stresstest2"
+Server Time 8.084: user ataricco joined the lobby "Computer Science 3" playing "stresstest2"
+Server Time 8.085: user eottmar joined the lobby "Computer Science 3" playing "stresstest2"
+Server Time 8.085: user iarroyo joined the lobby "Computer Science 3" playing "stresstest2"
+Server Time 8.085: user rchantani joined the lobby "Computer Science 3" playing "stresstest2"
+Server Time 8.086: user test2 joined the lobby "Computer Science 3" playing "stresstest2"
+Server Time 8.087: user thulse joined the lobby "Computer Science 3" playing "stresstest2"
+Server Time 8.093: Starting the game stresstest2 instance id 219
+Server Time 8.099: Task Game Instance 219 (Thread-74) Added...
+Server Time 8.113: Connection Accepted...
+Server Time 8.114: Connection Accepted...
+Server Time 8.115: Connection Accepted...
+Server Time 8.115: Connection Accepted...
+Server Time 8.116: Connection Accepted...
+Server Time 8.116: Connection Accepted...
+Server Time 8.117: Connection Accepted...
+Server Time 8.117: Connection Accepted...
+Server Time 8.118: Connection Accepted...
+Server Time 8.133: user iarroyo joined the lobby "AP Computer Science" playing "stresstest2"
+Server Time 8.134: user eottmar joined the lobby "AP Computer Science" playing "stresstest2"
+Server Time 8.134: user ataricco joined the lobby "AP Computer Science" playing "stresstest2"
+Server Time 8.134: user thulse joined the lobby "AP Computer Science" playing "stresstest2"
+Server Time 8.135: user mmicciolo joined the lobby "AP Computer Science" playing "stresstest2"
+Server Time 8.135: user test1 joined the lobby "AP Computer Science" playing "stresstest2"
+Server Time 8.135: user test2 joined the lobby "AP Computer Science" playing "stresstest2"
+Server Time 8.135: user aharrison joined the lobby "AP Computer Science" playing "stresstest2"
+Server Time 8.136: user rchantani joined the lobby "AP Computer Science" playing "stresstest2"
+Server Time 3725.561: Client Disconnected... (terminated or closed)
+Server Time 3725.561: Client Disconnected... (terminated or closed)
+Server Time 3725.561: Client Disconnected... (terminated or closed)
+Server Time 3725.561: Client Disconnected... (terminated or closed)
+Server Time 3725.561: Client Disconnected... (terminated or closed)
+Server Time 3725.561: Client Disconnected... (terminated or closed)
+Server Time 3725.561: Client Disconnected... (terminated or closed)
+Server Time 3725.561: Client Disconnected... (terminated or closed)
+Server Time 3725.561: Client Disconnected... (terminated or closed)
+Server Time 3725.561: Client Disconnected... (terminated or closed)
+Server Time 3725.561: Client Disconnected... (terminated or closed)
+Server Time 3725.561: Client Disconnected... (terminated or closed)
+Server Time 3725.562: Client Disconnected... (terminated or closed)
+Server Time 3725.562: Client Disconnected... (terminated or closed)
+Server Time 3725.562: Client Disconnected... (terminated or closed)
+Server Time 3725.562: Client Disconnected... (terminated or closed)
+Server Time 3725.562: Client Disconnected... (terminated or closed)
+Server Time 3725.562: Client Disconnected... (terminated or closed)
+Server Time 3725.562: Client Disconnected... (terminated or closed)
+Server Time 3725.562: Client Disconnected... (terminated or closed)
+Server Time 3725.562: Client Disconnected... (terminated or closed)
+Server Time 3725.562: Client Disconnected... (terminated or closed)
+Server Time 3725.562: Client Disconnected... (terminated or closed)
+Server Time 3725.562: Client Disconnected... (terminated or closed)
+Server Time 3725.562: Client Disconnected... (terminated or closed)
+Server Time 3725.563: Client Disconnected... (terminated or closed)
+Server Time 3725.563: Client Disconnected... (terminated or closed)
+Server Time 3725.563: Client Disconnected... (terminated or closed)
+Server Time 3725.563: Client Disconnected... (terminated or closed)
+Server Time 3725.563: Client Disconnected... (terminated or closed)
+Server Time 3725.563: Client Disconnected... (terminated or closed)
+Server Time 3725.563: Client Disconnected... (terminated or closed)
+Server Time 3725.563: Client Disconnected... (terminated or closed)
+Server Time 3725.563: Client Disconnected... (terminated or closed)
+Server Time 3725.563: Client Disconnected... (terminated or closed)
+Server Time 3725.563: Client Disconnected... (terminated or closed)
+Server Time 3725.563: Client Disconnected... (terminated or closed)
+Server Time 3725.563: Client Disconnected... (terminated or closed)
+Server Time 3725.563: Client Disconnected... (terminated or closed)
+Server Time 3725.563: Client Disconnected... (terminated or closed)

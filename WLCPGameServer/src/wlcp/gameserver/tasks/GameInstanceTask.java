@@ -320,7 +320,7 @@ public class GameInstanceTask extends Task implements ITask {
 				packetDistributor.AddPacketToSend(packet, player.usernameClientData.clientData);
 				player.playerVM.StartHeartbeatTimeoutTimer();
 			}
-			logger.write("Heart Beat");
+			//logger.write("Heart Beat");
 		}
 	}
 	

@@ -47,4 +47,8 @@ var StartState = class StartState extends State {
 		}
 		return saveData;
 	}
+	
+	onChange(oEvent) {
+		
+	}
 }

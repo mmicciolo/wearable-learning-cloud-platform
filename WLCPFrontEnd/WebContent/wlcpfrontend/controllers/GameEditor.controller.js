@@ -215,6 +215,11 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 			InputTransition.load(loadedData.transitions[i]);
 		}
 		
+		//Have the states revalidate
+		for(var i = 0; i < this.stateList.length; i++) {
+			this.stateList[i].onChange();
+		}
+		
 		this.busy.close();
 	},
 

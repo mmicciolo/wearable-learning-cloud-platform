@@ -97,10 +97,10 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 //				if(this.getBit(parentMask, 0) == 0x01) {
 //					parentMask = 0xffffffff;
 //				}
-//				
+				
 //				var teamList = [];
 //				
-//				//Check for game wide to team
+//				//Check for game wide to team (make sure it has team + players for that team)
 //				for(var team = 1; team < 3 + 1; team++) {
 //					if(this.getBit(parentMask, team) == 0x01) {
 //						teamList.push("Team " + team);
@@ -118,7 +118,7 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 //				}
 //				
 //			    var teamReturn = true;
-//			    
+			    
 //			    //Check for team to game wide
 //			    for(var team = 1; team < 3 + 1; team++) {
 //			      if(!this.getBit(parentMask, team) == 0x01) {
@@ -128,7 +128,7 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 //			    }
 //			    
 //			    if(teamReturn) { parentMask = 0xffffffff; }
-//			    
+			    
 //			    var playerReturn = true;
 //			    var playerReturns = [];
 //			    
@@ -155,14 +155,28 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 //					parentMask = parentMask | this.getActiveScopeMask(3, 3, playerReturns);
 //			    }
 			    
-			    //Check for player wide to game wide
-			  
+//			    var playerGamewideReturn = true;
+//			    
+//			    //Check for player wide to game wide
+//			    for(var player = 3 + 1; player < (3 * 3) + 3 + 1; player++) {
+//			      if(!this.getBit(parentMask, player) == 0x01) {
+//			    	  playerGamewideReturn = false;
+//			        break;
+//			      }
+//			    }
+//			    
+//			    if(playerGamewideReturn) { parentMask = 0xffffffff; }
+			    
 				//Get the active scope masks
 				var activeScopeMasks = this.getActiveScopeMasks(3, 3, orMaskAll);
 				
 			    parentMask = parentMask | parentScopeMask;
 			    
 			    parentMask = parentMask & this.andScopeMasks(activeScopeMasks);
+			    
+			    if((parentMask & 8190) == 8190) {
+			    	parentMask = 0xffffffff;
+			    }
 			    
 			    //parentMask = parentMask | (parentScopeMask & this.andScopeMasks(activeScopeMasks));
 			    

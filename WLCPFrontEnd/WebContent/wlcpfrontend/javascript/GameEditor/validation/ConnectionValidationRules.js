@@ -104,10 +104,12 @@ var ConnectionValidationSuccess = class ConnectionValidationSuccess extends Vali
 			var ep1 = GameEditor.getEditorController().jsPlumbInstance.selectEndpoints({element : validationData.connectionFrom}).get(0);
 			var ep2 = GameEditor.getEditorController().jsPlumbInstance.selectEndpoints({element : validationData.connectionTo}).get(0);
 			var connection = GameEditor.getEditorController().jsPlumbInstance.connect({ source: ep1 , target: ep2});
+			connection.id = validationData.connectionId;
 		} else {
 			var ep1 = GameEditor.getEditorController().jsPlumbInstance.selectEndpoints({element : validationData.connectionFrom}).get(1);
 			var ep2 = GameEditor.getEditorController().jsPlumbInstance.selectEndpoints({element : validationData.connectionTo}).get(0);
 			var connection = GameEditor.getEditorController().jsPlumbInstance.connect({source: ep1 , target: ep2});
+			connection.id = validationData.connectionId;
 		}
 		
 		//Tell the state to update

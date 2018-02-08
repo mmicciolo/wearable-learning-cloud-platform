@@ -118,10 +118,19 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 	},
 	
 	connectionDropped : function(oEvent) {
-//		oEvent.connection.id = this.createConnectionId();
-//		var connection = new Connection(oEvent.sourceId, oEvent.targetId, oEvent.connection.id);
-//		this.connectionList.push(connection);
-//		connection.validate();
+		//Check to see if the connection already exists
+		//Or if they are trying to add a second of the same source and target
+		//This can probably be moved to a validator eventually
+		for(var i = 0; i < this.connectionList.length; i++) {
+			if(oEvent.connection.id == this.connectionList[i].connectionId) {
+				return true;
+			} else if(oEvent.sourceId == this.connectionList[i].connectionFrom && oEvent.targetId == this.connectionList[i].connectionTo) {
+				console.log("Connection Already Exists!");
+				return false;
+			}
+		} 
+		
+		//Else we need to create a new one
 		var connection = new Connection(oEvent.sourceId, oEvent.targetId, this.createConnectionId());
 		this.connectionList.push(connection);
 		connection.validate();

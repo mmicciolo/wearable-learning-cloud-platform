@@ -150,4 +150,13 @@ var State = class State {
 	getHtmlId() {
 		return this.htmlId;
 	}
+	
+	static getStateById(stateId) {
+		var stateList = GameEditor.getEditorController().stateList;
+		for(var i = 0; i < GameEditor.getEditorController().stateList.length; i++) {
+			if(stateList[i].htmlId == stateId) {
+				return stateList[i];
+			}
+		}
+	}
 }

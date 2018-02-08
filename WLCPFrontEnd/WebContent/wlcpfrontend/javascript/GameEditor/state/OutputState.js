@@ -24,6 +24,9 @@ var OutputState = class OutputState extends State {
 		this.modelJSON.iconTabs = this.generateData(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam);
 		this.model = new sap.ui.model.json.JSONModel(this.modelJSON);
 		this.create();
+		this.validationRules = [];
+		this.setupValidationRules();
+		this.scopeMask = 0xffffffff;
 	}
 	
 	create() {
@@ -39,6 +42,10 @@ var OutputState = class OutputState extends State {
 		$("#"+this.stateDiv.id).dblclick($.proxy(this.doubleClick, this));
 	}
 	
+	setupValidationRules() {
+		this.validationRules.push(new StateScopeValidationRule());
+	}
+	
 	doubleClick() {
 		
 		//Create an instance of the dialog
@@ -47,8 +54,24 @@ var OutputState = class OutputState extends State {
 		//Set the model for the dialog
 		this.dialog.setModel(this.model);
 			
+		this.dialog.getContent()[0].addEventDelegate({
+			onAfterRendering : $.proxy(this.tabRendered, this)
+		});
+		
 		//Open the dialog
 		this.dialog.open();
+	}
+
+	tabRendered() {
+		for(var i = 0; i < this.dialog.getContent()[0].getItems().length; i++) {
+			if(this.dialog.getContent()[0].getItems()[i].getKey() == this.dialog.getContent()[0].getSelectedKey()) {
+				var info = this.dialog.getContent()[0].getItems()[i].getContent()[0].getContentAreas()[1].getCurrentPage().getContent()[1].getItems()[0].getFocusInfo();
+				info.selectionStart = this.dialog.getContent()[0].getItems()[i].getContent()[0].getContentAreas()[1].getCurrentPage().getContent()[1].getItems()[0].getValue().length;
+				info.selectionEnd = this.dialog.getContent()[0].getItems()[i].getContent()[0].getContentAreas()[1].getCurrentPage().getContent()[1].getItems()[0].getValue().length;
+				this.dialog.getContent()[0].getItems()[i].getContent()[0].getContentAreas()[1].getCurrentPage().getContent()[1].getItems()[0].applyFocusInfo(info);
+				break;
+			}
+		}
 	}
 	
 	createData() {
@@ -90,6 +113,94 @@ var OutputState = class OutputState extends State {
 		
 		return baseData;
 	}
+	
+	validate() {
+		console.log("validating...");
+		this.onChange();
+	}
+	
+	setScope(bitMask, teamCount, playersPerTeam) {
+		
+		this.scopeMask = bitMask;
+		var mask = bitMask;
+		var model = this.modelJSON.iconTabs;
+		var newTabs = [];
+	
+		//Test gamewide
+		if(bitMask & 0x01) {
+			var exists = false;
+			for(var i = 0; i < model.length; i++) {
+				if(model[i].scope == "Game Wide") {
+					exists = true;
+					newTabs.push(model[i]);
+					break;
+				}
+			}
+			if(!exists) {
+				var data = this.createData();
+				data.icon = "sap-icon://globe";
+				data.scope = "Game Wide";
+				newTabs.push(data);
+			}
+		}
+		
+		mask = mask >> 1;
+		
+		for(var i = 0; i < teamCount; i++) {
+			if(mask & 0x01) {
+				var exists = false;
+				for(var n = 0; n < model.length; n++) {
+					if(model[n].scope == "Team " + (i + 1)) {
+						exists = true;
+						newTabs.push(model[n]);
+						break;
+					}
+				}
+				if(!exists) {
+					var data = this.createData();
+					data.icon = "sap-icon://globe";
+					data.scope = "Team " + (i + 1);
+					newTabs.push(data);
+				}
+			}	
+			mask = mask >> 1;
+		}	
+		
+		for(var i = 0; i < teamCount; i++) {
+			for(var n = 0; n < playersPerTeam; n++) {
+				if(mask & 0x01) {
+					var exists = false;
+					for(var j = 0; j < model.length; j++) {
+						if(model[j].scope == "Team " + (i + 1) + " Player " + (n + 1)) {
+							exists = true;
+							newTabs.push(model[j]);
+							break;
+						}
+					}
+					if(!exists) {
+						var data = this.createData();
+						data.icon = "sap-icon://globe";
+						data.scope = "Team " + (i + 1) + " Player " + (n + 1);
+						newTabs.push(data);
+					}
+				}
+				mask = mask >> 1;
+			}
+		}
+		
+		this.modelJSON.iconTabs = newTabs;
+		this.model.setData(this.modelJSON);
+	}
+	
+    onChange(oEvent) {
+    	for(var i = 0; i < this.validationRules.length; i++) {
+    		this.validationRules[i].validate(this);
+    	}
+    }
+    
+    revalidate(state) {
+    	
+    }
 	
 	closeDialog() {
 		this.dialog.close();

@@ -7,14 +7,14 @@
 	xmlns:u="sap.ui.unified"
 	xmlns:html="http://www.w3.org/1999/xhtml">
 	
-	<Dialog id="outputStateDialog" title="Configure...">
+	<Dialog id="outputStateDialog" title="Configure..." contentWidth="50%" contentHeight="50%">
 		<buttons>
 			<Button text="Accept" type="Accept"/>
 			<Button text="Close" type="Reject" press="closeDialog"/>
 		</buttons>
-		<IconTabBar id="outputStateDialogIconTabBar" items="{/iconTabs}" showOverflowSelectList="false" applyContentPadding="false">
+		<IconTabBar id="outputStateDialogIconTabBar" items="{/iconTabs}" showOverflowSelectList="false" applyContentPadding="false" expandable="false">
 			<items>
-				<IconTabFilter icon="{icon}" text="{scope}">
+				<IconTabFilter icon="{icon}" text="{scope}" key="{scope}">
 					<content>
 						<l:Splitter>					
 							<tnt:NavigationList class="navList">
@@ -34,7 +34,7 @@
 									</FlexBox>
 									<FlexBox alignItems="Start" justifyContent="Center">
 										<items>
-											<TextArea rows="8" value="{displayText}"/>
+											<TextArea rows="8" value="{displayText}" liveChange="onChange" valueLiveUpdate="true"/>
 										</items>
 									</FlexBox>
 								</Page>

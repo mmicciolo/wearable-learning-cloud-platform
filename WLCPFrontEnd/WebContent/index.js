@@ -31,6 +31,10 @@ var Index = {
 	
 		jQuery.sap.require("wlcpfrontend/javascript/GameEditor/connection/Connection");
 		
+		jQuery.sap.require("wlcpfrontend/javascript/GameEditor/validation/ValidationRule");
+		jQuery.sap.require("wlcpfrontend/javascript/GameEditor/validation/ConnectionValidationRules");
+		jQuery.sap.require("wlcpfrontend/javascript/GameEditor/validation/StateValidationRules");
+		
 		jQuery.sap.require("wlcpfrontend/javascript/GameEditor/GameEditor");
 		jQuery.sap.require("wlcpfrontend/javascript/ODataModel");
 		

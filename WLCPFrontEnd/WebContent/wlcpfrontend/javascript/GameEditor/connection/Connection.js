@@ -7,6 +7,9 @@ var Connection = class Connection {
 		this.connectionFrom = connectionFrom;
 		this.connectionTo = connectionTo;
 		this.connectionId = connectionId;
+		this.validationCounter = -1;
+		this.validationRules = [];
+		this.setupValidationRules();
 	}
 	
 	static load(loadData) {
@@ -26,6 +29,22 @@ var Connection = class Connection {
 		}
 	}
 	
+	validate() {
+		if(this.validationCounter != this.validationRules.length - 1) {
+			this.validationCounter++;
+			this.validationRules[this.validationCounter].validate(this);
+		} else {
+			this.validationCounter = -1;
+		}
+	}
+	
+	setupValidationRules() {
+		this.validationRules.push(new ConnectionValidationSuccess());
+		//this.validationRules.push(new ConnectionGameWideValidationRule());
+		//this.validationRules.push(new ConnectionDroppedOnHigherScope());
+		//this.validationRules.push(new ConnectionScopeCountValidationRule());
+	}
+
 	detach() {
 		
 		//Loop through all of the transitions

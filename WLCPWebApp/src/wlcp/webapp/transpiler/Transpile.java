@@ -38,14 +38,15 @@ public class Transpile extends HttpServlet {
     public Transpile() {
         super();
         // TODO Auto-generated constructor stub
-		initJPA();
-        transpiler = new JavaScriptTranspiler(entityManager);
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
+		initJPA();
+        transpiler = new JavaScriptTranspiler(entityManager);
 		
 		String gameId = request.getParameter("gameId");
 	
@@ -54,6 +55,9 @@ public class Transpile extends HttpServlet {
 		PrintWriter pw = new PrintWriter(new FileOutputStream("C:/Users/Matt/git/wearable-learning-cloud-platform/WLCPGameServer/programs/" + gameId + ".js", false));
 		pw.println(transpiledCode);
 		pw.close();
+
+		entityManager.close();
+		entityManagerFactory.close();
 		
 		response.setContentType("text/plain");
 		response.setStatus(HttpServletResponse.SC_OK);

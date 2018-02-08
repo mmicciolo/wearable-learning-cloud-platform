@@ -81,7 +81,7 @@ validate(state) {
 				}
 			}
 			
-			if(parentMask == 0) {
+			if((parentMask | parentScopeMask) == 0) {
 				
 				//Get the active scope masks
 				var activeScopeMasks = this.getActiveScopeMasks(3, 3, orMaskAll);

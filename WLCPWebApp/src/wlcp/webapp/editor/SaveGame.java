@@ -58,6 +58,8 @@ public class SaveGame extends HttpServlet {
 		Gson gson = new Gson();
 		LoadSaveDataJSON saveData = gson.fromJson(text, LoadSaveDataJSON.class);
 		saveGame(saveData);
+		entityManager.close();
+		entityManagerFactory.close();
 		response.setContentType("text/plain");
 		response.setStatus(HttpServletResponse.SC_OK);
 		// TODO Auto-generated method stub
@@ -179,7 +181,7 @@ public class SaveGame extends HttpServlet {
 				entityManager.remove(entityManager.find(Transition.class, transition.getTransitionId()));
 				entityManager.getTransaction().commit();
 			}
-		}	
+		}
 	}
 
 }

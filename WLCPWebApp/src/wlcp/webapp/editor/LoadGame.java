@@ -66,6 +66,9 @@ public class LoadGame extends HttpServlet {
 		response.getWriter().println(loadGame(game));
 		response.getWriter().flush();
 		
+		entityManager.close();
+		entityManagerFactory.close();
+		
 		// TODO Auto-generated method stub
 		//doGet(request, response);
 	}

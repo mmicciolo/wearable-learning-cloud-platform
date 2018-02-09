@@ -12,6 +12,8 @@ var InputTransition = class InputTransition extends Transition {
 		}
 		this.modelJSON.iconTabs = this.generateData(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam);
 		this.model = new sap.ui.model.json.JSONModel(this.modelJSON);
+		this.validationRules = [];
+		this.setupValidationRules();
 	}
 	
 	create() {
@@ -32,6 +34,89 @@ var InputTransition = class InputTransition extends Transition {
 		
 		//Setup delete click
 		$("#" + this.overlayId + "_delete").click($.proxy(this.remove, this));
+	}
+	
+	setupValidationRules() {
+		this.validationRules.push(new TransitionValidationRule());
+	}
+	
+	onChange(oEvent) {
+		for(var i = 0; i < this.validationRules.length; i++) {
+			this.validationRules[i].validate(this);
+		}
+	}
+	
+	setScope(bitMask, teamCount, playersPerTeam) {
+		
+		this.scopeMask = bitMask;
+		var mask = bitMask;
+		var model = this.modelJSON.iconTabs;
+		var newTabs = [];
+	
+		//Test gamewide
+		if(bitMask & 0x01) {
+			var exists = false;
+			for(var i = 0; i < model.length; i++) {
+				if(model[i].scope == "Game Wide") {
+					exists = true;
+					newTabs.push(model[i]);
+					break;
+				}
+			}
+			if(!exists) {
+				var data = this.createData();
+				data.icon = "sap-icon://globe";
+				data.scope = "Game Wide";
+				newTabs.push(data);
+			}
+		}
+		
+		mask = mask >> 1;
+		
+		for(var i = 0; i < teamCount; i++) {
+			if(mask & 0x01) {
+				var exists = false;
+				for(var n = 0; n < model.length; n++) {
+					if(model[n].scope == "Team " + (i + 1)) {
+						exists = true;
+						newTabs.push(model[n]);
+						break;
+					}
+				}
+				if(!exists) {
+					var data = this.createData();
+					data.icon = "sap-icon://globe";
+					data.scope = "Team " + (i + 1);
+					newTabs.push(data);
+				}
+			}	
+			mask = mask >> 1;
+		}	
+		
+		for(var i = 0; i < teamCount; i++) {
+			for(var n = 0; n < playersPerTeam; n++) {
+				if(mask & 0x01) {
+					var exists = false;
+					for(var j = 0; j < model.length; j++) {
+						if(model[j].scope == "Team " + (i + 1) + " Player " + (n + 1)) {
+							exists = true;
+							newTabs.push(model[j]);
+							break;
+						}
+					}
+					if(!exists) {
+						var data = this.createData();
+						data.icon = "sap-icon://globe";
+						data.scope = "Team " + (i + 1) + " Player " + (n + 1);
+						newTabs.push(data);
+					}
+				}
+				mask = mask >> 1;
+			}
+		}
+		
+		this.modelJSON.iconTabs = newTabs;
+		this.model.setData(this.modelJSON);
 	}
 	
 	static load(loadData) {
@@ -110,7 +195,11 @@ var InputTransition = class InputTransition extends Transition {
 				button1 : false,
 				button2 : false,
 				button3 : false,
-				button4 : false
+				button4 : false,
+				button1Enabled : true,
+				button2Enabled : true,
+				button3Enabled : true,
+				button4Enabled : true
 			}
 		}
 	}

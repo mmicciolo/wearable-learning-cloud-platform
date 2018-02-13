@@ -30,10 +30,10 @@
 									<FlexBox alignItems="Start" justifyContent="Center">
 										<items>
 											<VBox>
-												<CheckBox text="Button 1" selected="{singlePress/button1}" enabled="{singlePress/button1Enabled}" select="onChange"></CheckBox>
-												<CheckBox text="Button 2" selected="{singlePress/button2}" enabled="{singlePress/button2Enabled}" select="onChange"></CheckBox>
-												<CheckBox text="Button 3" selected="{singlePress/button3}" enabled="{singlePress/button3Enabled}" select="onChange"></CheckBox>
-												<CheckBox text="Button 4" selected="{singlePress/button4}" enabled="{singlePress/button4Enabled}" select="onChange"></CheckBox>
+												<CheckBox text="Button 1" selected="{singlePress/0/selected}" enabled="{singlePress/0/enabled}" select="onChange"></CheckBox>
+												<CheckBox text="Button 2" selected="{singlePress/1/selected}" enabled="{singlePress/1/enabled}" select="onChange"></CheckBox>
+												<CheckBox text="Button 3" selected="{singlePress/2/selected}" enabled="{singlePress/2/enabled}" select="onChange"></CheckBox>
+												<CheckBox text="Button 4" selected="{singlePress/3/selected}" enabled="{singlePress/3/enabled}" select="onChange"></CheckBox>
 											</VBox>
 										</items>
 									</FlexBox>

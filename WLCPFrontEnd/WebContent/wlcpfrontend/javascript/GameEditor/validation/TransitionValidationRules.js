@@ -29,8 +29,7 @@ var TransitionValidationRule = class TransitionValidationRule extends Validation
 				if(transitionList[i].overlayId != transitionList[n].overlayId) {
 					
 					//Get the active scopes
-					//var activeScopes = this.getActiveScopes(transitionList[n].modelJSON);
-					var activeScopes = this.getActiveScopes3(transitionList[i], transitionList);
+					var activeScopes = this.getActiveScopes(transitionList[i], transitionList);
 					
 					//Get the active scope mask
 					var activeScopeMask = this.getActiveScopeMask(3, 3, activeScopes);
@@ -69,118 +68,82 @@ var TransitionValidationRule = class TransitionValidationRule extends Validation
 			transitionList[i].setScope(parentMask & (~orMaskNeighbors), 3, 3);	
 		}
 		
-		
-		
-		
-//		if(parentState != null) {
-//			if(parentState.htmlId.includes("start")) {
-//				parentScopeMask = 0xffffffff;
-//			} else {
-//				parentScopeMask = parentState.scopeMask;
-//			}
-//		}
-//		
-//		transition.setScope(parentScopeMask, 3, 3);
+		//Loop through all of the transitions
+		for(var i = 0; i < transitionList.length; i++) {
+			
+			var scopeCollection = [];
+			for(var n = 0; n < transitionList.length; n++) {
+				if(transitionList[i].overlayId != transitionList[n].overlayId) {
+					for(var j = 0; j < transitionList[n].modelJSON.iconTabs.length; j++) {
+						scopeCollection.push({transition : transitionList[n], model : transitionList[n].modelJSON.iconTabs[j]});
+					}
+				}
+			}
 
-//		//Get the connections stemming of the source of this transitions connection
-//		var neighborConnections = GameEditor.getJsPlumbInstance().getConnections({source : transition.connection.sourceId});
-//		
-//		//Maintain a list of states the previous one is connected to
-//		var transitionList = [];
-//		
-//		//Loop through all of these connections to get their active masks
-//		for(var i = 0; i < neighborConnections.length; i++) {
-//			//Find the neighbor transitions
-//			for(var n = 0; n < GameEditor.getEditorController().transitionList.length; n++) {
-//				
-//			}	
-//		}
+			for(var button = 0; button < 4; button++) {
+				for(var n = 0; n < scopeCollection.length; n++) {
+					var selected = false;
+					for(var j = 0; j < scopeCollection.length; j++) {
+						if(scopeCollection[n].model.scope == scopeCollection[j].model.scope) {
+							if(scopeCollection[j].model.singlePress[button].selected) {
+								selected = true;
+							}
+						}
+					}
+					var trans = this.getTab(transitionList[i], scopeCollection[n].model.scope);
+					if(trans != null) {
+						trans.singlePress[button].enabled = !selected;
+						this.setScopeData(transitionList[i], trans);
+					}
+				}
+			}
+		}
+	}
+	
+	getActiveScopes(transition, transitionList) {
+		var scopeCollection = [];
+		var activeScopes = [];
+		for(var i = 0; i < transitionList.length; i++) {
+			if(transition.overlayId != transitionList[i].overlayId) {
+				for(var n = 0; n < transitionList[i].modelJSON.iconTabs.length; n++) {
+					scopeCollection.push({transition : transitionList[i], model : transitionList[i].modelJSON.iconTabs[n]});
+				}
+			}
+		}
+		for(var i = 0; i < scopeCollection.length; i++) {
+			var buttonsChecked = 0;
+			for(var n = 0; n < scopeCollection.length; n++) {
+				if((scopeCollection[i].model.scope == scopeCollection[n].model.scope) && !activeScopes.includes(scopeCollection[i].model.scope)) {
+					for(var button = 0; button < 4; button++) {
+						if(scopeCollection[n].model.singlePress[button].selected) {buttonsChecked++;}
+					}
+				}
+			}
+			if(buttonsChecked == 4) { 
+				activeScopes.push(scopeCollection[i].model.scope); 
+			}
+		}
 		
-		var i = 0;
-	}
-	
-	getActiveScopes2(model) {
-		var activeScopes = [];
-		for(var i = 0; i < model.iconTabs.length; i++) {
-			if(model.iconTabs[i].displayText != "") {
-				activeScopes.push(model.iconTabs[i].scope);
-			}
-		}
 		return activeScopes;
 	}
 	
-	getActiveScopes(model) {
-		var activeScopes = [];
-		for(var i = 0; i < model.iconTabs.length; i++) {
-			if(model.iconTabs[i].singlePress.button1 == true || model.iconTabs[i].singlePress.button2 == true || model.iconTabs[i].singlePress.button3 == true || model.iconTabs[i].singlePress.button4 == true) {
-				activeScopes.push(model.iconTabs[i].scope);
+	setScopeData(transition, model) {
+		for(var i = 0; i < transition.modelJSON.iconTabs.length; i++) {
+			if(transition.modelJSON.iconTabs[i].scope == model.scope) {
+				transition.modelJSON.iconTabs[i] = model;
+				transition.model.setData(transition.modelJSON);
+				break;
 			}
 		}
-		return activeScopes;
 	}
 	
-	getActiveScopes3(transition, transitionList) {
-		var activeScopes = [];
-		for(var i = 0; i < transitionList.length; i++) {
-			var buttonCount = 0;
-			if(transition.overlayId != transitionList[i].overlayId) {
-				for(var n = 0; n < transitionList[i].modelJSON.iconTabs.length; n++) {
-					if(transitionList[i].modelJSON.iconTabs[n].singlePress.button1 == true) {
-						buttonCount++;
-						this.setButtonEnabled(transitionList[i], transitionList, transitionList[i].modelJSON.iconTabs[n].scope, 1, false);
-					} else {
-						this.setButtonEnabled(transitionList[i], transitionList, transitionList[i].modelJSON.iconTabs[n].scope, 1, true);
-					}
-					if(transitionList[i].modelJSON.iconTabs[n].singlePress.button2 == true) {
-						buttonCount++;
-						this.setButtonEnabled(transitionList[i], transitionList, transitionList[i].modelJSON.iconTabs[n].scope, 2, false);
-					} else {
-						this.setButtonEnabled(transitionList[i], transitionList, transitionList[i].modelJSON.iconTabs[n].scope, 2, true);
-					}
-					if(transitionList[i].modelJSON.iconTabs[n].singlePress.button3 == true) {
-						buttonCount++;
-						this.setButtonEnabled(transitionList[i], transitionList, transitionList[i].modelJSON.iconTabs[n].scope, 3, false);
-					} else {
-						this.setButtonEnabled(transitionList[i], transitionList, transitionList[i].modelJSON.iconTabs[n].scope, 3, true);
-					}
-					if(transitionList[i].modelJSON.iconTabs[n].singlePress.button4 == true) {
-						buttonCount++;
-						this.setButtonEnabled(transitionList[i], transitionList, transitionList[i].modelJSON.iconTabs[n].scope, 4, false);
-					} else {
-						this.setButtonEnabled(transitionList[i], transitionList, transitionList[i].modelJSON.iconTabs[n].scope, 4, true);
-					}
-					if(buttonCount > 3) {
-						activeScopes.push(transitionList[i].modelJSON.iconTabs[n].scope);
-						break;
-					}
-				}
+	getTab(transition, scope) {
+		for(var i = 0; i < transition.modelJSON.iconTabs.length; i++) {
+			if(transition.modelJSON.iconTabs[i].scope == scope) {
+				return transition.modelJSON.iconTabs[i];
 			}
 		}
-		return activeScopes;
-	}
-	
-	setButtonEnabled(transition, transitionList, scope, button, enabled) {
-		for(var i = 0; i < transitionList.length; i++) {
-			if(transition.overlayId != transitionList[i].overlayId) {
-				for(var n = 0; n < transitionList[i].modelJSON.iconTabs.length; n++) {
-					if(transitionList[i].modelJSON.iconTabs[n].scope == scope) {
-						if(button == 1) {
-							transitionList[i].modelJSON.iconTabs[n].singlePress.button1Enabled = enabled;
-						}
-						if(button == 2) {
-							transitionList[i].modelJSON.iconTabs[n].singlePress.button2Enabled = enabled;
-						}
-						if(button == 3) {
-							transitionList[i].modelJSON.iconTabs[n].singlePress.button3Enabled = enabled;
-						}
-						if(button == 4) {
-							transitionList[i].modelJSON.iconTabs[n].singlePress.button4Enabled = enabled;
-						}
-						transitionList[i].model.setData(transitionList[i].modelJSON);
-					}
-				}
-			}
-		}
+		return null;
 	}
 	
 	getActiveScopeMask(teamCount, playersPerTeam, activeScopes) {
@@ -211,7 +174,7 @@ var TransitionValidationRule = class TransitionValidationRule extends Validation
 		return scopeMask;
 	}
 	
-	  getActiveScopeMasks(teamCount, playersPerTeam, activeMask) {
+	getActiveScopeMasks(teamCount, playersPerTeam, activeMask) {
 		    
 	    var scopeMasks = [];
 	    

@@ -143,10 +143,14 @@ var InputTransition = class InputTransition extends Transition {
 		for(var key in loadData.singleButtonPresses) {
 			for(var n = 0; n < this.modelJSON.iconTabs.length; n++) {
 				if(key == this.modelJSON.iconTabs[n].scope) {
-					this.modelJSON.iconTabs[n].singlePress.button1 = loadData.singleButtonPresses[key].button1;
-					this.modelJSON.iconTabs[n].singlePress.button2 = loadData.singleButtonPresses[key].button2;
-					this.modelJSON.iconTabs[n].singlePress.button3 = loadData.singleButtonPresses[key].button3;
-					this.modelJSON.iconTabs[n].singlePress.button4 = loadData.singleButtonPresses[key].button4;
+					//this.modelJSON.iconTabs[n].singlePress.button1 = loadData.singleButtonPresses[key].button1;
+					//this.modelJSON.iconTabs[n].singlePress.button2 = loadData.singleButtonPresses[key].button2;
+					//this.modelJSON.iconTabs[n].singlePress.button3 = loadData.singleButtonPresses[key].button3;
+					//this.modelJSON.iconTabs[n].singlePress.button4 = loadData.singleButtonPresses[key].button4;
+					this.modelJSON.iconTabs[n].singlePress[0].selected = loadData.singleButtonPresses[key].button1;
+					this.modelJSON.iconTabs[n].singlePress[1].selected = loadData.singleButtonPresses[key].button2;
+					this.modelJSON.iconTabs[n].singlePress[2].selected = loadData.singleButtonPresses[key].button3;
+					this.modelJSON.iconTabs[n].singlePress[3].selected = loadData.singleButtonPresses[key].button4;
 				}
 			}
 		}
@@ -155,13 +159,22 @@ var InputTransition = class InputTransition extends Transition {
 	save() {
 		var singleButtonPresses = {};
 		for(var i = 0; i < this.modelJSON.iconTabs.length; i++) {
-			if(this.modelJSON.iconTabs[i].singlePress.button1 || this.modelJSON.iconTabs[i].singlePress.button2
-			 ||this.modelJSON.iconTabs[i].singlePress.button3 || this.modelJSON.iconTabs[i].singlePress.button4) {
+//			if(this.modelJSON.iconTabs[i].singlePress.button1 || this.modelJSON.iconTabs[i].singlePress.button2
+//			 ||this.modelJSON.iconTabs[i].singlePress.button3 || this.modelJSON.iconTabs[i].singlePress.button4) {
+//				singleButtonPresses[this.modelJSON.iconTabs[i].scope] = {
+//					button1 : this.modelJSON.iconTabs[i].singlePress.button1,
+//					button2 : this.modelJSON.iconTabs[i].singlePress.button2,
+//					button3 : this.modelJSON.iconTabs[i].singlePress.button3,
+//					button4 : this.modelJSON.iconTabs[i].singlePress.button4
+//				}
+//			}
+			if(this.modelJSON.iconTabs[i].singlePress[0].selected || this.modelJSON.iconTabs[i].singlePress[1].selected
+			 ||this.modelJSON.iconTabs[i].singlePress[2].selected || this.modelJSON.iconTabs[i].singlePress[3].selected) {
 				singleButtonPresses[this.modelJSON.iconTabs[i].scope] = {
-					button1 : this.modelJSON.iconTabs[i].singlePress.button1,
-					button2 : this.modelJSON.iconTabs[i].singlePress.button2,
-					button3 : this.modelJSON.iconTabs[i].singlePress.button3,
-					button4 : this.modelJSON.iconTabs[i].singlePress.button4	
+					button1 : this.modelJSON.iconTabs[i].singlePress[0].selected,
+					button2 : this.modelJSON.iconTabs[i].singlePress[1].selected,
+					button3 : this.modelJSON.iconTabs[i].singlePress[2].selected,
+					button4 : this.modelJSON.iconTabs[i].singlePress[3].selected
 				}
 			}
 		}
@@ -191,16 +204,34 @@ var InputTransition = class InputTransition extends Transition {
 		return {
 			icon : "",
 			scope : "",
-			singlePress : {
-				button1 : false,
-				button2 : false,
-				button3 : false,
-				button4 : false,
-				button1Enabled : true,
-				button2Enabled : true,
-				button3Enabled : true,
-				button4Enabled : true
-			}
+			singlePress : [
+				{
+					selected : false,
+					enabled : true
+				},
+				{
+					selected : false,
+					enabled : true
+				},
+				{
+					selected : false,
+					enabled : true
+				},
+				{
+					selected : false,
+					enabled : true
+				},
+			],
+//			singlePress : {
+//				button1 : false,
+//				button2 : false,
+//				button3 : false,
+//				button4 : false,
+//				button1Enabled : true,
+//				button2Enabled : true,
+//				button3Enabled : true,
+//				button4Enabled : true
+//			}
 		}
 	}
 	

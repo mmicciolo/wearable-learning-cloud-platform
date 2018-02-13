@@ -38,18 +38,24 @@ public class Transition implements Serializable {
     @CollectionTable(name = "SINGLE_BUTTON_PRESS")
     @MapKeyColumn(name = "SCOPE")
 	private Map<String, SingleButtonPress> singleButtonPresses = new HashMap<String, SingleButtonPress>();
+	
+	@ElementCollection()
+    @CollectionTable(name = "ACTIVE_TRANSITIONS")
+    @MapKeyColumn(name = "SCOPE")
+	private Map<String, String> activeTransitions = new HashMap<String, String>();
 
 	public Transition() {
 		super();
 	}
 	
 	public Transition(String transitionId, Game game, String connection,
-			Map<String, SingleButtonPress> singleButtonPresses) {
+			Map<String, SingleButtonPress> singleButtonPresses, Map<String, String> activeTransitions) {
 		super();
 		this.transitionId = transitionId;
 		this.game = game;
 		this.connection = connection;
 		this.singleButtonPresses = singleButtonPresses;
+		this.activeTransitions = activeTransitions;
 	}
 
 	public String getTransitionId() {
@@ -82,6 +88,14 @@ public class Transition implements Serializable {
 
 	public void setSingleButtonPresses(Map<String, SingleButtonPress> singleButtonPresses) {
 		this.singleButtonPresses = singleButtonPresses;
+	}
+
+	public Map<String, String> getActiveTransitions() {
+		return activeTransitions;
+	}
+
+	public void setActiveTransitions(Map<String, String> activeTransitions) {
+		this.activeTransitions = activeTransitions;
 	}
 
 }

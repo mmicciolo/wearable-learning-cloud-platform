@@ -20,8 +20,8 @@
 							<List class="navList" mode="SingleSelectLeft" headerText="Select the Transition Type" selectionChange="transitionTypeSelected"> 
 								<layoutData><l:SplitterLayoutData size="250px" resizable="false"/></layoutData>
 								<items>
-									<StandardListItem title="Single Button Press" icon="sap-icon://touch" selected="true"/>
-									<StandardListItem title="Sequence Button Press" icon="sap-icon://multiselect-none"/>
+									<StandardListItem title="Single Button Press" icon="sap-icon://touch" selected="{= ${activeTransition} === 'Single Button Press' ? true : false}"/>
+									<StandardListItem title="Sequence Button Press" icon="sap-icon://multiselect-none" selected="{= ${activeTransition} === 'Sequence Button Press' ? true : false}"/>
 								</items>
 							</List>
 							<NavContainer width="100%" height="500px">

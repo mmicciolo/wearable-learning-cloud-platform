@@ -121,14 +121,18 @@ public class SaveGame extends HttpServlet {
 		
 		//Loop through all of the transitions
 		for(int i = 0; i < saveData.transitions.length; i++) {
+			Map<String, String> activeTransitions = new HashMap<String, String>();
+			for(Map.Entry<String, String> entry : saveData.transitions[i].getActiveTransitions().entrySet()) {
+				activeTransitions.put(entry.getKey(), entry.getValue());
+			}
 			Map<String, SingleButtonPress> singleButtonPresses = new HashMap<String, SingleButtonPress>();
 			for(Map.Entry<String, SingleButtonPress> entry : saveData.transitions[i].getSingleButtonPresses().entrySet()) {
 				singleButtonPresses.put(entry.getKey(), entry.getValue());
 			}
 			entityManager.getTransaction().begin();
-			entityManager.merge(new Transition(saveData.transitions[i].getTransitionId(), saveData.game, saveData.transitions[i].getConnection(), new HashMap<String, SingleButtonPress>()));
+			entityManager.merge(new Transition(saveData.transitions[i].getTransitionId(), saveData.game, saveData.transitions[i].getConnection(), new HashMap<String, SingleButtonPress>(), new HashMap<String, String>()));
 			entityManager.flush();
-			entityManager.merge(new Transition(saveData.transitions[i].getTransitionId(), saveData.game, saveData.transitions[i].getConnection(), singleButtonPresses));
+			entityManager.merge(new Transition(saveData.transitions[i].getTransitionId(), saveData.game, saveData.transitions[i].getConnection(), singleButtonPresses, activeTransitions));
 			entityManager.getTransaction().commit();
 		}
 		

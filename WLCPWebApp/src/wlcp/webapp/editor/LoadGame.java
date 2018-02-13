@@ -8,13 +8,16 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.eclipse.persistence.config.HintValues;
 import org.eclipse.persistence.config.PersistenceUnitProperties;
+import org.eclipse.persistence.config.QueryHints;
 
 import com.google.gson.Gson;
 
@@ -39,6 +42,7 @@ public class LoadGame extends HttpServlet {
      */
     public LoadGame() {
         super();
+        initJPA();
         // TODO Auto-generated constructor stub
     }
 
@@ -54,9 +58,8 @@ public class LoadGame extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String gameId = request.getParameter("gameId");
 		
-		initJPA();
+		String gameId = request.getParameter("gameId");
 		
 		Game game = entityManager.getReference(Game.class, gameId);
 		
@@ -66,8 +69,7 @@ public class LoadGame extends HttpServlet {
 		response.getWriter().println(loadGame(game));
 		response.getWriter().flush();
 		
-		entityManager.close();
-		entityManagerFactory.close();
+		entityManager.clear();
 		
 		// TODO Auto-generated method stub
 		//doGet(request, response);
@@ -92,10 +94,10 @@ public class LoadGame extends HttpServlet {
 	private String loadGame(Game game) {
 		Gson gson = new Gson();
 		
-		List<StartState> startStates = entityManager.createQuery("SELECT s FROM StartState s WHERE s.game.gameId = '" + game.getGameId() + "'", StartState.class).getResultList();
-		List<OutputState> outputStates = entityManager.createQuery("SELECT s FROM OutputState s WHERE s.game.gameId = '" + game.getGameId() + "'", OutputState.class).getResultList();
-		List<Connection> connections = entityManager.createQuery("SELECT s FROM Connection s WHERE s.game.gameId = '" + game.getGameId() + "'", Connection.class).getResultList();
-		List<Transition> transitions = entityManager.createQuery("SELECT s FROM Transition s WHERE s.game.gameId = '" + game.getGameId() + "'", Transition.class).getResultList();
+		List<StartState> startStates = entityManager.createQuery("SELECT s FROM StartState s WHERE s.game.gameId = '" + game.getGameId() + "'", StartState.class).setHint(QueryHints.REFRESH, HintValues.TRUE).getResultList();
+		List<OutputState> outputStates = entityManager.createQuery("SELECT s FROM OutputState s WHERE s.game.gameId = '" + game.getGameId() + "'", OutputState.class).setHint(QueryHints.REFRESH, HintValues.TRUE).getResultList();
+		List<Connection> connections = entityManager.createQuery("SELECT s FROM Connection s WHERE s.game.gameId = '" + game.getGameId() + "'", Connection.class).setHint(QueryHints.REFRESH, HintValues.TRUE).getResultList();
+		List<Transition> transitions = entityManager.createQuery("SELECT s FROM Transition s WHERE s.game.gameId = '" + game.getGameId() + "'", Transition.class).setHint(QueryHints.REFRESH, HintValues.TRUE).getResultList();
 		
 		for(StartState state : startStates) {
 			state.setGame(null);

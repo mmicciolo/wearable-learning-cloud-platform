@@ -151,14 +151,18 @@ var InputTransition = class InputTransition extends Transition {
 				}
 			}
 		}
-		for(var key in loadData.singleButtonPresses) {
-			for(var n = 0; n < this.modelJSON.iconTabs.length; n++) {
-				if(key == this.modelJSON.iconTabs[n].scope) {
-					this.modelJSON.iconTabs[n].singlePress[0].selected = loadData.singleButtonPresses[key].button1;
-					this.modelJSON.iconTabs[n].singlePress[1].selected = loadData.singleButtonPresses[key].button2;
-					this.modelJSON.iconTabs[n].singlePress[2].selected = loadData.singleButtonPresses[key].button3;
-					this.modelJSON.iconTabs[n].singlePress[3].selected = loadData.singleButtonPresses[key].button4;
+		for(var i = 0; i < this.modelJSON.iconTabs.length; i++) {
+			if(this.modelJSON.iconTabs[i].activeTransition == "Single Button Press") {
+				for(var key in loadData.singleButtonPresses) {
+					if(key == this.modelJSON.iconTabs[i].scope) {
+						this.modelJSON.iconTabs[i].singlePress[0].selected = loadData.singleButtonPresses[key].button1;
+						this.modelJSON.iconTabs[i].singlePress[1].selected = loadData.singleButtonPresses[key].button2;
+						this.modelJSON.iconTabs[i].singlePress[2].selected = loadData.singleButtonPresses[key].button3;
+						this.modelJSON.iconTabs[i].singlePress[3].selected = loadData.singleButtonPresses[key].button4;
+					}
 				}
+			} else if(this.modelJSON.iconTabs[i].activeTransition == "Sequence Button Press") {
+				
 			}
 		}
 	}
@@ -170,14 +174,18 @@ var InputTransition = class InputTransition extends Transition {
 		}
 		var singleButtonPresses = {};
 		for(var i = 0; i < this.modelJSON.iconTabs.length; i++) {
-			if(this.modelJSON.iconTabs[i].singlePress[0].selected || this.modelJSON.iconTabs[i].singlePress[1].selected
-			 ||this.modelJSON.iconTabs[i].singlePress[2].selected || this.modelJSON.iconTabs[i].singlePress[3].selected) {
-				singleButtonPresses[this.modelJSON.iconTabs[i].scope] = {
-					button1 : this.modelJSON.iconTabs[i].singlePress[0].selected,
-					button2 : this.modelJSON.iconTabs[i].singlePress[1].selected,
-					button3 : this.modelJSON.iconTabs[i].singlePress[2].selected,
-					button4 : this.modelJSON.iconTabs[i].singlePress[3].selected
+			if(this.modelJSON.iconTabs[i].activeTransition == "Single Button Press") {
+				if(this.modelJSON.iconTabs[i].singlePress[0].selected || this.modelJSON.iconTabs[i].singlePress[1].selected
+				 ||this.modelJSON.iconTabs[i].singlePress[2].selected || this.modelJSON.iconTabs[i].singlePress[3].selected) {
+					singleButtonPresses[this.modelJSON.iconTabs[i].scope] = {
+						button1 : this.modelJSON.iconTabs[i].singlePress[0].selected,
+						button2 : this.modelJSON.iconTabs[i].singlePress[1].selected,
+						button3 : this.modelJSON.iconTabs[i].singlePress[2].selected,
+						button4 : this.modelJSON.iconTabs[i].singlePress[3].selected
+					}
 				}
+			} else if(this.modelJSON.iconTabs[i].activeTransition == "Sequence Button Press") {
+				
 			}
 		}
 		

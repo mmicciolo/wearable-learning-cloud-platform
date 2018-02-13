@@ -144,10 +144,25 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 			    	parentMask = 0xffffffff;
 			    }
 			    
-			    parentMask = parentMask & this.andScopeMasks(activeScopeMasks);
-			    
-				//Set the new scopes
-				stateList[i].setScope(parentMask & (~orMaskNeighbors), 3, 3);	
+				
+				//Check to see if we have a transition above us
+			    var transitionAbove = false;
+				for(var n = 0; n < GameEditor.getEditorController().transitionList.length; n++) {
+					var connection = GameEditor.getJsPlumbInstance().getConnections({target : stateList[i].htmlId});
+					if(connection[0].id == GameEditor.getEditorController().transitionList[n].connection.id) {
+						parentMask = GameEditor.getEditorController().transitionList[n].scopeMask;
+						stateList[i].setScope(parentMask, 3, 3);
+						transitionAbove = true;
+					}
+				}
+				
+				if(!transitionAbove) {
+					
+				    parentMask = parentMask & this.andScopeMasks(activeScopeMasks);
+				    
+					//Set the new scopes
+					stateList[i].setScope(parentMask & (~orMaskNeighbors), 3, 3);	
+				}
 			}	
 		}	
 	}

@@ -100,6 +100,16 @@ var TransitionValidationRule = class TransitionValidationRule extends Validation
 		}
 	}
 	
+	getActiveScopes2(model) {
+		var activeScopes = [];
+		for(var i = 0; i < model.iconTabs.length; i++) {
+			if(model.iconTabs[i].displayText != "") {
+				activeScopes.push(model.iconTabs[i].scope);
+			}
+		}
+		return activeScopes;
+	}
+	
 	getActiveScopes(transition, transitionList) {
 		var scopeCollection = [];
 		var activeScopes = [];

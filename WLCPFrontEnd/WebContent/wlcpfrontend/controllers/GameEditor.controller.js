@@ -11,7 +11,8 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		ConnectionIdCount : 0,
 		UsernameDetails : {
 			__metadata : {
-	             uri : ODataModel.getODataModelURL() + "/Usernames('" + sap.ui.getCore().getModel("user").oData.username + "')"
+	             //uri : ODataModel.getODataModelURL() + "/Usernames('" + sap.ui.getCore().getModel("user").oData.username + "')"
+				uri : ODataModel.getODataModelURL() + "/Usernames('mmicciolo')"
 	         }
 		},
 		Visibility : true
@@ -112,6 +113,12 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		if(connection != null) {
 			var inputTransition = new InputTransition("transition", connection, this.createTransitionId(), this);
 			this.transitionList.push(inputTransition);
+			inputTransition.onChange(connection);
+			for(var i = 0; i < this.stateList.length; i++) {
+				if(this.stateList[i].htmlId == connection.targetId) {
+					this.stateList[i].onChange();
+				}
+			}
 		} else {
 			sap.m.MessageBox.error("A transition could not be placed there!");
 		}
@@ -224,11 +231,16 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 			InputTransition.load(loadedData.transitions[i]);
 		}
 		
+		//Have the transitions revalidate
+		for(var i = 0; i < this.transitionList.length; i++) {
+			this.transitionList[i].onChange();
+		}
+		
 		//Have the states revalidate
 		for(var i = 0; i < this.stateList.length; i++) {
 			this.stateList[i].onChange();
 		}
-		
+	
 		this.busy.close();
 	},
 

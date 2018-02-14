@@ -204,3 +204,28 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
 	background-color: #0092D1;
 	border-radius : 0px 0px 15px 15px;
 }
+
+.sequenceButton {
+	display : inline-block !important;
+	float: left;
+    width: 100px;
+    margin: 5px;
+    padding: 5px;
+    height: 100px;
+}
+
+.sequenceButtonRed {
+	background: red;
+}
+
+.sequenceButtonGreen {
+	background: green;
+}
+
+.sequenceButtonBlue {
+	background: blue;
+}
+
+.sequenceButtonBlack {
+	background: black;
+}

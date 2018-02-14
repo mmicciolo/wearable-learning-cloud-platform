@@ -5,7 +5,8 @@
 	xmlns:tnt="sap.tnt"
 	xmlns:l="sap.ui.layout"
 	xmlns:u="sap.ui.unified"
-	xmlns:html="http://www.w3.org/1999/xhtml">
+	xmlns:html="http://www.w3.org/1999/xhtml"
+	xmlns:mvc="sap.ui.core.mvc">
 	
 	<Dialog id="outputStateDialog" title="Configure..." contentWidth="50%" contentHeight="50%">
 		<buttons>
@@ -39,6 +40,46 @@
 									</FlexBox>
 								</Page>
 								<Page title="{scope} Sequence Button Press">
+									<content>
+										<FlexBox alignItems="Start" justifyContent="Center">
+											<items>
+												<Button text="Add" press="addSequence"></Button>
+<!-- 												<core:Fragment fragmentName="wlcpfrontend.fragments.test2" type="HTML"></core:Fragment> -->
+											</items>
+										</FlexBox>
+										<FlexBox alignItems="Start" justifyContent="Center">
+											<items>
+												<List showSeparators="None" items="{sequencePress}">
+													<CustomListItem xmlns="sap.m">
+														<content>
+															<List showSeparators="None" items="{buttons}">
+																<StandardListItem/>
+<!-- 																<items>
+																	<StandardListItem class="sequenceButton sequenceButtonRed"/>
+																	<StandardListItem class="sequenceButton sequenceButtonGreen"/>
+																	<StandardListItem class="sequenceButton sequenceButtonBlue"/>
+																	<StandardListItem class="sequenceButton sequenceButtonBlack"/>
+																</items> -->
+															</List>
+														</content>
+													</CustomListItem>
+												</List>
+											</items>
+										</FlexBox>
+<!-- 										<FlexBox alignItems="Start" justifyContent="Center">
+											<List showSeparators="None"> 
+												<items>
+													<StandardListItem class="sequenceButton sequenceButtonRed"/>
+													<StandardListItem class="sequenceButton sequenceButtonGreen"/>
+													<StandardListItem class="sequenceButton sequenceButtonBlue"/>
+													<StandardListItem class="sequenceButton sequenceButtonBlack"/>
+												</items>
+											</List>
+										</FlexBox> -->
+<!-- 										<ScrollContainer height="100%" width="100%" horizontal="false" vertical="true" focusable="true">
+											<mvc:HTMLView viewName="wlcpfrontend.views.test"></mvc:HTMLView>
+										</ScrollContainer> -->
+									</content>
 								</Page>
 							</NavContainer>
 						</l:Splitter>

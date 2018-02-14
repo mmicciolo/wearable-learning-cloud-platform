@@ -14,6 +14,7 @@ var Index = {
 	    jQuery.sap.require('sap.ui.thirdparty.jqueryui.jquery-ui-mouse');
 	    jQuery.sap.require('sap.ui.thirdparty.jqueryui.jquery-ui-droppable');
 	    jQuery.sap.require('sap.ui.thirdparty.jqueryui.jquery-ui-draggable');
+	    jQuery.sap.require('sap.ui.thirdparty.jqueryui.jquery-ui-sortable');
 		jQuery.sap.require("sap.m.MessageBox");
 	},
 	

@@ -11,5 +11,6 @@
 		<class>wlcp.model.master.transition.Transition</class>
 		<class>wlcp.model.master.transition.SingleButtonPress</class>
 		<class>wlcp.model.master.GameInstance</class>
+		<class>wlcp.model.master.transition.SequenceButtonPress</class>
 	</persistence-unit>
 </persistence>

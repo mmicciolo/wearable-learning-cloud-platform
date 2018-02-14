@@ -162,7 +162,17 @@ var InputTransition = class InputTransition extends Transition {
 					}
 				}
 			} else if(this.modelJSON.iconTabs[i].activeTransition == "Sequence Button Press") {
-				
+				for(var key in loadData.sequenceButtonPresses) {
+					if(key == this.modelJSON.iconTabs[i].scope) {
+						for(var n = 0; n < loadData.sequenceButtonPresses[key].sequences.length; n++) {
+							var buttons = [];
+							for(var j = 0; j < loadData.sequenceButtonPresses[key].sequences[n].length; j++) {
+								buttons.push({number : parseInt(loadData.sequenceButtonPresses[key].sequences[n].charAt(j))});
+							}
+							this.modelJSON.iconTabs[i].sequencePress.push({buttons: buttons});
+						}
+					}
+				}
 			}
 		}
 	}
@@ -173,6 +183,7 @@ var InputTransition = class InputTransition extends Transition {
 			activeTransitions[this.modelJSON.iconTabs[i].scope] = this.modelJSON.iconTabs[i].activeTransition;
 		}
 		var singleButtonPresses = {};
+		var sequenceButtonPresses = {};
 		for(var i = 0; i < this.modelJSON.iconTabs.length; i++) {
 			if(this.modelJSON.iconTabs[i].activeTransition == "Single Button Press") {
 				if(this.modelJSON.iconTabs[i].singlePress[0].selected || this.modelJSON.iconTabs[i].singlePress[1].selected
@@ -185,7 +196,17 @@ var InputTransition = class InputTransition extends Transition {
 					}
 				}
 			} else if(this.modelJSON.iconTabs[i].activeTransition == "Sequence Button Press") {
-				
+				var sequences = [];
+				for(var n = 0; n < this.modelJSON.iconTabs[i].sequencePress.length; n++) {
+					var buttons = "";
+					for(var j = 0; j < this.modelJSON.iconTabs[i].sequencePress[n].buttons.length; j++) {
+						buttons = buttons.concat(this.modelJSON.iconTabs[i].sequencePress[n].buttons[j].number);
+					}
+					sequences.push(buttons);
+				}
+				sequenceButtonPresses[this.modelJSON.iconTabs[i].scope] = {
+					sequences : sequences
+				}
 			}
 		}
 		
@@ -193,7 +214,8 @@ var InputTransition = class InputTransition extends Transition {
 			transitionId : this.overlayId,
 			connection : this.connection.id,
 			activeTransitions : activeTransitions,
-			singleButtonPresses : singleButtonPresses
+			singleButtonPresses : singleButtonPresses,
+			sequenceButtonPresses : sequenceButtonPresses
 		}
 		
 		return saveData;

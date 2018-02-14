@@ -26,6 +26,7 @@ import wlcp.model.master.connection.Connection;
 import wlcp.model.master.state.OutputState;
 import wlcp.model.master.state.StartState;
 import wlcp.model.master.state.StateType;
+import wlcp.model.master.transition.SequenceButtonPress;
 import wlcp.model.master.transition.Transition;
 
 /**
@@ -113,6 +114,9 @@ public class LoadGame extends HttpServlet {
 		
 		for(Transition transition : transitions) {
 			transition.setGame(null);
+			for(Map.Entry<String, SequenceButtonPress> entry : transition.getSequenceButtonPresses().entrySet()) {
+				entry.getValue().setTransition(null);
+			}
 		}
 		
 		OutputState[] outputStateArray = new OutputState[startStates.size() + outputStates.size()];

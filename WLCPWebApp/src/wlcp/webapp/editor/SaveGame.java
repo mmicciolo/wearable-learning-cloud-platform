@@ -23,6 +23,7 @@ import wlcp.model.master.connection.Connection;
 import wlcp.model.master.state.OutputState;
 import wlcp.model.master.state.StartState;
 import wlcp.model.master.state.StateType;
+import wlcp.model.master.transition.SequenceButtonPress;
 import wlcp.model.master.transition.SingleButtonPress;
 import wlcp.model.master.transition.Transition;
 /**
@@ -129,10 +130,16 @@ public class SaveGame extends HttpServlet {
 			for(Map.Entry<String, SingleButtonPress> entry : saveData.transitions[i].getSingleButtonPresses().entrySet()) {
 				singleButtonPresses.put(entry.getKey(), entry.getValue());
 			}
+			Map<String, SequenceButtonPress> sequenceButtonPresses = new HashMap<String, SequenceButtonPress>();
+			for(Map.Entry<String, SequenceButtonPress> entry : saveData.transitions[i].getSequenceButtonPresses().entrySet()) {
+				//sequenceButtonPresses.put(entry.getKey(), entry.getValue());
+				Transition t = new Transition(); t.setTransitionId(saveData.transitions[i].getTransitionId());
+				sequenceButtonPresses.put(entry.getKey(), new SequenceButtonPress(t, entry.getKey(), entry.getValue().getSequences()));
+			}
 			entityManager.getTransaction().begin();
-			entityManager.merge(new Transition(saveData.transitions[i].getTransitionId(), saveData.game, saveData.transitions[i].getConnection(), new HashMap<String, SingleButtonPress>(), new HashMap<String, String>()));
+			entityManager.merge(new Transition(saveData.transitions[i].getTransitionId(), saveData.game, saveData.transitions[i].getConnection(), new HashMap<String, String>(), new HashMap<String, SingleButtonPress>(), new HashMap<String, SequenceButtonPress>()));
 			entityManager.flush();
-			entityManager.merge(new Transition(saveData.transitions[i].getTransitionId(), saveData.game, saveData.transitions[i].getConnection(), singleButtonPresses, activeTransitions));
+			entityManager.merge(new Transition(saveData.transitions[i].getTransitionId(), saveData.game, saveData.transitions[i].getConnection(), activeTransitions, singleButtonPresses, sequenceButtonPresses));
 			entityManager.getTransaction().commit();
 		}
 		

@@ -35,27 +35,37 @@ public class Transition implements Serializable {
 	private String connection;
 	
 	@ElementCollection()
+    @CollectionTable(name = "ACTIVE_TRANSITIONS")
+    @MapKeyColumn(name = "SCOPE")
+	private Map<String, String> activeTransitions = new HashMap<String, String>();
+	
+	@ElementCollection()
     @CollectionTable(name = "SINGLE_BUTTON_PRESS")
     @MapKeyColumn(name = "SCOPE")
 	private Map<String, SingleButtonPress> singleButtonPresses = new HashMap<String, SingleButtonPress>();
 	
-	@ElementCollection()
-    @CollectionTable(name = "ACTIVE_TRANSITIONS")
-    @MapKeyColumn(name = "SCOPE")
-	private Map<String, String> activeTransitions = new HashMap<String, String>();
+	//@ElementCollection()
+    //@CollectionTable(name = "SEQUENCE_BUTTON_PRESS")
+    //@MapKeyColumn(name = "SCOPE")
+	//@OneToMany(mappedBy="sequenceButtonPressId")
+	@OneToMany(mappedBy="transition", orphanRemoval = true)
+	@MapKey(name = "scope")
+	private Map<String, SequenceButtonPress> sequenceButtonPresses = new HashMap<String, SequenceButtonPress>();
 
 	public Transition() {
 		super();
 	}
-	
-	public Transition(String transitionId, Game game, String connection,
-			Map<String, SingleButtonPress> singleButtonPresses, Map<String, String> activeTransitions) {
+
+	public Transition(String transitionId, Game game, String connection, Map<String, String> activeTransitions,
+			Map<String, SingleButtonPress> singleButtonPresses,
+			Map<String, SequenceButtonPress> sequenceButtonPresses) {
 		super();
 		this.transitionId = transitionId;
 		this.game = game;
 		this.connection = connection;
-		this.singleButtonPresses = singleButtonPresses;
 		this.activeTransitions = activeTransitions;
+		this.singleButtonPresses = singleButtonPresses;
+		this.sequenceButtonPresses = sequenceButtonPresses;
 	}
 
 	public String getTransitionId() {
@@ -81,6 +91,14 @@ public class Transition implements Serializable {
 	public void setConnection(String connection) {
 		this.connection = connection;
 	}
+	
+	public Map<String, String> getActiveTransitions() {
+		return activeTransitions;
+	}
+
+	public void setActiveTransitions(Map<String, String> activeTransitions) {
+		this.activeTransitions = activeTransitions;
+	}
 
 	public Map<String, SingleButtonPress> getSingleButtonPresses() {
 		return singleButtonPresses;
@@ -90,12 +108,12 @@ public class Transition implements Serializable {
 		this.singleButtonPresses = singleButtonPresses;
 	}
 
-	public Map<String, String> getActiveTransitions() {
-		return activeTransitions;
+	public Map<String, SequenceButtonPress> getSequenceButtonPresses() {
+		return sequenceButtonPresses;
 	}
 
-	public void setActiveTransitions(Map<String, String> activeTransitions) {
-		this.activeTransitions = activeTransitions;
+	public void setSequenceButtonPresses(Map<String, SequenceButtonPress> sequenceButtonPresses) {
+		this.sequenceButtonPresses = sequenceButtonPresses;
 	}
 
 }

@@ -206,10 +206,26 @@ var InputTransition = class InputTransition extends Transition {
 		
 		//Set the model for the dialog
 		this.dialog.setModel(this.model);
+		
+		//Set the on after rendering
+		this.dialog.onAfterRendering = $.proxy(this.onAfterRenderingDialog, this);
 			
 		//Open the dialog
 		this.dialog.open();
-		
+	}
+	
+	onAfterRenderingDialog() {
+		for(var i = 0; i < sap.ui.getCore().byId("outputStateDialog").getContent()[0].getItems().length; i++) {
+			var navContainer = sap.ui.getCore().byId("outputStateDialog").getContent()[0].getItems()[i].getContent()[0].getContentAreas()[1];
+			var path = sap.ui.getCore().byId("outputStateDialog").getContent()[0].getItems()[i].getBindingContext().getPath() + "/activeTransition";
+			var activeTransition = this.model.getProperty(path);
+			for(var n = 0; n < navContainer.getPages().length; n++) {
+				if(navContainer.getPages()[n].getTitle().includes(activeTransition)) {
+					navContainer.to(navContainer.getPages()[n]);
+					break;
+				}
+			}
+		}
 		this.sequenceRefresh();
 	}
 	

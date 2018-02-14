@@ -44,41 +44,21 @@
 										<FlexBox alignItems="Start" justifyContent="Center">
 											<items>
 												<Button text="Add" press="addSequence"></Button>
-<!-- 												<core:Fragment fragmentName="wlcpfrontend.fragments.test2" type="HTML"></core:Fragment> -->
 											</items>
 										</FlexBox>
 										<FlexBox alignItems="Start" justifyContent="Center">
 											<items>
-												<List showSeparators="None" items="{sequencePress}">
+												<List showSeparators="None" items="{path:'sequencePress', templateShareable:false}">
 													<CustomListItem xmlns="sap.m">
 														<content>
-															<List showSeparators="None" items="{buttons}">
+															<List showSeparators="None" items="{path:'buttons', templateShareable:false}">
 																<StandardListItem/>
-<!-- 																<items>
-																	<StandardListItem class="sequenceButton sequenceButtonRed"/>
-																	<StandardListItem class="sequenceButton sequenceButtonGreen"/>
-																	<StandardListItem class="sequenceButton sequenceButtonBlue"/>
-																	<StandardListItem class="sequenceButton sequenceButtonBlack"/>
-																</items> -->
 															</List>
 														</content>
 													</CustomListItem>
 												</List>
 											</items>
 										</FlexBox>
-<!-- 										<FlexBox alignItems="Start" justifyContent="Center">
-											<List showSeparators="None"> 
-												<items>
-													<StandardListItem class="sequenceButton sequenceButtonRed"/>
-													<StandardListItem class="sequenceButton sequenceButtonGreen"/>
-													<StandardListItem class="sequenceButton sequenceButtonBlue"/>
-													<StandardListItem class="sequenceButton sequenceButtonBlack"/>
-												</items>
-											</List>
-										</FlexBox> -->
-<!-- 										<ScrollContainer height="100%" width="100%" horizontal="false" vertical="true" focusable="true">
-											<mvc:HTMLView viewName="wlcpfrontend.views.test"></mvc:HTMLView>
-										</ScrollContainer> -->
 									</content>
 								</Page>
 							</NavContainer>

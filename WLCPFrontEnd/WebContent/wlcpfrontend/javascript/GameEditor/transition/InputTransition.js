@@ -275,13 +275,6 @@ var InputTransition = class InputTransition extends Transition {
 				},
 			],
 			sequencePress : []
-//			sequencePress : [{
-//				buttons : [
-//					{
-//						title : "Hello"
-//					}
-//				]
-//			}]
 		}
 	}
 	

@@ -9,13 +9,25 @@ var TransitionValidationRule = class TransitionValidationRule extends Validation
 		
 		//Loop through the neighbor connections
 		for(var i = 0; i < neighborConnections.length; i++) {
-			//if(neighborConnections[i].id != transition.connection.id) {
-				for(var n = 0; n < GameEditor.getEditorController().transitionList.length; n++) {
-					if(neighborConnections[i].id == GameEditor.getEditorController().transitionList[n].connection.id) {
-						transitionList.push(GameEditor.getEditorController().transitionList[n]);
-					}
+			for(var n = 0; n < GameEditor.getEditorController().transitionList.length; n++) {
+				if(neighborConnections[i].id == GameEditor.getEditorController().transitionList[n].connection.id) {
+					transitionList.push(GameEditor.getEditorController().transitionList[n]);
 				}
-			//}
+			}
+		}
+		
+		var orMaskAll = 0;
+		
+		//Loop through and or all active masks that have the same parent
+		for(var i = 0; i < transitionList.length; i++) {
+			
+			//Get the active scopes
+			var activeScopes = this.getActiveScopes3(transitionList[i]);
+			
+			//Get the active scope mask
+			var activeScopeMask = this.getActiveScopeMask(3, 3, activeScopes);
+			
+			orMaskAll = orMaskAll | activeScopeMask;
 		}
 		
 		//Loop through the transitions and apply their scope
@@ -24,9 +36,9 @@ var TransitionValidationRule = class TransitionValidationRule extends Validation
 			var orMaskNeighbors = 0;
 			
 			//Get the neighbor active scope mask
-			for(var n = 0; n < transitionList.length; n++) {
+			//for(var n = 0; n < transitionList.length; n++) {
 				
-				if(transitionList[i].overlayId != transitionList[n].overlayId) {
+				//if(transitionList[i].overlayId != transitionList[n].overlayId) {
 					
 					//Get the active scopes
 					var activeScopes = this.getActiveScopes(transitionList[i], transitionList);
@@ -35,8 +47,8 @@ var TransitionValidationRule = class TransitionValidationRule extends Validation
 					var activeScopeMask = this.getActiveScopeMask(3, 3, activeScopes);
 					
 					orMaskNeighbors = orMaskNeighbors | activeScopeMask;
-				}
-			}
+				//}
+			//}
 			
 			var parentState = null;
 			var parentMask = 0;
@@ -64,6 +76,70 @@ var TransitionValidationRule = class TransitionValidationRule extends Validation
 					parentMask = activeScopeMask;
 				}
 			}
+			
+			//Check for game wide to game wide
+			if(this.getBit(parentMask, 0) == 0x01) {
+				parentMask = 0xffffffff;
+			}
+			
+			var teamList = [];
+			
+			//Check for game wide to team (make sure it has team + players for that team)
+			for(var team = 1; team < 3 + 1; team++) {
+				if(this.getBit(parentMask, team) == 0x01) {
+					teamList.push("Team " + team);
+			      }
+			}
+			
+			if(teamList.length > 0) {
+				var l = [];
+				for(var g = 0; g < teamList.length; g++) {
+					for(var c = 1; c < 3 + 1; c++) {
+						l.push(teamList[g] + " Player " + c);
+					}
+				}
+				parentMask = parentMask | this.getActiveScopeMask(3, 3, l);
+			}
+		    
+		    var playerReturn = true;
+		    var playerReturns = [];
+		    
+		    //Check for player wide to team wide
+		    for(var team = 1; team < 3 + 1; team++) {
+		    	for(var player = 1; player < 3 + 1; player++) {
+		    		if(!this.getBit(parentMask, (3 * team) + player) == 0x01) {
+		    			playerReturn = false;
+	    	            break;
+		    	    }
+		    	}
+		    	if(playerReturn) {
+		    		playerReturns.push("Team " + team);
+		    		for(var player = 1; player < 3 + 1; player++) {
+		    			playerReturns.push("Team " + team + " Player " + player);
+		    		}
+		    	} else {
+		    		playerReturn = true;
+		    	}
+		    }
+		    
+		    if(playerReturns.length > 0) {
+				parentMask = parentMask | this.getActiveScopeMask(3, 3, playerReturns);
+		    }
+		  
+			//Get the active scope masks
+			var activeScopeMasks = this.getActiveScopeMasks(3, 3, orMaskAll);
+			
+		    //Takes care of team to game wide
+		    //Takes care of player to game wide
+		    if((parentMask & 8190) == 8190) {
+		    	parentMask = 0xffffffff;
+		    }
+
+			//Get the active scope masks
+			var activeScopeMasks = this.getActiveScopeMasks(3, 3, orMaskAll);
+
+			//And all of the masks together to get our new scope mask
+			parentMask = parentMask & this.andScopeMasks(activeScopeMasks);
 			
 			transitionList[i].setScope(parentMask & (~orMaskNeighbors), 3, 3);	
 		}
@@ -98,6 +174,17 @@ var TransitionValidationRule = class TransitionValidationRule extends Validation
 				}
 			}
 		}
+	}
+	
+	getActiveScopes3(transition) {
+		var activeScopes = [];
+		for(var i = 0; i < transition.modelJSON.iconTabs.length; i++) {
+			if(transition.modelJSON.iconTabs[i].singlePress[0].selected || transition.modelJSON.iconTabs[i].singlePress[1].selected || 
+		       transition.modelJSON.iconTabs[i].singlePress[2].selected || transition.modelJSON.iconTabs[i].singlePress[3].selected) {
+				activeScopes.push(transition.modelJSON.iconTabs[i].scope);
+			}
+		}
+		return activeScopes;
 	}
 	
 	getActiveScopes2(model) {

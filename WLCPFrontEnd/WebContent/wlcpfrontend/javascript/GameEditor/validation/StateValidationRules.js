@@ -150,8 +150,11 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 				for(var n = 0; n < GameEditor.getEditorController().transitionList.length; n++) {
 					var connection = GameEditor.getJsPlumbInstance().getConnections({target : stateList[i].htmlId});
 					if(connection[0].id == GameEditor.getEditorController().transitionList[n].connection.id) {
-						parentMask = GameEditor.getEditorController().transitionList[n].scopeMask;
-						stateList[i].setScope(parentMask, 3, 3);
+						//parentMask = GameEditor.getEditorController().transitionList[n].scopeMask;
+						//parentMask = parentMask & this.andScopeMasks(activeScopeMasks);
+						var activeScopes = GameEditor.getEditorController().transitionList[n].validationRules[0].getActiveScopes3(GameEditor.getEditorController().transitionList[n]);
+						var activeScopeMask = this.getActiveScopeMask(3, 3, activeScopes);
+						stateList[i].setScope(activeScopeMask, 3, 3);
 						transitionAbove = true;
 					}
 				}

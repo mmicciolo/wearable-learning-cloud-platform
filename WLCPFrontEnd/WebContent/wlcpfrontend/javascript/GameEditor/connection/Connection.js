@@ -7,6 +7,7 @@ var Connection = class Connection {
 		this.connectionFrom = connectionFrom;
 		this.connectionTo = connectionTo;
 		this.connectionId = connectionId;
+		this.isLoopBack = false;
 		this.validationCounter = -1;
 		this.validationRules = [];
 		this.setupValidationRules();
@@ -14,7 +15,11 @@ var Connection = class Connection {
 	
 	static load(loadData) {
 		for(var i = 0; i < loadData.length; i++) {
-			GameEditor.getEditorController().connectionList.push(new Connection(loadData[i].connectionFrom, loadData[i].connectionTo, loadData[i].connectionId));
+			//var state = this.getState(loadData[i].connectionTo);
+			//var state2 = this.getState(loadData[i].connectionFrom);
+			//var loopBack = this.isLoopBack(state2.htmlId, state.htmlId);
+			var editorConnection = new Connection(loadData[i].connectionFrom, loadData[i].connectionTo, loadData[i].connectionId);
+			GameEditor.getEditorController().connectionList.push(editorConnection);
 			if(loadData[i].connectionFrom == (GameEditor.getEditorController().gameModel.GameId + "_start")) {
 				var ep1 = GameEditor.getEditorController().jsPlumbInstance.selectEndpoints({element : loadData[i].connectionFrom}).get(0);
 				var ep2 = GameEditor.getEditorController().jsPlumbInstance.selectEndpoints({element : loadData[i].connectionTo}).get(0);
@@ -27,6 +32,44 @@ var Connection = class Connection {
 				connection.id = loadData[i].connectionId;
 			}
 		}
+		
+		//editorConnection.isLoopBack = loopBack;
+		
+		for(var i = 0; i < GameEditor.getEditorController().connectionList.length; i++) {
+			var state = this.getState(GameEditor.getEditorController().connectionList[i].connectionTo);
+			var state2 = this.getState(GameEditor.getEditorController().connectionList[i].connectionFrom);
+
+			var loopBack = this.isLoopBack(state2.htmlId, state.htmlId);
+			if(loopBack) {
+				GameEditor.getEditorController().connectionList[i].isLoopBack = true;
+			}
+		}
+	}
+	
+	static getState(stateId) {
+		for(var i = 0; i < GameEditor.getEditorController().stateList.length; i++) {
+			if(GameEditor.getEditorController().stateList[i].htmlId == stateId) {
+				return GameEditor.getEditorController().stateList[i];
+			}
+		}
+	}
+	
+	static isLoopBack(stateId, nextState, calledArgs = []) {
+		var connections = GameEditor.getJsPlumbInstance().getConnections({source : nextState});
+		for(var i = 0; i < connections.length; i++) {
+			if(connections[i].targetId == stateId) {
+				return true;
+			} else {
+				if(!calledArgs.includes(stateId + nextState)) {
+					calledArgs.push(stateId + nextState);
+					var result = this.isLoopBack(stateId, connections[i].targetId, calledArgs);
+					if(result) {
+						return result;
+					}
+				}
+			}
+		}
+		return false;
 	}
 	
 	validate() {

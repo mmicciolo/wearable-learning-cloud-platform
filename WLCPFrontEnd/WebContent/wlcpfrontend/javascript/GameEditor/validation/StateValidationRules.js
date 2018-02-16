@@ -6,6 +6,35 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 		var connectionsToState = GameEditor.getJsPlumbInstance().getConnections({target : state.htmlId});
 		
 		//TODO: What if no connections?
+		var newConnectionsToState = [];
+		for(var i = 0; i < connectionsToState.length; i++) {
+			for(var n = 0; n < GameEditor.getEditorController().connectionList.length; n++) {
+				if(connectionsToState[i].id == GameEditor.getEditorController().connectionList[n].connectionId) {
+					if(!GameEditor.getEditorController().connectionList[n].isLoopBack) {
+						newConnectionsToState.push(connectionsToState[i]);
+					}
+				}
+			}
+		}
+		connectionsToState = newConnectionsToState;
+		
+		if(connectionsToState.length == 0) { return; }
+		
+//		var loopBackConnections = [];
+//		var newConnectionsToState = [];
+//		this.checkForLoopBacks(state.htmlId, state.htmlId, loopBackConnections);
+//		for(var i = 0; i < connectionsToState.length; i++) {
+//			var contains = false;
+//			for(var n = 0; n < loopBackConnections.length; n++) {
+//				if(connectionsToState[i].id == loopBackConnections[n].id) {
+//					contains = true
+//				}
+//			}
+//			if(!contains) { newConnectionsToState.push(connectionsToState[i]); }
+//		}
+//		connectionsToState = newConnectionsToState;
+//		
+//		if(connectionsToState.length == 0) { return; }
 		
 		//Get the connections stemming of the source of this states connection
 		var neighborConnections = GameEditor.getJsPlumbInstance().getConnections({source : connectionsToState[0].sourceId});
@@ -168,6 +197,25 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 				}
 			}	
 		}	
+	}
+	
+	static checkForLoopBacks(stateId, nextState, returnConnections) {
+		var connections = GameEditor.getJsPlumbInstance().getConnections({source : nextState});
+		for(var i = 0; i < connections.length; i++) {
+			if(connections[i].targetId == stateId) {
+				returnConnections.push(connections[i]);
+			} else {
+				this.checkForLoopBacks(stateId, connections[i].targetId, returnConnections, false);
+			}
+		}
+	}
+	
+	static getConnectionsBelow(stateId, nextState, returnConnections) {
+		var connections = GameEditor.getJsPlumbInstance().getConnections({source : nextState});
+		for(var i = 0; i < connections.length; i++) {
+			returnConnections.push(connections[i]);
+			this.checkForLoopBacks(stateId, connections[i].targetId, returnConnections);
+		}
 	}
 	
 //validate(state) {

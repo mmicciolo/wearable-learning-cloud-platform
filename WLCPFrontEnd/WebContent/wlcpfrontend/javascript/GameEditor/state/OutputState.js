@@ -48,6 +48,19 @@ var OutputState = class OutputState extends State {
 	
 	doubleClick() {
 		
+		//Check to see if we have a connection to us
+		var hasConnection = false;
+		for(var i = 0; i < GameEditor.getEditorController().connectionList.length; i++) {
+			if(GameEditor.getEditorController().connectionList[i].connectionTo == this.htmlId) {
+				hasConnection = true;
+				break;
+			}
+		}
+		if(!hasConnection) {
+			sap.m.MessageBox.error("Drop a connection of the state before using it!");
+			return;
+		}
+		
 		//Create an instance of the dialog
 		this.dialog = sap.ui.xmlfragment("wlcpfrontend.fragments.GameEditor.States.OutputStateConfig", this);
 		
@@ -201,6 +214,15 @@ var OutputState = class OutputState extends State {
     	for(var i = 0; i < GameEditor.getEditorController().transitionList.length; i++) {
     		for(var n = 0; n < GameEditor.getEditorController().transitionList[i].validationRules.length; n++) {
     			GameEditor.getEditorController().transitionList[i].validationRules[n].validate(GameEditor.getEditorController().transitionList[i]);
+    		}
+    	}
+    	
+    	//Revalidate the states
+    	for(var i = 0; i < GameEditor.getEditorController().stateList.length; i++) {
+    		if(!GameEditor.getEditorController().stateList[i].htmlId.includes("start")) {
+        		for(var n = 0; n < GameEditor.getEditorController().stateList[i].validationRules.length; n++) {
+        			GameEditor.getEditorController().stateList[i].validationRules[n].validate(GameEditor.getEditorController().stateList[i]);
+        		}
     		}
     	}
     }

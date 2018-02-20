@@ -135,7 +135,7 @@ var ConnectionValidationSuccess = class ConnectionValidationSuccess extends Vali
 //		}
 //		
 //		//Tell the state to update
-//		this.getState(validationData.connectionTo).onChange();	
+		this.getState(validationData.connectionTo).onChange();	
 	}
 	
 	getState(stateId) {

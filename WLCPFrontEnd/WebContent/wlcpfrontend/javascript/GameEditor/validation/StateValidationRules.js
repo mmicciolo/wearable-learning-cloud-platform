@@ -151,6 +151,17 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 			var transitionMask = 0;
 			var orMaskAll2 = 0;
 			var connectionsToState2 = GameEditor.getJsPlumbInstance().getConnections({target : stateList[i].htmlId});
+			var newConnectionsToState2 = [];
+			for(var n = 0; n < connectionsToState2.length; n++) {
+				for(var j = 0; j < GameEditor.getEditorController().connectionList.length; j++) {
+					if(connectionsToState2[n].id == GameEditor.getEditorController().connectionList[j].connectionId) {
+						if(!GameEditor.getEditorController().connectionList[j].isLoopBack) {
+							newConnectionsToState2.push(connectionsToState2[n]);
+						}
+					}
+				}
+			}
+			connectionsToState2 = newConnectionsToState2;
 			for(var n = 0; n < connectionsToState2.length; n++) {
 				var found = false;
 				for(var j = 0; j < GameEditor.getEditorController().transitionList.length; j++) {
@@ -196,7 +207,8 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 			var transitionAbove = false;
 			var allTransitions = false; 
 			var transitionCount = 0;
-			var connection = GameEditor.getJsPlumbInstance().getConnections({target : stateList[i].htmlId});
+			//var connection = GameEditor.getJsPlumbInstance().getConnections({target : stateList[i].htmlId});
+			var connection = newConnectionsToState2;
 			for(var n = 0; n < connection.length; n++) {
 				for(var j = 0; j < GameEditor.getEditorController().transitionList.length; j++) {
 					if(connection[n].id == GameEditor.getEditorController().transitionList[j].connection.id) {
@@ -316,7 +328,7 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 					//Set the new scopes
 					stateList[i].setScope(parentMask & (~orMaskNeighbors), 3, 3);	
 				} else if (!transitionAbove && transList.length > 0) {
-					stateList[i].setScope(parentMask, 3, 3);
+					stateList[i].setScope(parentMask & (~orMaskNeighbors), 3, 3);
 				} else if(transitionAbove && !allTransitions) {
 			    	stateList[i].setScope(parentMask & (~transitionNeighborMask), 3, 3);
 			    } else if(allTransitions) { 

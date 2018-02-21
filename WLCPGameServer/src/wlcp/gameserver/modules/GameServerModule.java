@@ -1,6 +1,7 @@
 package wlcp.gameserver.modules;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
@@ -9,8 +10,14 @@ import java.nio.channels.AsynchronousServerSocketChannel;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
 import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.xml.bind.DatatypeConverter;
 
 import wlcp.gameserver.config.Configurations;
 import wlcp.gameserver.config.ServerConfiguration;
@@ -115,6 +122,86 @@ public class GameServerModule extends Module implements IModule {
 	}
 	
 	class ServerReadHandler implements CompletionHandler<Integer, ClientData> {
+		
+		private boolean CheckForWebSocketHandshake(ClientData clientData) {
+	    	//Check if the first 3 bytes are GET
+			if(clientData.inputBytes.get(0) == 'G' && clientData.inputBytes.get(1) == 'E' && clientData.inputBytes.get(2) == 'T') {
+				//If so its a connect request
+				ByteBuffer byteBuffer = ByteBuffer.allocate(clientData.inputBytes.size());
+				int size = clientData.inputBytes.size();
+				for(int i = 0; i < size; i++) {
+					byteBuffer.put(clientData.inputBytes.removeFirst());
+				}
+				byteBuffer.flip();
+				String handshake = StandardCharsets.UTF_8.decode(byteBuffer).toString();
+				Matcher get = Pattern.compile("^GET").matcher(handshake);
+				if (get.find()) {
+				    Matcher match = Pattern.compile("Sec-WebSocket-Key: (.*)").matcher(handshake);
+				    match.find();
+				    byte[] response;
+					try {
+						response = ("HTTP/1.1 101 Switching Protocols\r\n"
+						        + "Connection: Upgrade\r\n"
+						        + "Upgrade: websocket\r\n"
+						        + "Sec-WebSocket-Accept: "
+						        + DatatypeConverter
+						        .printBase64Binary(
+						                MessageDigest
+						                .getInstance("SHA-1")
+						                .digest((match.group(1) + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11")
+						                        .getBytes("UTF-8")))
+						        + "\r\n\r\n")
+						        .getBytes("UTF-8");
+
+					    clientData.getClientSocket().write(ByteBuffer.wrap(response));
+					    return true;
+					} catch (UnsupportedEncodingException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (NoSuchAlgorithmException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+			return false;
+		}
+		
+		private boolean CheckForWebSocketPacket(ClientData clientData) {
+			//Actual Packet
+			if(clientData.inputBytes.peekFirst() == -126) {
+				clientData.inputBytes.removeFirst();
+				byte lengthByte = (byte) (clientData.inputBytes.removeFirst() & 127);
+				byte[] masks = new byte[4];
+				ByteBuffer byteBuffer = ByteBuffer.allocate((int)lengthByte);
+				for(int i = 0; i < 4; i++) {
+					masks[i] = clientData.inputBytes.removeFirst();
+				}
+				for(int i = 0; i < (int)lengthByte; i++) {
+					byte data = (byte) (clientData.inputBytes.removeFirst() ^ masks[i % 4]);
+					byteBuffer.put(data);
+				}
+				
+				//clientData.setBuffer(byteBuffer);
+				clientData.byteBuffer = byteBuffer;
+				clientData.setWebSocket(true);
+				return true;
+				//DataRecieved(clientData);
+			} 
+			return false;
+		}
+		
+		private boolean CheckForWebSocketDisconnect(ClientData clientData) {
+			if(clientData.inputBytes.peekFirst() == -120) {
+				clientData.inputBytes.removeFirst();
+				if(clientData.inputBytes.peekFirst() == -128) {
+					clientData.getBuffer().clear();
+					clientData.getClientSocket().write(clientData.getBuffer(), clientData, new ServerWriteHandler());
+					return true;
+				}
+			}
+			return false;
+		}
 
 		@Override
 		public void completed(Integer result, ClientData clientData) {
@@ -139,9 +226,25 @@ public class GameServerModule extends Module implements IModule {
 			        //If we have atleast 5 bytes and already havent started reading another
 				    //packet with data we recieved from an earlier read.
 				    if(clientData.inputBytes.size() >= 5 && clientData.recievedPacketAmount == 0) {
-					    byte[] bytes = {clientData.inputBytes.get(1), clientData.inputBytes.get(2), clientData.inputBytes.get(3), clientData.inputBytes.get(4)};
-					    clientData.packetLength = ByteBuffer.wrap(bytes).getInt();
-					    clientData.recievedPacketAmount = clientData.packetLength;
+				    	if(CheckForWebSocketHandshake(clientData)) {
+				    		clientData.recievedPacketAmount = 0;
+				    		clientData.inputBytes.clear();
+				    		clientData.getClientSocket().read(clientData.getBuffer(), clientData, this); 
+				    		break;
+				    	} else if(CheckForWebSocketPacket(clientData)) {
+				    		PacketDistributorTask packetDistributor = (PacketDistributorTask) ((TaskManagerModule) ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).getTasksByType(PacketDistributorTask.class).get(0);
+							packetDistributor.DataRecieved(clientData);
+							clientData.inputBytes.clear();
+							clientData.recievedPacketAmount = 0;
+							clientData.getClientSocket().read(clientData.getBuffer(), clientData, this); 
+							break;
+				    	} else if(CheckForWebSocketDisconnect(clientData)) {
+				    		break;
+				    	} else {
+						    byte[] bytes = {clientData.inputBytes.get(1), clientData.inputBytes.get(2), clientData.inputBytes.get(3), clientData.inputBytes.get(4)};
+						    clientData.packetLength = ByteBuffer.wrap(bytes).getInt();
+						    clientData.recievedPacketAmount = clientData.packetLength;
+				    	}
 				    }
 				    
 					//If we have enough bytes to finish processing a packet
@@ -204,6 +307,24 @@ public class GameServerModule extends Module implements IModule {
 				logger.write(exc.getMessage());
 				return;
 			}
+		}
+	}
+	
+	class ServerWriteHandler implements CompletionHandler<Integer, ClientData> {
+
+		@Override
+		public void completed(Integer result, ClientData clientData) {
+			try {
+				clientData.getClientSocket().close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		@Override
+		public void failed(Throwable exc, ClientData clientData) {
+			
 		}
 	}
 	

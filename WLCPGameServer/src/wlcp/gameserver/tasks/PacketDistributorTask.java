@@ -66,8 +66,8 @@ public class PacketDistributorTask extends Task implements ITask {
 		try {
 			packetType = PacketTypes.values()[byteBuffer.get(0)];
 		} catch (Exception e) {
-			HandleWebSocket(clientData);
-			return;
+			//HandleWebSocket(clientData);
+			//return;
 		}
 		switch(packetType) {
 		case START_GAME_INSTANCE:
@@ -232,8 +232,8 @@ public class PacketDistributorTask extends Task implements ITask {
 	public void AddPacket(IPacket packet, ClientData clientData) {
 		try {
 			accquire();
-			packet.populateData(clientData.getBuffer());
-			//packet.populateData(clientData.byteBuffer);
+			//packet.populateData(clientData.getBuffer());
+			packet.populateData(clientData.byteBuffer);
 			recievedPackets.add(new PacketClientData(packet, clientData));
 			release();
 		} catch (InterruptedException e) {
@@ -295,6 +295,7 @@ public class PacketDistributorTask extends Task implements ITask {
 				//We must write until all bytes of the packet have been written
 				//If this is not done, its possible not all data in the buffer is written
 				int bytesWritten = 0;
+				if(data.clientData.isWebSocket()) { bytesWritten = -2; }
 				while(bytesWritten != data.packet.getPacketSize()) {
 					Future<Integer> status = data.clientData.getClientSocket().write(buffer);
 					while(!status.isDone()) { }

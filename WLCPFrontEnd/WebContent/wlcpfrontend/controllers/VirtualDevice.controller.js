@@ -16,10 +16,12 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 		if(!this.transitionHandled) {
 			var byteBuffer = new dcodeIO.ByteBuffer();
 			byteBuffer.writeByte(13);
+			byteBuffer.writeInt(0);
 			byteBuffer.writeInt(this.gameInstanceId);
 			byteBuffer.writeInt(this.team);
 			byteBuffer.writeInt(this.player);
 			byteBuffer.writeInt(1);
+			byteBuffer.writeInt(byteBuffer.offset, 1);
 			byteBuffer.flip();
 			this.socket.send(byteBuffer.toArrayBuffer());
 			this.transitionHandled = true;
@@ -42,9 +44,11 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 		//this.socket.close();
 		var byteBuffer = new dcodeIO.ByteBuffer();
 		byteBuffer.writeByte(8);
+		byteBuffer.writeInt(0);
 		byteBuffer.writeInt(this.gameInstanceId);
 		byteBuffer.writeInt(this.team);
 		byteBuffer.writeInt(this.player);
+		byteBuffer.writeInt(byteBuffer.offset, 1);
 		byteBuffer.flip();
 		this.socket.send(byteBuffer.toArrayBuffer());
 	},
@@ -111,9 +115,11 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 	heartBeat : function() {
 		var byteBuffer = new dcodeIO.ByteBuffer();
 		byteBuffer.writeByte(10);
+		byteBuffer.writeInt(0);
 		byteBuffer.writeInt(this.gameInstanceId);
 		byteBuffer.writeInt(this.team);
 		byteBuffer.writeInt(this.player);
+		byteBuffer.writeInt(byteBuffer.offset, 1);
 		byteBuffer.flip();
 		this.socket.send(byteBuffer.toArrayBuffer());
 	},
@@ -122,6 +128,7 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 		//Switch the nav container to display text if it isnt already
 		
 		var displayTextBox = sap.ui.getCore().byId("virtualDevice--displayText");
+		byteBuffer.readInt();
 		byteBuffer.skip(12);
 		var text = byteBuffer.readString(byteBuffer.readInt());
 		displayTextBox.setValue(text);
@@ -137,6 +144,7 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 		var navContainer = sap.ui.getCore().byId("virtualDevice--virtualDeviceNavContainer");
 		navContainer.to(sap.ui.getCore().byId("virtualDevice--virtualDevicePage"));	
 		
+		byteBuffer.readInt();
 		this.gameInstanceId = byteBuffer.readInt();
 		this.team = byteBuffer.readInt();
 		this.player = byteBuffer.readInt();
@@ -145,6 +153,7 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 	},
 
 	handleGameTeams : function(byteBuffer) {
+		byteBuffer.readInt();
 		var gameInstanceId = byteBuffer.readInt();
 		byteBuffer.skip(8);
 		var gameLobbyId = byteBuffer.readInt();
@@ -166,17 +175,21 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 		//Send a request to connect
 		var byteBuffer = new dcodeIO.ByteBuffer();
 		byteBuffer.writeByte(5);
+		byteBuffer.writeInt(0);
 		byteBuffer.writeInt(selectedGameInstance.gameInstanceId);
-		byteBuffer.skip(8);
+		//byteBuffer.skip(8);
+		byteBuffer.writeInt(0); byteBuffer.writeInt(0);
 		byteBuffer.writeInt(this.username.length);
 		byteBuffer.writeString(this.username);
 		byteBuffer.writeInt(selectedGameInstance.gameLobbyId);
 		byteBuffer.writeByte(parseInt(selectedGameInstance.teamNumber.replace("Team ", "")));
+		byteBuffer.writeInt(byteBuffer.offset, 1);
 		byteBuffer.flip();
 		this.socket.send(byteBuffer.toArrayBuffer());
 	},
 
 	handleActiveGameLobbies : function(byteBuffer) {
+		byteBuffer.readInt();
 		byteBuffer.skip(byteBuffer.readInt());
 		var lobbyCount = byteBuffer.readInt();
 		var lobbies = [];
@@ -210,6 +223,7 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 		//Send a request for the avaliable teams for the given game lobby id
 		var byteBuffer = new dcodeIO.ByteBuffer();
 		byteBuffer.writeByte(4);
+		byteBuffer.writeInt(0);
 		byteBuffer.writeInt(parseInt(selectedLobby.gameInstanceId));
 		//byteBuffer.skip(8);
 		for(var i = 0; i < 8; i++) {
@@ -222,6 +236,7 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 		for(var i = 0; i < 4; i++) {
 			byteBuffer.writeByte(0);
 		}
+		byteBuffer.writeInt(byteBuffer.offset, 1);
 		byteBuffer.flip();
 		this.socket.send(byteBuffer.toArrayBuffer());
 	},
@@ -229,9 +244,11 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 	startGameInstance : function(game, gameLobby) {
 		var byteBuffer = new dcodeIO.ByteBuffer();
 		byteBuffer.writeByte(0);
+		byteBuffer.writeInt(0);
 		byteBuffer.writeInt(game.length);
 		byteBuffer.writeString(game);
 		byteBuffer.writeInt(gameLobby);
+		byteBuffer.writeInt(byteBuffer.offset, 1);
 		byteBuffer.flip();
 		var buffer = byteBuffer.toArrayBuffer();
 		this.socket.send(buffer);
@@ -240,9 +257,11 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 	getActiveGameLobbies : function() {
 		var byteBuffer = new dcodeIO.ByteBuffer();
 		byteBuffer.writeByte(3);
+		byteBuffer.writeInt(0);
 		byteBuffer.writeInt(this.username.length);
 		byteBuffer.writeString(this.username);
 		byteBuffer.writeInt(0);
+		byteBuffer.writeInt(byteBuffer.offset, 1);
 		byteBuffer.flip();
 		this.socket.send(byteBuffer.toArrayBuffer());
 	},

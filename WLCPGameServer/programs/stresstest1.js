@@ -48,7 +48,7 @@ var FSMGame = {
    },
 
    stresstest1_state_2 : function() {
-      this.playerVM.DisplayText("Yo!");
+      this.playerVM.DisplayText("Hello Again!");
       this.state = this.playerVM.SingleButtonPress(["1", "2", "3", "4"], [states.stresstest1_state_1, states.stresstest1_state_1, states.stresstest1_state_1, states.stresstest1_state_1]);
    },
 

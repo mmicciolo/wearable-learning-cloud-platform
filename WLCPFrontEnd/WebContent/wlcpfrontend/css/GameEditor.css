@@ -205,27 +205,12 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
 	border-radius : 0px 0px 15px 15px;
 }
 
-.test {
-	height : 100px;
-	width : 100px;
-	outline-style: solid;
-	display : inline;
-}
-
-.test2 {
+.sequencePressColorList {
 	display:inline-block;
 	float:left;
 	height:100px;
 	width:500px;
 	outline-style: solid;
-}
-
-.sequenceButton2 {
-	float: left;
-    width: 100px;
-    margin: 5px;
-    padding: 5px;
-    height: 100px;
 }
 
 .sequenceButton {

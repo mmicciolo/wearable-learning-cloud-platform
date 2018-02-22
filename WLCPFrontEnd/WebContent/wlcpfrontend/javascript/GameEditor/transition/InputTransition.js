@@ -256,7 +256,7 @@ var InputTransition = class InputTransition extends Transition {
 				}
 			}
 		}
-		this.sequenceRefresh2();
+		this.sequenceRefresh();
 	}
 	
 	createData() {
@@ -385,6 +385,14 @@ var InputTransition = class InputTransition extends Transition {
 		this.path23 = oEvent.getSource().getParent().getParent().getContent()[1].getBindingContext().getPath();
 	}
 	
+	onAfterRenderingSequence(oEvent) {
+		$("#colorListRed").draggable({revert: false, helper: "clone", connectToSortable : "#colorListSortable-listUl"});
+		$("#colorListGreen").draggable({revert: false, helper: "clone", connectToSortable : "#colorListSortable-listUl"});
+		$("#colorListBlue").draggable({revert: false, helper: "clone", connectToSortable : "#colorListSortable-listUl"});
+		$("#colorListBlack").draggable({revert: false, helper: "clone", connectToSortable : "#colorListSortable-listUl"});
+		$("#colorListSortable-listUl").sortable();
+	}
+	
 	closeSequence() {
 		var sequence = $("#colorListSortable-listUl").sortable("toArray", { attribute: "class" });
 		var data = this.model.getProperty(this.path23 + "/sequencePress");
@@ -401,127 +409,10 @@ var InputTransition = class InputTransition extends Transition {
 			}
 		}
 		data.push({buttons : buttonsArray});
-		//data.push({buttons : [{number : 1}, {number : 2}, {number : 3}, {number : 4}]});
 		this.model.setProperty(this.path23 + "/sequencePress", data);
-		this.sequenceRefresh2();
+		this.sequenceRefresh();
 		this.dialog2.close();
 		this.dialog2.destroy();
-	}
-	
-	sequenceRefresh2() {
-		var tabs = sap.ui.getCore().byId("outputStateDialog").getContent()[0].getItems();
-		for(var i = 0; i < tabs.length; i++) {
-			var sequences = sap.ui.getCore().byId("outputStateDialog").getContent()[0].getItems()[i].getContent()[0].getContentAreas()[1].getPages()[1].getContent()[1].getItems()[0].getItems();
-			for(var n = 0; n < sequences.length; n++) {
-				var sequence = sequences[n].getContent()[0].getItems();
-				for(var j = 0; j < sequence.length; j++) {
-					var path = sequence[j].getBindingContext().getPath();
-					var data = this.model.getProperty(path);
-					if(sequence[j].hasStyleClass("sequenceButton")) {
-						var stylesToRemove = [];
-						for(var k = 0; k < sequence[j].aCustomStyleClasses.length; k++) {
-							stylesToRemove.push(sequence[j].aCustomStyleClasses[k]);
-						}
-						for(var k = 0; k < stylesToRemove.length; k++) {
-							sequence[j].removeStyleClass(stylesToRemove[k]);
-						}
-					}
-					switch(data.number) {
-					case 1:
-						sequence[j].addStyleClass("sequenceButton sequenceButtonRed");
-						break;
-					case 2:
-						sequence[j].addStyleClass("sequenceButton sequenceButtonGreen");
-						break;
-					case 3:
-						sequence[j].addStyleClass("sequenceButton sequenceButtonBlue");
-						break;
-					case 4:
-						sequence[j].addStyleClass("sequenceButton sequenceButtonBlack");
-						break;
-					default:
-						break;
-					}
-				}
-			}
-		}
-	}
-	
-	onAfterRenderingSequence(oEvent) {
-		$("#colorListRed").draggable({revert: false, helper: "clone", connectToSortable : "#colorListSortable-listUl"});
-		$("#colorListGreen").draggable({revert: false, helper: "clone", connectToSortable : "#colorListSortable-listUl"});
-		$("#colorListBlue").draggable({revert: false, helper: "clone", connectToSortable : "#colorListSortable-listUl"});
-		$("#colorListBlack").draggable({revert: false, helper: "clone", connectToSortable : "#colorListSortable-listUl"});
-		$("#colorListSortable-listUl").sortable({update : function(event, ui) {
-			//ui.item.addClass("sequenceButton sequenceButtonRed");
-			console.log("update!");
-		}});
-	}
-	
-	addSequence2(oEvent) {
-		var path = oEvent.getSource().getParent().getParent().getContent()[1].getBindingContext().getPath();
-		var data = this.model.getProperty(path + "/sequencePress");
-		data.push({buttons : [{number : 1}, {number : 2}, {number : 3}, {number : 4}]});
-		this.model.setProperty(path + "/sequencePress", data);
-		var list = oEvent.getSource().getParent().getParent().getContent()[1].getItems()[oEvent.getSource().getParent().getParent().getContent()[1].getItems().length - 1];
-		var list2 = list.getItems()[list.getItems().length - 1];
-		var id = "#" + list2.getContent()[0].getId() + "-listUl";
-		list.onAfterRendering = $.proxy(this.sequenceAdded, this, id, oEvent.getSource().getParent().getParent(), list2);
-		
-//		list2.getContent()[0].getItems()[0].addStyleClass("sequenceButton sequenceButtonRed");
-//		list2.getContent()[0].getItems()[1].addStyleClass("sequenceButton sequenceButtonGreen");
-//		list2.getContent()[0].getItems()[2].addStyleClass("sequenceButton sequenceButtonBlue");
-//		list2.getContent()[0].getItems()[3].addStyleClass("sequenceButton sequenceButtonBlack");
-		
-		
-		
-		
-		
-//		var list = new sap.m.List({showSeparators : "None"});
-//		list.addItem(new sap.m.StandardListItem().addStyleClass("sequenceButton sequenceButtonRed"));
-//		list.addItem(new sap.m.StandardListItem().addStyleClass("sequenceButton sequenceButtonGreen"));
-//		list.addItem(new sap.m.StandardListItem().addStyleClass("sequenceButton sequenceButtonBlue"));
-//		list.addItem(new sap.m.StandardListItem().addStyleClass("sequenceButton sequenceButtonBlack"));
-//		var flexBox = new sap.m.FlexBox({alignItems : "Start", justifyContent : "Center"});
-//		flexBox.addItem(list);
-//		oEvent.getSource().getParent().getParent().addContent(flexBox);
-//		oEvent.getSource().getParent().getParent().onAfterRendering = $.proxy(this.sequenceAdded, this, "#" + list.getId() + "-listUl", oEvent.getSource().getParent().getParent());
-	}
-	
-	sequenceAdded(list, parent, list2) {
-		//$(list).sortable({stop : $.proxy(this.sequenceChange, this, list2)});
-		this.sequenceRefresh();
-		parent.onAfterRendering = null;
-	}
-	
-	sequenceChange(list, event, ui) {
-		var array = $("#" + event.target.id).sortable("toArray");
-		var order = [];
-		if(array.length == 4) {
-			for(var i = 0; i < 4; i++) {
-				order.push(parseInt(array[i].substr(array[i].length - 1)) + 1);
-			}
-		}
-		var path = list.getBindingContext() + "/buttons";
-		var buttons = this.model.getProperty(path);
-		var newOrder = [];
-		while(newOrder.length != 4) {
-			for(var i = 0; i < order.length; i++) {
-				if(order[i] == 1) { newOrder.push(this.getOrder(buttons, 1)); order.splice(i, 1); break; }
-				if(order[i] == 2) { newOrder.push(this.getOrder(buttons, 2)); order.splice(i, 1); break; }
-				if(order[i] == 3) { newOrder.push(this.getOrder(buttons, 3)); order.splice(i, 1); break; }
-				if(order[i] == 4) { newOrder.push(this.getOrder(buttons, 4)); order.splice(i, 1); break; }
-			}
-		}
-		this.model.setProperty(path, newOrder);
-	}
-	
-	getOrder(buttons, order) {
-		for(var i = 0; i <buttons.length; i++) {
-			if(buttons[i].number == order) {
-				return buttons[i];
-			}
-		}
 	}
 	
 	sequenceRefresh() {
@@ -529,7 +420,6 @@ var InputTransition = class InputTransition extends Transition {
 		for(var i = 0; i < tabs.length; i++) {
 			var sequences = sap.ui.getCore().byId("outputStateDialog").getContent()[0].getItems()[i].getContent()[0].getContentAreas()[1].getPages()[1].getContent()[1].getItems()[0].getItems();
 			for(var n = 0; n < sequences.length; n++) {
-				$("#" + sequences[n].getContent()[0].getId() + "-listUl").sortable({stop : $.proxy(this.sequenceChange, this, sequences[n].getContent()[0])});
 				var sequence = sequences[n].getContent()[0].getItems();
 				for(var j = 0; j < sequence.length; j++) {
 					var path = sequence[j].getBindingContext().getPath();
@@ -562,6 +452,5 @@ var InputTransition = class InputTransition extends Transition {
 				}
 			}
 		}
-		
 	}
 }

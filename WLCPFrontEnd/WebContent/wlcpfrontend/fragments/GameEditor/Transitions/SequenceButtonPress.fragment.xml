@@ -1,0 +1,59 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:t="sap.ui.table"
+	xmlns:core="sap.ui.core"
+	xmlns:tnt="sap.tnt"
+	xmlns:l="sap.ui.layout"
+	xmlns:u="sap.ui.unified"
+	xmlns:html="http://www.w3.org/1999/xhtml"
+	xmlns:mvc="sap.ui.core.mvc">
+	
+	<Dialog id="sequencePressDialog" title="Configure..." contentWidth="50%" contentHeight="50%">
+		<buttons>
+			<Button text="Submit" type="Accept" press="closeSequence"/>
+		</buttons>
+<!-- 		<FlexBox alignItems="Start" justifyContent="Center">
+			<items>
+				<Text text="Drag the colors into the outlined box below to create a sequence" textAlign="Center"/>
+			</items>
+		</FlexBox> -->
+
+		<FlexBox alignItems="Start" justifyContent="Center">
+			<items>
+				<VBox>
+						<html:div id="colorList">
+			<html:div id="colorListRed" class="sequenceButton sequenceButtonRed"/>
+			<html:div id="colorListGreen" class="sequenceButton sequenceButtonGreen"/>
+			<html:div id="colorListBlue" class="sequenceButton sequenceButtonBlue"/>
+			<html:div id="colorListBlack" class="sequenceButton sequenceButtonBlack"/>
+		</html:div>
+<!-- 				<List id="colorList" showSeparators="None">
+					<items>
+						<StandardListItem id="colorListRed" class="sequenceButton sequenceButtonRed"/>
+						<StandardListItem id="colorListGreen" class="sequenceButton sequenceButtonGreen"/>
+						<StandardListItem id="colorListBlue" class="sequenceButton sequenceButtonBlue"/>
+						<StandardListItem id="colorListBlack" class="sequenceButton sequenceButtonBlack"/>
+					</items>
+				</List> -->
+<!--  				<html:ul id="colorListSortable-listUl" class="test">
+					<html:li class="sequenceButton sequenceButtonRed"></html:li>
+					<html:li class="sequenceButton sequenceButtonGreen"></html:li>
+				</html:ul> -->
+<!-- 				<html:div id="colorListSortable-listUl" class="test">
+				</html:div> -->
+<!--   				<List id="colorListSortable" items="{/sequence}" showSeparators="None" showNoData="true" class="test">
+					<StandardListItem class="sequenceButton2"/>
+				</List> -->
+				</VBox>
+			</items>
+		</FlexBox>
+		<FlexBox alignItems="Start" justifyContent="Center">
+			<items>
+			<VBox>
+						<html:div id="colorListSortable-listUl" class="test2">
+		</html:div>
+		</VBox>
+			</items>
+		</FlexBox>
+	</Dialog>
+</core:FragmentDefinition>

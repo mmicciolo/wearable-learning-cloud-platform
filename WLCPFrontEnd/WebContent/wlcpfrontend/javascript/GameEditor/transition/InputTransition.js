@@ -256,7 +256,7 @@ var InputTransition = class InputTransition extends Transition {
 				}
 			}
 		}
-		this.sequenceRefresh();
+		this.sequenceRefresh2();
 	}
 	
 	createData() {
@@ -370,6 +370,95 @@ var InputTransition = class InputTransition extends Transition {
 	}
 	
 	addSequence(oEvent) {
+		//Create an instance of the dialog
+		this.dialog2 = sap.ui.xmlfragment("wlcpfrontend.fragments.GameEditor.Transitions.SequenceButtonPress", this);
+		
+		//Set the model for the dialog
+		this.dialog2.setModel(new sap.ui.model.json.JSONModel({sequence : [{}]}));
+		
+		//Set the on after rendering
+		this.dialog2.onAfterRendering = $.proxy(this.onAfterRenderingSequence, this);
+			
+		//Open the dialog
+		this.dialog2.open();
+		
+		this.path23 = oEvent.getSource().getParent().getParent().getContent()[1].getBindingContext().getPath();
+	}
+	
+	closeSequence() {
+		var sequence = $("#colorListSortable-listUl").sortable("toArray", { attribute: "class" });
+		var data = this.model.getProperty(this.path23 + "/sequencePress");
+		var buttonsArray = [];
+		for(var i = 0; i < sequence.length; i++) {
+			if(sequence[i].includes("Red")) {
+				buttonsArray.push({number : 1});
+			} else if(sequence[i].includes("Green")) {
+				buttonsArray.push({number : 2});
+			} else if(sequence[i].includes("Blue")) {
+				buttonsArray.push({number : 3});
+			} else if(sequence[i].includes("Black")) {
+				buttonsArray.push({number : 4});
+			}
+		}
+		data.push({buttons : buttonsArray});
+		//data.push({buttons : [{number : 1}, {number : 2}, {number : 3}, {number : 4}]});
+		this.model.setProperty(this.path23 + "/sequencePress", data);
+		this.sequenceRefresh2();
+		this.dialog2.close();
+		this.dialog2.destroy();
+	}
+	
+	sequenceRefresh2() {
+		var tabs = sap.ui.getCore().byId("outputStateDialog").getContent()[0].getItems();
+		for(var i = 0; i < tabs.length; i++) {
+			var sequences = sap.ui.getCore().byId("outputStateDialog").getContent()[0].getItems()[i].getContent()[0].getContentAreas()[1].getPages()[1].getContent()[1].getItems()[0].getItems();
+			for(var n = 0; n < sequences.length; n++) {
+				var sequence = sequences[n].getContent()[0].getItems();
+				for(var j = 0; j < sequence.length; j++) {
+					var path = sequence[j].getBindingContext().getPath();
+					var data = this.model.getProperty(path);
+					if(sequence[j].hasStyleClass("sequenceButton")) {
+						var stylesToRemove = [];
+						for(var k = 0; k < sequence[j].aCustomStyleClasses.length; k++) {
+							stylesToRemove.push(sequence[j].aCustomStyleClasses[k]);
+						}
+						for(var k = 0; k < stylesToRemove.length; k++) {
+							sequence[j].removeStyleClass(stylesToRemove[k]);
+						}
+					}
+					switch(data.number) {
+					case 1:
+						sequence[j].addStyleClass("sequenceButton sequenceButtonRed");
+						break;
+					case 2:
+						sequence[j].addStyleClass("sequenceButton sequenceButtonGreen");
+						break;
+					case 3:
+						sequence[j].addStyleClass("sequenceButton sequenceButtonBlue");
+						break;
+					case 4:
+						sequence[j].addStyleClass("sequenceButton sequenceButtonBlack");
+						break;
+					default:
+						break;
+					}
+				}
+			}
+		}
+	}
+	
+	onAfterRenderingSequence(oEvent) {
+		$("#colorListRed").draggable({revert: false, helper: "clone", connectToSortable : "#colorListSortable-listUl"});
+		$("#colorListGreen").draggable({revert: false, helper: "clone", connectToSortable : "#colorListSortable-listUl"});
+		$("#colorListBlue").draggable({revert: false, helper: "clone", connectToSortable : "#colorListSortable-listUl"});
+		$("#colorListBlack").draggable({revert: false, helper: "clone", connectToSortable : "#colorListSortable-listUl"});
+		$("#colorListSortable-listUl").sortable({update : function(event, ui) {
+			//ui.item.addClass("sequenceButton sequenceButtonRed");
+			console.log("update!");
+		}});
+	}
+	
+	addSequence2(oEvent) {
 		var path = oEvent.getSource().getParent().getParent().getContent()[1].getBindingContext().getPath();
 		var data = this.model.getProperty(path + "/sequencePress");
 		data.push({buttons : [{number : 1}, {number : 2}, {number : 3}, {number : 4}]});

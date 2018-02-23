@@ -20,6 +20,7 @@ import wlcp.gameserver.modules.ConfigurationModule;
 import wlcp.gameserver.tasks.GameInstanceTask;
 import wlcp.shared.packet.IPacket;
 import wlcp.shared.packets.DisplayTextPacket;
+import wlcp.shared.packets.SequenceButtonPressPacket;
 import wlcp.shared.packets.SingleButtonPressPacket;
 
 import jdk.nashorn.api.scripting.*;
@@ -159,6 +160,15 @@ public class PlayerVM extends Thread {
 				return transitions[i];
 			}
 		}
+		return -1;
+	}
+	
+	public int SequenceButtonPress(String[] buttons, int[] transitions) throws ScriptException {
+		block = true;
+		gameInstanceTask.getPacketDistributor().AddPacketToSend(new SequenceButtonPressPacket(gameInstanceTask.getGameInstanceId(), team, player, ""), usernameClientData.clientData);
+		int state;
+		while((state = block()) == -2) {}
+		if(state != -2 && state != -1) { return state; }
 		return -1;
 	}
 	

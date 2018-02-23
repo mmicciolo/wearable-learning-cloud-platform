@@ -60,13 +60,40 @@
 				</NavContainer>
 				<NavContainer id="inputContainer">
 					<layoutData><l:SplitterLayoutData size="50%" resizable="false"/></layoutData>
-					<Page showHeader="false" enableScrolling="false">
+					<Page id="singleButtonPress" showHeader="false" enableScrolling="false">
 						<FlexBox height="100%" wrap="Wrap" alignItems="Center" justifyContent="Center">
 							<items>
 								<Button id="redButton" text="Red Button" class="buttonMargin" press="redButtonPressed"></Button>
 								<Button id="greenButton" text="Green Button" class="buttonMargin" press="greenButtonPressed"></Button>
 								<Button id="blueButton" text="Blue Button" class="buttonMargin" press="blueButtonPressed" ></Button>
 								<Button id="blackButton" text="Black Button" class="buttonMargin" press="blackButtonPressed"></Button>
+							</items>
+						</FlexBox>
+					</Page>
+					<Page id="sequenceButtonPress" showHeader="false" enableScrolling="false">
+						<FlexBox alignItems="Start" justifyContent="Center">
+							<items>
+								<VBox>
+									<html:div id="colorList">
+										<html:div id="colorListRed" class="sequenceButton sequenceButtonRed"/>
+										<html:div id="colorListGreen" class="sequenceButton sequenceButtonGreen"/>
+										<html:div id="colorListBlue" class="sequenceButton sequenceButtonBlue"/>
+										<html:div id="colorListBlack" class="sequenceButton sequenceButtonBlack"/>
+									</html:div>
+								</VBox>
+							</items>
+						</FlexBox>
+						<FlexBox alignItems="Start" justifyContent="Center">
+							<items>
+								<VBox>
+									<html:div id="colorListSortable-listUl" class="sequencePressColorList">
+									</html:div>
+								</VBox>
+							</items>
+						</FlexBox>
+						<FlexBox alignItems="Start" justifyContent="Center">
+							<items>
+								<Button text="Submit" press="submitButtonPressSequence"></Button>
 							</items>
 						</FlexBox>
 					</Page>

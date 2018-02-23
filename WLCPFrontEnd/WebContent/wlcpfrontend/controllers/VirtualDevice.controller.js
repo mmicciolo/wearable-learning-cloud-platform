@@ -40,6 +40,16 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 		
 	},
 	
+	submitButtonPressSequence : function() {
+		if(!this.transitionHandled) {
+			this.transitionHandled = true;
+		}
+		var children = $("#virtualDevice--colorListSortable-listUl").children();
+		for(var i = 0; i < children.length; i++) {
+			children[i].remove();
+		}
+	},
+	
 	disconnectPressed : function() {
 		//this.socket.close();
 		var byteBuffer = new dcodeIO.ByteBuffer();
@@ -64,7 +74,7 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 	
 	onOpen : function(event) {
 		console.log("Connected");
-		this.startGameInstance("servertest", 1);
+		this.startGameInstance("estim", 1);
 		this.getActiveGameLobbies();
 	},
 	
@@ -94,6 +104,9 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 			break;
 		case 13:
 			this.singleButtonPress(byteBuffer);
+			break;
+		case 16:
+			this.sequenceButtonPress(byteBuffer);
 			break;
 		default:
 			break;
@@ -135,8 +148,37 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 	},
 	
 	singleButtonPress : function(byteBuffer) {
+		this.switchToTransitionType("SingleButtonPress");
 		this.transitionHandled = false;
 	}, 
+	
+	sequenceButtonPress : function(byteBuffer) {
+		this.switchToTransitionType("SequenceButtonPress");
+		this.transitionHandled = false;
+	},
+	
+	switchToTransitionType : function(type) {
+		var navContainer = sap.ui.getCore().byId("virtualDevice--inputContainer");
+		switch(type) {
+		case "SingleButtonPress":
+			navContainer.afterNavigate = null;
+			navContainer.to(sap.ui.getCore().byId("virtualDevice--singleButtonPress"));
+			break;
+		case "SequenceButtonPress":
+			var page = sap.ui.getCore().byId("virtualDevice--sequenceButtonPress");
+			page.onAfterRendering = $.proxy(this.onAfterRenderingSequence, this);
+			navContainer.to(sap.ui.getCore().byId("virtualDevice--sequenceButtonPress"));
+			break;
+		}
+	},
+	
+	onAfterRenderingSequence : function() {
+		$("#virtualDevice--colorListRed").draggable({revert: false, helper: "clone", connectToSortable : "#virtualDevice--colorListSortable-listUl"});
+		$("#virtualDevice--colorListGreen").draggable({revert: false, helper: "clone", connectToSortable : "#virtualDevice--colorListSortable-listUl"});
+		$("#virtualDevice--colorListBlue").draggable({revert: false, helper: "clone", connectToSortable : "#virtualDevice--colorListSortable-listUl"});
+		$("#virtualDevice--colorListBlack").draggable({revert: false, helper: "clone", connectToSortable : "#virtualDevice--colorListSortable-listUl"});
+		$("#virtualDevice--colorListSortable-listUl").sortable();
+	},
 	
 	joinedGame : function(byteBuffer) {
 		//console.log("We have joined the game!");
@@ -274,6 +316,9 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 	onInit: function() {
 		this.setupSocketConnect();
 		sap.ui.getCore().setModel(this.model);
+		
+		//var navContainer = sap.ui.getCore().byId("virtualDevice--virtualDeviceNavContainer");
+		//navContainer.to(sap.ui.getCore().byId("virtualDevice--virtualDevicePage"));	
 	},
 
 /**

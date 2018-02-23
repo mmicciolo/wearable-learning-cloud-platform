@@ -304,8 +304,7 @@ public class PacketDistributorTask extends Task implements ITask {
 				//We must write until all bytes of the packet have been written
 				//If this is not done, its possible not all data in the buffer is written
 				int bytesWritten = 0;
-				if(data.clientData.isWebSocket()) { bytesWritten = -2; }
-				while(bytesWritten != data.packet.getPacketSize()) {
+				while(bytesWritten != buffer.array().length) {
 					Future<Integer> status = data.clientData.getClientSocket().write(buffer);
 					while(!status.isDone()) { }
 					try {

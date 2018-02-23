@@ -33,3 +33,38 @@
 	text-shadow : inherit;
 	border: inherit;
 }
+
+.sequencePressColorList {
+	display:inline-block;
+	float:left;
+	height:50px;
+	width:200px;
+	margin-top:20px;
+	outline-style: solid;
+	outline-color: black;
+}
+
+.sequenceButton {
+	display : inline-block !important;
+	float: left;
+    width: 25px;
+    margin: 5px;
+    padding: 5px;
+    height: 25px;
+}
+
+.sequenceButtonRed {
+	background: red;
+}
+
+.sequenceButtonGreen {
+	background: green;
+}
+
+.sequenceButtonBlue {
+	background: blue;
+}
+
+.sequenceButtonBlack {
+	background: black;
+}

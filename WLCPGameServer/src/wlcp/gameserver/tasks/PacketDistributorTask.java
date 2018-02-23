@@ -207,24 +207,33 @@ public class PacketDistributorTask extends Task implements ITask {
 	}
 	
 	public ByteBuffer HandleSocket(ByteBuffer byteBuffer) {
-		ByteBuffer bb = ByteBuffer.allocate(byteBuffer.array().length + 2);
-		bb.put((byte) -126);
 		
-		byte[] mask = {5, 28, -23, -67};
+		//Get the amount of data we need to send
+		int length = byteBuffer.array().length;
+		ByteBuffer bb = null;
 		
-		//bb.put((byte) ((byte)byteBuffer.limit() + (1 << 7)));
-		bb.put((byte) ((byte)byteBuffer.limit() & 127));
-		//bb.put(mask[0]);
-		//bb.put(mask[1]);
-		//bb.put(mask[2]);
-		//bb.put(mask[3]);
+		//If its more than 125 bytes, we need to use 2 bytes for the length
+		if(length > 125) {
+			bb = ByteBuffer.allocate(byteBuffer.array().length + 4);
+			bb.put((byte) -126);
+			bb.put((byte)126);
+			bb.put((byte)((length >> 8) & 0xFF));
+			bb.put((byte)(length & 0xFF));
+		} else {
+			
+			//Else just use a single byte
+			bb = ByteBuffer.allocate(byteBuffer.array().length + 2);
+			bb.put((byte) -126);
+
+			bb.put((byte) ((byte)byteBuffer.limit() & 127));
+		}
 		
+		//Fill the data in the new web socket buffer
 		for(int i = 0; i < byteBuffer.limit(); i++) {
-			//byte data = (byte) (byteBuffer.get() ^ mask[i % 4]);
-			//bb.put(data);
 			bb.put(byteBuffer.get());
 		}
 		
+		//Send it off
 		bb.flip();
 		return bb;
 	}

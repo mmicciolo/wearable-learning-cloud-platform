@@ -169,6 +169,12 @@ public class PlayerVM extends Thread {
 		int state;
 		while((state = block()) == -2) {}
 		if(state != -2 && state != -1) { return state; }
+		SequenceButtonPressPacket packet = (SequenceButtonPressPacket) blockPacket;
+		for(int i = 0; i < buttons.length; i++) {
+			if(buttons[i].equals(packet.getSequenceButtonPress())) {
+				return transitions[i];
+			}
+		}
 		return -1;
 	}
 	

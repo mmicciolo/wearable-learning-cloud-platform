@@ -42,6 +42,30 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 	
 	submitButtonPressSequence : function() {
 		if(!this.transitionHandled) {
+			var sequences = $("#virtualDevice--colorListSortable-listUl").sortable("toArray", {attribute : "class"});
+			var sequence = "";
+			for(var i = 0; i < sequences.length; i++) {
+				if(sequences[i].includes("Red")) {
+					sequence = sequence.concat("1");
+				} else if(sequences[i].includes("Green")) {
+					sequence = sequence.concat("2");
+				} else if(sequences[i].includes("Blue")) {
+					sequence = sequence.concat("3");
+				} else if(sequences[i].includes("Black")) {
+					sequence = sequence.concat("4");
+				}
+			}
+			var byteBuffer = new dcodeIO.ByteBuffer();
+			byteBuffer.writeByte(16);
+			byteBuffer.writeInt(0);
+			byteBuffer.writeInt(this.gameInstanceId);
+			byteBuffer.writeInt(this.team);
+			byteBuffer.writeInt(this.player);
+			byteBuffer.writeInt(sequence.length);
+			byteBuffer.writeString(sequence);
+			byteBuffer.writeInt(byteBuffer.offset, 1);
+			byteBuffer.flip();
+			this.socket.send(byteBuffer.toArrayBuffer());
 			this.transitionHandled = true;
 		}
 		var children = $("#virtualDevice--colorListSortable-listUl").children();

@@ -33,6 +33,7 @@ import wlcp.shared.packets.GameLobbiesPacket;
 import wlcp.shared.packets.GamePacket;
 import wlcp.shared.packets.GameTeamsPacket;
 import wlcp.shared.packets.HeartBeatPacket;
+import wlcp.shared.packets.SequenceButtonPressPacket;
 import wlcp.shared.packets.ServerPacket;
 import wlcp.shared.packets.SingleButtonPressPacket;
 import wlcp.shared.packets.StartGameInstancePacket;
@@ -90,6 +91,9 @@ public class PacketDistributorTask extends Task implements ITask {
 			break;
 		case SINGLE_BUTTON_PRESS:
 			AddPacket(new SingleButtonPressPacket(), clientData);
+			break;
+		case SEQUENCE_BUTTON_PRESS:
+			AddPacket(new SequenceButtonPressPacket(), clientData);
 			break;
 		default:
 			break;

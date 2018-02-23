@@ -16,7 +16,7 @@ public class DisplayTextStateType extends StateType implements IStateType {
 			if(scope.equals("Game Wide")) {
 				stringBuilder.append("      " + "this.playerVM.DisplayText(" + "\"" + displayText.get(scope) + "\"" + ");\n");
 			} else {
-				stringBuilder.append("         " + "DisplayText(" + "\"" + displayText.get(scope) + "\"" + ");\n");
+				stringBuilder.append("         " + "this.playerVM.DisplayText(" + "\"" + displayText.get(scope) + "\"" + ");\n");
 			}
 			stringBuilder.append(StateType.GenerateEndStateConditional(scope));
 			return stringBuilder.toString();

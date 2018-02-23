@@ -40,6 +40,7 @@ import wlcp.shared.packets.DisconnectCompletePacket;
 import wlcp.shared.packets.DisconnectPacket;
 import wlcp.shared.packets.GameTeamsPacket;
 import wlcp.shared.packets.HeartBeatPacket;
+import wlcp.shared.packets.SequenceButtonPressPacket;
 import wlcp.shared.packets.SingleButtonPressPacket;
 
 
@@ -133,6 +134,9 @@ public class GameInstanceTask extends Task implements ITask {
 		case SINGLE_BUTTON_PRESS:
 			SingleButtonPress(packetClientData);
 			break;
+		case SEQUENCE_BUTTON_PRESS:
+			SequenceButtonPress(packetClientData);
+			break;
 		default:
 			break;
 		}
@@ -142,6 +146,16 @@ public class GameInstanceTask extends Task implements ITask {
 		
 		//Get the single button press packet
 		SingleButtonPressPacket packet = (SingleButtonPressPacket) packetClientData.packet;
+		for(Player player : players) {
+			if(player.teamPlayer.team == packet.getTeam() && player.teamPlayer.player == packet.getPlayer()) {
+				player.playerVM.unblock(packet);
+			}
+		}
+	}
+	
+	private void SequenceButtonPress(PacketClientData packetClientData) {
+		//Get the sequence button press packet
+		SequenceButtonPressPacket packet = (SequenceButtonPressPacket) packetClientData.packet;
 		for(Player player : players) {
 			if(player.teamPlayer.team == packet.getTeam() && player.teamPlayer.player == packet.getPlayer()) {
 				player.playerVM.unblock(packet);

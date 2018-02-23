@@ -239,6 +239,8 @@ public class GameServerModule extends Module implements IModule {
 							clientData.getClientSocket().read(clientData.getBuffer(), clientData, this); 
 							break;
 				    	} else if(CheckForWebSocketDisconnect(clientData)) {
+							clientData.inputBytes.clear();
+							clientData.recievedPacketAmount = 0;
 				    		break;
 				    	} else {
 						    byte[] bytes = {clientData.inputBytes.get(1), clientData.inputBytes.get(2), clientData.inputBytes.get(3), clientData.inputBytes.get(4)};

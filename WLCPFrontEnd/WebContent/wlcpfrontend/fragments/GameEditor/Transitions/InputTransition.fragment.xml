@@ -48,10 +48,10 @@
 										</FlexBox>
 										<FlexBox alignItems="Start" justifyContent="Center">
 											<items>
-												<List showSeparators="None" items="{path:'sequencePress', templateShareable:false}">
+												<List showSeparators="None" items="{path:'sequencePress', templateShareable:false}" noDataText="No Button Sequence">
 													<CustomListItem xmlns="sap.m">
 														<content>
-															<List showSeparators="None" items="{path:'buttons', templateShareable:false}">
+															<List showSeparators="None" items="{path:'buttons', templateShareable:false}" noDataText="Empty Sequence">
 																<StandardListItem/>
 															</List>
 														</content>

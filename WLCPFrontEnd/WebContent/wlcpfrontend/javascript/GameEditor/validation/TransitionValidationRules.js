@@ -182,7 +182,30 @@ var TransitionValidationRule = class TransitionValidationRule extends Validation
 			if(transition.modelJSON.iconTabs[i].singlePress[0].selected || transition.modelJSON.iconTabs[i].singlePress[1].selected || 
 		       transition.modelJSON.iconTabs[i].singlePress[2].selected || transition.modelJSON.iconTabs[i].singlePress[3].selected) {
 				activeScopes.push(transition.modelJSON.iconTabs[i].scope);
-			}
+			} else if(transition.modelJSON.iconTabs[i].sequencePress.length > 0) {
+				activeScopes.push(transition.modelJSON.iconTabs[i].scope);
+			} //else if(transition.modelJSON.iconTabs[i].sequencePress.length == 0) {
+//				var neighborConnections = GameEditor.getJsPlumbInstance().getConnections({source : transition.connection.sourceId});
+//				var neighborTransitions = [];
+//				for(var n = 0; n < neighborConnections.length; n++) {
+//					for(var j = 0; j < GameEditor.getEditorController().transitionList.length; j++) {
+//						if(GameEditor.getEditorController().transitionList[j].connection.id == neighborConnections[n].id && GameEditor.getEditorController().transitionList[j].overlayId != transition.overlayId) {
+//							neighborTransitions.push(GameEditor.getEditorController().transitionList[j]);
+//						}
+//					}
+//				}
+//				var lengthZero = false;
+//				for(var n = 0; n < neighborTransitions.length; n++) {
+//					for(var j = 0; j < neighborTransitions[n].modelJSON.iconTabs.length; j++) {
+//						if(neighborTransitions[n].modelJSON.iconTabs[j].sequencePress.length == 0) {
+//							lengthZero = true;
+//						}
+//					}
+//				}
+//				if(!lengthZero) {
+//					activeScopes.push(transition.modelJSON.iconTabs[i].scope);
+//				}
+//			}
 		}
 		return activeScopes;
 	}

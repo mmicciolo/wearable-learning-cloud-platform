@@ -410,7 +410,9 @@ var InputTransition = class InputTransition extends Transition {
 		}
 		data.push({buttons : buttonsArray});
 		this.model.setProperty(this.path23 + "/sequencePress", data);
-		this.sequenceRefresh();
+		this.onChange();
+		this.onAfterRenderingDialog();
+		//this.sequenceRefresh();
 		this.dialog2.close();
 		this.dialog2.destroy();
 	}

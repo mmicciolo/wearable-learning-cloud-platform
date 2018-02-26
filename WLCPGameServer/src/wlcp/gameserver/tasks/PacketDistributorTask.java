@@ -59,8 +59,6 @@ public class PacketDistributorTask extends Task implements ITask {
 	}
 	
 	public void DataRecieved(ClientData clientData) {
-		//ByteBuffer byteBuffer = clientData.getBuffer();
-		//byteBuffer.flip();
 		ByteBuffer byteBuffer = clientData.byteBuffer;
 		byteBuffer.flip();
 		PacketTypes packetType = null;
@@ -100,116 +98,6 @@ public class PacketDistributorTask extends Task implements ITask {
 		}
 	}
 	
-	private void HandleWebSocket(ClientData clientData) {
-		
-		//Check if the first 3 bytes are GET
-		if(clientData.getBuffer().get(0) == 'G' && clientData.getBuffer().get(1) == 'E' && clientData.getBuffer().get(2) == 'T') {
-			
-			//If so its a connect request
-			String handshake = StandardCharsets.UTF_8.decode(clientData.getBuffer()).toString();
-			Matcher get = Pattern.compile("^GET").matcher(handshake);
-			if (get.find()) {
-			    Matcher match = Pattern.compile("Sec-WebSocket-Key: (.*)").matcher(handshake);
-			    match.find();
-			    byte[] response;
-				try {
-					response = ("HTTP/1.1 101 Switching Protocols\r\n"
-					        + "Connection: Upgrade\r\n"
-					        + "Upgrade: websocket\r\n"
-					        + "Sec-WebSocket-Accept: "
-					        + DatatypeConverter
-					        .printBase64Binary(
-					                MessageDigest
-					                .getInstance("SHA-1")
-					                .digest((match.group(1) + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11")
-					                        .getBytes("UTF-8")))
-					        + "\r\n\r\n")
-					        .getBytes("UTF-8");
-
-				    clientData.getClientSocket().write(ByteBuffer.wrap(response));
-				} catch (UnsupportedEncodingException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (NoSuchAlgorithmException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		} else {
-			//Actual Packet
-			if(clientData.getBuffer().get() == -126) {
-				byte lengthByte = (byte) (clientData.getBuffer().get() & 127);
-				byte[] masks = new byte[4];
-				ByteBuffer byteBuffer = ByteBuffer.allocate((int)lengthByte);
-				for(int i = 0; i < 4; i++) {
-					masks[i] = clientData.getBuffer().get();
-				}
-				for(int i = 0; i < (int)lengthByte; i++) {
-					byte data = (byte) (clientData.getBuffer().get() ^ masks[i % 4]);
-					byteBuffer.put(data);
-				}
-				
-				clientData.setBuffer(byteBuffer);
-				clientData.setWebSocket(true);
-				//DataRecieved(clientData);
-			} else if(clientData.getBuffer().get(0) == -120) {
-				if(clientData.getBuffer().get(1) == -128) {
-					//disconnect
-					clientData.getBuffer().clear();
-					clientData.getClientSocket().write(clientData.getBuffer(), clientData, new ServerWriteHandler());
-					return;
-				}
-			}
-		}
-	}
-	
-	private void WebSocketHandleShake(ClientData clientData) {
-		
-		String handshake = "";
-		
-		handshake = StandardCharsets.UTF_8.decode(clientData.getBuffer()).toString();
-		
-		//translate bytes of request to string
-//		for(int i = 0; i < clientData.getBuffer().remaining(); i++) {
-//			handshake += (char) clientData.getBuffer().get();
-//		}
-		
-		//clientData.getClientSocket().write(ByteBuffer.wrap(new String("HTTP/1.1 200 OK\r\nConnection: keep-alive\r\n\r\n").getBytes()));
-		
-
-
-		Matcher get = Pattern.compile("^GET").matcher(handshake);
-		
-		if (get.find()) {
-		    Matcher match = Pattern.compile("Sec-WebSocket-Key: (.*)").matcher(handshake);
-		    match.find();
-		    byte[] response;
-			try {
-				response = ("HTTP/1.1 101 Switching Protocols\r\n"
-				        + "Connection: Upgrade\r\n"
-				        + "Upgrade: websocket\r\n"
-				        + "Sec-WebSocket-Accept: "
-				        + DatatypeConverter
-				        .printBase64Binary(
-				                MessageDigest
-				                .getInstance("SHA-1")
-				                .digest((match.group(1) + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11")
-				                        .getBytes("UTF-8")))
-				        + "\r\n\r\n")
-				        .getBytes("UTF-8");
-
-			    clientData.getClientSocket().write(ByteBuffer.wrap(response));
-			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (NoSuchAlgorithmException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-	}
-	
 	public ByteBuffer HandleSocket(ByteBuffer byteBuffer) {
 		
 		//Get the amount of data we need to send
@@ -245,7 +133,6 @@ public class PacketDistributorTask extends Task implements ITask {
 	public void AddPacket(IPacket packet, ClientData clientData) {
 		try {
 			accquire();
-			//packet.populateData(clientData.getBuffer());
 			packet.populateData(clientData.byteBuffer);
 			recievedPackets.add(new PacketClientData(packet, clientData));
 			release();
@@ -310,11 +197,11 @@ public class PacketDistributorTask extends Task implements ITask {
 				int bytesWritten = 0;
 				while(bytesWritten != buffer.array().length) {
 					Future<Integer> status = data.clientData.getClientSocket().write(buffer);
-					while(!status.isDone()) { }
 					try {
 						bytesWritten += status.get();
-					} catch (ExecutionException e) {
+					} catch (Exception e) {
 						//e.printStackTrace();
+						break;
 					}
 				}
 			}

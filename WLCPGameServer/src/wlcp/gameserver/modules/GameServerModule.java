@@ -125,18 +125,29 @@ public class GameServerModule extends Module implements IModule {
 		
 		private boolean CheckForWebSocketHandshake(ClientData clientData) {
 	    	//Check if the first 3 bytes are GET
-			if(clientData.inputBytes.get(0) == 'G' && clientData.inputBytes.get(1) == 'E' && clientData.inputBytes.get(2) == 'T') {
-				//If so its a connect request
-				ByteBuffer byteBuffer = ByteBuffer.allocate(clientData.inputBytes.size());
-				int size = clientData.inputBytes.size();
-				for(int i = 0; i < size; i++) {
-					byteBuffer.put(clientData.inputBytes.removeFirst());
-				}
-				byteBuffer.flip();
-				String handshake = StandardCharsets.UTF_8.decode(byteBuffer).toString();
-				Matcher get = Pattern.compile("^GET").matcher(handshake);
+			if(clientData.inputBytes.get(0) == 'G' && clientData.inputBytes.get(1) == 'E' && clientData.inputBytes.get(2) == 'T' && !clientData.webSocketHandshakeComplete) {
+				clientData.setWebSocket(true);
+			} else if(!clientData.isWebSocket()) {
+				return true;
+			}
+			
+			//If so its a connect request
+			ByteBuffer byteBuffer = ByteBuffer.allocate(clientData.inputBytes.size());
+			int size = clientData.inputBytes.size();
+			for(int i = 0; i < size; i++) {
+				byteBuffer.put(clientData.inputBytes.removeFirst());
+			}
+			byteBuffer.flip();
+			clientData.webSocketHandshake = clientData.webSocketHandshake.concat(StandardCharsets.UTF_8.decode(byteBuffer).toString());
+			if(clientData.webSocketHandshake.contains("\r\n\r\n")) {
+				clientData.webSocketHandshakeComplete = true;
+			}
+			
+			if(clientData.webSocketHandshakeComplete) {
+			
+				Matcher get = Pattern.compile("^GET").matcher(clientData.webSocketHandshake);
 				if (get.find()) {
-				    Matcher match = Pattern.compile("Sec-WebSocket-Key: (.*)").matcher(handshake);
+				    Matcher match = Pattern.compile("Sec-WebSocket-Key: (.*)").matcher(clientData.webSocketHandshake);
 				    match.find();
 				    byte[] response;
 					try {
@@ -154,6 +165,7 @@ public class GameServerModule extends Module implements IModule {
 						        .getBytes("UTF-8");
 
 					    clientData.getClientSocket().write(ByteBuffer.wrap(response));
+					    clientData.getClientSocket().read(clientData.getBuffer(), clientData, this); 
 					    return true;
 					} catch (UnsupportedEncodingException e) {
 						// TODO Auto-generated catch block
@@ -164,30 +176,49 @@ public class GameServerModule extends Module implements IModule {
 					}
 				}
 			}
+
+			clientData.getClientSocket().read(clientData.getBuffer(), clientData, this); 
 			return false;
 		}
 		
-		private boolean CheckForWebSocketPacket(ClientData clientData) {
-			//Actual Packet
-			if(clientData.inputBytes.peekFirst() == -126) {
+		private boolean CheckForWebSocketPacket(Integer result, ClientData clientData) {
+			
+			int bytesRead = 0;
+			if(clientData.inputBytes.peekFirst() == -126 && clientData.packetLength == 0) {
 				clientData.inputBytes.removeFirst();
 				byte lengthByte = (byte) (clientData.inputBytes.removeFirst() & 127);
-				byte[] masks = new byte[4];
 				ByteBuffer byteBuffer = ByteBuffer.allocate((int)lengthByte);
 				for(int i = 0; i < 4; i++) {
-					masks[i] = clientData.inputBytes.removeFirst();
+					clientData.masks[i] = clientData.inputBytes.removeFirst();
 				}
-				for(int i = 0; i < (int)lengthByte; i++) {
-					byte data = (byte) (clientData.inputBytes.removeFirst() ^ masks[i % 4]);
-					byteBuffer.put(data);
+				clientData.packetLength = lengthByte;
+			    clientData.recievedPacketAmount = clientData.packetLength;
+			    bytesRead = clientData.inputBytes.size();
+			} else {
+				bytesRead = result;
+			}
+			
+			//If we have enough bytes to finish processing a packet
+			if(clientData.inputBytes.size() >= clientData.recievedPacketAmount && clientData.recievedPacketAmount != 0) {
+				clientData.byteBuffer = ByteBuffer.allocate(clientData.packetLength);
+				for(int i = 0; i < clientData.packetLength; i++) {
+					byte data = (byte) (clientData.inputBytes.removeFirst() ^ clientData.masks[i % 4]);
+					clientData.byteBuffer.put(data);
 				}
+				PacketDistributorTask packetDistributor = (PacketDistributorTask) ((TaskManagerModule) ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).getTasksByType(PacketDistributorTask.class).get(0);
+				packetDistributor.DataRecieved(clientData);
+				clientData.recievedPacketAmount = 0;
+				clientData.packetLength = 0;
+				if(clientData.recievedPacketAmount == clientData.inputBytes.size()) {
+					clientData.getClientSocket().read(clientData.getBuffer(), clientData, this); 
+				} 
+			} else {
 				
-				//clientData.setBuffer(byteBuffer);
-				clientData.byteBuffer = byteBuffer;
-				clientData.setWebSocket(true);
-				return true;
-				//DataRecieved(clientData);
-			} 
+				//If we get here we havent recieved enough data, keep reading
+				if(clientData.recievedPacketAmount != 0 ) {clientData.recievedPacketAmount -= bytesRead;}
+				clientData.getClientSocket().read(clientData.getBuffer(), clientData, this);
+			}
+			
 			return false;
 		}
 		
@@ -218,58 +249,55 @@ public class GameServerModule extends Module implements IModule {
 			  
 				//Clear the buffer so more data can be put into it
 				clientData.getBuffer().clear();
+				
+				//Check for web socket handshake
+				if(!clientData.webSocketHandshakeComplete && clientData.inputBytes.size() >= 3) {
+					CheckForWebSocketHandshake(clientData);
+				}
 				  
 				//We need to read until all bytes of the packet have been returned
 				//If we do not do this, full packets wont be read and data will get corrupt
 				while(true) {
 					
-			        //If we have atleast 5 bytes and already havent started reading another
-				    //packet with data we recieved from an earlier read.
-				    if(clientData.inputBytes.size() >= 5 && clientData.recievedPacketAmount == 0) {
-				    	if(CheckForWebSocketHandshake(clientData)) {
-				    		clientData.recievedPacketAmount = 0;
-				    		clientData.inputBytes.clear();
-				    		clientData.getClientSocket().read(clientData.getBuffer(), clientData, this); 
-				    		break;
-				    	} else if(CheckForWebSocketPacket(clientData)) {
-				    		PacketDistributorTask packetDistributor = (PacketDistributorTask) ((TaskManagerModule) ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).getTasksByType(PacketDistributorTask.class).get(0);
-							packetDistributor.DataRecieved(clientData);
-							clientData.inputBytes.clear();
-							clientData.recievedPacketAmount = 0;
-							clientData.getClientSocket().read(clientData.getBuffer(), clientData, this); 
-							break;
-				    	} else if(CheckForWebSocketDisconnect(clientData)) {
-							clientData.inputBytes.clear();
-							clientData.recievedPacketAmount = 0;
-				    		break;
-				    	} else {
-						    byte[] bytes = {clientData.inputBytes.get(1), clientData.inputBytes.get(2), clientData.inputBytes.get(3), clientData.inputBytes.get(4)};
+					if(!clientData.isWebSocket()) {
+						//If we have atleast 5 bytes and already havent started reading another
+					    //packet with data we recieved from an earlier read.
+					    if(clientData.inputBytes.size() >= 5 && clientData.recievedPacketAmount == 0) {
+					    	byte[] bytes = {clientData.inputBytes.get(1), clientData.inputBytes.get(2), clientData.inputBytes.get(3), clientData.inputBytes.get(4)};
 						    clientData.packetLength = ByteBuffer.wrap(bytes).getInt();
 						    clientData.recievedPacketAmount = clientData.packetLength;
-				    	}
-				    }
-				    
-					//If we have enough bytes to finish processing a packet
-					if(clientData.inputBytes.size() >= clientData.recievedPacketAmount && clientData.recievedPacketAmount != 0) {
-						clientData.byteBuffer = ByteBuffer.allocate(clientData.packetLength);
-						for(int i = 0; i < clientData.packetLength; i++) {
-							clientData.byteBuffer.put(clientData.inputBytes.removeFirst());
+					    }
+					    
+						//If we have enough bytes to finish processing a packet
+						if(clientData.inputBytes.size() >= clientData.recievedPacketAmount && clientData.recievedPacketAmount != 0) {
+							clientData.byteBuffer = ByteBuffer.allocate(clientData.packetLength);
+							for(int i = 0; i < clientData.packetLength; i++) {
+								clientData.byteBuffer.put(clientData.inputBytes.removeFirst());
+							}
+							PacketDistributorTask packetDistributor = (PacketDistributorTask) ((TaskManagerModule) ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).getTasksByType(PacketDistributorTask.class).get(0);
+							packetDistributor.DataRecieved(clientData);
+							clientData.recievedPacketAmount = 0;
+							if(clientData.recievedPacketAmount == clientData.inputBytes.size()) {
+								clientData.getClientSocket().read(clientData.getBuffer(), clientData, this); 
+								break; 
+							} 
+						} else {
+							
+							//If we get here we havent recieved enough data, keep reading
+							if(clientData.recievedPacketAmount != 0 ) {clientData.recievedPacketAmount -= result;}
+							clientData.getClientSocket().read(clientData.getBuffer(), clientData, this);
+							break;
 						}
-						PacketDistributorTask packetDistributor = (PacketDistributorTask) ((TaskManagerModule) ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).getTasksByType(PacketDistributorTask.class).get(0);
-						packetDistributor.DataRecieved(clientData);
-						clientData.recievedPacketAmount = 0;
-						if(clientData.recievedPacketAmount == clientData.inputBytes.size()) {
-							clientData.getClientSocket().read(clientData.getBuffer(), clientData, this); 
-							break; 
-						} 
+					} else if(clientData.webSocketHandshakeComplete) {
+						if(clientData.inputBytes.size() >= 6) {
+							CheckForWebSocketPacket(result, clientData);
+							break;
+					    } else {
+					    	break;
+					    }
 					} else {
-						
-						//If we get here we havent recieved enough data, keep reading
-						if(clientData.recievedPacketAmount != 0 ) {clientData.recievedPacketAmount -= clientData.inputBytes.size();}
-						clientData.getClientSocket().read(clientData.getBuffer(), clientData, this);
 						break;
 					}
-
 				}
 			} else if(result == -1) {
 				//This happens when the client shut downs without calling close

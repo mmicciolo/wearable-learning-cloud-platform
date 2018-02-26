@@ -14,6 +14,9 @@ public class ClientData {
 	private GameServerModule server;
 	private ByteBuffer buffer;
 	private boolean webSocket = false;
+	public boolean webSocketHandshakeComplete = false;
+	public String webSocketHandshake = "";
+	public byte[] masks = new byte[4];
 	public LinkedList<Byte> inputBytes = new LinkedList<Byte>();
 	public int packetLength = 0;
 	public int recievedPacketAmount = 0;

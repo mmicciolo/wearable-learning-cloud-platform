@@ -94,7 +94,12 @@ public class ServerPacketHandlerTask extends Task implements ITask {
 		//3. Make sure a game instance of the lobby has not already been started
 		for(Task task : ((TaskManagerModule) ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).getTasksByType(GameInstanceTask.class)) {
 			if(((GameInstanceTask)task).getGameLobby().getGameLobbyId() == startGameInstancePacket.getGameLobbyId()) {
-				logger.write("Game " + game.getGameId() + " has already been started with lobby " + ((GameInstanceTask)task).getGameLobby().getGameLobbyName());
+				logger.write("Game has already been started with lobby " + ((GameInstanceTask)task).getGameLobby().getGameLobbyName());
+				//5. Send back success
+				GameInstanceStartedPacket packet = new GameInstanceStartedPacket(((GameInstanceTask)task).getGameInstance().getGameInstanceId());
+				
+				//Send off the packet
+				packetDistributor.AddPacketToSend(packet, packetClientData.clientData);
 				return;
 			}
 		}

@@ -123,6 +123,7 @@ public class PlayerVM extends Thread {
 		PlayerVM that = this;
 		heartbeatTimeoutTimerTask = new TimerTask() {
 			public void run() {
+				CancelHeartbeatTimeoutTimer();
 				gameInstanceTask.HandleHeartbeatTimeout(that);
 			}
 		};
@@ -136,6 +137,7 @@ public class PlayerVM extends Thread {
 	public void CancelHeartbeatTimeoutTimer() {
 		if(heartbeatTimerRunning) {
 			heartbeatTimeoutTimer.cancel();
+			heartbeatTimeoutTimerTask.cancel();
 			heartbeatTimerRunning = false;
 		}
 	}

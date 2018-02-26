@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.Semaphore;
 
 import wlcp.gameserver.common.JPAEntityManager;
 import wlcp.gameserver.common.PlayerVM;
@@ -72,6 +73,7 @@ public class GameInstanceTask extends Task implements ITask {
 	private Game game;
 	private GameLobby gameLobby;
 	private List<Player> players;
+	private final Semaphore available = new Semaphore(1, true);
 	
 	private LoggerModule logger;
 	private PacketDistributorTask packetDistributor;
@@ -146,20 +148,33 @@ public class GameInstanceTask extends Task implements ITask {
 		
 		//Get the single button press packet
 		SingleButtonPressPacket packet = (SingleButtonPressPacket) packetClientData.packet;
-		for(Player player : players) {
-			if(player.teamPlayer.team == packet.getTeam() && player.teamPlayer.player == packet.getPlayer()) {
-				player.playerVM.unblock(packet);
+		try {
+			available.acquire();
+			for(Player player : players) {
+				if(player.teamPlayer.team == packet.getTeam() && player.teamPlayer.player == packet.getPlayer()) {
+					player.playerVM.unblock(packet);
+				}
 			}
+			available.release();
+		} catch (InterruptedException e) {
+			
 		}
 	}
 	
 	private void SequenceButtonPress(PacketClientData packetClientData) {
 		//Get the sequence button press packet
 		SequenceButtonPressPacket packet = (SequenceButtonPressPacket) packetClientData.packet;
-		for(Player player : players) {
-			if(player.teamPlayer.team == packet.getTeam() && player.teamPlayer.player == packet.getPlayer()) {
-				player.playerVM.unblock(packet);
+		try {
+			available.acquire();
+			for(Player player : players) {
+				if(player.teamPlayer.team == packet.getTeam() && player.teamPlayer.player == packet.getPlayer()) {
+					player.playerVM.unblock(packet);
+				}
 			}
+			available.release();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	
@@ -170,46 +185,54 @@ public class GameInstanceTask extends Task implements ITask {
 		
 		//Get the user from the db
 		Username username = entityManager.getEntityManager().find(Username.class, connectPacket.getUsername());
-		
-		//Check to make sure the player doesnt already exist in the game
-		for(Player player : players) {
-			if(player.usernameClientData.username.getUsernameId().equals(username.getUsernameId())) {
-				//User already exists in the game, maybe they are trying to reconnect?
-				UserReconnect(packetClientData, player);
-				//Recall the current state function its in
-				player.playerVM.reconnect(packetClientData.clientData);
-				//Send the packet
-				packetDistributor.AddPacketToSend(new ConnectAcceptedPacket(getGameInstanceId(), player.teamPlayer.team, player.teamPlayer.player), packetClientData.clientData);
-				return;
-			}
-		}
-		
-		//See if the team they are trying to join is full
-		int count = 1;
-		for(Player player : players) {
-			if(player.teamPlayer.team == connectPacket.getTeamNumber()) { count++; }
-		}
-		if(count >= game.getTeamCount() + 1) {
-			//Team is full, handle
-		}
-		
-		//They passed our tests, they can join
-		UsernameClientData usernameClientData = new UsernameClientData(username, packetClientData.clientData);
-		
-		//Get the team palyer
-		TeamPlayer teamPlayer = new TeamPlayer(connectPacket.getTeamNumber(), count);
-		
-		//Store the player data
-		Player player = new Player(usernameClientData, teamPlayer, StartPlayerVM(usernameClientData, teamPlayer));
-		
-		//Add the player to a list
-		players.add(player);
-		
-		//Log the event
-		logger.write("user " + player.usernameClientData.username.getUsernameId() + " joined the lobby " + "\"" + gameLobby.getGameLobbyName() + "\"" + " playing " + "\"" + game.getGameId() + "\"");
 
-		//Send the packet
-		packetDistributor.AddPacketToSend(new ConnectAcceptedPacket(getGameInstanceId(), player.teamPlayer.team, player.teamPlayer.player), packetClientData.clientData);
+		//Check to make sure the player doesnt already exist in the game
+		try {
+			available.acquire();
+			for(Player player : players) {
+				if(player.usernameClientData.username.getUsernameId().equals(username.getUsernameId())) {
+					//User already exists in the game, maybe they are trying to reconnect?
+					UserReconnect(packetClientData, player);
+					//Recall the current state function its in
+					player.playerVM.reconnect(packetClientData.clientData);
+					//Send the packet
+					packetDistributor.AddPacketToSend(new ConnectAcceptedPacket(getGameInstanceId(), player.teamPlayer.team, player.teamPlayer.player), packetClientData.clientData);
+					return;
+				}
+			}
+			//See if the team they are trying to join is full
+			int count = 1;
+			for(Player player : players) {
+				if(player.teamPlayer.team == connectPacket.getTeamNumber()) { count++; }
+			}
+			if(count >= game.getTeamCount() + 1) {
+				//Team is full, handle
+			}
+			
+			//They passed our tests, they can join
+			UsernameClientData usernameClientData = new UsernameClientData(username, packetClientData.clientData);
+			
+			//Get the team palyer
+			TeamPlayer teamPlayer = new TeamPlayer(connectPacket.getTeamNumber(), count);
+			
+			//Store the player data
+			Player player = new Player(usernameClientData, teamPlayer, StartPlayerVM(usernameClientData, teamPlayer));
+			
+			//Add the player to a list
+			players.add(player);
+			
+			//Log the event
+			logger.write("user " + player.usernameClientData.username.getUsernameId() + " joined the lobby " + "\"" + gameLobby.getGameLobbyName() + "\"" + " playing " + "\"" + game.getGameId() + "\"");
+
+			//Send the packet
+			packetDistributor.AddPacketToSend(new ConnectAcceptedPacket(getGameInstanceId(), player.teamPlayer.team, player.teamPlayer.player), packetClientData.clientData);
+			
+			//Release the lock
+			available.release();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	private void UserReconnect(PacketClientData packetClientData, Player player) {
@@ -226,25 +249,37 @@ public class GameInstanceTask extends Task implements ITask {
 		//Get the packet
 		DisconnectPacket packet = (DisconnectPacket) packetClientData.packet;
 		
+		//Player to remove
+		Player playerToRemove = null;
+		
 		//Find the player
-		for(Player player : players) {
-			if(player.teamPlayer.team == packet.getTeam() && player.teamPlayer.player == packet.getPlayer()) {
-				
-				//Log the event
-				logger.write("User " + player.usernameClientData.username.getUsernameId() + " is disconnecting...");
-				
-				//Stop the VM's thread
-				player.playerVM.shutdown();
-				
-				//Remove us from players
-				players.remove(player);
-				
-				//Send a disconnect  complete
-				packetDistributor.AddPacketToSend(new DisconnectCompletePacket(), player.usernameClientData.clientData);
-				
-				break;
+		try {
+			available.acquire();
+			for(Player player : players) {
+				if(player.teamPlayer.team == packet.getTeam() && player.teamPlayer.player == packet.getPlayer()) {
+					
+					//Log the event
+					logger.write("User " + player.usernameClientData.username.getUsernameId() + " is disconnecting...");
+					
+					//Stop the VM's thread
+					player.playerVM.shutdown();
+					
+					//Remove us from players
+					playerToRemove = player;
+					
+					//Send a disconnect  complete
+					packetDistributor.AddPacketToSend(new DisconnectCompletePacket(), player.usernameClientData.clientData);
+					
+					break;
+				}
 			}
+			available.release();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		
+		if(playerToRemove != null) { players.remove(playerToRemove); }
 	}
 	
 	private void GetTeams(PacketClientData packetClientData) {
@@ -254,29 +289,46 @@ public class GameInstanceTask extends Task implements ITask {
 		
 		//Check to see if the username is already connected
 		//If it is this is a reconnect situation
-		for(Player player : players) {
-			if(player.usernameClientData.username.getUsernameId().equals(teams.getUsername())) {
-				
-				//Set the team to current team
-				List<Byte> teamNumbers = new ArrayList<Byte>();
-				teamNumbers.add((byte) ((byte)player.teamPlayer.team));
-				teams.setTeamNumbers(teamNumbers);
-				
-				//Send the packet
-				packetDistributor.AddPacketToSend(teams, packetClientData.clientData);
-				
-				//Return
-				return;
+		try {
+			available.acquire();
+			for(Player player : players) {
+				if(player.usernameClientData.username.getUsernameId().equals(teams.getUsername())) {
+					
+					//Set the team to current team
+					List<Byte> teamNumbers = new ArrayList<Byte>();
+					teamNumbers.add((byte) ((byte)player.teamPlayer.team));
+					teams.setTeamNumbers(teamNumbers);
+					
+					//Send the packet
+					packetDistributor.AddPacketToSend(teams, packetClientData.clientData);
+					
+					//Release the semaphore before we return
+					available.release();
+					
+					//Return
+					return;
+				}
 			}
+			available.release();
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
 		
 		//Loop through the teams
 		int[] playerArray = new int[game.getPlayersPerTeam()];
 		for(int i = 0; i < game.getTeamCount(); i++) {
-			for(Player p : players) {
-				if(p.teamPlayer.team == i) {
-					playerArray[p.teamPlayer.team - 1]++;
+			try {
+				available.acquire();
+				for(Player p : players) {
+					if(p.teamPlayer.team == i) {
+						playerArray[p.teamPlayer.team - 1]++;
+					}
 				}
+				available.release();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 		
@@ -328,13 +380,21 @@ public class GameInstanceTask extends Task implements ITask {
 	}
 	
 	public void SendHeartBeat() {
-		if(players.size() > 0) {
-			for(Player player : players) {
-				HeartBeatPacket packet = new HeartBeatPacket();
-				packetDistributor.AddPacketToSend(packet, player.usernameClientData.clientData);
-				player.playerVM.StartHeartbeatTimeoutTimer();
+		try {
+			available.acquire();
+			if(players.size() > 0) {
+				for(Player player : players) {
+					if(!player.playerVM.isHeartbeatTimerRunning()) {
+						HeartBeatPacket packet = new HeartBeatPacket();
+						packetDistributor.AddPacketToSend(packet, player.usernameClientData.clientData);
+						player.playerVM.StartHeartbeatTimeoutTimer();
+					}
+				}
 			}
-			//logger.write("Heart Beat");
+			available.release();
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
 	}
 	
@@ -344,10 +404,17 @@ public class GameInstanceTask extends Task implements ITask {
 		HeartBeatPacket packet = (HeartBeatPacket) packetClientData.packet;
 		
 		//Loop through the players and update the time of the last heart beat
-		for(Player player : players) {
-			if(player.teamPlayer.team == packet.getTeam() && player.teamPlayer.player == packet.getPlayer()) {
-				player.playerVM.CancelHeartbeatTimeoutTimer();
+		try {
+			available.acquire();
+			for(Player player : players) {
+				if(player.teamPlayer.team == packet.getTeam() && player.teamPlayer.player == packet.getPlayer()) {
+					player.playerVM.CancelHeartbeatTimeoutTimer();
+				}
 			}
+			available.release();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	
@@ -356,18 +423,23 @@ public class GameInstanceTask extends Task implements ITask {
 		//Shutdown the VM
 		playerVM.shutdown();
 		
+		//Player to remove
 		Player timeoutPlayer = null;
 		
 		//Remove the player
-		List<Player> playersToRemove = new ArrayList<Player>();
-		for(Player player : players) {
-			if(player.playerVM.equals(playerVM)) {
-				playersToRemove.add(player);
-				timeoutPlayer = player;
+		try {
+			available.acquire();
+			for(Player player : players) {
+				if(player.playerVM.equals(playerVM)) {
+					timeoutPlayer = player;
+					break;
+				}
 			}
-		}
-		for(Player player : playersToRemove) {
-			players.remove(player);
+			if(timeoutPlayer != null) { players.remove(timeoutPlayer); }
+			available.release();
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
 		
 		if(timeoutPlayer != null) {

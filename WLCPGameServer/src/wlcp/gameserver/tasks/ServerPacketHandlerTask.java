@@ -90,6 +90,12 @@ public class ServerPacketHandlerTask extends Task implements ITask {
 		//1. Make sure the game exists
 		Game game = entityManager.getEntityManager().find(Game.class, startGameInstancePacket.getGameId());
 		
+		//Game doesnt exist
+		if(game == null) {
+			logger.write("Game " + startGameInstancePacket.getGameId() + " could not be started because it does not exist!");
+			return;
+		}
+		
 		//2. Make sure the game lobby exists
 		//3. Make sure a game instance of the lobby has not already been started
 		for(Task task : ((TaskManagerModule) ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).getTasksByType(GameInstanceTask.class)) {

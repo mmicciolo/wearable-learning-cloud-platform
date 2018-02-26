@@ -30,17 +30,21 @@ public class Connection implements Serializable {
 	
 	@Column(length = 40, name = "CONNECTION_TO")
 	private String connectionTo;
+	
+	@Column(name = "BACKWARDS_LOOP")
+	private Boolean backwardsLoop;
 
 	public Connection() {
 		super();
 	}
 
-	public Connection(String connectionId, Game game, String connectionFrom, String connectionTo) {
+	public Connection(String connectionId, Game game, String connectionFrom, String connectionTo, Boolean backwardsLoop) {
 		super();
 		this.connectionId = connectionId;
 		this.game = game;
 		this.connectionFrom = connectionFrom;
 		this.connectionTo = connectionTo;
+		this.backwardsLoop = backwardsLoop;
 	}
 
 	public String getConnectionId() {
@@ -73,6 +77,14 @@ public class Connection implements Serializable {
 
 	public void setConnectionTo(String connectionTo) {
 		this.connectionTo = connectionTo;
+	}
+
+	public Boolean getBackwardsLoop() {
+		return backwardsLoop;
+	}
+
+	public void setBackwardsLoop(Boolean backwardsLoop) {
+		this.backwardsLoop = backwardsLoop;
 	}
 
 }

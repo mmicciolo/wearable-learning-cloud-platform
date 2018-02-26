@@ -34,7 +34,7 @@
 	border: inherit;
 }
 
-.sequencePressColorList {
+.sequencePressColorList2 {
 	display:inline-block;
 	float:left;
 	height:50px;
@@ -44,7 +44,7 @@
 	outline-color: black;
 }
 
-.sequenceButton {
+.sequenceButton2 {
 	display : inline-block !important;
 	float: left;
     width: 25px;
@@ -53,18 +53,18 @@
     height: 25px;
 }
 
-.sequenceButtonRed {
+.sequenceButton2Red {
 	background: red;
 }
 
-.sequenceButtonGreen {
+.sequenceButton2Green {
 	background: green;
 }
 
-.sequenceButtonBlue {
+.sequenceButton2Blue {
 	background: blue;
 }
 
-.sequenceButtonBlack {
+.sequenceButton2Black {
 	background: black;
 }

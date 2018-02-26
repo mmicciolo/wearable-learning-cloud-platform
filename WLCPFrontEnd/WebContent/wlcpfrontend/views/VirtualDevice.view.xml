@@ -75,10 +75,10 @@
 							<items>
 								<VBox>
 									<html:div id="colorList">
-										<html:div id="colorListRed" class="sequenceButton sequenceButtonRed"/>
-										<html:div id="colorListGreen" class="sequenceButton sequenceButtonGreen"/>
-										<html:div id="colorListBlue" class="sequenceButton sequenceButtonBlue"/>
-										<html:div id="colorListBlack" class="sequenceButton sequenceButtonBlack"/>
+										<html:div id="colorListRed" class="sequenceButton2 sequenceButton2Red"/>
+										<html:div id="colorListGreen" class="sequenceButton2 sequenceButton2Green"/>
+										<html:div id="colorListBlue" class="sequenceButton2 sequenceButton2Blue"/>
+										<html:div id="colorListBlack" class="sequenceButton2 sequenceButton2Black"/>
 									</html:div>
 								</VBox>
 							</items>
@@ -86,7 +86,7 @@
 						<FlexBox alignItems="Start" justifyContent="Center">
 							<items>
 								<VBox>
-									<html:div id="colorListSortable-listUl" class="sequencePressColorList">
+									<html:div id="colorListSortable-listUl" class="sequencePressColorList2">
 									</html:div>
 								</VBox>
 							</items>

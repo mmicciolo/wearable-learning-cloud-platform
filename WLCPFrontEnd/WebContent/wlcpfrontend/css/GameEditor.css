@@ -237,3 +237,7 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
 .sequenceButtonBlack {
 	background: black;
 }
+
+.sequenceDeleteButton {
+	height : 100px;
+}

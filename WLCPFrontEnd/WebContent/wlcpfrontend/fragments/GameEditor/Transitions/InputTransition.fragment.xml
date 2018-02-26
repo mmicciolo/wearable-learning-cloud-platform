@@ -43,7 +43,7 @@
 									<content>
 										<FlexBox alignItems="Start" justifyContent="Center">
 											<items>
-												<Button text="Add" press="addSequence"></Button>
+												<Button text="Add Sequence" press="addSequence"></Button>
 											</items>
 										</FlexBox>
 										<FlexBox alignItems="Start" justifyContent="Center">
@@ -54,6 +54,7 @@
 															<List showSeparators="None" items="{path:'buttons', templateShareable:false}" noDataText="Empty Sequence">
 																<StandardListItem/>
 															</List>
+															<Button icon="sap-icon://delete" press="deleteSequence" class="sequenceDeleteButton"></Button>
 														</content>
 													</CustomListItem>
 												</List>

@@ -385,6 +385,16 @@ var InputTransition = class InputTransition extends Transition {
 		this.path23 = oEvent.getSource().getParent().getParent().getContent()[1].getBindingContext().getPath();
 	}
 	
+	deleteSequence(oEvent) {
+		var path = oEvent.getSource().getBindingContext().getPath();
+		var splitPath = path.split("/");
+		var index = parseInt(splitPath[splitPath.length - 1]);
+		var sequencePath = oEvent.getSource().getParent().getParent().getBindingContext().getPath() + "/sequencePress";
+		var sequenceArray = this.model.getProperty(sequencePath);
+		sequenceArray.splice(index, 1);
+		this.model.setProperty(sequencePath, sequenceArray);
+	}
+	
 	onAfterRenderingSequence(oEvent) {
 		$("#colorListRed").draggable({revert: false, helper: "clone", connectToSortable : "#colorListSortable-listUl"});
 		$("#colorListGreen").draggable({revert: false, helper: "clone", connectToSortable : "#colorListSortable-listUl"});

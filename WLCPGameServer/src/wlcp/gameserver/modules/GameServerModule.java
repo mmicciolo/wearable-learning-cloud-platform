@@ -123,12 +123,12 @@ public class GameServerModule extends Module implements IModule {
 	
 	class ServerReadHandler implements CompletionHandler<Integer, ClientData> {
 		
-		private boolean CheckForWebSocketHandshake(ClientData clientData) {
+		private void CheckForWebSocketHandshake(ClientData clientData) {
 	    	//Check if the first 3 bytes are GET
 			if(clientData.inputBytes.get(0) == 'G' && clientData.inputBytes.get(1) == 'E' && clientData.inputBytes.get(2) == 'T' && !clientData.webSocketHandshakeComplete) {
 				clientData.setWebSocket(true);
 			} else if(!clientData.isWebSocket()) {
-				return true;
+				return;
 			}
 			
 			//If so its a connect request
@@ -165,8 +165,8 @@ public class GameServerModule extends Module implements IModule {
 						        .getBytes("UTF-8");
 
 					    clientData.getClientSocket().write(ByteBuffer.wrap(response));
-					    clientData.getClientSocket().read(clientData.getBuffer(), clientData, this); 
-					    return true;
+					    return;
+					    //clientData.getClientSocket().read(clientData.getBuffer(), clientData, this); 
 					} catch (UnsupportedEncodingException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -178,24 +178,32 @@ public class GameServerModule extends Module implements IModule {
 			}
 
 			clientData.getClientSocket().read(clientData.getBuffer(), clientData, this); 
-			return false;
 		}
 		
-		private boolean CheckForWebSocketPacket(Integer result, ClientData clientData) {
+		private void CheckForWebSocketPacket(Integer result, ClientData clientData) {
 			
 			int bytesRead = 0;
-			if(clientData.inputBytes.peekFirst() == -126 && clientData.packetLength == 0) {
-				clientData.inputBytes.removeFirst();
-				byte lengthByte = (byte) (clientData.inputBytes.removeFirst() & 127);
-				ByteBuffer byteBuffer = ByteBuffer.allocate((int)lengthByte);
-				for(int i = 0; i < 4; i++) {
-					clientData.masks[i] = clientData.inputBytes.removeFirst();
+			if(clientData.inputBytes.size() >= 6 && clientData.recievedPacketAmount == 0) {
+				if(clientData.inputBytes.peekFirst() == -126 && clientData.packetLength == 0) {
+					clientData.inputBytes.removeFirst();
+					byte lengthByte = (byte) (clientData.inputBytes.removeFirst() & 127);
+					ByteBuffer byteBuffer = ByteBuffer.allocate((int)lengthByte);
+					for(int i = 0; i < 4; i++) {
+						clientData.masks[i] = clientData.inputBytes.removeFirst();
+					}
+					clientData.packetLength = lengthByte;
+				    clientData.recievedPacketAmount = clientData.packetLength;
+				    bytesRead = clientData.inputBytes.size();
+				} else if(clientData.inputBytes.peekFirst() == -120) {
+					clientData.inputBytes.removeFirst();
+					if(clientData.inputBytes.peekFirst() == -128) {
+						clientData.getBuffer().clear();
+						clientData.getClientSocket().write(clientData.getBuffer(), clientData, new ServerWriteHandler());
+						return;
+					}
+				} else {
+					bytesRead = result;
 				}
-				clientData.packetLength = lengthByte;
-			    clientData.recievedPacketAmount = clientData.packetLength;
-			    bytesRead = clientData.inputBytes.size();
-			} else {
-				bytesRead = result;
 			}
 			
 			//If we have enough bytes to finish processing a packet
@@ -218,20 +226,6 @@ public class GameServerModule extends Module implements IModule {
 				if(clientData.recievedPacketAmount != 0 ) {clientData.recievedPacketAmount -= bytesRead;}
 				clientData.getClientSocket().read(clientData.getBuffer(), clientData, this);
 			}
-			
-			return false;
-		}
-		
-		private boolean CheckForWebSocketDisconnect(ClientData clientData) {
-			if(clientData.inputBytes.peekFirst() == -120) {
-				clientData.inputBytes.removeFirst();
-				if(clientData.inputBytes.peekFirst() == -128) {
-					clientData.getBuffer().clear();
-					clientData.getClientSocket().write(clientData.getBuffer(), clientData, new ServerWriteHandler());
-					return true;
-				}
-			}
-			return false;
 		}
 
 		@Override
@@ -289,12 +283,8 @@ public class GameServerModule extends Module implements IModule {
 							break;
 						}
 					} else if(clientData.webSocketHandshakeComplete) {
-						if(clientData.inputBytes.size() >= 6) {
-							CheckForWebSocketPacket(result, clientData);
-							break;
-					    } else {
-					    	break;
-					    }
+						CheckForWebSocketPacket(result, clientData);
+						break;
 					} else {
 						break;
 					}

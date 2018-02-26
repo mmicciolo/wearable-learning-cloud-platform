@@ -53,7 +53,7 @@
 					<Page showHeader="false">
 						<FlexBox height="100%" alignItems="Center" justifyContent="Center">
 							<items>
-								<TextArea id="displayText" editable="false" value="Testing" rows="8" cols="100" />
+								<TextArea id="displayText" editable="false" rows="8" cols="100" />
 							</items>
 						</FlexBox>
 					</Page>
@@ -94,6 +94,7 @@
 						<FlexBox alignItems="Start" justifyContent="Center">
 							<items>
 								<Button text="Submit" press="submitButtonPressSequence"></Button>
+								<Button text="Clear" press="clearButtonPressSequence"></Button>
 							</items>
 						</FlexBox>
 					</Page>

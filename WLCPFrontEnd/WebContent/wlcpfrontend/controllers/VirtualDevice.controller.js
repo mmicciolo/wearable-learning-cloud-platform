@@ -74,6 +74,13 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 		}
 	},
 	
+	clearButtonPressSequence : function() {
+		var children = $("#virtualDevice--colorListSortable-listUl").children();
+		for(var i = 0; i < children.length; i++) {
+			children[i].remove();
+		}
+	},
+	
 	disconnectPressed : function() {
 		//this.socket.close();
 		var byteBuffer = new dcodeIO.ByteBuffer();
@@ -98,7 +105,7 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 	
 	onOpen : function(event) {
 		console.log("Connected");
-		this.startGameInstance("estim", 1);
+		this.startGameInstance("servertest", 1);
 		this.getActiveGameLobbies();
 	},
 	

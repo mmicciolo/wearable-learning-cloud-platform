@@ -44,11 +44,7 @@ public class Transition implements Serializable {
     @MapKeyColumn(name = "SCOPE")
 	private Map<String, SingleButtonPress> singleButtonPresses = new HashMap<String, SingleButtonPress>();
 	
-	//@ElementCollection()
-    //@CollectionTable(name = "SEQUENCE_BUTTON_PRESS")
-    //@MapKeyColumn(name = "SCOPE")
-	//@OneToMany(mappedBy="sequenceButtonPressId")
-	@OneToMany(mappedBy="transition", orphanRemoval = true)
+	@OneToMany(mappedBy="transition", orphanRemoval = true, cascade = CascadeType.PERSIST)
 	@MapKey(name = "scope")
 	private Map<String, SequenceButtonPress> sequenceButtonPresses = new HashMap<String, SequenceButtonPress>();
 

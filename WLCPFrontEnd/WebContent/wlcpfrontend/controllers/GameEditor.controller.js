@@ -125,6 +125,11 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 	},
 	
 	connectionDropped : function(oEvent) {
+		//Check to see if the state has an input transition
+		if(GameEditor.getJsPlumbInstance().getConnections({target : oEvent.sourceId}).length == 0 && !oEvent.sourceId.includes("start")) {
+			sap.m.MessageBox.error("You cannot have any output connections without input connections.");
+			return false;
+		}
 		//Check to see if the connection already exists
 		//Or if they are trying to add a second of the same source and target
 		//This can probably be moved to a validator eventually
@@ -132,7 +137,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 			if(oEvent.connection.id == this.connectionList[i].connectionId) {
 				return true;
 			} else if(oEvent.sourceId == this.connectionList[i].connectionFrom && oEvent.targetId == this.connectionList[i].connectionTo) {
-				console.log("Connection Already Exists!");
+				sap.m.MessageBox.error("You cannot have mutliple connections with same source and target state!");
 				return false;
 			}
 		} 

@@ -150,14 +150,19 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 	},
 	
 	connectionDetached : function(oEvent) {
-		for(var i = 0; i < this.connectionList.length; i++) {
+		var i = 0;
+		if(oEvent.suspendedElementId == oEvent.targetId) {
+			for(var i = 0; i < this.connectionList.length; i++) {
 			if(this.connectionList[i].connectionId == oEvent.id) {
 				this.connectionList[i].detach();
 				break;
+				}
 			}
+		} else {
+			sap.m.MessageBox.error("Cannot move connections, drag a new one.");
 		}
 	},
-	
+
 	createStateId : function() {
 		this.gameModel.StateIdCount++;
 		return this.gameModel.GameId + "_state_" + this.gameModel.StateIdCount;

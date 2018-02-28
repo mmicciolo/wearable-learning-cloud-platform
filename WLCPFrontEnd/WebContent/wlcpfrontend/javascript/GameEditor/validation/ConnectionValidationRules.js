@@ -114,10 +114,29 @@ var ConnectionValidationSuccess = class ConnectionValidationSuccess extends Vali
 		
 		var state = this.getState(validationData.connectionTo);
 		var state2 = this.getState(validationData.connectionFrom);
-
-		var loopBack = this.isLoopBack3(state2.htmlId, state.htmlId);
-		if(loopBack) {
+		
+		var loopBack = this.isLoopBack(state2.htmlId, state.htmlId);
+		var neighborloopBack = false;
+		var neighborConnections = GameEditor.getJsPlumbInstance().getConnections({target : validationData.connectionTo});
+		for(var i = 0; i < neighborConnections.length; i++) {
+			if(neighborConnections[i].id != validationData.connectionId) {
+				var neighbors = GameEditor.getJsPlumbInstance().getConnections({source : neighborConnections[i].sourceId});
+				for(var n = 0; n < neighbors.length; n++) {
+					if(neighbors[n].targetId != validationData.connectionTo) {
+						if(this.isLoopBack(validationData.connectionTo, neighbors[n].targetId)) {
+							neighborloopBack = true;
+							break;
+						}
+					}
+				}
+			}
+		}
+		
+		if(loopBack && !neighborloopBack) {
 			validationData.isLoopBack = true;
+		} else if(neighborloopBack) {
+			sap.m.MessageBox.error("You cannot loop back to a neighbor.");
+			this.removeConnection(validationData);
 		}
 
 		//Tell the state to update
@@ -131,20 +150,16 @@ var ConnectionValidationSuccess = class ConnectionValidationSuccess extends Vali
 			}
 		}
 	}
-	
-	isLoopBack4(stateId, nextState, calledArgs = []) {
-		var connections = GameEditor.getJsPlumbInstance().getConnections({source : nextState});
-	}
-	
-	isLoopBack3(stateId, nextState, calledArgs = []) {
+
+	isLoopBack(stateId, nextState, calledArgs = []) {
 		var connections = GameEditor.getJsPlumbInstance().getConnections({source : nextState});
 		for(var i = 0; i < connections.length; i++) {
 			if(connections[i].targetId == stateId) {
 				return true;
 			} else {
-				if(!calledArgs.includes(stateId + nextState)) {
-					calledArgs.push(stateId + nextState);
-					var result = this.isLoopBack3(stateId, connections[i].targetId, calledArgs);
+				if(!calledArgs.includes(stateId + connections[i].targetId)) {
+					calledArgs.push(stateId + connections[i].targetId);
+					var result = this.isLoopBack(stateId, connections[i].targetId, calledArgs);
 					if(result) {
 						return result;
 					}

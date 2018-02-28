@@ -62,8 +62,10 @@ var Connection = class Connection {
 			}
 		}
 		
-		//Remove ourself from the connection list
-		GameEditor.getEditorController().connectionList.splice(GameEditor.getEditorController().connectionList.indexOf(this), 1);
+		if(GameEditor.getEditorController().connectionList.indexOf(this) >= 0) {
+			//Remove ourself from the connection list
+			GameEditor.getEditorController().connectionList.splice(GameEditor.getEditorController().connectionList.indexOf(this), 1);
+		}
 	}
 	
 	save() {

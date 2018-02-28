@@ -135,7 +135,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		//This can probably be moved to a validator eventually
 		for(var i = 0; i < this.connectionList.length; i++) {
 			if(oEvent.connection.id == this.connectionList[i].connectionId) {
-				return true;
+				return false;
 			} else if(oEvent.sourceId == this.connectionList[i].connectionFrom && oEvent.targetId == this.connectionList[i].connectionTo) {
 				sap.m.MessageBox.error("You cannot have mutliple connections with same source and target state!");
 				return false;

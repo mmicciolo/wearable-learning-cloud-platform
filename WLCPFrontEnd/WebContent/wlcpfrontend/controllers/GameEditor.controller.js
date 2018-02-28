@@ -151,7 +151,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 	
 	connectionDetached : function(oEvent) {
 		var i = 0;
-		if(oEvent.suspendedElementId == oEvent.targetId) {
+		if(oEvent.suspendedElementId == oEvent.targetId || typeof oEvent.suspendedElementId === "undefined") {
 			for(var i = 0; i < this.connectionList.length; i++) {
 			if(this.connectionList[i].connectionId == oEvent.id) {
 				this.connectionList[i].detach();

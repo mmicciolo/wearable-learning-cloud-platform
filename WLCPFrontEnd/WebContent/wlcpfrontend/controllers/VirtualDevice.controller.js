@@ -29,15 +29,51 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 	},
 	
 	greenButtonPressed : function() {
-		
+		if(!this.transitionHandled) {
+			var byteBuffer = new dcodeIO.ByteBuffer();
+			byteBuffer.writeByte(13);
+			byteBuffer.writeInt(0);
+			byteBuffer.writeInt(this.gameInstanceId);
+			byteBuffer.writeInt(this.team);
+			byteBuffer.writeInt(this.player);
+			byteBuffer.writeInt(2);
+			byteBuffer.writeInt(byteBuffer.offset, 1);
+			byteBuffer.flip();
+			this.socket.send(byteBuffer.toArrayBuffer());
+			this.transitionHandled = true;
+		}
 	},
 	
 	blueButtonPressed : function() {
-		
+		if(!this.transitionHandled) {
+			var byteBuffer = new dcodeIO.ByteBuffer();
+			byteBuffer.writeByte(13);
+			byteBuffer.writeInt(0);
+			byteBuffer.writeInt(this.gameInstanceId);
+			byteBuffer.writeInt(this.team);
+			byteBuffer.writeInt(this.player);
+			byteBuffer.writeInt(3);
+			byteBuffer.writeInt(byteBuffer.offset, 1);
+			byteBuffer.flip();
+			this.socket.send(byteBuffer.toArrayBuffer());
+			this.transitionHandled = true;
+		}
 	},
 	
 	blackButtonPressed : function() {
-		
+		if(!this.transitionHandled) {
+			var byteBuffer = new dcodeIO.ByteBuffer();
+			byteBuffer.writeByte(13);
+			byteBuffer.writeInt(0);
+			byteBuffer.writeInt(this.gameInstanceId);
+			byteBuffer.writeInt(this.team);
+			byteBuffer.writeInt(this.player);
+			byteBuffer.writeInt(4);
+			byteBuffer.writeInt(byteBuffer.offset, 1);
+			byteBuffer.flip();
+			this.socket.send(byteBuffer.toArrayBuffer());
+			this.transitionHandled = true;
+		}
 	},
 	
 	submitButtonPressSequence : function() {
@@ -105,7 +141,7 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 	
 	onOpen : function(event) {
 		console.log("Connected");
-		this.startGameInstance("servertest", 1);
+		this.startGameInstance("estimateit", 1);
 		this.getActiveGameLobbies();
 	},
 	

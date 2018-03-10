@@ -1,6 +1,6 @@
 var Index = {
 	
-	showMainPage : false,
+	showMainPage : true,
 	
 	main : function() {
 		this.loadJQuery();

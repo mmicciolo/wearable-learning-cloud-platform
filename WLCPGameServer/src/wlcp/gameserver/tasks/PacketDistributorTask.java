@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.concurrent.Semaphore;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -51,6 +52,8 @@ public class PacketDistributorTask extends Task implements ITask {
 	
 	private LinkedList<PacketClientData> recievedPackets;
 	private LinkedList<PacketClientData> packetsToSend;
+	private final Semaphore recievedPacketsAvailable = new Semaphore(1, true);
+	private final Semaphore packetsToSendAvailable = new Semaphore(1, true);
 
 	public PacketDistributorTask() {
 		super("Packet Distributor");
@@ -132,10 +135,12 @@ public class PacketDistributorTask extends Task implements ITask {
 	
 	public void AddPacket(IPacket packet, ClientData clientData) {
 		try {
-			accquire();
+			//accquire();
+			recievedPacketsAvailable.acquire();
 			packet.populateData(clientData.byteBuffer);
 			recievedPackets.add(new PacketClientData(packet, clientData));
-			release();
+			recievedPacketsAvailable.release();
+			//release();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -144,9 +149,11 @@ public class PacketDistributorTask extends Task implements ITask {
 	
 	public void AddPacketToSend(IPacket packet, ClientData clientData) {
 		try {
-			accquire();
+			packetsToSendAvailable.acquire();
+			//accquire();
 			packetsToSend.add(new PacketClientData(packet, clientData));
-			release();
+			packetsToSendAvailable.release();
+			//release();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -158,7 +165,8 @@ public class PacketDistributorTask extends Task implements ITask {
 		
 		//Loop through all of packets recieved
 		try {
-			accquire();
+			//accquire();
+			recievedPacketsAvailable.acquire();
 			while(recievedPackets.size() > 0) {
 				PacketClientData data = recievedPackets.removeFirst();
 				if(data.packet instanceof GamePacket) {
@@ -174,7 +182,8 @@ public class PacketDistributorTask extends Task implements ITask {
 					}
 				}
 			}
-			release();
+			recievedPacketsAvailable.release();
+			//release();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -184,7 +193,8 @@ public class PacketDistributorTask extends Task implements ITask {
 		long start = new Date().getTime();
 		//Loop through packet to send
 		try {
-			accquire();
+			packetsToSendAvailable.acquire();
+			//accquire();
 			while(packetsToSend.size() > 0) {
 				PacketClientData data = packetsToSend.removeFirst();
 				ByteBuffer buffer = data.packet.assemblePacket();
@@ -205,7 +215,8 @@ public class PacketDistributorTask extends Task implements ITask {
 					}
 				}
 			}
-			release();
+			packetsToSendAvailable.release();
+			//release();
 		} catch(InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

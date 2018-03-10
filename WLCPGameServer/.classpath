@@ -17,5 +17,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry combineaccessrules="false" kind="src" path="/WLCPShared"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/WLCPDataModel"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

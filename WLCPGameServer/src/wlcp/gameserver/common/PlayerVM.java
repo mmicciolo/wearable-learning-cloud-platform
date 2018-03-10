@@ -162,7 +162,13 @@ public class PlayerVM extends Thread {
 				return transitions[i];
 			}
 		}
-		return -1;
+		try {
+			scriptEngine.eval("FSMGame.oldState = FSMGame.oldState - 1");
+		} catch (ScriptException e) {
+			e.printStackTrace();
+		}
+		return (int) ((JSObject)scriptEngine.get("FSMGame")).getMember("state");
+		//return -1;
 	}
 	
 	public int SequenceButtonPress(String[] buttons, int[] transitions) throws ScriptException {

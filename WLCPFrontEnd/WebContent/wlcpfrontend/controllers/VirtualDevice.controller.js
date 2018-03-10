@@ -131,7 +131,8 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 	},
 	
 	setupSocketConnect : function() {
-		this.socket = new WebSocket('ws://192.168.0.100:3333');
+		//this.socket = new WebSocket('ws://24.240.135.66:3333');
+		this.socket = new WebSocket('ws://130.215.45.83:3333');
 		this.socket.binaryType = "arraybuffer";
 		this.socket.onopen = $.proxy(this.onOpen, this);
 		this.socket.onmessage = $.proxy(this.onMessage, this);

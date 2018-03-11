@@ -7,9 +7,9 @@
 				<VBox fitContainer="true" justifyContent="Center" alignItems="Center" alignContent="Center" class="box">
 					<items>
 						<Text text="Select a game lobby (game) to join..." class="sapUiSmallMarginBottom"/>
-						<ComboBox width="12em" placeholder="Game Lobby (Game)" items="{/games}" value="{/mode}">
+						<Select width="12em" placeholder="Game Lobby (Game)" items="{/games}" value="{/mode}">
 							<core:Item key="{key}" text="{gameLobbyName} ({gameName})" />
-						</ComboBox>
+						</Select>
 						<Button width="12em" text="Join" type="Emphasized" press="onLoginPress"></Button>
 					</items>
 				</VBox>
@@ -18,9 +18,9 @@
 				<VBox fitContainer="true" justifyContent="Center" alignItems="Center" alignContent="Center" class="box">
 					<items>
 						<Text text="Select a team to join..." class="sapUiSmallMarginBottom"/>
-						<ComboBox width="12em" placeholder="Team" items="{/teams}" value="{/mode}">
+						<Select width="12em" placeholder="Team" items="{/teams}" value="{/mode}">
 							<core:Item key="{key}" text="{teamNumber}" />
-						</ComboBox>
+						</Select>
 						<Button width="12em" text="Join" type="Emphasized" press="onTeamJoinPress"></Button>
 					</items>
 				</VBox>

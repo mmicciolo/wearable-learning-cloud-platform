@@ -131,8 +131,9 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 	},
 	
 	setupSocketConnect : function() {
-		//this.socket = new WebSocket('ws://24.240.135.66:3333');
-		this.socket = new WebSocket('ws://130.215.45.83:3333');
+		this.socket = new WebSocket('ws://24.240.135.66:3333');
+		//this.socket = new WebSocket('ws://130.215.45.83:3333');
+		//this.socket = new WebSocket('ws://192.168.0.102:3333');
 		this.socket.binaryType = "arraybuffer";
 		this.socket.onopen = $.proxy(this.onOpen, this);
 		this.socket.onmessage = $.proxy(this.onMessage, this);
@@ -183,6 +184,9 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 	
 	onClose : function(event) {
 		console.log("Connection closed" + event);
+		sap.m.MessageBox.error("The connection was closed! This may have happened if you disconnected, locked your device or the screen turned off. The page will now refresh. Please re-login to continue where you left off in the game.", { onClose : function() {
+			location.reload();
+		}});
 	},
 	
 	onError : function(event) {

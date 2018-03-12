@@ -10,7 +10,7 @@
 					<ComboBox width="12em" placeholder="Mode" items="{/items}" value="{/mode}">
 						<core:Item key="{key}" text="{text}" />
 					</ComboBox>
-					<Button width="12em" text="Login" type="Emphasized" press="onLoginPress"></Button>
+					<Button width="12em" text="Login" type="Emphasized" press="validateLogin"></Button>
 					<HBox>
 						<items>
 							<Link text="Forgot Password?" class="sapUiSmallMarginTop sapUiTinyMarginEnd"/>

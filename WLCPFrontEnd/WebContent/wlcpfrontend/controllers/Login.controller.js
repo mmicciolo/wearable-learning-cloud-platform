@@ -54,6 +54,29 @@ sap.ui.controller("wlcpfrontend.controllers.Login", {
 			break;
 		}
 	},
+	
+	validateLogin : function() {
+		var oDataModel = ODataModel.getODataModel();
+		oDataModel.read("/Usernames", {success : $.proxy(this.oDataSuccess, this), error : $.proxy(this.oDataError, this)});
+	},
+	
+	oDataSuccess : function(oData) {
+		var usernameFound = false;
+		for(var i = 0; i < oData.results.length; i++) {
+			if(this.modelData.username == oData.results[i].UsernameId) {
+				this.onLoginPress();
+				usernameFound = true;
+				break;
+			}
+		}
+		if(!usernameFound) {
+			sap.m.MessageBox.error("Login Credentials Incorrect!");
+		}
+	},
+	
+	oDataError : function(oData) {
+		sap.m.MessageBox.error("There was an error validating the login credentials!");
+	},
 
 /**
 * Called when a controller is instantiated and its View controls (if available) are already created.
@@ -68,6 +91,9 @@ sap.ui.controller("wlcpfrontend.controllers.Login", {
 		
 		this.userModel.setData(this.userModelData);
 		sap.ui.getCore().setModel(this.userModel, "user");
+		
+		//Setup the ODATA
+		ODataModel.setupODataModel();
 	},
 
 /**

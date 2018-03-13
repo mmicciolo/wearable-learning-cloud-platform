@@ -1,0 +1,28 @@
+<core:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m"
+		controllerName="wlcpfrontend.controllers.Games" xmlns:html="http://www.w3.org/1999/xhtml">
+	<Page id="games" showHeader="true" title="Your Games" enableScrolling="false">
+		<subHeader>
+			<Toolbar>
+				<SearchField id="searchField" liveChange="onSearch" placeholder="Search by Game name..." width="100%" />
+				<Button text="Upload CSV" type="Accept"/>
+			</Toolbar>
+		</subHeader>
+		<content>
+			<TileContainer id="gamesTileContainer" tileDelete="onDelete" tiles="{path : 'odata>/Games'}" >
+				<StandardTile press="TilePress" number="{odata>TeamCount} {odata>PlayersPerTeam}" numberUnit="Team + Players" title="{odata>GameId}" icon="sap-icon://soccor" />
+			</TileContainer>
+		</content>
+		<footer>
+			<Toolbar design="Transparent">
+				<ToolbarSpacer/>
+					<Button icon="sap-icon://close-command-field" type="Transparent"/>
+					<Button icon="sap-icon://navigation-left-arrow" type="Transparent"/>
+					<Button icon="sap-icon://add" type="Accept"  press="onCreateGameLobby"/>
+					<Button icon="sap-icon://edit" type="Reject"  press="onEdit"/>
+					<Button icon="sap-icon://navigation-right-arrow" type="Transparent"/>
+					<Button icon="sap-icon://open-command-field" type="Transparent"/>
+				<ToolbarSpacer/>
+			</Toolbar>
+		</footer>
+	</Page>
+</core:View>

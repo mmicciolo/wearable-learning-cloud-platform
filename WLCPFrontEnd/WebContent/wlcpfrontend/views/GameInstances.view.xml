@@ -1,0 +1,8 @@
+<core:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m"
+		controllerName="wlcpfrontend.controllers.GameInstances" xmlns:html="http://www.w3.org/1999/xhtml">
+	<Page id="gameInstances" showHeader="true" title="Your Running Game Instances" enableScrolling="false">
+		<content>
+	
+		</content>
+	</Page>
+</core:View>

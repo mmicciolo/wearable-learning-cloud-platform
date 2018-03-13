@@ -11,11 +11,12 @@
 	}, {
 		"title" : "Games",
 		"icon" : "sap-icon://iphone",
-		"key" : "parent",
+		"key" : "parent,wlcpfrontend.views.Games,games,page",
 		"expanded" : false
 	}, {
 		"title" : "Game Instances",
 		"icon" : "sap-icon://instance",
+		"key" : "parent,wlcpfrontend.views.GameInstances,gameInstances,page",
 		"expanded" : false
 	}, {
 		"title" : "Users",

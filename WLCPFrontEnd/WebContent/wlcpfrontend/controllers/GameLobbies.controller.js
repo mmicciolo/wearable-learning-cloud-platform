@@ -10,7 +10,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameLobbies", {
 			GameLobbyName : "",
 			UsernameDetails1 : {
 				__metadata: {
-		             uri : "http://localhost:8080/WLCPWebApp/WLCPOData.svc/Usernames('" + sap.ui.getCore().getModel("user").oData.username + "')"
+		             uri : ODataModel.getODataModelURL() + "/Usernames('" + sap.ui.getCore().getModel("user").oData.username + "')"
 		         }
 			}
 		}
@@ -85,6 +85,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameLobbies", {
 		//Close the dialog
 		this.getView().removeDependent(this.dialog);
 		this.dialog.close();
+		this.dialog.destroy();
 	},
 	
 	onSearch : function(oEvent) {
@@ -93,6 +94,72 @@ sap.ui.controller("wlcpfrontend.controllers.GameLobbies", {
 	    var searchString = view.byId("searchField").getValue();
 	    var filter = new sap.ui.model.Filter("GameLobbyName", sap.ui.model.FilterOperator.Contains, searchString);
 	    tileContainer.getBinding("tiles").filter([filter], sap.ui.model.FilterType.Application);
+	},
+	
+	onTilePress : function(oEvent) {
+		
+		//Get the pressed tile
+		this.pressedTile = oEvent.getSource();
+		
+		//Create an instance of the dialog
+		this.dialog = sap.ui.xmlfragment("wlcpfrontend.fragments.GameLobbies.EditGameLobby", this);
+		
+		//Set the model
+		this.dialog.setModel(ODataModel.getODataModel(), "odata");
+		
+		//Add as dependent to the current view
+		this.getView().addDependent(this.dialog);
+
+		var path = oEvent.getSource().oBindingContexts.odata.sPath;
+		this.dialog.bindElement({
+			path : "odata>" + path,
+			parameters : {
+				expand : "UsernameDetails"
+			}
+		});
+
+		//Open the dialog
+		this.dialog.open();
+	},
+	
+	addUser : function(oEvent) {
+		//Create an instance of the dialog
+		this.userAddDialog = sap.ui.xmlfragment("wlcpfrontend.fragments.GameLobbies.AddUserToLobby", this);
+		
+		//Set the model
+		this.userAddDialog.setModel(ODataModel.getODataModel(), "odata");
+		
+		//Add as dependent to the current view
+		this.getView().addDependent(this.userAddDialog);
+
+		//Open the dialog
+		this.userAddDialog.open();
+	},
+	
+	closeAddUser : function() {
+		this.userAddDialog.close();
+		this.userAddDialog.destroy();
+	},
+	
+	userToAddSelected : function(oEvent) {
+		var path = this.pressedTile.oBindingContexts.odata.sPath + "/$links/UsernameDetails";
+		ODataModel.getODataModel().create(path, {
+			uri : ODataModel.getODataModelURL() + "/Usernames('" + oEvent.getSource().getParent().getContent()[0].getItems()[0].getSelectedKey() + "')"
+		}, {success : $.proxy(this.userAddSuccess, this), error : $.proxy(this.userAddError, this)});
+	},
+	
+	userAddSuccess : function() {
+		sap.m.MessageToast.show("User Added!");
+		this.closeAddUser();
+	},
+	
+	userAddError : function() {
+		sap.m.MessageBox.error("User could not be added! It may already exists!");
+		this.closeAddUser();
+	},
+	
+	deleteUser : function(oEvent) {
+		var i = 0;
 	},
 
 /**

@@ -8,7 +8,7 @@
 			</Toolbar>
 		</subHeader>
 		<TileContainer id="gameLobbyTileContainer" tileDelete="onDelete" tiles="{path : 'odata>/GameLobbys', parameters : {expand : 'UsernameDetails'}}" >
-			<StandardTile press="TilePress" number="{odata>GameLobbyId}" numberUnit="Game Lobby Id" title="{odata>GameLobbyName}" icon="sap-icon://group" />
+			<StandardTile press="onTilePress" number="{odata>GameLobbyId}" numberUnit="Game Lobby Id" title="{odata>GameLobbyName}" icon="sap-icon://group" />
 		</TileContainer>
 		<footer>
 			<Toolbar design="Transparent">

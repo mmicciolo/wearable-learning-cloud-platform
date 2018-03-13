@@ -1,0 +1,21 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core"
+	xmlns:l="sap.ui.layout">
+	
+	<Dialog id="addUserToGameLobby" title = "Select User To Add">
+		<buttons>
+			<Button text="Add" type="Accept" press="userToAddSelected"/>
+			<Button text="Cancel" type="Reject" press="closeAddUser"/>
+		</buttons>
+		
+		<FlexBox alignItems="Center" justifyContent="Center">
+			<items>
+				<ComboBox items="{odata>/Usernames}">
+					<core:Item key="{odata>UsernameId}" text="{odata>FirstName} {odata>LastName}"></core:Item>
+				</ComboBox>
+			</items>
+		</FlexBox>
+		
+	</Dialog>
+</core:FragmentDefinition>

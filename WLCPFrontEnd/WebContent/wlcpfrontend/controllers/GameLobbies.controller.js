@@ -8,7 +8,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameLobbies", {
 		return {
 			GameLobbyId : 0,
 			GameLobbyName : "",
-			UsernameDetails : {
+			UsernameDetails1 : {
 				__metadata: {
 		             uri : "http://localhost:8080/WLCPWebApp/WLCPOData.svc/Usernames('" + sap.ui.getCore().getModel("user").oData.username + "')"
 		         }
@@ -33,17 +33,51 @@ sap.ui.controller("wlcpfrontend.controllers.GameLobbies", {
 	},
 	
 	onCreate : function(oEvent) {
-		sap.ui.getCore().getModel("odata").create("/GameLobbys", oEvent.getSource().getModel().getData(), {success : this.success, error: this.error});
+		sap.ui.getCore().getModel("odata").create("/GameLobbys", oEvent.getSource().getModel().getData(), {success : this.createSuccess, error: this.createError});
 		this.dialog.close();
 		this.getView().removeDependent(this.dialog);
 	},
 	
-	success : function(oSuccess) {
-		var i = 0;
+	createSuccess : function(oSuccess) {
+		sap.m.MessageToast.show("Game Lobby Created!");
 	},
 	
-	error : function(oError) {
-		var i = 0;
+	createError : function(oError) {
+		sap.m.MessageBox.error("Could not create lobby!");
+	},
+	
+	onEdit : function() {
+		var oTileContainer = this.getView().byId("gameLobbyTileContainer");
+		var newValue = !oTileContainer.getEditable();
+		oTileContainer.setEditable(newValue);
+	},
+	
+	onDelete : function(oEvent) {
+		this.tileToRemove = oEvent.getParameter("tile");
+		sap.m.MessageBox.confirm("Are you sure you want to delete this game?", {onClose : $.proxy(this.onDeleteConfirm, this)});
+	},
+	
+	onDeleteConfirm : function(oAction) {
+		if(oAction == sap.m.MessageBox.Action.OK) {
+			var path = this.tileToRemove.oBindingContexts.odata.sPath;
+			var finalPath = "/Usernames('" + sap.ui.getCore().getModel("user").oData.username + "')/$links/GameLobbyDetails(" + ODataModel.getODataModel().getProperty(path).GameLobbyId + ")";
+			sap.ui.getCore().getModel("odata").remove(finalPath, {success : $.proxy(this.usernameUnlinked, this), error: this.deleteError});
+		}
+	},
+	
+	usernameUnlinked : function() {
+		ODataModel.getODataModel().refresh();
+		var path = this.tileToRemove.oBindingContexts.odata.sPath;
+		sap.ui.getCore().getModel("odata").remove(path, {success : $.proxy(this.deleteSuccess, this), error: this.deleteError});
+	},
+	
+	deleteSuccess : function () {
+		ODataModel.getODataModel().refresh();
+		sap.m.MessageToast.show("Game Lobby Deleted!");
+	},
+	
+	deleteError : function() {
+		sap.m.MessageBox.error("Could not delete lobby!");
 	},
 	
 	onCancel : function(oEvent) {

@@ -156,24 +156,24 @@ var FSMGame = {
    },
 
    estimateit_state_10 : function() {
-      this.playerVM.DisplayText("Listen carefully to the organizers as they tell you about the 2nd part. Wait and do not push any buttons until you are told.");
+      this.playerVM.DisplayText("Bring the objects as a group to the organizers. Listen carefully to the organizers as they tell you about the 2nd part. Wait and do not push any buttons until you are told.");
       this.state = this.playerVM.SingleButtonPress(["1", "2", "3", "4"], [states.estimateit_state_11, states.estimateit_state_11, states.estimateit_state_11, states.estimateit_state_11]);
    },
 
    estimateit_state_11 : function() {
-      this.playerVM.DisplayText("Work as a team to find as many shapes as you can before time runs out. You have 8  minutes. Push the black button to continue.");
+      this.playerVM.DisplayText("Work as a team to find shapes scattered across the room. Push the black button to continue.");
       this.state = this.playerVM.SingleButtonPress(["4"], [states.estimateit_state_12]);
    },
 
    estimateit_state_12 : function() {
       if(this.team == 1) {
-         this.playerVM.DisplayText("Find a volume about 6 inches wide, with no flat faces.");
+         this.playerVM.DisplayText("Find a volume about 6 inches wide, with no flat faces. Drag only black for a hint.");
       }
       if(this.team == 2) {
-         this.playerVM.DisplayText("Find a shape with 2 flat sides and 1 curved side, 8 inches tall.");
+         this.playerVM.DisplayText("Find a shape with 2 flat sides and 1 curved side, 8 inches tall. Drag only black for a hint.");
       }
       if(this.team == 3) {
-         this.playerVM.DisplayText("Find a rectangular prism with 4 longer edges than the rest.");
+         this.playerVM.DisplayText("Find a rectangular prism with two 6 x 6 inch square faces. Drag only black for a hint.");
       }
       if(this.team == 1) {
          this.state = this.playerVM.SequenceButtonPress(["", "4", "2134"], [states.estimateit_state_15, states.estimateit_state_13, states.estimateit_state_14]);
@@ -227,16 +227,16 @@ var FSMGame = {
 
    estimateit_state_16 : function() {
       if(this.team == 1) {
-         this.playerVM.DisplayText("Find a volume where each face has 4 right angles and all sides are 6 inches long.");
+         this.playerVM.DisplayText("Find a volume where each face has 4 right angles and all sides are 6 inches long. Drag only black for a hint.");
       }
       if(this.team == 2) {
-         this.playerVM.DisplayText("Find a volume with 4 faces, with all acute angles.");
+         this.playerVM.DisplayText("Find a volume with 4 faces, with all acute angles. Drag only black for a hint.");
       }
       if(this.team == 3) {
-         this.playerVM.DisplayText("Find a rectangular prism: two of its faces are squares with 4 inch sides.");
+         this.playerVM.DisplayText("Find a rectangular prism: two of its faces are squares with 3.5 inch sides. Drag only black for a hint.");
       }
       if(this.team == 1) {
-         this.state = this.playerVM.SequenceButtonPress(["", "4", "3213"], [states.estimateit_state_19, states.estimateit_state_17, states.estimateit_state_18]);
+         this.state = this.playerVM.SequenceButtonPress(["", "4", "2143"], [states.estimateit_state_19, states.estimateit_state_17, states.estimateit_state_18]);
       }
       if(this.team == 2) {
          this.state = this.playerVM.SequenceButtonPress(["", "4", "3141"], [states.estimateit_state_19, states.estimateit_state_17, states.estimateit_state_18]);
@@ -291,22 +291,22 @@ var FSMGame = {
    },
 
    estimateit_state_20 : function() {
-      this.playerVM.DisplayText("Great Job! You reached LEVEL 3 of the ?Estimate it!? game. Wait until you are given instructions. Do not push any buttons until told to do so.");
+      this.playerVM.DisplayText("Great Job! You reached LEVEL 3 of the Estimate it! game. Bring the objects to the organizers. Wait until you are given instructions. Do not push any buttons until told to do so.");
       this.state = this.playerVM.SingleButtonPress(["1", "2", "3", "4"], [states.estimateit_state_21, states.estimateit_state_21, states.estimateit_state_21, states.estimateit_state_21]);
    },
 
    estimateit_state_21 : function() {
       if(this.team == 1) {
-         this.playerVM.DisplayText("Find a sphere about 6 inches tall.");
+         this.playerVM.DisplayText("Find a sphere about 6 inches tall. Drag only black for a hint.");
       }
       if(this.team == 2) {
-         this.playerVM.DisplayText("Find a cube with a face 8 inches long.");
+         this.playerVM.DisplayText("Find a cube with a face 8 inches long. Drag only black for a hint.");
       }
       if(this.team == 3) {
-         this.playerVM.DisplayText("Find a volume where each face has 4 right angles and all sides are 6 inches long.");
+         this.playerVM.DisplayText("Find a volume where each face has 4 right angles and all sides are 6 inches long. Drag only black for a hint.");
       }
       if(this.team == 1) {
-         this.state = this.playerVM.SequenceButtonPress(["", "4", "1341"], [states.estimateit_state_24, states.estimateit_state_22, states.estimateit_state_23]);
+         this.state = this.playerVM.SequenceButtonPress(["", "4", "2134"], [states.estimateit_state_24, states.estimateit_state_22, states.estimateit_state_23]);
       }
       if(this.team == 2) {
          this.state = this.playerVM.SequenceButtonPress(["", "4", "2132"], [states.estimateit_state_24, states.estimateit_state_22, states.estimateit_state_23]);
@@ -357,19 +357,19 @@ var FSMGame = {
 
    estimateit_state_25 : function() {
       if(this.team == 1) {
-         this.playerVM.DisplayText("Find a volume with 4 faces, with all acute angles.");
+         this.playerVM.DisplayText("Find a volume with 4 faces, with all acute angles. Drag only black for a hint.");
       }
       if(this.team == 2) {
-         this.playerVM.DisplayText("Find a sphere about 8 inches tall.");
+         this.playerVM.DisplayText("Find a sphere about 8 inches tall. Drag only black for a hint.");
       }
       if(this.team == 3) {
-         this.playerVM.DisplayText("Find a 6 inch tall cylinder.");
+         this.playerVM.DisplayText("Find a 6 inch tall cylinder. Drag only black for a hint.");
       }
       if(this.team == 1) {
          this.state = this.playerVM.SequenceButtonPress(["", "4", "3141"], [states.estimateit_state_28, states.estimateit_state_26, states.estimateit_state_27]);
       }
       if(this.team == 2) {
-         this.state = this.playerVM.SequenceButtonPress(["", "4", "2141"], [states.estimateit_state_28, states.estimateit_state_26, states.estimateit_state_27]);
+         this.state = this.playerVM.SequenceButtonPress(["", "4", "3142"], [states.estimateit_state_28, states.estimateit_state_26, states.estimateit_state_27]);
       }
       if(this.team == 3) {
          this.state = this.playerVM.SequenceButtonPress(["", "1313", "4"], [states.estimateit_state_28, states.estimateit_state_27, states.estimateit_state_26]);
@@ -416,7 +416,7 @@ var FSMGame = {
    },
 
    estimateit_state_29 : function() {
-      this.playerVM.DisplayText("Congratulations you have completed EstimateIt!");
+      this.playerVM.DisplayText("Congratulations you have completed EstimateIt! Please return all objects to the organizer. GAME OVER.");
    },
 
    estimateit_state_3 : function() {
@@ -426,41 +426,41 @@ var FSMGame = {
 
    estimateit_state_4 : function() {
       this.playerVM.DisplayText("That was the wrong sequence! Push any button to try again!");
-      this.state = states.estimateit_state_2;
+      this.state = this.playerVM.SingleButtonPress(["1", "2", "3", "4"], [states.estimateit_state_2, states.estimateit_state_2, states.estimateit_state_2, states.estimateit_state_2]);
    },
 
    estimateit_state_5 : function() {
-      this.playerVM.DisplayText("Each person in your team will look for a different object.Ready to Start? Push any button to get your first clue.");
+      this.playerVM.DisplayText("Each person in your team will look for a different object. Ready to Start? Push any button to get your first clue.");
       this.state = this.playerVM.SingleButtonPress(["1", "2", "3", "4"], [states.estimateit_state_6, states.estimateit_state_6, states.estimateit_state_6, states.estimateit_state_6]);
    },
 
    estimateit_state_6 : function() {
       if(this.team == 1 && this.player == 1) {
-         this.playerVM.DisplayText("Find a cube with a face 6 inches long.");
+         this.playerVM.DisplayText("Find a cube with a face 6 inches long. Drag only black for a hint.");
       }
       if(this.team == 1 && this.player == 2) {
-         this.playerVM.DisplayText("Find a rectangular prism with its longest edge about 6 inches.");
+         this.playerVM.DisplayText("Find a rectangular prism with its longest edge about 6 inches. Drag only black for a hint.");
       }
       if(this.team == 1 && this.player == 3) {
-         this.playerVM.DisplayText("Find a 6 inch tall cylinder.");
+         this.playerVM.DisplayText("Find a 6 inch tall cylinder. Drag only black for a hint.");
       }
       if(this.team == 2 && this.player == 1) {
-         this.playerVM.DisplayText("Find a cube with a face 4 inches long.");
+         this.playerVM.DisplayText("Find a cube with a face 3 inches long. Drag only black for a hint.");
       }
       if(this.team == 2 && this.player == 2) {
-         this.playerVM.DisplayText("Find a sphere about 6 inches in diameter.");
+         this.playerVM.DisplayText("Find a sphere about 6 inches in diameter. Drag only black for a hint.");
       }
       if(this.team == 2 && this.player == 3) {
-         this.playerVM.DisplayText("Find a rectangular prism with its longest edge about 10 inches.");
+         this.playerVM.DisplayText("Find a rectangular prism with its longest edge about 11 inches. Drag only black for a hint.");
       }
       if(this.team == 3 && this.player == 1) {
-         this.playerVM.DisplayText("Find a cube with a face 8 inches long.");
+         this.playerVM.DisplayText("Find a cube with a face 8 inches long. Drag only black for a hint.");
       }
       if(this.team == 3 && this.player == 2) {
-         this.playerVM.DisplayText("Find a rectangular prism with its longest edge about 10 inches long.");
+         this.playerVM.DisplayText("Find a rectangular prism with its longest edge about 9 inches long. Drag only black for a hint.");
       }
       if(this.team == 3 && this.player == 3) {
-         this.playerVM.DisplayText("Find a sphere about 8 inches tall.");
+         this.playerVM.DisplayText("Find a sphere about 8 inches tall. Drag only black for a hint.");
       }
       if(this.team == 1 && this.player == 1) {
          this.state = this.playerVM.SequenceButtonPress(["", "4", "2143"], [states.estimateit_state_9, states.estimateit_state_8, states.estimateit_state_7]);
@@ -472,10 +472,10 @@ var FSMGame = {
          this.state = this.playerVM.SequenceButtonPress(["", "1313", "4"], [states.estimateit_state_9, states.estimateit_state_7, states.estimateit_state_8]);
       }
       if(this.team == 2 && this.player == 1) {
-         this.state = this.playerVM.SequenceButtonPress(["", "4", "3142"], [states.estimateit_state_9, states.estimateit_state_8, states.estimateit_state_7]);
+         this.state = this.playerVM.SequenceButtonPress(["", "4", "2113"], [states.estimateit_state_9, states.estimateit_state_8, states.estimateit_state_7]);
       }
       if(this.team == 2 && this.player == 2) {
-         this.state = this.playerVM.SequenceButtonPress(["", "4", "1341"], [states.estimateit_state_9, states.estimateit_state_8, states.estimateit_state_7]);
+         this.state = this.playerVM.SequenceButtonPress(["", "4", "2134"], [states.estimateit_state_9, states.estimateit_state_8, states.estimateit_state_7]);
       }
       if(this.team == 2 && this.player == 3) {
          this.state = this.playerVM.SequenceButtonPress(["", "4", "1432"], [states.estimateit_state_9, states.estimateit_state_8, states.estimateit_state_7]);
@@ -484,10 +484,10 @@ var FSMGame = {
          this.state = this.playerVM.SequenceButtonPress(["", "4", "2132"], [states.estimateit_state_9, states.estimateit_state_8, states.estimateit_state_7]);
       }
       if(this.team == 3 && this.player == 2) {
-         this.state = this.playerVM.SequenceButtonPress(["", "4", "2121"], [states.estimateit_state_9, states.estimateit_state_8, states.estimateit_state_7]);
+         this.state = this.playerVM.SequenceButtonPress(["", "4", "2114"], [states.estimateit_state_9, states.estimateit_state_8, states.estimateit_state_7]);
       }
       if(this.team == 3 && this.player == 3) {
-         this.state = this.playerVM.SequenceButtonPress(["", "2414", "4"], [states.estimateit_state_9, states.estimateit_state_7, states.estimateit_state_8]);
+         this.state = this.playerVM.SequenceButtonPress(["", "4", "3142"], [states.estimateit_state_9, states.estimateit_state_8, states.estimateit_state_7]);
       }
    },
 

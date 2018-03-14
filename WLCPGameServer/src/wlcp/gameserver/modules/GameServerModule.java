@@ -195,12 +195,15 @@ public class GameServerModule extends Module implements IModule {
 				    clientData.recievedPacketAmount = clientData.packetLength;
 				    bytesRead = clientData.inputBytes.size();
 				} else if(clientData.inputBytes.peekFirst() == -120) {
-					clientData.inputBytes.removeFirst();
-					if(clientData.inputBytes.peekFirst() == -128) {
+					//clientData.inputBytes.removeFirst();
+					//if(clientData.inputBytes.peekFirst() == -128) {
+						clientData.inputBytes.clear();
 						clientData.getBuffer().clear();
+						clientData.getBuffer().put((byte)0x80);
+						clientData.getBuffer().flip();
 						clientData.getClientSocket().write(clientData.getBuffer(), clientData, new ServerWriteHandler());
 						return;
-					}
+					//}
 				} else {
 					bytesRead = result;
 				}
@@ -217,9 +220,12 @@ public class GameServerModule extends Module implements IModule {
 				packetDistributor.DataRecieved(clientData);
 				clientData.recievedPacketAmount = 0;
 				clientData.packetLength = 0;
-				if(clientData.recievedPacketAmount == clientData.inputBytes.size()) {
+				if(clientData.inputBytes.size() == 0) {
 					clientData.getClientSocket().read(clientData.getBuffer(), clientData, this); 
-				} 
+				}
+//				if(clientData.recievedPacketAmount == clientData.inputBytes.size()) {
+//					clientData.getClientSocket().read(clientData.getBuffer(), clientData, this); 
+//				} 
 			} else {
 				
 				//If we get here we havent recieved enough data, keep reading
@@ -284,7 +290,8 @@ public class GameServerModule extends Module implements IModule {
 						}
 					} else if(clientData.webSocketHandshakeComplete) {
 						CheckForWebSocketPacket(result, clientData);
-						break;
+						if(clientData.inputBytes.size() == 0) { break; }
+						//break;
 					} else {
 						break;
 					}

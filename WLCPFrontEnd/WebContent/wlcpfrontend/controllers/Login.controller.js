@@ -29,7 +29,7 @@ sap.ui.controller("wlcpfrontend.controllers.Login", {
 	userModel : new sap.ui.model.json.JSONModel(),
 	
 	onLoginPress: function() {
-		this.userModelData.username = this.modelData.username;
+		this.userModelData.username = this.modelData.username.toLowerCase();
 		this.userModel.setData(this.userModelData);
 		switch(this.modelData.mode) {
 		case "Game Manager": 

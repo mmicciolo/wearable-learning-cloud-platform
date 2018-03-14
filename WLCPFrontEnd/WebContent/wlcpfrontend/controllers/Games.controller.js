@@ -19,15 +19,28 @@ sap.ui.controller("wlcpfrontend.controllers.Games", {
 			this.tileContainer.removeTile(this.tileToRemove);
 		}
 	},
+	
+	onSearch : function(oEvent) {
+		var view = this.getView();
+	    var tileContainer = view.byId("gamesTileContainer");
+	    var searchString = view.byId("searchField").getValue();
+	    var filter = new sap.ui.model.Filter("GameId", sap.ui.model.FilterOperator.Contains, searchString);
+	    tileContainer.getBinding("tiles").filter([filter], sap.ui.model.FilterType.Application);
+	},
 
 /**
 * Called when a controller is instantiated and its View controls (if available) are already created.
 * Can be used to modify the View before it is displayed, to bind event handlers and do other one-time initialization.
 * @memberOf wlcpfrontend.views.Games
 */
-//	onInit: function() {
-//
-//	},
+	onInit: function() {
+		this.getView().byId("gamesTileContainer").addEventDelegate({
+			  onAfterRendering: function(){
+			        var oBinding = this.getView().byId("gamesTileContainer").getBinding("tiles");
+			        oBinding.filter([new sap.ui.model.Filter("Username", "EQ", sap.ui.getCore().getModel("user").oData.username)]);
+			  }
+			}, this);
+	},
 
 /**
 * Similar to onAfterRendering, but this hook is invoked before the controller's View is re-rendered

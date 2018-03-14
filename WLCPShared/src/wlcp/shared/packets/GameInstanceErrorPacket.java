@@ -5,7 +5,7 @@ import java.nio.ByteBuffer;
 import wlcp.shared.packet.IPacket;
 import wlcp.shared.packet.PacketTypes;
 
-public class GameInstanceError extends ServerPacket implements IPacket {
+public class GameInstanceErrorPacket extends ServerPacket implements IPacket {
 	
 	public enum GameInstanceErrorCode {
 		GAME_DOES_NOT_EXIST,
@@ -16,11 +16,11 @@ public class GameInstanceError extends ServerPacket implements IPacket {
 	
 	private GameInstanceErrorCode errorCode;
 
-	public GameInstanceError() {
+	public GameInstanceErrorPacket() {
 		super(PacketTypes.GAME_INSTANCE_ERROR);
 	}
 	
-	public GameInstanceError(GameInstanceErrorCode errorCode) {
+	public GameInstanceErrorPacket(GameInstanceErrorCode errorCode) {
 		super(PacketTypes.GAME_INSTANCE_ERROR);
 		this.errorCode = errorCode;
 	}

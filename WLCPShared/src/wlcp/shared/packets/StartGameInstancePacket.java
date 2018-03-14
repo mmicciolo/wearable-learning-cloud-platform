@@ -9,15 +9,17 @@ public class StartGameInstancePacket extends ServerPacket implements IPacket {
 	
 	private String gameId;
 	private int gameLobbyId;
+	private String usernameId;
 
 	public StartGameInstancePacket() {
 		super(PacketTypes.START_GAME_INSTANCE);
 	}
 	
-	public StartGameInstancePacket(String gameId, int gameLobbyId) {
+	public StartGameInstancePacket(String gameId, int gameLobbyId, String usernameId) {
 		super(PacketTypes.START_GAME_INSTANCE);
 		this.gameId = gameId;
 		this.gameLobbyId = gameLobbyId;
+		this.usernameId = usernameId;
 	}
 
 	@Override
@@ -31,6 +33,9 @@ public class StartGameInstancePacket extends ServerPacket implements IPacket {
 		
 		//Populate the game lobby id
 		gameLobbyId = getInt();
+		
+		//Populate the username
+		usernameId = getString();
 	}
 
 	@Override
@@ -44,6 +49,9 @@ public class StartGameInstancePacket extends ServerPacket implements IPacket {
 		
 		//Put the game lobby id
 		putInt(gameLobbyId);
+		
+		//Put the username
+		putString(usernameId);
 		
 		return super.assembleOutputBytes();
 	}
@@ -62,6 +70,14 @@ public class StartGameInstancePacket extends ServerPacket implements IPacket {
 
 	public void setGameLobbyId(int gameLobbyId) {
 		this.gameLobbyId = gameLobbyId;
+	}
+
+	public String getUsernameId() {
+		return usernameId;
+	}
+
+	public void setUsernameId(String usernameId) {
+		this.usernameId = usernameId;
 	}
 	
 }

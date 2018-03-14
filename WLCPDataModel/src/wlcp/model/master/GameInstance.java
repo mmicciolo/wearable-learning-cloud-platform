@@ -26,14 +26,19 @@ public class GameInstance implements Serializable {
 	@JoinColumn(name = "GAME", referencedColumnName = "GAME_ID")
 	private Game game;
 	
+	@OneToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(name = "USERNAME", referencedColumnName = "USERNAME_ID")
+	private Username username;
+	
 	public GameInstance() {
 		super();
 	}
 
-	public GameInstance(GameLobby gameLobby, Game game) {
+	public GameInstance(GameLobby gameLobby, Game game, Username username) {
 		super();
 		this.gameLobby = gameLobby;
 		this.game = game;
+		this.username = username;
 	}
 
 	public Integer getGameInstanceId() {
@@ -58,6 +63,14 @@ public class GameInstance implements Serializable {
 
 	public void setGame(Game game) {
 		this.game = game;
+	}
+
+	public Username getUsername() {
+		return username;
+	}
+
+	public void setUsername(Username username) {
+		this.username = username;
 	}
    
 }

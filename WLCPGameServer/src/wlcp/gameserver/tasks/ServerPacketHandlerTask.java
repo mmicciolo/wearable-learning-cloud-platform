@@ -97,7 +97,17 @@ public class ServerPacketHandlerTask extends Task implements ITask {
 		}
 		
 		//2. Make sure the game lobby exists
-		//3. Make sure a game instance of the lobby has not already been started
+		
+		//3. Make sure the user exists
+		Username username = entityManager.getEntityManager().find(Username.class, startGameInstancePacket.getUsernameId());
+		
+		//User doesnt exists
+		if(username == null) {
+			logger.write("Game " + startGameInstancePacket.getGameId() + " could not be started because the user trying to start it does not exist!");
+			return;
+		}
+		
+		//4. Make sure a game instance of the lobby has not already been started
 		for(Task task : ((TaskManagerModule) ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).getTasksByType(GameInstanceTask.class)) {
 			if(((GameInstanceTask)task).getGameLobby().getGameLobbyId() == startGameInstancePacket.getGameLobbyId()) {
 				logger.write("Game has already been started with lobby " + ((GameInstanceTask)task).getGameLobby().getGameLobbyName());
@@ -109,12 +119,12 @@ public class ServerPacketHandlerTask extends Task implements ITask {
 				return;
 			}
 		}
-		//4. Create the instance
+		//5. Create the instance
 		
 		//Add it to the database
 		entityManager.getEntityManager().getTransaction().begin();
 		GameLobby gameLobby = entityManager.getEntityManager().find(GameLobby.class, startGameInstancePacket.getGameLobbyId());
-		GameInstance gameInstance = new GameInstance(gameLobby, game);
+		GameInstance gameInstance = new GameInstance(gameLobby, game, username);
 		entityManager.getEntityManager().persist(gameInstance);
 		entityManager.getEntityManager().getTransaction().commit();
 		

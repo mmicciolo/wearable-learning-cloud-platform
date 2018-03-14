@@ -106,9 +106,6 @@ sap.ui.controller("wlcpfrontend.controllers.GameLobbies", {
 		
 		//Set the model
 		this.dialog.setModel(ODataModel.getODataModel(), "odata");
-		
-		//Add as dependent to the current view
-		this.getView().addDependent(this.dialog);
 
 		var path = oEvent.getSource().oBindingContexts.odata.sPath;
 		this.dialog.bindElement({
@@ -128,9 +125,6 @@ sap.ui.controller("wlcpfrontend.controllers.GameLobbies", {
 		
 		//Set the model
 		this.userAddDialog.setModel(ODataModel.getODataModel(), "odata");
-		
-		//Add as dependent to the current view
-		this.getView().addDependent(this.userAddDialog);
 
 		//Open the dialog
 		this.userAddDialog.open();
@@ -159,7 +153,21 @@ sap.ui.controller("wlcpfrontend.controllers.GameLobbies", {
 	},
 	
 	deleteUser : function(oEvent) {
-		var i = 0;
+		this.usernameId = ODataModel.getODataModel().getProperty(oEvent.getSource().getParent().getParent().oBindingContexts.odata.sPath).UsernameId;
+		sap.m.MessageBox.confirm("Are you sure you want to delete this user?", {onClose : $.proxy(this.onDeleteUserConfirm, this)});
+	},
+	
+	onDeleteUserConfirm : function() {
+		var path = this.pressedTile.oBindingContexts.odata.sPath + "/$links/UsernameDetails(" + "'" + this.usernameId + "')";
+		ODataModel.getODataModel().remove(path, {success : $.proxy(this.deleteUserSuccess, this), error : $.proxy(this.deleteUserError, this)});
+	},
+	
+	deleteUserSuccess : function() {
+		sap.m.MessageToast.show("User Deleted!");
+	},
+	
+	deleteUserError : function() {
+		sap.m.MessageBox.error("User could not be deleted!");
 	},
 
 /**

@@ -11,7 +11,7 @@
 		
 		<FlexBox alignItems="Center" justifyContent="Center">
 			<items>
-				<ComboBox items="{odata>/Usernames}">
+				<ComboBox placeholder="Select a user to add..." items="{odata>/Usernames}">
 					<core:Item key="{odata>UsernameId}" text="{odata>FirstName} {odata>LastName}"></core:Item>
 				</ComboBox>
 			</items>

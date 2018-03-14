@@ -19,6 +19,7 @@ import wlcp.model.master.GameInstance;
 import wlcp.model.master.GameLobby;
 import wlcp.model.master.Username;
 import wlcp.shared.packet.IPacket;
+import wlcp.shared.packets.GameInstanceError;
 import wlcp.shared.packets.GameInstanceStartedPacket;
 import wlcp.shared.packets.GameLobbiesPacket;
 import wlcp.shared.packets.GameLobbyInfo;
@@ -93,10 +94,19 @@ public class ServerPacketHandlerTask extends Task implements ITask {
 		//Game doesnt exist
 		if(game == null) {
 			logger.write("Game " + startGameInstancePacket.getGameId() + " could not be started because it does not exist!");
+			packetDistributor.AddPacketToSend(new GameInstanceError(GameInstanceError.GameInstanceErrorCode.GAME_DOES_NOT_EXIST), packetClientData.clientData);
 			return;
 		}
 		
 		//2. Make sure the game lobby exists
+		GameLobby gameLobby = entityManager.getEntityManager().find(GameLobby.class, startGameInstancePacket.getGameLobbyId());
+		
+		//Lobby does not exists
+		if(gameLobby == null) {
+			logger.write("Game " + startGameInstancePacket.getGameId() + " could not be started because the lobby does not exist!");
+			packetDistributor.AddPacketToSend(new GameInstanceError(GameInstanceError.GameInstanceErrorCode.LOBBY_DOES_NOT_EXIST), packetClientData.clientData);
+			return;
+		}
 		
 		//3. Make sure the user exists
 		Username username = entityManager.getEntityManager().find(Username.class, startGameInstancePacket.getUsernameId());
@@ -104,6 +114,7 @@ public class ServerPacketHandlerTask extends Task implements ITask {
 		//User doesnt exists
 		if(username == null) {
 			logger.write("Game " + startGameInstancePacket.getGameId() + " could not be started because the user trying to start it does not exist!");
+			packetDistributor.AddPacketToSend(new GameInstanceError(GameInstanceError.GameInstanceErrorCode.USERNAME_DOES_NOT_EXIST), packetClientData.clientData);
 			return;
 		}
 		
@@ -112,18 +123,20 @@ public class ServerPacketHandlerTask extends Task implements ITask {
 			if(((GameInstanceTask)task).getGameLobby().getGameLobbyId() == startGameInstancePacket.getGameLobbyId()) {
 				logger.write("Game has already been started with lobby " + ((GameInstanceTask)task).getGameLobby().getGameLobbyName());
 				//5. Send back success
-				GameInstanceStartedPacket packet = new GameInstanceStartedPacket(((GameInstanceTask)task).getGameInstance().getGameInstanceId());
+				//GameInstanceStartedPacket packet = new GameInstanceStartedPacket(((GameInstanceTask)task).getGameInstance().getGameInstanceId());
 				
 				//Send off the packet
-				packetDistributor.AddPacketToSend(packet, packetClientData.clientData);
+				//packetDistributor.AddPacketToSend(packet, packetClientData.clientData);
+				packetDistributor.AddPacketToSend(new GameInstanceError(GameInstanceError.GameInstanceErrorCode.GAME_ALREADY_STARTED), packetClientData.clientData);
 				return;
 			}
 		}
+		
 		//5. Create the instance
 		
 		//Add it to the database
 		entityManager.getEntityManager().getTransaction().begin();
-		GameLobby gameLobby = entityManager.getEntityManager().find(GameLobby.class, startGameInstancePacket.getGameLobbyId());
+		//GameLobby gameLobby = entityManager.getEntityManager().find(GameLobby.class, startGameInstancePacket.getGameLobbyId());
 		GameInstance gameInstance = new GameInstance(gameLobby, game, username);
 		entityManager.getEntityManager().persist(gameInstance);
 		entityManager.getEntityManager().getTransaction().commit();

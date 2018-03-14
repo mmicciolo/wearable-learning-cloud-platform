@@ -31,12 +31,13 @@ sap.ui.controller("wlcpfrontend.controllers.GameInstances", {
 		this.dialog.destroy();
 	},
 	
-	onStopGameInstance : function() {
-		sap.m.MessageBox.confirm("Are you sure you want to stop this game instance?", {onClose : $.proxy(this.onDeleteConfirm, this)});
+	onStopGameInstance : function(oEvent) {
+		this.stopInstanceId = ODataModel.getODataModel().getProperty(oEvent.getParameter("tile").oBindingContexts.odata.sPath).GameInstanceId;
+		sap.m.MessageBox.confirm("Are you sure you want to stop this game instance?", {onClose : $.proxy(this.stopGameInstance, this)});
 	},
 	
 	onEdit : function() {
-		var oTileContainer = this.getView().byId("gameLobbyTileContainer");
+		var oTileContainer = this.getView().byId("gameInstanceTileContainer");
 		var newValue = !oTileContainer.getEditable();
 		oTileContainer.setEditable(newValue);
 	},
@@ -50,13 +51,18 @@ sap.ui.controller("wlcpfrontend.controllers.GameInstances", {
 		this.socket.onmessage = $.proxy(this.onMessage, this);
 	},
 	
+	stopGameInstance : function(oEvent) {
+		this.busy = new sap.m.BusyDialog();
+		this.busy.open();
+		this.socket = new WebSocket('ws://24.240.135.66:3333');
+		this.socket.binaryType = "arraybuffer";
+		this.socket.onopen = $.proxy(this.onOpen2, this);
+		this.socket.onmessage = $.proxy(this.onMessage, this);
+	},
+	
 	onOpen : function(event) {
 		var gameId = sap.ui.getCore().byId("gameInstanceGame").getSelectedKey();
 		var gameLobbyId = sap.ui.getCore().byId("gameInstanceGameLobby").getSelectedKey();
-//		if(gameId == "" || gameLobbyId == "") {
-//			this.gameStartError();
-//			return;
-//		}
 		var byteBuffer = new dcodeIO.ByteBuffer();
 		byteBuffer.writeByte(0);
 		byteBuffer.writeInt(0);
@@ -75,6 +81,17 @@ sap.ui.controller("wlcpfrontend.controllers.GameInstances", {
 		this.socket.send(buffer);
 	},
 	
+	onOpen2 : function(event) {
+		var byteBuffer = new dcodeIO.ByteBuffer();
+		byteBuffer.writeByte(1);
+		byteBuffer.writeInt(0);
+		byteBuffer.writeInt(this.stopInstanceId);
+		byteBuffer.writeInt(byteBuffer.offset, 1);
+		byteBuffer.flip();
+		var buffer = byteBuffer.toArrayBuffer();
+		this.socket.send(buffer);
+	},
+	
 	onMessage : function(event) {
 		var byteBuffer = new dcodeIO.ByteBuffer();
 		byteBuffer.append(new Uint8Array(event.data));
@@ -87,6 +104,9 @@ sap.ui.controller("wlcpfrontend.controllers.GameInstances", {
 		case 14:
 			this.gameStartedSuccess();
 			break;
+		case 15:
+			this.gameStoppedSuccess();
+			break;
 		default:
 			break;
 		}
@@ -98,6 +118,13 @@ sap.ui.controller("wlcpfrontend.controllers.GameInstances", {
 		this.busy.close();
 		ODataModel.getODataModel().refresh();
 		sap.m.MessageToast.show("Game Instance Start Successfully!");
+	},
+	
+	gameStoppedSuccess : function() {
+		this.socket.close();
+		this.busy.close();
+		ODataModel.getODataModel().refresh();
+		sap.m.MessageToast.show("Game Instance Stopped Successfully!");
 	},
 	
 	gameStartError : function(errorCode) {

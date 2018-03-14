@@ -464,7 +464,26 @@ public class GameInstanceTask extends Task implements ITask {
 	
 	@Override 
 	public void ShutDown() {
-		
+		//Loop through the players
+		try {
+			available.acquire();
+			for(Player player : players) {
+				player.playerVM.shutdown();
+				try {
+					player.usernameClientData.clientData.getClientSocket().close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			available.release();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		heartbeatTimer.cancel();
+		heartbeatTimerTask.cancel();
+		super.ShutDown();
 	}
 
 	public int getGameInstanceId() {

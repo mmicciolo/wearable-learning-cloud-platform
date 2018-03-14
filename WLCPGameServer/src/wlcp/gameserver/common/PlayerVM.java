@@ -80,6 +80,8 @@ public class PlayerVM extends Thread {
 			e.printStackTrace();
 		}
 		
+		CancelHeartbeatTimeoutTimer();
+		
 		//Shutdown
 		shutdown = true;
 	}

@@ -21,6 +21,7 @@ import wlcp.model.master.Username;
 import wlcp.shared.packet.IPacket;
 import wlcp.shared.packets.GameInstanceErrorPacket;
 import wlcp.shared.packets.GameInstanceStartedPacket;
+import wlcp.shared.packets.GameInstanceStoppedPacket;
 import wlcp.shared.packets.GameLobbiesPacket;
 import wlcp.shared.packets.GameLobbyInfo;
 import wlcp.shared.packets.StartGameInstancePacket;
@@ -166,12 +167,23 @@ public class ServerPacketHandlerTask extends Task implements ITask {
 		//Get the start game packet
 		StopGameInstancePacket stopGameInstancePacket = (StopGameInstancePacket) packetClientData.packet;
 		
+		Task gameInstanceTask = null;
+		
 		for(Task task : ((TaskManagerModule) ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).getTasksByType(GameInstanceTask.class)) {
 			if(((GameInstanceTask)task).getGameInstance().getGameInstanceId() == stopGameInstancePacket.getGameInstanceId()) {
-				logger.write("Stopping the game " +  ((GameInstanceTask)task).getGame().getGameId() + " instance " + ((GameInstanceTask)task).getGameInstance().getGameInstanceId());
-				
+				gameInstanceTask = task;
+				logger.write("Stopping the game " +  ((GameInstanceTask)task).getGame().getGameId() + " instance id " + ((GameInstanceTask)task).getGameInstance().getGameInstanceId());
+				((GameInstanceTask)task).ShutDown();
+				GameInstance gameInstance = entityManager.getEntityManager().find(GameInstance.class, ((GameInstanceTask)task).getGameInstance().getGameInstanceId());
+				entityManager.getEntityManager().getTransaction().begin();
+				entityManager.getEntityManager().remove(gameInstance);
+				entityManager.getEntityManager().getTransaction().commit();
+				packetDistributor.AddPacketToSend(new GameInstanceStoppedPacket(), packetClientData.clientData);
 			}
 		}
+		
+		((TaskManagerModule) ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).removeTask(gameInstanceTask);
+		
 	}
 	
 	private void GetGameLobbies(PacketClientData packetClientData) {

@@ -3,7 +3,7 @@ package wlcp.shared.packet;
 public enum PacketTypes {
 	
 	START_GAME_INSTANCE,
-	END_GAME_INSTANCE,
+	STOP_GAME_INSTANCE,
 	GAME_INSTANCE_ERROR,
 	GAME_LOBBIES,
 	GAME_TEAMS,

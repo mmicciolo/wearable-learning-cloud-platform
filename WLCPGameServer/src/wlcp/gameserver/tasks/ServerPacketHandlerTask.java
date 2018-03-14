@@ -19,11 +19,12 @@ import wlcp.model.master.GameInstance;
 import wlcp.model.master.GameLobby;
 import wlcp.model.master.Username;
 import wlcp.shared.packet.IPacket;
-import wlcp.shared.packets.GameInstanceError;
+import wlcp.shared.packets.GameInstanceErrorPacket;
 import wlcp.shared.packets.GameInstanceStartedPacket;
 import wlcp.shared.packets.GameLobbiesPacket;
 import wlcp.shared.packets.GameLobbyInfo;
 import wlcp.shared.packets.StartGameInstancePacket;
+import wlcp.shared.packets.StopGameInstancePacket;
 
 public class ServerPacketHandlerTask extends Task implements ITask {
 	
@@ -75,6 +76,9 @@ public class ServerPacketHandlerTask extends Task implements ITask {
 		case START_GAME_INSTANCE:
 			StartGameInstance(packetClientData);
 			break;
+		case STOP_GAME_INSTANCE:
+			StopGameInstance(packetClientData);
+			break;
 		case GAME_LOBBIES:
 			GetGameLobbies(packetClientData);
 			break;
@@ -94,7 +98,7 @@ public class ServerPacketHandlerTask extends Task implements ITask {
 		//Game doesnt exist
 		if(game == null) {
 			logger.write("Game " + startGameInstancePacket.getGameId() + " could not be started because it does not exist!");
-			packetDistributor.AddPacketToSend(new GameInstanceError(GameInstanceError.GameInstanceErrorCode.GAME_DOES_NOT_EXIST), packetClientData.clientData);
+			packetDistributor.AddPacketToSend(new GameInstanceErrorPacket(GameInstanceErrorPacket.GameInstanceErrorCode.GAME_DOES_NOT_EXIST), packetClientData.clientData);
 			return;
 		}
 		
@@ -104,7 +108,7 @@ public class ServerPacketHandlerTask extends Task implements ITask {
 		//Lobby does not exists
 		if(gameLobby == null) {
 			logger.write("Game " + startGameInstancePacket.getGameId() + " could not be started because the lobby does not exist!");
-			packetDistributor.AddPacketToSend(new GameInstanceError(GameInstanceError.GameInstanceErrorCode.LOBBY_DOES_NOT_EXIST), packetClientData.clientData);
+			packetDistributor.AddPacketToSend(new GameInstanceErrorPacket(GameInstanceErrorPacket.GameInstanceErrorCode.LOBBY_DOES_NOT_EXIST), packetClientData.clientData);
 			return;
 		}
 		
@@ -114,7 +118,7 @@ public class ServerPacketHandlerTask extends Task implements ITask {
 		//User doesnt exists
 		if(username == null) {
 			logger.write("Game " + startGameInstancePacket.getGameId() + " could not be started because the user trying to start it does not exist!");
-			packetDistributor.AddPacketToSend(new GameInstanceError(GameInstanceError.GameInstanceErrorCode.USERNAME_DOES_NOT_EXIST), packetClientData.clientData);
+			packetDistributor.AddPacketToSend(new GameInstanceErrorPacket(GameInstanceErrorPacket.GameInstanceErrorCode.USERNAME_DOES_NOT_EXIST), packetClientData.clientData);
 			return;
 		}
 		
@@ -127,7 +131,7 @@ public class ServerPacketHandlerTask extends Task implements ITask {
 				
 				//Send off the packet
 				//packetDistributor.AddPacketToSend(packet, packetClientData.clientData);
-				packetDistributor.AddPacketToSend(new GameInstanceError(GameInstanceError.GameInstanceErrorCode.GAME_ALREADY_STARTED), packetClientData.clientData);
+				packetDistributor.AddPacketToSend(new GameInstanceErrorPacket(GameInstanceErrorPacket.GameInstanceErrorCode.GAME_ALREADY_STARTED), packetClientData.clientData);
 				return;
 			}
 		}
@@ -155,6 +159,19 @@ public class ServerPacketHandlerTask extends Task implements ITask {
 		
 		//Send off the packet
 		packetDistributor.AddPacketToSend(packet, packetClientData.clientData);
+	}
+	
+	private void StopGameInstance(PacketClientData packetClientData) {
+		
+		//Get the start game packet
+		StopGameInstancePacket stopGameInstancePacket = (StopGameInstancePacket) packetClientData.packet;
+		
+		for(Task task : ((TaskManagerModule) ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).getTasksByType(GameInstanceTask.class)) {
+			if(((GameInstanceTask)task).getGameInstance().getGameInstanceId() == stopGameInstancePacket.getGameInstanceId()) {
+				logger.write("Stopping the game " +  ((GameInstanceTask)task).getGame().getGameId() + " instance " + ((GameInstanceTask)task).getGameInstance().getGameInstanceId());
+				
+			}
+		}
 	}
 	
 	private void GetGameLobbies(PacketClientData packetClientData) {

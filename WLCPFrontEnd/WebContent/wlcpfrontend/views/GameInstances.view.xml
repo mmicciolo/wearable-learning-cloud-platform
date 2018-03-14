@@ -1,8 +1,28 @@
 <core:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m"
 		controllerName="wlcpfrontend.controllers.GameInstances" xmlns:html="http://www.w3.org/1999/xhtml">
 	<Page id="gameInstances" showHeader="true" title="Your Running Game Instances" enableScrolling="false">
+		<subHeader>
+			<Toolbar>
+				<SearchField id="searchField" liveChange="onSearch" placeholder="Search by Game Instance..." width="100%" />
+				<Button text="Upload CSV" type="Accept"/>
+			</Toolbar>
+		</subHeader>
 		<content>
-	
+			<TileContainer id="gameInstanceTileContainer" tileDelete="onStopGameInstance" tiles="{path : 'odata>/GameInstances', parameters : {expand : 'GameDetails'}}" >
+				<StandardTile press="onTilePress" number="{odata>GameInstanceId}" numberUnit="Instance Id" title="{odata>Game}" icon="sap-icon://instance" />
+			</TileContainer>
 		</content>
+		<footer>
+			<Toolbar design="Transparent">
+				<ToolbarSpacer/>
+					<Button icon="sap-icon://close-command-field" type="Transparent"/>
+					<Button icon="sap-icon://navigation-left-arrow" type="Transparent"/>
+					<Button icon="sap-icon://add" type="Accept"  press="onStartGameInstance"/>
+					<Button icon="sap-icon://edit" type="Reject"  press="onEdit"/>
+					<Button icon="sap-icon://navigation-right-arrow" type="Transparent"/>
+					<Button icon="sap-icon://open-command-field" type="Transparent"/>
+				<ToolbarSpacer/>
+			</Toolbar>
+		</footer>
 	</Page>
 </core:View>

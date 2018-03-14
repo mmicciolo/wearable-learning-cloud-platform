@@ -1,0 +1,30 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core"
+	xmlns:l="sap.ui.layout">
+	
+	<Dialog id="startGameInstance" title = "Start a game instance">
+		<buttons>
+			<Button text="Start" type="Accept" press="startGameInstance"/>
+			<Button text="Cancel" type="Reject" press="onCancel"/>
+		</buttons>
+		
+		<VBox>
+			<FlexBox alignItems="Center" justifyContent="Center">
+				<items>
+					<ComboBox id="gameInstanceGame" placeholder="Select a game..." items="{odata>/Games}">
+						<core:Item key="{odata>GameId}" text="{odata>GameId}"></core:Item>
+					</ComboBox>
+				</items>
+			</FlexBox>
+			<FlexBox alignItems="Center" justifyContent="Center">
+				<items>
+					<ComboBox id="gameInstanceGameLobby" placeholder="Select a game lobby..." items="{odata>/GameLobbys}">
+						<core:Item key="{odata>GameLobbyId}" text="{odata>GameLobbyName}"></core:Item>
+					</ComboBox>
+				</items>
+			</FlexBox>
+		</VBox>
+		
+	</Dialog>
+</core:FragmentDefinition>

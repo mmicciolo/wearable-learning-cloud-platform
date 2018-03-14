@@ -39,6 +39,7 @@ var Index = {
 		
 		jQuery.sap.require("wlcpfrontend/javascript/GameEditor/GameEditor");
 		jQuery.sap.require("wlcpfrontend/javascript/ODataModel");
+		jQuery.sap.require("wlcpfrontend/javascript/ServerConfig");
 		
 		jQuery.sap.require("wlcpfrontend/javascript/jsplumb");
 		jQuery.sap.require("wlcpfrontend/javascript/jquery-ui-touch-punch-min");

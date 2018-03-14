@@ -45,7 +45,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameInstances", {
 	startGameInstance : function() {
 		this.busy = new sap.m.BusyDialog();
 		this.busy.open();
-		this.socket = new WebSocket('ws://24.240.135.66:3333');
+		this.socket = new WebSocket("ws://" + ServerConfig.getServerAddress());
 		this.socket.binaryType = "arraybuffer";
 		this.socket.onopen = $.proxy(this.onOpen, this);
 		this.socket.onmessage = $.proxy(this.onMessage, this);
@@ -54,7 +54,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameInstances", {
 	stopGameInstance : function(oEvent) {
 		this.busy = new sap.m.BusyDialog();
 		this.busy.open();
-		this.socket = new WebSocket('ws://24.240.135.66:3333');
+		this.socket = new WebSocket("ws://" + ServerConfig.getServerAddress());
 		this.socket.binaryType = "arraybuffer";
 		this.socket.onopen = $.proxy(this.onOpen2, this);
 		this.socket.onmessage = $.proxy(this.onMessage, this);

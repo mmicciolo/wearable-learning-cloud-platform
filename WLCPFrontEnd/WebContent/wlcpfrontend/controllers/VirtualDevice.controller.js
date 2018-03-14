@@ -118,7 +118,6 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 	},
 	
 	disconnectPressed : function() {
-		//this.socket.close();
 		var byteBuffer = new dcodeIO.ByteBuffer();
 		byteBuffer.writeByte(8);
 		byteBuffer.writeInt(0);
@@ -131,9 +130,7 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 	},
 	
 	setupSocketConnect : function() {
-		this.socket = new WebSocket('ws://24.240.135.66:3333');
-		//this.socket = new WebSocket('ws://130.215.45.83:3333');
-		//this.socket = new WebSocket('ws://192.168.0.102:3333');
+		this.socket = new WebSocket("ws://" + ServerConfig.getServerAddress());
 		this.socket.binaryType = "arraybuffer";
 		this.socket.onopen = $.proxy(this.onOpen, this);
 		this.socket.onmessage = $.proxy(this.onMessage, this);
@@ -362,6 +359,8 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 		byteBuffer.writeInt(game.length);
 		byteBuffer.writeString(game);
 		byteBuffer.writeInt(gameLobby);
+		byteBuffer.writeInt(this.username.length);
+		byteBuffer.writeString(this.username);
 		byteBuffer.writeInt(byteBuffer.offset, 1);
 		byteBuffer.flip();
 		var buffer = byteBuffer.toArrayBuffer();

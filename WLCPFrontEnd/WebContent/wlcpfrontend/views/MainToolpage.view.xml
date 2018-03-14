@@ -29,8 +29,8 @@
 			</tnt:header>
 			<tnt:sideContent>
 				<tnt:SideNavigation expanded="true">
-				<tnt:NavigationList items="{/navigation}">
-					<tnt:NavigationListItem select="selectParentItem" text="{title}" icon="{icon}" enabled="{enabled}" expanded="{expanded}" items="{items}" key="{key}">
+				<tnt:NavigationList items="{path : '/navigation', templateShareable:false}">
+					<tnt:NavigationListItem select="selectParentItem" text="{title}" icon="{icon}" enabled="{enabled}" expanded="{expanded}" items="{path : 'items', templateShareable:false}" key="{key}">
 						<tnt:NavigationListItem select="selectParentItem" text="{title}" key="{key}" enabled="{enabled}">
 						</tnt:NavigationListItem>
 					</tnt:NavigationListItem>

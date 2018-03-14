@@ -63,7 +63,7 @@ sap.ui.controller("wlcpfrontend.controllers.Login", {
 	oDataSuccess : function(oData) {
 		var usernameFound = false;
 		for(var i = 0; i < oData.results.length; i++) {
-			if(this.modelData.username == oData.results[i].UsernameId) {
+			if(this.modelData.username.toLowerCase() == oData.results[i].UsernameId) {
 				this.onLoginPress();
 				usernameFound = true;
 				break;

@@ -197,6 +197,8 @@ public class GameInstanceTask extends Task implements ITask {
 					player.playerVM.reconnect(packetClientData.clientData);
 					//Send the packet
 					packetDistributor.AddPacketToSend(new ConnectAcceptedPacket(getGameInstanceId(), player.teamPlayer.team, player.teamPlayer.player), packetClientData.clientData);
+					//Release the lock
+					available.release();
 					return;
 				}
 			}

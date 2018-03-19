@@ -23,6 +23,15 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 		//Get the connections stemming of the source of this states connection
 		var neighborConnections = GameEditor.getJsPlumbInstance().getConnections({source : connectionsToState[0].sourceId});
 		
+		var neighborConnections2 = [];
+		
+		for(var i = 0; i < connectionsToState.length; i++) {
+			var connections = GameEditor.getJsPlumbInstance().getConnections({source : connectionsToState[i].sourceId});
+			for(var n = 0; n < connections.length; n++) {
+				neighborConnections2.push(connections[n]);
+			}
+		}
+		
 		//Maintain a list of states the previous one is connected to
 		var stateList = [];
 		
@@ -56,20 +65,103 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 			
 			var orMaskNeighbors = 0;
 			
-			//Get the neighbor active scope mask
-			for(var n = 0; n < stateList.length; n++) {
-				
-				if(stateList[i].htmlId != stateList[n].htmlId) {
-					
-					//Get the active scopes
-					var activeScopes = this.getActiveScopes(stateList[n].modelJSON);
-					
-					//Get the active scope mask
-					var activeScopeMask = this.getActiveScopeMask(3, 3, activeScopes);
-					
-					orMaskNeighbors = orMaskNeighbors | activeScopeMask;
+			//Get a list of connections whose target are the current state
+			var targetConnections = GameEditor.getJsPlumbInstance().getConnections({target : stateList[i].htmlId});
+			var neighborStateList = [];
+			
+			//Loop through those connections and get neighbors
+			for(var n = 0; n < targetConnections.length; n++) {
+				var connections = GameEditor.getJsPlumbInstance().getConnections({source : targetConnections[n].sourceId});
+				for(var j = 0; j < connections.length; j++) {
+					if(connections[j].targetId != stateList[i].htmlId) {
+						for(var k = 0; k < GameEditor.getEditorController().stateList.length; k++) {
+							if(GameEditor.getEditorController().stateList[k].htmlId == connections[j].targetId) {
+								neighborStateList.push(GameEditor.getEditorController().stateList[k]);
+							}
+						}
+					}
 				}
 			}
+			
+			var orMaskNeighbors2 = 0;
+			
+			for(var n = 0; n < neighborStateList.length; n++) {
+				//Get the active scopes
+				var activeScopes = this.getActiveScopes(neighborStateList[n].modelJSON);
+				
+				//Get the active scope mask
+				var activeScopeMask = this.getActiveScopeMask(3, 3, activeScopes);
+				
+				orMaskNeighbors = orMaskNeighbors | activeScopeMask;
+				
+				var activeScopeMasks = this.getActiveScopeMasks(3, 3, activeScopeMask);
+				
+				orMaskNeighbors2 = orMaskNeighbors2 | this.andScopeMasks(activeScopeMasks);
+				orMaskNeighbors2 = orMaskNeighbors2 & (~activeScopeMask);
+			}
+			
+			if(this.getBit(orMaskNeighbors, 0) == 0 && orMaskNeighbors != 0) {
+				orMaskNeighbors = this.setBit(orMaskNeighbors, 0);
+			}
+			
+			var teamList2 = [];
+			
+			//Check for game wide to team (make sure it has team + players for that team)
+			for(var team = 1; team < 3 + 1; team++) {
+				if(this.getBit(orMaskNeighbors, team) == 0x01) {
+					teamList2.push("Team " + team);
+			      }
+			}
+			
+			if(teamList2.length > 0) {
+				var l = [];
+				for(var g = 0; g < teamList2.length; g++) {
+					for(var c = 1; c < 3 + 1; c++) {
+						l.push(teamList2[g] + " Player " + c);
+					}
+				}
+				orMaskNeighbors = orMaskNeighbors | this.getActiveScopeMask(3, 3, l);
+			}
+		    
+		    var playerReturn2 = true;
+		    var playerReturns2 = [];
+		    
+		    //Check for player wide to team wide
+		    for(var team = 1; team < 3 + 1; team++) {
+		    	for(var player = 1; player < 3 + 1; player++) {
+		    		if(!this.getBit(orMaskNeighbors, (3 * team) + player) == 0x01) {
+		    			playerReturn2 = false;
+	    	            break;
+		    	    }
+		    	}
+		    	if(playerReturn2) {
+		    		playerReturns2.push("Team " + team);
+		    		for(var player = 1; player < 3 + 1; player++) {
+		    			playerReturns2.push("Team " + team + " Player " + player);
+		    		}
+		    	} else {
+		    		playerReturn2 = true;
+		    	}
+		    }
+		    
+		    if(playerReturns2.length > 0) {
+		    	orMaskNeighbors = orMaskNeighbors | this.getActiveScopeMask(3, 3, playerReturns2);
+		    }
+
+//			//Get the neighbor active scope mask
+//			for(var n = 0; n < stateList.length; n++) {
+//				
+//				if(stateList[i].htmlId != stateList[n].htmlId) {
+//					
+//					//Get the active scopes
+//					var activeScopes = this.getActiveScopes(stateList[n].modelJSON);
+//					
+//					//Get the active scope mask
+//					var activeScopeMask = this.getActiveScopeMask(3, 3, activeScopes);
+//					
+//					orMaskNeighbors = orMaskNeighbors | activeScopeMask;
+//				}
+//			}
 			
 			var transList = [];
 			
@@ -286,7 +378,12 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 			if(!transitionAbove && !allTransitions && transList.length == 0) {
 				parentMask = nonTransitionMask;
 			} else if (!transitionAbove && transList.length > 0) {
-				parentMask = someTransitionNeighborMask;
+				//parentMask = someTransitionNeighborMask;
+				if(someTransitionNeighborMask != 0) {
+					parentMask = nonTransitionMask & someTransitionNeighborMask;
+				} else {
+					parentMask = nonTransitionMask;
+				}
 			} else if(transitionAbove && !allTransitions) {
 				parentMask = transitionMask2;
 			} else if(allTransitions) {

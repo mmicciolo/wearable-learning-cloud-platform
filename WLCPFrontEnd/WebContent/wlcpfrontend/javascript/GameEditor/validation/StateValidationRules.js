@@ -83,8 +83,6 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 				}
 			}
 			
-			var orMaskNeighbors2 = 0;
-			
 			for(var n = 0; n < neighborStateList.length; n++) {
 				//Get the active scopes
 				var activeScopes = this.getActiveScopes(neighborStateList[n].modelJSON);
@@ -93,11 +91,6 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 				var activeScopeMask = this.getActiveScopeMask(3, 3, activeScopes);
 				
 				orMaskNeighbors = orMaskNeighbors | activeScopeMask;
-				
-				var activeScopeMasks = this.getActiveScopeMasks(3, 3, activeScopeMask);
-				
-				orMaskNeighbors2 = orMaskNeighbors2 | this.andScopeMasks(activeScopeMasks);
-				orMaskNeighbors2 = orMaskNeighbors2 & (~activeScopeMask);
 			}
 			
 			if(this.getBit(orMaskNeighbors, 0) == 0 && orMaskNeighbors != 0) {

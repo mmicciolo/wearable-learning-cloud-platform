@@ -140,7 +140,7 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 	
 	onOpen : function(event) {
 		console.log("Connected");
-		this.startGameInstance("estimateit", 1);
+		//this.startGameInstance("estimateit", 1);
 		this.getActiveGameLobbies();
 	},
 	

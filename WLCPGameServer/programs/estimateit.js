@@ -230,7 +230,7 @@ var FSMGame = {
          this.playerVM.DisplayText("Find a volume where each face has 4 right angles and all sides are 6 inches long. Drag only black for a hint.");
       }
       if(this.team == 2) {
-         this.playerVM.DisplayText("Find a volume with 4 faces, with all acute angles. Drag only black for a hint.");
+         this.playerVM.DisplayText("Find a volume with 4 triangular faces, with all acute angles. Drag only black for a hint.");
       }
       if(this.team == 3) {
          this.playerVM.DisplayText("Find a rectangular prism: two of its faces are squares with 3.5 inch sides. Drag only black for a hint.");
@@ -251,7 +251,7 @@ var FSMGame = {
          this.playerVM.DisplayText("I am a cube: all faces are squares (4 right angles and same length sides). Push any button to continue.");
       }
       if(this.team == 2) {
-         this.playerVM.DisplayText("A cylinder has 2 flat round sides and 1 curved side (like a soda can). Push any button to continue.");
+         this.playerVM.DisplayText("An acute angle measures less than 90 degrees. Push any button to continue.");
       }
       if(this.team == 3) {
          this.playerVM.DisplayText("Hint: 4 inches is one third of your 12 inch dowel. Look for that square face. Push any button to continue.");
@@ -426,7 +426,7 @@ var FSMGame = {
 
    estimateit_state_4 : function() {
       this.playerVM.DisplayText("That was the wrong sequence! Push any button to try again!");
-      this.state = this.playerVM.SingleButtonPress(["1", "2", "3", "4"], [states.estimateit_state_2, states.estimateit_state_2, states.estimateit_state_2, states.estimateit_state_2]);
+      this.state = states.estimateit_state_2;
    },
 
    estimateit_state_5 : function() {

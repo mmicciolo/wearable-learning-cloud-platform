@@ -347,6 +347,21 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 						} 
 					}
 				}
+				
+				//Loop through our parent states
+				for(var n = 0; n < GameEditor.getEditorController().stateList.length; n++) {
+					for(var j = 0; j < connectionsWithoutTransitions.length; j++) {
+						if(connectionsWithoutTransitions[j].sourceId == GameEditor.getEditorController().stateList[n].htmlId && !GameEditor.getEditorController().stateList[n].htmlId.includes("start")) {
+							//Get the active scopes
+							var activeScopes = this.getActiveScopes(GameEditor.getEditorController().stateList[n].modelJSON);
+							
+							//Get the active scope mask
+							var activeScopeMask = this.getActiveScopeMask(3, 3, activeScopes);
+							
+							nonTransitionMask = nonTransitionMask | activeScopeMask;
+						}
+					}
+				}
 			}
 
 			
@@ -378,7 +393,7 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 					parentMask = nonTransitionMask;
 				}
 			} else if(transitionAbove && !allTransitions) {
-				parentMask = transitionMask2;
+				parentMask = transitionMask2 | nonTransitionMask;
 			} else if(allTransitions) {
 				parentMask = transitionMask;
 			}
@@ -472,7 +487,7 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 				} else if (!transitionAbove && transList.length > 0) {
 					stateList[i].setScope(parentMask & (~orMaskNeighbors), 3, 3);
 				} else if(transitionAbove && !allTransitions) {
-			    	//stateList[i].setScope(parentMask & (~transitionNeighborMask), 3, 3);
+			    	stateList[i].setScope(parentMask & (~transitionNeighborMask), 3, 3);
 				} else if(allTransitions) { 
 			    	stateList[i].setScope(parentMask & (~transitionNeighborMask), 3, 3);
 				}

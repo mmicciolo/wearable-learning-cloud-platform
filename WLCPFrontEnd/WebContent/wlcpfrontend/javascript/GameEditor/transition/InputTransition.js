@@ -38,6 +38,7 @@ var InputTransition = class InputTransition extends Transition {
 	
 	setupValidationRules() {
 		this.validationRules.push(new TransitionValidationRule());
+		this.validationRules.push(new TransitionSelectedTypeValidationRule());
 	}
 	
 	onChange(oEvent) {
@@ -249,6 +250,12 @@ var InputTransition = class InputTransition extends Transition {
 			var navContainer = sap.ui.getCore().byId("outputStateDialog").getContent()[0].getItems()[i].getContent()[0].getContentAreas()[1];
 			var path = sap.ui.getCore().byId("outputStateDialog").getContent()[0].getItems()[i].getBindingContext().getPath() + "/activeTransition";
 			var activeTransition = this.model.getProperty(path);
+			var transitionTypes = this.model.getProperty(sap.ui.getCore().byId("outputStateDialog").getContent()[0].getItems()[i].getBindingContext().getPath() + "/transitionTypes");
+			for(var n = 0; n < transitionTypes.length; n++) {
+				if(transitionTypes[n].title == activeTransition) { transitionTypes[n].selected = true; }
+				else { transitionTypes[n].selected = false; }
+			}
+			this.model.setProperty(sap.ui.getCore().byId("outputStateDialog").getContent()[0].getItems()[i].getBindingContext().getPath() + "/transitionTypes", transitionTypes);
 			for(var n = 0; n < navContainer.getPages().length; n++) {
 				if(navContainer.getPages()[n].getTitle().includes(activeTransition)) {
 					navContainer.to(navContainer.getPages()[n]);
@@ -264,6 +271,18 @@ var InputTransition = class InputTransition extends Transition {
 			icon : "",
 			scope : "",
 			activeTransition : "Single Button Press",
+			transitionTypes : [{
+				title : "Single Button Press",
+				icon : "sap-icon://touch",
+				selected : true,
+				visible : true
+			},
+			{
+				title : "Sequence Button Press",
+				icon : "sap-icon://multiselect-none",
+				selected : false,
+				visible : true
+			}],
 			singlePress : [
 				{
 					selected : false,
@@ -319,7 +338,13 @@ var InputTransition = class InputTransition extends Transition {
 	}
 	
 	transitionTypeSelected(oEvent, oParam) {
-		this.model.setProperty(oEvent.getParameters().listItem.getBindingContext().getPath() + "/activeTransition", oEvent.getParameters().listItem.getTitle());
+		this.model.setProperty(oEvent.getSource().getBindingContext() + "/activeTransition", oEvent.getParameters().listItem.getTitle());
+		var transitionTypes = this.model.getProperty(oEvent.getSource().getBindingContext() + "/transitionTypes");
+		for(var i = 0; i < transitionTypes.length; i++) {
+			if(transitionTypes[i].title == oEvent.getParameters().listItem.getTitle()) { transitionTypes[i].selected = true; }
+			else { transitionTypes[i].selected = false; }
+		}
+		this.model.setProperty(oEvent.getSource().getBindingContext() + "/transitionTypes", transitionTypes);
 		var navContainer = oEvent.oSource.getParent().getContentAreas()[1];
 		for(var i = 0; i < navContainer.getPages().length; i++) {
 			if(navContainer.getPages()[i].getTitle().includes(oEvent.getParameters().listItem.getTitle())) {
@@ -393,6 +418,8 @@ var InputTransition = class InputTransition extends Transition {
 		var sequenceArray = this.model.getProperty(sequencePath);
 		sequenceArray.splice(index, 1);
 		this.model.setProperty(sequencePath, sequenceArray);
+		this.onChange();
+		this.sequenceRefresh();
 	}
 	
 	onAfterRenderingSequence(oEvent) {
@@ -418,11 +445,16 @@ var InputTransition = class InputTransition extends Transition {
 				buttonsArray.push({number : 4});
 			}
 		}
-		data.push({buttons : buttonsArray});
-		this.model.setProperty(this.path23 + "/sequencePress", data);
-		this.onChange();
-		this.onAfterRenderingDialog();
-		//this.sequenceRefresh();
+		var sequenceValidation = new TransitionSequenceButtonPressValidationRule();
+		if(!sequenceValidation.validate(this, {buttons : buttonsArray}, this.model.getProperty(this.path23).scope)) {
+			sap.m.MessageBox.error("That sequence already exists in this scope!");
+		} else {
+			data.push({buttons : buttonsArray});
+			this.model.setProperty(this.path23 + "/sequencePress", data);
+			this.onChange();
+			this.onAfterRenderingDialog();
+			//this.sequenceRefresh();
+		}
 		this.dialog2.close();
 		this.dialog2.destroy();
 	}

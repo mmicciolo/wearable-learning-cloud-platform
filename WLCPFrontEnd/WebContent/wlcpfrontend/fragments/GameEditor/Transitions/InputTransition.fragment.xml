@@ -18,12 +18,9 @@
 				<IconTabFilter icon="{icon}" text="{scope}" key="{scope}">
 					<content>
 						<l:Splitter>
-							<List class="navList" mode="SingleSelectLeft" headerText="Select the Transition Type" selectionChange="transitionTypeSelected"> 
+							<List class="navList" items="{path : 'transitionTypes', templateShareable:false}" mode="SingleSelectLeft" headerText="Select the Transition Type" selectionChange="transitionTypeSelected"> 
 								<layoutData><l:SplitterLayoutData size="250px" resizable="false"/></layoutData>
-								<items>
-									<StandardListItem title="Single Button Press" icon="sap-icon://touch" selected="{= ${activeTransition} === 'Single Button Press' ? true : false}"/>
-									<StandardListItem title="Sequence Button Press" icon="sap-icon://multiselect-none" selected="{= ${activeTransition} === 'Sequence Button Press' ? true : false}"/>
-								</items>
+								<StandardListItem title="{title}" icon="{icon}" selected="{selected}" visible="{visible}"/>
 							</List>
 							<NavContainer width="100%" height="500px">
 								<layoutData><l:SplitterLayoutData minSize="500" resizable="false"/></layoutData>

@@ -25,7 +25,7 @@ var TransitionValidationRule = class TransitionValidationRule extends Validation
 			var activeScopes = this.getActiveScopes3(transitionList[i]);
 			
 			//Get the active scope mask
-			var activeScopeMask = this.getActiveScopeMask(3, 3, activeScopes);
+			var activeScopeMask = this.getActiveScopeMask(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam3, activeScopes);
 			
 			orMaskAll = orMaskAll | activeScopeMask;
 		}
@@ -44,7 +44,7 @@ var TransitionValidationRule = class TransitionValidationRule extends Validation
 					var activeScopes = this.getActiveScopes(transitionList[i], transitionList);
 					
 					//Get the active scope mask
-					var activeScopeMask = this.getActiveScopeMask(3, 3, activeScopes);
+					var activeScopeMask = this.getActiveScopeMask(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, activeScopes);
 					
 					orMaskNeighbors = orMaskNeighbors | activeScopeMask;
 				//}
@@ -71,7 +71,7 @@ var TransitionValidationRule = class TransitionValidationRule extends Validation
 					var activeScopes = this.getActiveScopes2(parentState.modelJSON);
 					
 					//Get the active scope mask
-					var activeScopeMask = this.getActiveScopeMask(3, 3, activeScopes);
+					var activeScopeMask = this.getActiveScopeMask(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, activeScopes);
 					
 					parentMask = activeScopeMask;
 				}
@@ -85,7 +85,7 @@ var TransitionValidationRule = class TransitionValidationRule extends Validation
 			var teamList = [];
 			
 			//Check for game wide to team (make sure it has team + players for that team)
-			for(var team = 1; team < 3 + 1; team++) {
+			for(var team = 1; team < GameEditor.getEditorController().gameModel.TeamCount + 1; team++) {
 				if(this.getBit(parentMask, team) == 0x01) {
 					teamList.push("Team " + team);
 			      }
@@ -94,27 +94,27 @@ var TransitionValidationRule = class TransitionValidationRule extends Validation
 			if(teamList.length > 0) {
 				var l = [];
 				for(var g = 0; g < teamList.length; g++) {
-					for(var c = 1; c < 3 + 1; c++) {
+					for(var c = 1; c < GameEditor.getEditorController().gameModel.PlayersPerTeam + 1; c++) {
 						l.push(teamList[g] + " Player " + c);
 					}
 				}
-				parentMask = parentMask | this.getActiveScopeMask(3, 3, l);
+				parentMask = parentMask | this.getActiveScopeMask(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, l);
 			}
 		    
 		    var playerReturn = true;
 		    var playerReturns = [];
 		    
 		    //Check for player wide to team wide
-		    for(var team = 1; team < 3 + 1; team++) {
-		    	for(var player = 1; player < 3 + 1; player++) {
-		    		if(!this.getBit(parentMask, (3 * team) + player) == 0x01) {
+		    for(var team = 1; team < GameEditor.getEditorController().gameModel.TeamCount + 1; team++) {
+		    	for(var player = 1; player < GameEditor.getEditorController().gameModel.PlayersPerTeam + 1; player++) {
+		    		if(!this.getBit(parentMask, (GameEditor.getEditorController().gameModel.PlayersPerTeam * team) + player) == 0x01) {
 		    			playerReturn = false;
 	    	            break;
 		    	    }
 		    	}
 		    	if(playerReturn) {
 		    		playerReturns.push("Team " + team);
-		    		for(var player = 1; player < 3 + 1; player++) {
+		    		for(var player = 1; player < GameEditor.getEditorController().gameModel.PlayersPerTeam + 1; player++) {
 		    			playerReturns.push("Team " + team + " Player " + player);
 		    		}
 		    	} else {
@@ -123,11 +123,11 @@ var TransitionValidationRule = class TransitionValidationRule extends Validation
 		    }
 		    
 		    if(playerReturns.length > 0) {
-				parentMask = parentMask | this.getActiveScopeMask(3, 3, playerReturns);
+				parentMask = parentMask | this.getActiveScopeMask(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, playerReturns);
 		    }
 		  
 			//Get the active scope masks
-			var activeScopeMasks = this.getActiveScopeMasks(3, 3, orMaskAll);
+			var activeScopeMasks = this.getActiveScopeMasks(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, orMaskAll);
 			
 		    //Takes care of team to game wide
 		    //Takes care of player to game wide
@@ -136,12 +136,12 @@ var TransitionValidationRule = class TransitionValidationRule extends Validation
 		    }
 
 			//Get the active scope masks
-			var activeScopeMasks = this.getActiveScopeMasks(3, 3, orMaskAll);
+			var activeScopeMasks = this.getActiveScopeMasks(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, orMaskAll);
 
 			//And all of the masks together to get our new scope mask
 			parentMask = parentMask & this.andScopeMasks(activeScopeMasks);
 			
-			transitionList[i].setScope(parentMask & (~orMaskNeighbors), 3, 3);	
+			transitionList[i].setScope(parentMask & (~orMaskNeighbors), GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam);	
 		}
 		
 		//Loop through all of the transitions

@@ -25,7 +25,7 @@ var TransitionValidationRule = class TransitionValidationRule extends Validation
 			var activeScopes = this.getActiveScopes3(transitionList[i]);
 			
 			//Get the active scope mask
-			var activeScopeMask = this.getActiveScopeMask(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam3, activeScopes);
+			var activeScopeMask = this.getActiveScopeMask(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, activeScopes);
 			
 			orMaskAll = orMaskAll | activeScopeMask;
 		}

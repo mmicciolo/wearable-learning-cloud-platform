@@ -411,13 +411,19 @@ var InputTransition = class InputTransition extends Transition {
 	}
 	
 	deleteSequence(oEvent) {
-		var path = oEvent.getSource().getBindingContext().getPath();
-		var splitPath = path.split("/");
+		this.deletePath = oEvent.getSource().getBindingContext().getPath();
+		this.deleteSequencePath = oEvent.getSource().getParent().getParent().getBindingContext().getPath() + "/sequencePress";
+		sap.m.MessageBox.confirm("Are you sure you want to delete this sequence?", {onClose : $.proxy(this.deleteOnClose, this)});
+	}
+	
+	deleteOnClose(oEvent) {
+		//var path = oEvent.getSource().getBindingContext().getPath();
+		var splitPath = this.deletePath.split("/");
 		var index = parseInt(splitPath[splitPath.length - 1]);
-		var sequencePath = oEvent.getSource().getParent().getParent().getBindingContext().getPath() + "/sequencePress";
-		var sequenceArray = this.model.getProperty(sequencePath);
+		//var sequencePath = oEvent.getSource().getParent().getParent().getBindingContext().getPath() + "/sequencePress";
+		var sequenceArray = this.model.getProperty(this.deleteSequencePath);
 		sequenceArray.splice(index, 1);
-		this.model.setProperty(sequencePath, sequenceArray);
+		this.model.setProperty(this.deleteSequencePath, sequenceArray);
 		this.onChange();
 		this.sequenceRefresh();
 	}
@@ -444,6 +450,9 @@ var InputTransition = class InputTransition extends Transition {
 			} else if(sequence[i].includes("Black")) {
 				buttonsArray.push({number : 4});
 			}
+		}
+		if(buttonsArray.length == 0) {
+			sap.m.MessageBox.information("Adding an empty sequence means the transition will occur if none of the defined sequences are input (i.e. wrong sequence).");
 		}
 		var sequenceValidation = new TransitionSequenceButtonPressValidationRule();
 		if(!sequenceValidation.validate(this, {buttons : buttonsArray}, this.model.getProperty(this.path23).scope)) {

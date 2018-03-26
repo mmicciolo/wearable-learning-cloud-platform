@@ -54,7 +54,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameLobbies", {
 	
 	onDelete : function(oEvent) {
 		this.tileToRemove = oEvent.getParameter("tile");
-		sap.m.MessageBox.confirm("Are you sure you want to delete this game?", {onClose : $.proxy(this.onDeleteConfirm, this)});
+		sap.m.MessageBox.confirm("Are you sure you want to delete this game lobby?", {onClose : $.proxy(this.onDeleteConfirm, this)});
 	},
 	
 	onDeleteConfirm : function(oAction) {

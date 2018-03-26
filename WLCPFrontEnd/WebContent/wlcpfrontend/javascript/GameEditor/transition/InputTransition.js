@@ -456,7 +456,7 @@ var InputTransition = class InputTransition extends Transition {
 		}
 		var sequenceValidation = new TransitionSequenceButtonPressValidationRule();
 		if(!sequenceValidation.validate(this, {buttons : buttonsArray}, this.model.getProperty(this.path23).scope)) {
-			sap.m.MessageBox.error("That sequence already exists in this scope!");
+			sap.m.MessageBox.error("That sequence already exists in this scope (possibly in another neighbor transition)!");
 		} else {
 			data.push({buttons : buttonsArray});
 			this.model.setProperty(this.path23 + "/sequencePress", data);

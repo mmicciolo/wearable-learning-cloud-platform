@@ -416,7 +416,7 @@ var TransitionSelectedTypeValidationRule = class TransitionSelectedTypeValidatio
 	
 	validate(transition) {
 		
-var transitionList = [];
+		var transitionList = [];
 		
 		//Get a list of neighbor connections
 		var neighborConnections = GameEditor.getJsPlumbInstance().getConnections({source : transition.connection.sourceId});
@@ -445,17 +445,19 @@ var transitionList = [];
 				for(var j = 0; j < transitionList.length; j++) {
 					for(var k = 0; k < transitionList[j].modelJSON.iconTabs.length; k++) {
 						var transitionTypes = transitionList[j].modelJSON.iconTabs[k].transitionTypes;
-						for(var l = 0; l < transitionTypes.length; l++) {
-							if(activeList.includes("") && !activeList.includes("Single Button Press") && !activeList.includes("Sequence Button Press")) {
-								transitionTypes[l].visible = true;
-							} else if(activeList.includes(transitionTypes[l].title)) {
-								transitionTypes[l].visible = true;
-								transitionList[j].modelJSON.iconTabs[k].activeTransition = transitionTypes[l].title;
-							} else {
-								transitionTypes[l].visible = false;
+						if(scopes[n].scope == transitionList[j].modelJSON.iconTabs[k].scope) {
+							for(var l = 0; l < transitionTypes.length; l++) {
+								if(activeList.includes("") && !activeList.includes("Single Button Press") && !activeList.includes("Sequence Button Press")) {
+									transitionTypes[l].visible = true;
+								} else if(activeList.includes(transitionTypes[l].title)) {
+									transitionTypes[l].visible = true;
+									transitionList[j].modelJSON.iconTabs[k].activeTransition = transitionTypes[l].title;
+								} else {
+									transitionTypes[l].visible = false;
+								}
 							}
+							transitionList[j].model.setData(transitionList[j].modelJSON);
 						}
-						transitionList[j].model.setData(transitionList[j].modelJSON);
 					}
 				}
 			}

@@ -21,18 +21,18 @@ sap.ui.controller("wlcpfrontend.controllers.Users", {
 	
 	CreateStudentPressed : function(oEvent) {
 		
-		//Create an instance of the dialog
-		this.dialog = sap.ui.xmlfragment("wlcpfrontend.fragments.Students.CreateStudent", this);
-		
-		//Create a new student
-		this.edit = this.CreateStudentObject();
-		
-		//Set the model
-		this.dialog.setModel(new sap.ui.model.json.JSONModel(this.edit));
-		
-		//Open the dialog
-		this.getView().addDependent(this.dialog);
-		this.dialog.open();
+//		//Create an instance of the dialog
+//		this.dialog = sap.ui.xmlfragment("wlcpfrontend.fragments.Students.CreateStudent", this);
+//		
+//		//Create a new student
+//		this.edit = this.CreateStudentObject();
+//		
+//		//Set the model
+//		this.dialog.setModel(new sap.ui.model.json.JSONModel(this.edit));
+//		
+//		//Open the dialog
+//		this.getView().addDependent(this.dialog);
+//		this.dialog.open();
 	},
 	
 	CreateStudent : function(oEvent) {
@@ -51,25 +51,25 @@ sap.ui.controller("wlcpfrontend.controllers.Users", {
 	
 	TilePress : function(oEvent) {
 		
-		//Create an instance of the dialog
-		this.dialog = sap.ui.xmlfragment("wlcpfrontend.fragments.Students.EditStudent", this);
-		
-		//Get the odata for the select student
-		var oData = oEvent.getSource().getBindingContext("odata").getObject();
-		
-		//Create a new student
-		this.edit = this.CreateStudentObject();
-		
-		//Bind it to a local model
-		this.edit.FirstName = oData.FirstName;
-		this.edit.LastName = oData.LastName;
-		this.edit.Username = oData.Username;
-		this.edit.Password = oData.Password;
-		this.dialog.setModel(new sap.ui.model.json.JSONModel(this.edit));
-		
-		//Open the dialog
-		this.getView().addDependent(this.dialog);
-		this.dialog.open();
+//		//Create an instance of the dialog
+//		this.dialog = sap.ui.xmlfragment("wlcpfrontend.fragments.Students.EditStudent", this);
+//		
+//		//Get the odata for the select student
+//		var oData = oEvent.getSource().getBindingContext("odata").getObject();
+//		
+//		//Create a new student
+//		this.edit = this.CreateStudentObject();
+//		
+//		//Bind it to a local model
+//		this.edit.FirstName = oData.FirstName;
+//		this.edit.LastName = oData.LastName;
+//		this.edit.Username = oData.Username;
+//		this.edit.Password = oData.Password;
+//		this.dialog.setModel(new sap.ui.model.json.JSONModel(this.edit));
+//		
+//		//Open the dialog
+//		this.getView().addDependent(this.dialog);
+//		this.dialog.open();
 	},
 	
 	CancelDialog : function(oEvent) {
@@ -83,6 +83,14 @@ sap.ui.controller("wlcpfrontend.controllers.Users", {
 		sap.ui.getCore().getModel("odata").update("/Students(1)", this.edit);
 		this.dialog.close();
 		this.getView().removeDependent(this.dialog);
+	},
+	
+	onSearch : function(oEvent) {
+		var view = this.getView();
+	    var tileContainer = view.byId("usersContainer");
+	    var searchString = view.byId("searchField").getValue();
+	    var filter = new sap.ui.model.Filter("UsernameId", sap.ui.model.FilterOperator.Contains, searchString);
+	    tileContainer.getBinding("tiles").filter([filter], sap.ui.model.FilterType.Application);
 	},
 
 /**

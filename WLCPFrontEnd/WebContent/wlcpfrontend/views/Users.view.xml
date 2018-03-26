@@ -1,14 +1,14 @@
 <core:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:t="sap.ui.table"
 		controllerName="wlcpfrontend.controllers.Users" xmlns:html="http://www.w3.org/1999/xhtml">
-	<Page id="users" showHeader="true" title="School's Students" enableScrolling="false">
+	<Page id="users" showHeader="true" title="Users" enableScrolling="false">
 		<subHeader>
 			<Toolbar>
-				<SearchField width="100%" />
+				<SearchField id="searchField" liveChange="onSearch" placeholder="Search by username..." width="100%" />
 				<Button text="Upload CSV" type="Accept"/>
 			</Toolbar>
 		</subHeader>
-		<TileContainer tiles="{path : 'odata>/Students', parameters : {expand : 'SchoolDetails'}}" >
-			<StandardTile key="{odata>StudentId}" press="TilePress" number="{odata>StudentId}" numberUnit="Student ID" title="{odata>FirstName} {odata>LastName}" info="{odata>SchoolDetails/SchoolName}" icon="sap-icon://study-leave" />
+		<TileContainer id="usersContainer" tiles="{path : 'odata>/Usernames'}" >
+			<StandardTile key="{odata>UsernameId}" press="TilePress" number="{odata>UsernameId}" numberUnit="Username ID" title="{odata>FirstName} {odata>LastName}" info="{odata>SchoolDetails/SchoolName}" icon="sap-icon://study-leave" />
 		</TileContainer>
 		<footer>
 			<Toolbar design="Transparent">

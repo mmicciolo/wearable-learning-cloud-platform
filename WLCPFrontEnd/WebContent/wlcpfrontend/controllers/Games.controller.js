@@ -27,6 +27,21 @@ sap.ui.controller("wlcpfrontend.controllers.Games", {
 	    var filter = new sap.ui.model.Filter("GameId", sap.ui.model.FilterOperator.Contains, searchString);
 	    tileContainer.getBinding("tiles").filter([filter], sap.ui.model.FilterType.Application);
 	},
+	
+	onTilePress : function(oEvent) {
+		this.gameToOpen = ODataModel.getODataModel().getProperty(oEvent.getSource().getBindingContext("odata").sPath);
+		sap.m.MessageBox.confirm("Do you want to open this game in the editor?", {onClose: $.proxy(this.onConfirmGameOpen, this)});
+	},
+	
+	onConfirmGameOpen : function(oAction) {
+		if(oAction == sap.m.MessageBox.Action.OK) {
+			var app = sap.ui.getCore().byId("app1");
+			var page = sap.ui.view({id:"gameEditor", viewName:"wlcpfrontend.views.GameEditor", type:sap.ui.core.mvc.ViewType.XML});
+			page.getController().loadFromEditor = this.gameToOpen;
+			app.addPage(page);
+			app.to(page.getId());
+		}
+	},
 
 /**
 * Called when a controller is instantiated and its View controls (if available) are already created.

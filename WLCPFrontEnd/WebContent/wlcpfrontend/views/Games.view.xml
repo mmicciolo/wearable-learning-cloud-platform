@@ -9,7 +9,7 @@
 		</subHeader>
 		<content>
 			<TileContainer id="gamesTileContainer" tileDelete="onDelete" tiles="{path : 'odata>/Games'}" >
-				<StandardTile press="TilePress" number="{odata>TeamCount} {odata>PlayersPerTeam}" numberUnit="Team + Players" title="{odata>GameId}" icon="sap-icon://soccor" />
+				<StandardTile press="onTilePress" number="{odata>TeamCount} {odata>PlayersPerTeam}" numberUnit="Team + Players" title="{odata>GameId}" icon="sap-icon://soccor" />
 			</TileContainer>
 		</content>
 		<footer>

@@ -34,6 +34,8 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 	
 	jsPlumbInstance : null,
 	
+	loadFromEditor : null,
+	
 	initJsPlumb : function() {
 		this.jsPlumbInstance = jsPlumb.getInstance();
 		this.jsPlumbInstance.importDefaults({Connector: ["Flowchart", {cornerRadius : 50}], ConnectionOverlays: [
@@ -211,6 +213,18 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		$.ajax({url: ODataModel.getWebAppURL() + "/LoadGame", type: 'POST',  dataType: 'application/json', data: 'gameId=' + this.gameModel.GameId, complete: $.proxy(this.loadSuccess, this)});
 	},
 	
+	loadFromManager : function(gameInfo) {
+		GameEditor.getEditorController().resetEditor();
+		GameEditor.getEditorController().gameModel.GameId = gameInfo.GameId;
+		GameEditor.getEditorController().gameModel.TeamCount = gameInfo.TeamCount;
+		GameEditor.getEditorController().gameModel.PlayersPerTeam = gameInfo.PlayersPerTeam;
+		GameEditor.getEditorController().gameModel.Visibility = gameInfo.Visibility;
+		GameEditor.getEditorController().gameModel.StateIdCount = gameInfo.StateIdCount;
+		GameEditor.getEditorController().gameModel.TransitionIdCount = gameInfo.TransitionIdCount;
+		GameEditor.getEditorController().gameModel.ConnectionIdCount = gameInfo.ConnectionIdCount;
+		GameEditor.getEditorController().load();
+	},
+	
 	loadSuccess(data) {
 		
 		var loadedData = JSON.parse(data.responseText);
@@ -349,6 +363,11 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 				  
 				  //Load the data model
 				  ODataModel.setupODataModel();
+				  
+				  //Check to see if we are loading from the game manager
+				  if(this.loadFromEditor != null) {
+					  this.loadFromManager(this.loadFromEditor);
+				  }
 				  
 				  //Wait for the inital DOM to render
 				  //Init jsPlumb

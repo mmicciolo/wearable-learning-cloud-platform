@@ -42,6 +42,27 @@ sap.ui.controller("wlcpfrontend.controllers.Games", {
 			app.to(page.getId());
 		}
 	},
+	
+	onDelete : function(oEvent) {
+		this.tileToRemove = oEvent.getParameter("tile");
+		sap.m.MessageBox.confirm("Are you sure you want to delete this game?", {onClose : $.proxy(this.onDeleteConfirm, this)});
+	},
+	
+	onDeleteConfirm : function(oAction) {
+		if(oAction == sap.m.MessageBox.Action.OK) {
+			var gameInfo = ODataModel.getODataModel().getProperty(this.tileToRemove.getBindingContext("odata").sPath);
+			$.ajax({url: ODataModel.getWebAppURL() + "/DeleteGame", type: 'POST', dataType: 'text', data: 'gameId=' + gameInfo.GameId, success : $.proxy(this.deleteSuccess, this), error : $.proxy(this.deleteError, this)});
+		}
+	},
+	
+	deleteSuccess : function() {
+		ODataModel.getODataModel().refresh();
+		sap.m.MessageToast.show("Game deleted!");
+	},
+	
+	deleteError : function() {
+		sap.m.MessageToast.show("Game could not be deleted!");
+	},
 
 /**
 * Called when a controller is instantiated and its View controls (if available) are already created.

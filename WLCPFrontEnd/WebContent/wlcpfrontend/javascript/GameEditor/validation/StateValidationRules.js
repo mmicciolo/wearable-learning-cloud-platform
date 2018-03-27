@@ -174,10 +174,39 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 				//Get the active scope mask
 				activeScopeMask = this.getActiveScopeMask(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, activeScopes);
 				
-				var activeScopeMasks = this.getActiveScopeMasks(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, activeScopeMask);
+				someTransitionNeighborMask = someTransitionNeighborMask | activeScopeMask;
 				
-				someTransitionNeighborMask = someTransitionNeighborMask | this.andScopeMasks(activeScopeMasks);
-				someTransitionNeighborMask = someTransitionNeighborMask & (~activeScopeMask);
+				//var activeScopeMasks = this.getActiveScopeMasks(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, activeScopeMask);
+				
+				//someTransitionNeighborMask = someTransitionNeighborMask | this.andScopeMasks(activeScopeMasks);
+				//someTransitionNeighborMask = someTransitionNeighborMask & (~activeScopeMask);
+			}
+			
+			//Check if any of the team player bits are set
+			//If so exclude the entire team + players from someTransitionNeighborMask
+			if(someTransitionNeighborMask != 0) {
+				if(this.getBit(someTransitionNeighborMask, 0) == 0x01) {
+					someTransitionNeighborMask = 0xffffffff;
+				} else {
+					var playerSet = false;
+					var playersSet = [];
+					for(var team = 1; team < GameEditor.getEditorController().gameModel.TeamCount + 1; team++) {
+				    	for(var player = 1; player < GameEditor.getEditorController().gameModel.PlayersPerTeam + 1; player++) {
+				    		if(this.getBit(someTransitionNeighborMask, (GameEditor.getEditorController().gameModel.PlayersPerTeam * team) + player) == 0x01) {
+				    			playerSet = true;
+			    	            break;
+				    		}
+				    	}
+				    	if(playerSet) {
+				    		playersSet.push("Team " + team);
+				    		for(var player = 1; player < GameEditor.getEditorController().gameModel.PlayersPerTeam + 1; player++) {
+				    			playersSet.push("Team " + team + " Player " + player);
+				    		}
+				    		playerSet = false;
+				    	} 
+					}
+					someTransitionNeighborMask = someTransitionNeighborMask | this.getActiveScopeMask(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, playersSet);
+				}
 			}
 			
 			var parentMask = 0;
@@ -307,7 +336,13 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 			} else if (!transitionAbove && transList.length > 0) {
 				//parentMask = someTransitionNeighborMask;
 				if(someTransitionNeighborMask != 0) {
-					parentMask = nonTransitionMask & someTransitionNeighborMask;
+					if(this.getBit(nonTransitionMask, 0) == 0x01) {
+						var activeScopeMasks = this.getActiveScopeMasks(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, someTransitionNeighborMask);
+						parentMask = this.andScopeMasks(activeScopeMasks);
+						parentMask = parentMask & (~someTransitionNeighborMask);
+					} else {
+						parentMask = nonTransitionMask & (~someTransitionNeighborMask);
+					}
 				} else {
 					parentMask = nonTransitionMask;
 				}
@@ -369,11 +404,19 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 			//Get the active scope masks
 			var activeScopeMasks = this.getActiveScopeMasks(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, orMaskAll);
 			
+			var toGameWideMask = 0;
+			for(var n = 1; n < GameEditor.getEditorController().gameModel.TeamCount + (GameEditor.getEditorController().gameModel.TeamCount * GameEditor.getEditorController().gameModel.PlayersPerTeam) + 1; n++) {
+				toGameWideMask = this.setBit(toGameWideMask, n);
+			}
+			
 		    //Takes care of team to game wide
 		    //Takes care of player to game wide
-		    if((parentMask & 8190) == 8190) {
+		    if((parentMask & toGameWideMask) == toGameWideMask) {
 		    	parentMask = 0xffffffff;
 		    }
+//		    if((parentMask & 8190) == 8190) {
+//		    	parentMask = 0xffffffff;
+//		    }
 		   
 		    //if(!allTransitions) {
 			    parentMask = parentMask & this.andScopeMasks(activeScopeMasks);

@@ -358,6 +358,11 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 * @memberOf wlcpfrontend.views.GameEditor
 */
 	onInit: function() {
+		
+//		window.onbeforeunload = function() {
+//			return "Are you sure you want to leave this page? You will lose all unsaved data!";
+//		};
+		
 		GameEditor.getEditor().addEventDelegate({
 			  onAfterRendering: function(){
 				  
@@ -368,18 +373,6 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 				  if(this.loadFromEditor != null) {
 					  this.loadFromManager(this.loadFromEditor);
 				  }
-				  
-				  //Wait for the inital DOM to render
-				  //Init jsPlumb
-				  //this.initJsPlumb();
-				  
-				  //Init the start state
-				  //this.initStartState();
-				  
-				  //Setup the toolbox drag and drop
-				  //this.initToolbox();
-				  
-				  //ButtonPressTransition.doubleClick();
 			  }
 			}, this);
 	},

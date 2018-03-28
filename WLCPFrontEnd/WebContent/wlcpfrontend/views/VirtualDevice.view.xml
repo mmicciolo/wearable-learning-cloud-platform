@@ -31,7 +31,7 @@
 					<items>
 						<Text text="Choose a team and player" class="sapUiSmallMarginBottom"/>
 						<Select width="12em" placeholder="Team" items="{/teamPlayers}" value="{/mode}">
-							<core:Item key="{key}" text="{teamPlayer}" />
+							<core:Item key="{key}" text="Team {team} Player {player}" />
 						</Select>
 						<Button width="12em" text="Join" type="Emphasized" press="onDebugJoinPress"></Button>
 					</items>

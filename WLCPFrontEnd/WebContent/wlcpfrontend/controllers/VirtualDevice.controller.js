@@ -434,7 +434,7 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 		for(var i = 0; i < teamCount; i = i + 2) {
 			var team = byteBuffer.readByte();
 			var player = byteBuffer.readByte();
-			this.modelJSON.teamPlayers.push({team : team, player : player, teamPlayer : "Team " + (team + 1) + " Player " + (player + 1)});
+			this.modelJSON.teamPlayers.push({team : team + 1, player : player + 1});
 		}
 		this.modelJSON.games = [];
 		this.model.setData(this.modelJSON);

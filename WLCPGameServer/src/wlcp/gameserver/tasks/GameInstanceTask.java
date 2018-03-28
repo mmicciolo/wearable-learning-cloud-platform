@@ -278,7 +278,7 @@ public class GameInstanceTask extends Task implements ITask {
 			}
 			
 			Username username = new Username();
-			username.setUsernameId("Team " + (debugConnectPacket.getTeam() + 1) + " Player " + (debugConnectPacket.getPlayer() + 1));
+			username.setUsernameId("Team " + debugConnectPacket.getTeam() + " Player " + debugConnectPacket.getPlayer());
 			
 			//They passed our tests, they can join
 			UsernameClientData usernameClientData = new UsernameClientData(username, packetClientData.clientData);

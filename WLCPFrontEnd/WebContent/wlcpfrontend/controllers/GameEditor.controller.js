@@ -366,10 +366,9 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 			}
 		}
 	},
-	
-	
-	readInstancesError : function() {
 		
+	readInstancesError : function() {
+		sap.m.MessageBox.error("There was an error debugging...");
 	},
 	
 	handleDebugInstanceMessageBox : function(oAction) {
@@ -415,9 +414,9 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 */
 	onInit: function() {
 		
-//		window.onbeforeunload = function() {
-//			return "Are you sure you want to leave this page? You will lose all unsaved data!";
-//		};
+		window.onbeforeunload = function() {
+			return "Are you sure you want to leave this page? You will lose all unsaved data!";
+		};
 		
 		GameEditor.getEditor().addEventDelegate({
 			  onAfterRendering: function(){

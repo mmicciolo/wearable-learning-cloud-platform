@@ -29,6 +29,7 @@ import wlcp.gameserver.task.Task;
 import wlcp.shared.packet.IPacket;
 import wlcp.shared.packet.PacketTypes;
 import wlcp.shared.packets.ConnectPacket;
+import wlcp.shared.packets.DebugConnectPacket;
 import wlcp.shared.packets.DisconnectPacket;
 import wlcp.shared.packets.GameLobbiesPacket;
 import wlcp.shared.packets.GamePacket;
@@ -95,6 +96,9 @@ public class PacketDistributorTask extends Task implements ITask {
 			break;
 		case CONNECT:
 			AddPacket(new ConnectPacket(), clientData);
+			break;
+		case DEBUG_CONNECT:
+			AddPacket(new DebugConnectPacket(), clientData);
 			break;
 		case DISCONNECT:
 			AddPacket(new DisconnectPacket(), clientData);

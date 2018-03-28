@@ -195,7 +195,9 @@ public class ServerPacketHandlerTask extends Task implements ITask {
 		for(Task task : ((TaskManagerModule) ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).getTasksByType(GameInstanceTask.class)) {
 			if((((GameInstanceTask)task).getGameInstance().getUsername().getUsernameId().equals(startDebugGameInstancePacket.getUsernameId())) && ((GameInstanceTask)task).getGameInstance().isDebugInstance()) {
 				logger.write("Debug Game has already been started, a username can only debug one game at a time");
-				packetDistributor.AddPacketToSend(new GameInstanceErrorPacket(GameInstanceErrorPacket.GameInstanceErrorCode.GAME_ALREADY_STARTED), packetClientData.clientData);
+				//packetDistributor.AddPacketToSend(new GameInstanceErrorPacket(GameInstanceErrorPacket.GameInstanceErrorCode.GAME_ALREADY_STARTED), packetClientData.clientData);
+				GameInstanceStartedPacket packet = new GameInstanceStartedPacket(((GameInstanceTask)task).getGameInstance().getGameInstanceId());
+				packetDistributor.AddPacketToSend(packet, packetClientData.clientData);
 				return;
 			}
 		}

@@ -9,11 +9,11 @@ var DebuggerWindow = {
 	},
 	
 	initDebugger : function() {
-		this.initParams("mmicciolo", "0");
+		//this.initParams("mmicciolo", "debug");
 		Index.loadJQuery();
 		Index.loadExternalResources();
-		var app = new sap.m.App({id:"debuggerApp", initialPage:"debugger"});
-		var page = sap.ui.view({id:"debugger", viewName:"wlcpfrontend.views.VirtualDevice", type:sap.ui.core.mvc.ViewType.XML});
+		var app = new sap.m.App({id:"debuggerApp", initialPage:"virtualDevice"});
+		var page = sap.ui.view({id:"virtualDevice", viewName:"wlcpfrontend.views.VirtualDevice", type:sap.ui.core.mvc.ViewType.XML});
 		page.getController().debugMode = true;
 		page.getController().initVirtualDevice(this.username, this.debugGameId);
 		app.addPage(page);

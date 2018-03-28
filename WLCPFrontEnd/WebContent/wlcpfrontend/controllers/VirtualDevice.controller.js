@@ -441,8 +441,19 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 	},
 	
 	onDebugJoinPress : function(oEvent) {
+		
 		var selectedTeamPlayer = this.model.getProperty(oEvent.getSource().getParent().getItems()[1].getSelectedItem().getBindingContext().getPath());
-		var i = 0;
+		
+		//Send a request to connect
+		var byteBuffer = new dcodeIO.ByteBuffer();
+		byteBuffer.writeByte(19);
+		byteBuffer.writeInt(0);
+		byteBuffer.writeInt(this.gameInstanceId);
+		byteBuffer.writeInt(parseInt(selectedTeamPlayer.team));
+		byteBuffer.writeInt(parseInt(selectedTeamPlayer.player));
+		byteBuffer.writeInt(byteBuffer.offset, 1);
+		byteBuffer.flip();
+		this.socket.send(byteBuffer.toArrayBuffer());
 	},
 	
 	initVirtualDevice : function(username, debugGameId) {
@@ -470,8 +481,8 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 						var navContainer = sap.ui.getCore().byId("virtualDevice--virtualDeviceNavContainer");
 						navContainer.to(sap.ui.getCore().byId("virtualDevice--selectGameLobby"));	
 				  } else {
-						var navContainer = sap.ui.getCore().byId("debugger--virtualDeviceNavContainer");
-						navContainer.to(sap.ui.getCore().byId("debugger--selectTeamPlayer"));
+						var navContainer = sap.ui.getCore().byId("virtualDevice--virtualDeviceNavContainer");
+						navContainer.to(sap.ui.getCore().byId("virtualDevice--selectTeamPlayer"));
 				  }
 			  }
 		}, this);

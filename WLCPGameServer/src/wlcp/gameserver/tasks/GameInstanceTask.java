@@ -37,6 +37,7 @@ import wlcp.shared.packet.Packet;
 import wlcp.shared.packet.PacketTypes;
 import wlcp.shared.packets.ConnectAcceptedPacket;
 import wlcp.shared.packets.ConnectPacket;
+import wlcp.shared.packets.DebugConnectPacket;
 import wlcp.shared.packets.DisconnectCompletePacket;
 import wlcp.shared.packets.DisconnectPacket;
 import wlcp.shared.packets.GameTeamsAndPlayersPacket;
@@ -125,6 +126,9 @@ public class GameInstanceTask extends Task implements ITask {
 		switch(packetClientData.packet.getType()) {
 		case CONNECT:
 			UserConnect(packetClientData);
+			break;
+		case DEBUG_CONNECT:
+			DebugUserConnect(packetClientData);
 			break;
 		case DISCONNECT:
 			UserDisconnect(packetClientData);
@@ -230,6 +234,66 @@ public class GameInstanceTask extends Task implements ITask {
 			
 			//Log the event
 			logger.write("user " + player.usernameClientData.username.getUsernameId() + " joined the lobby " + "\"" + gameLobby.getGameLobbyName() + "\"" + " playing " + "\"" + game.getGameId() + "\"");
+
+			//Send the packet
+			packetDistributor.AddPacketToSend(new ConnectAcceptedPacket(getGameInstanceId(), player.teamPlayer.team, player.teamPlayer.player), packetClientData.clientData);
+			
+			//Release the lock
+			available.release();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private void DebugUserConnect(PacketClientData packetClientData) {
+		
+		//Get the connect packet
+		DebugConnectPacket debugConnectPacket = (DebugConnectPacket) packetClientData.packet;
+		
+		//Check to make sure the player doesnt already exist in the game
+		try {
+			available.acquire();
+			for(Player player : players) {
+				if(player.teamPlayer.team == debugConnectPacket.getTeam() && player.teamPlayer.player == debugConnectPacket.getPlayer()) {
+					//User already exists in the game, maybe they are trying to reconnect?
+					UserReconnect(packetClientData, player);
+					//Recall the current state function its in
+					player.playerVM.reconnect(packetClientData.clientData);
+					//Send the packet
+					packetDistributor.AddPacketToSend(new ConnectAcceptedPacket(getGameInstanceId(), player.teamPlayer.team, player.teamPlayer.player), packetClientData.clientData);
+					//Release the lock
+					available.release();
+					return;
+				}
+			}
+			
+			//See if the team they are trying to join is full
+			int count = 1;
+			for(Player player : players) {
+				if(player.teamPlayer.team == debugConnectPacket.getTeam()) { count++; }
+			}
+			if(count >= game.getTeamCount() + 1) {
+				//Team is full, handle
+			}
+			
+			Username username = new Username();
+			username.setUsernameId("Team " + (debugConnectPacket.getTeam() + 1) + " Player " + (debugConnectPacket.getPlayer() + 1));
+			
+			//They passed our tests, they can join
+			UsernameClientData usernameClientData = new UsernameClientData(username, packetClientData.clientData);
+			
+			//Get the team palyer
+			TeamPlayer teamPlayer = new TeamPlayer(debugConnectPacket.getTeam(), debugConnectPacket.getPlayer());
+			
+			//Store the player data
+			Player player = new Player(usernameClientData, teamPlayer, StartPlayerVM(usernameClientData, teamPlayer));
+			
+			//Add the player to a list
+			players.add(player);
+			
+			//Log the event
+			logger.write("Debug user " + player.usernameClientData.username.getUsernameId() + " joined the lobby " + "\"" + gameLobby.getGameLobbyName() + "\"" + " playing " + "\"" + game.getGameId() + "\"");
 
 			//Send the packet
 			packetDistributor.AddPacketToSend(new ConnectAcceptedPacket(getGameInstanceId(), player.teamPlayer.team, player.teamPlayer.player), packetClientData.clientData);

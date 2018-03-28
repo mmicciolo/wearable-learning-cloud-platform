@@ -191,15 +191,31 @@ public class ServerPacketHandlerTask extends Task implements ITask {
 			return;
 		}
 		
+		Task gameInstanceTask = null;
+		
 		//4. Make sure a game instance of the lobby has not already been started
 		for(Task task : ((TaskManagerModule) ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).getTasksByType(GameInstanceTask.class)) {
 			if((((GameInstanceTask)task).getGameInstance().getUsername().getUsernameId().equals(startDebugGameInstancePacket.getUsernameId())) && ((GameInstanceTask)task).getGameInstance().isDebugInstance()) {
-				logger.write("Debug Game has already been started, a username can only debug one game at a time");
-				//packetDistributor.AddPacketToSend(new GameInstanceErrorPacket(GameInstanceErrorPacket.GameInstanceErrorCode.GAME_ALREADY_STARTED), packetClientData.clientData);
-				GameInstanceStartedPacket packet = new GameInstanceStartedPacket(((GameInstanceTask)task).getGameInstance().getGameInstanceId());
-				packetDistributor.AddPacketToSend(packet, packetClientData.clientData);
-				return;
+				if(startDebugGameInstancePacket.getRestartDebug() == 0) {
+					logger.write(((GameInstanceTask)task).getGameInstance().getUsername().getUsernameId() + " Debug Game has already been started, a username can only debug one game at a time");
+					//packetDistributor.AddPacketToSend(new GameInstanceErrorPacket(GameInstanceErrorPacket.GameInstanceErrorCode.GAME_ALREADY_STARTED), packetClientData.clientData);
+					GameInstanceStartedPacket packet = new GameInstanceStartedPacket(((GameInstanceTask)task).getGameInstance().getGameInstanceId());
+					packetDistributor.AddPacketToSend(packet, packetClientData.clientData);
+					return;
+				} else {
+					gameInstanceTask = task;
+					logger.write("Restarting " + ((GameInstanceTask)task).getGameInstance().getUsername().getUsernameId() + " Debug Game");
+					GameInstance gameInstance = entityManager.getEntityManager().find(GameInstance.class, ((GameInstanceTask)task).getGameInstance().getGameInstanceId());
+					entityManager.getEntityManager().getTransaction().begin();
+					entityManager.getEntityManager().remove(gameInstance);
+					entityManager.getEntityManager().getTransaction().commit();
+					((GameInstanceTask)task).ShutDown();
+				}
 			}
+		}
+		
+		if(startDebugGameInstancePacket.getRestartDebug() == 1) {
+			((TaskManagerModule) ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).removeTask(gameInstanceTask);
 		}
 		
 		//5. Create the instance
@@ -237,11 +253,11 @@ public class ServerPacketHandlerTask extends Task implements ITask {
 			if(((GameInstanceTask)task).getGameInstance().getGameInstanceId() == stopGameInstancePacket.getGameInstanceId()) {
 				gameInstanceTask = task;
 				logger.write("Stopping the game " +  ((GameInstanceTask)task).getGame().getGameId() + " instance id " + ((GameInstanceTask)task).getGameInstance().getGameInstanceId());
-				((GameInstanceTask)task).ShutDown();
 				GameInstance gameInstance = entityManager.getEntityManager().find(GameInstance.class, ((GameInstanceTask)task).getGameInstance().getGameInstanceId());
 				entityManager.getEntityManager().getTransaction().begin();
 				entityManager.getEntityManager().remove(gameInstance);
 				entityManager.getEntityManager().getTransaction().commit();
+				((GameInstanceTask)task).ShutDown();
 				packetDistributor.AddPacketToSend(new GameInstanceStoppedPacket(), packetClientData.clientData);
 			}
 		}

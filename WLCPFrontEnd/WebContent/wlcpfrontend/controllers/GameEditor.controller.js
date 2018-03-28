@@ -340,7 +340,11 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 	runSuccess : function() {
 		this.busy.close();
 		sap.m.MessageToast.show("Transpiled Successfully! Opening Debugger!");
-		this.openDebuggerWindow();
+		var filters = [];
+		filters.push(new sap.ui.model.Filter({path: "Username", operator: sap.ui.model.FilterOperator.EQ, value1: sap.ui.getCore().getModel("user").oData.username}));
+		filters.push(new sap.ui.model.Filter({path: "DebugInstance", operator: sap.ui.model.FilterOperator.EQ, value1: true}));
+		ODataModel.getODataModel().read("/GameInstances", {filters : filters, success : $.proxy(this.readInstancesSuccess, this), error: $.proxy(this.readInstancesError, this)});
+		//this.openDebuggerWindow();
 		//debuggerWindow.DebuggerWindow.initParams(sap.ui.getCore().getModel("user").oData.username, this.gameModel.GameId);
 	},
 	
@@ -349,13 +353,41 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		this.busy.close();
 	},
 	
+	readInstancesSuccess : function(oData) {
+		if(oData.results.length == 0) {
+			this.restartDebug = false;
+			this.openDebuggerWindow();
+		} else {
+			if(oData.results[0].Game == this.gameModel.GameId) {
+				sap.m.MessageBox.confirm("You are already debugging a game instance. Do you want to restart the instance (OK) or open another debugger (CANCEL) (to continue debugging the current game with another user)?", {onClose : $.proxy(this.handleDebugInstanceMessageBox, this)});
+			} else {
+				this.restartDebug = true;
+				this.openDebuggerWindow();
+			}
+		}
+	},
+	
+	
+	readInstancesError : function() {
+		
+	},
+	
+	handleDebugInstanceMessageBox : function(oAction) {
+		if(oAction == sap.m.MessageBox.Action.OK) {
+			this.restartDebug = true;
+		} else {
+			this.restartDebug = false;
+		}
+		this.openDebuggerWindow();
+	},
+	
 	openDebuggerWindow : function() {
 		this.debuggerWindow = window.open(window.location.href + "debugger.html");
 		this.debuggerWindow.addEventListener('load', $.proxy(this.debuggerWindowOpened, this), true); 
 	},
 	
 	debuggerWindowOpened : function() {
-		this.debuggerWindow.DebuggerWindow.initParams("mmicciolo", this.gameModel.GameId);
+		this.debuggerWindow.DebuggerWindow.initParams(sap.ui.getCore().getModel("user").oData.username, this.gameModel.GameId, this.restartDebug);
 		this.debuggerWindow.DebuggerWindow.initDebugger();
 	},
 	

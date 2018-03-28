@@ -14,6 +14,7 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 	transitionHandled : false,
 	debugMode : false,
 	debugGameId : null,
+	restartDebug : null,
 	
 	redButtonPressed : function() {
 		if(!this.transitionHandled) {
@@ -400,6 +401,7 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 		byteBuffer.writeString(this.debugGameId);
 		byteBuffer.writeInt(this.username.length);
 		byteBuffer.writeString(this.username);
+		byteBuffer.writeByte(this.restartDebug ? 1 : 0);
 		byteBuffer.writeInt(byteBuffer.offset, 1);
 		byteBuffer.flip();
 		this.socket.send(byteBuffer.toArrayBuffer());
@@ -456,7 +458,7 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 		this.socket.send(byteBuffer.toArrayBuffer());
 	},
 	
-	initVirtualDevice : function(username, debugGameId) {
+	initVirtualDevice : function(username, debugGameId, restartDebug) {
 		if(!this.debugMode) {
 			this.username = sap.ui.getCore().getModel("user").oData.username;
 			this.setupSocketConnect();
@@ -464,6 +466,7 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 		} else {
 			this.username = username;
 			this.debugGameId = debugGameId;
+			this.restartDebug = restartDebug;
 			this.setupSocketConnect();
 			sap.ui.getCore().setModel(this.model);
 		}

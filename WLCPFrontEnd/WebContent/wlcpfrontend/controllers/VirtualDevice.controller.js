@@ -194,10 +194,14 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 	},
 	
 	onClose : function(event) {
-		console.log("Connection closed" + event);
-		sap.m.MessageBox.error("The connection was closed! This may have happened if you disconnected, locked your device or the screen turned off. The page will now refresh. Please re-login to continue where you left off in the game.", { onClose : function() {
-			location.reload();
-		}});
+		if(!this.debugMode) {
+			console.log("Connection closed" + event);
+			sap.m.MessageBox.error("The connection was closed! This may have happened if you disconnected, locked your device or the screen turned off. The page will now refresh. Please re-login to continue where you left off in the game.", { onClose : function() {
+				location.reload();
+			}});
+		} else {
+			window.close();
+		}
 	},
 	
 	onError : function(event) {

@@ -121,7 +121,7 @@ public class LoadGame extends HttpServlet {
 		
 		OutputState[] outputStateArray = new OutputState[startStates.size() + outputStates.size()];
 		outputStateArray = outputStates.toArray(outputStateArray);
-		outputStateArray[outputStateArray.length - 1] = new OutputState(startStates.get(0).getStateId(), startStates.get(0).getGame(), StateType.START_STATE, startStates.get(0).getPositionX(), startStates.get(0).getPositionY(), null);
+		outputStateArray[outputStateArray.length - 1] = new OutputState(startStates.get(0).getStateId(), startStates.get(0).getGame(), StateType.START_STATE, startStates.get(0).getPositionX(), startStates.get(0).getPositionY(), "", null);
 		
 		Connection[] connectionArray = new Connection[connections.size()];
 		connectionArray = connections.toArray(connectionArray);

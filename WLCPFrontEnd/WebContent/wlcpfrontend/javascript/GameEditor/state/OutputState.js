@@ -19,6 +19,7 @@ var OutputState = class OutputState extends State {
 				 maxConnections: -1,
 			};
 		this.modelJSON = {
+				description : this.text,
 				iconTabs : []
 		}
 		this.modelJSON.iconTabs = this.generateData(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam);
@@ -75,16 +76,21 @@ var OutputState = class OutputState extends State {
 		this.dialog.open();
 	}
 
+	//This is supposed to focus on the text box, but it no longer works and has been commented
 	tabRendered() {
-		for(var i = 0; i < this.dialog.getContent()[0].getItems().length; i++) {
-			if(this.dialog.getContent()[0].getItems()[i].getKey() == this.dialog.getContent()[0].getSelectedKey()) {
-				var info = this.dialog.getContent()[0].getItems()[i].getContent()[0].getContentAreas()[1].getCurrentPage().getContent()[1].getItems()[0].getFocusInfo();
-				info.selectionStart = this.dialog.getContent()[0].getItems()[i].getContent()[0].getContentAreas()[1].getCurrentPage().getContent()[1].getItems()[0].getValue().length;
-				info.selectionEnd = this.dialog.getContent()[0].getItems()[i].getContent()[0].getContentAreas()[1].getCurrentPage().getContent()[1].getItems()[0].getValue().length;
-				this.dialog.getContent()[0].getItems()[i].getContent()[0].getContentAreas()[1].getCurrentPage().getContent()[1].getItems()[0].applyFocusInfo(info);
-				break;
-			}
-		}
+//		for(var i = 0; i < this.dialog.getContent()[0].getItems().length; i++) {
+//			if(this.dialog.getContent()[0].getItems()[i].getKey() == this.dialog.getContent()[0].getSelectedKey()) {
+//				var info = this.dialog.getContent()[0].getItems()[i].getContent()[0].getContentAreas()[1].getCurrentPage().getContent()[1].getItems()[0].getFocusInfo();
+//				info.selectionStart = this.dialog.getContent()[0].getItems()[i].getContent()[0].getContentAreas()[1].getCurrentPage().getContent()[1].getItems()[0].getValue().length;
+//				info.selectionEnd = this.dialog.getContent()[0].getItems()[i].getContent()[0].getContentAreas()[1].getCurrentPage().getContent()[1].getItems()[0].getValue().length;
+//				this.dialog.getContent()[0].getItems()[i].getContent()[0].getContentAreas()[1].getCurrentPage().getContent()[1].getItems()[0].applyFocusInfo(info);
+//				break;
+//			}
+//		}
+	}
+	
+	descriptionChanged(oEvent) {
+		this.changeText(oEvent.getParameter("newValue"));
 	}
 	
 	createData() {
@@ -249,7 +255,7 @@ var OutputState = class OutputState extends State {
 	
 	static load(loadData) {
 		//Create a new display state
-		var outputState = new OutputState("toolboxOutputStateTopColor", "toolboxOutputStateBottomColor", "Output State", loadData.stateId, GameEditor.getEditorController().jsPlumbInstance);
+		var outputState = new OutputState("toolboxOutputStateTopColor", "toolboxOutputStateBottomColor", loadData.description, loadData.stateId, GameEditor.getEditorController().jsPlumbInstance);
 		
 		//Set the position
 		outputState.setPositionX(loadData.positionX); outputState.setPositionY(loadData.positionY);
@@ -287,6 +293,7 @@ var OutputState = class OutputState extends State {
 			positionX : this.positionX,
 			positionY : this.positionY,
 			stateType : "OUTPUT_STATE",
+			description : this.text,
 			displayText : outputStateData
 		}
 		

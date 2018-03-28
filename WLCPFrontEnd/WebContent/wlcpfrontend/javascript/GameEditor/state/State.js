@@ -44,6 +44,7 @@ var State = class State {
 		
 		//Top Color Text
 		var topColorText = document.createElement('div');
+		topColorText.id = this.htmlId + "-description";
 		topColorText.className = "centerStateText";
 		topColorText.innerHTML = this.text;
 		topColorDiv.appendChild(topColorText);
@@ -145,6 +146,11 @@ var State = class State {
 	
 	save() {
 		return [];
+	}
+	
+	changeText(text) {
+		document.getElementById(this.htmlId + "-description").innerHTML = text;
+		this.text = text;
 	}
 	
 	getPositionX() {

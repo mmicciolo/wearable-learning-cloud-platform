@@ -12,6 +12,10 @@
 			<Button text="Accept" type="Accept"/>
 			<Button text="Close" type="Reject" press="closeDialog"/>
 		</buttons>
+		<HBox justifyContent="Start" alignItems="Center" class="stateDescriptionHBox">
+			<Label text="State Description: " design="Bold" class="stateDescription"></Label>
+			<Input placeholder="Enter Output State Display Text..." value="{/description}" valueLiveUpdate="true" liveChange="descriptionChanged" maxLength="50" width="500px"></Input>
+		</HBox>
 		<IconTabBar id="outputStateDialogIconTabBar" items="{/iconTabs}" showOverflowSelectList="false" applyContentPadding="false" expandable="false">
 			<items>
 				<IconTabFilter icon="{icon}" text="{scope}" key="{scope}">

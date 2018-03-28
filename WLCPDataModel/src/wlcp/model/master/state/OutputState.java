@@ -20,6 +20,9 @@ public class OutputState extends State implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
+	@Column(name = "DESCRIPTION")
+	private String description;
+	
 	@ElementCollection
     @CollectionTable(name = "DISPLAY_TEXT_MAP")
     @MapKeyColumn(name = "SCOPE")
@@ -31,9 +34,18 @@ public class OutputState extends State implements Serializable {
 		setStateType(StateType.OUTPUT_STATE);
 	}
 	
-	public OutputState(String stateId, Game game, StateType stateType, Float positionX, Float positionY, Map<String, String> displayText) {
+	public OutputState(String stateId, Game game, StateType stateType, Float positionX, Float positionY, String description, Map<String, String> displayText) {
 		super(stateId, game, stateType, positionX, positionY);
+		this.description = description;
 		this.displayText = displayText;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public Map<String, String> getDisplayText() {

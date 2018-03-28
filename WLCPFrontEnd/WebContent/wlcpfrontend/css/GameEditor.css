@@ -41,6 +41,14 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
     user-select: none;    
 }
 
+.stateDescriptionHBox {
+	background-color : #eff4f9;
+}
+.stateDescription {
+	margin-left : 5px;
+	margin-right : 5px;
+}
+
 #outputStateDialog-scrollCont {
 	padding:0rem;
 }
@@ -158,6 +166,8 @@ html.sap-desktop .sapMSlt.sapMTSSlt, html.sap-tablet .sapMSlt.sapMTSSlt {
 	top: 50%;
   	transform: translateY(-50%);
   	color:#3F5161;
+  	white-space : normal;
+	word-wrap : break-word;
 }
 
 /* Start State */

@@ -107,7 +107,7 @@ public class SaveGame extends HttpServlet {
 					displayText.put(entry.getKey(), entry.getValue());
 				}
 				entityManager.getTransaction().begin();
-				entityManager.merge(new OutputState(saveData.states[i].getStateId(), saveData.game, StateType.OUTPUT_STATE, saveData.states[i].getPositionX(), saveData.states[i].getPositionY(), displayText));
+				entityManager.merge(new OutputState(saveData.states[i].getStateId(), saveData.game, StateType.OUTPUT_STATE, saveData.states[i].getPositionX(), saveData.states[i].getPositionY(), saveData.states[i].getDescription(), displayText));
 				entityManager.getTransaction().commit();
 				break;
 			}

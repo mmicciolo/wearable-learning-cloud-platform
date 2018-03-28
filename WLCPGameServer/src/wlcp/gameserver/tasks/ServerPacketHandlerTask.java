@@ -24,6 +24,7 @@ import wlcp.shared.packets.GameInstanceStartedPacket;
 import wlcp.shared.packets.GameInstanceStoppedPacket;
 import wlcp.shared.packets.GameLobbiesPacket;
 import wlcp.shared.packets.GameLobbyInfo;
+import wlcp.shared.packets.StartDebugGameInstancePacket;
 import wlcp.shared.packets.StartGameInstancePacket;
 import wlcp.shared.packets.StopGameInstancePacket;
 
@@ -167,6 +168,60 @@ public class ServerPacketHandlerTask extends Task implements ITask {
 	
 	private void StartDebugGameInstance(PacketClientData packetClientData) {
 		
+		//Get the start game packet
+		StartDebugGameInstancePacket startDebugGameInstancePacket = (StartDebugGameInstancePacket) packetClientData.packet;
+		
+		//1. Make sure the game exists
+		Game game = entityManager.getEntityManager().find(Game.class, startDebugGameInstancePacket.getGameId());
+		
+		//Game doesnt exist
+		if(game == null) {
+			logger.write("Game " + startDebugGameInstancePacket.getGameId() + " could not be started because it does not exist!");
+			packetDistributor.AddPacketToSend(new GameInstanceErrorPacket(GameInstanceErrorPacket.GameInstanceErrorCode.GAME_DOES_NOT_EXIST), packetClientData.clientData);
+			return;
+		}
+		
+		//3. Make sure the user exists
+		Username username = entityManager.getEntityManager().find(Username.class, startDebugGameInstancePacket.getUsernameId());
+		
+		//User doesnt exists
+		if(username == null) {
+			logger.write("Game " + startDebugGameInstancePacket.getGameId() + " could not be started because the user trying to start it does not exist!");
+			packetDistributor.AddPacketToSend(new GameInstanceErrorPacket(GameInstanceErrorPacket.GameInstanceErrorCode.USERNAME_DOES_NOT_EXIST), packetClientData.clientData);
+			return;
+		}
+		
+		//4. Make sure a game instance of the lobby has not already been started
+		for(Task task : ((TaskManagerModule) ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).getTasksByType(GameInstanceTask.class)) {
+			if((((GameInstanceTask)task).getGameInstance().getUsername().getUsernameId().equals(startDebugGameInstancePacket.getUsernameId())) && ((GameInstanceTask)task).getGameInstance().isDebugInstance()) {
+				logger.write("Debug Game has already been started, a username can only debug one game at a time");
+				packetDistributor.AddPacketToSend(new GameInstanceErrorPacket(GameInstanceErrorPacket.GameInstanceErrorCode.GAME_ALREADY_STARTED), packetClientData.clientData);
+				return;
+			}
+		}
+		
+		//5. Create the instance
+		
+		//Add it to the database
+		entityManager.getEntityManager().getTransaction().begin();
+		GameInstance gameInstance = new GameInstance(null, game, username, true);
+		entityManager.getEntityManager().persist(gameInstance);
+		entityManager.getEntityManager().getTransaction().commit();
+		
+		//Get the task manager
+		TaskManagerModule taskManager = (TaskManagerModule) ModuleManager.getInstance().getModule(Modules.TASK_MANAGER);
+		
+		//Create the game instance
+		GameInstanceTask newGameInstance = new GameInstanceTask(gameInstance, game, new GameLobby());
+		
+		//Add the game instance
+		taskManager.addTask(newGameInstance);
+		
+		//5. Send back success
+		GameInstanceStartedPacket packet = new GameInstanceStartedPacket(newGameInstance.getGameInstanceId());
+		
+		//Send off the packet
+		packetDistributor.AddPacketToSend(packet, packetClientData.clientData);
 	}
 	
 	private void StopGameInstance(PacketClientData packetClientData) {

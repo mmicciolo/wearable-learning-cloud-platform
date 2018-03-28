@@ -39,6 +39,7 @@ import wlcp.shared.packets.ConnectAcceptedPacket;
 import wlcp.shared.packets.ConnectPacket;
 import wlcp.shared.packets.DisconnectCompletePacket;
 import wlcp.shared.packets.DisconnectPacket;
+import wlcp.shared.packets.GameTeamsAndPlayersPacket;
 import wlcp.shared.packets.GameTeamsPacket;
 import wlcp.shared.packets.HeartBeatPacket;
 import wlcp.shared.packets.SequenceButtonPressPacket;
@@ -90,7 +91,8 @@ public class GameInstanceTask extends Task implements ITask {
 		this.game = game;
 		this.gameLobby = gameLobby;
 		logger = (LoggerModule) ModuleManager.getInstance().getModule(Modules.LOGGER);
-		logger.write("Starting the game " + game.getGameId() + " instance id " + gameInstance.getGameInstanceId());
+		if(!gameInstance.isDebugInstance()) { logger.write("Starting the game " + game.getGameId() + " instance id " + gameInstance.getGameInstanceId()); }
+		if(gameInstance.isDebugInstance()) { logger.write("Starting a debug instance for the game " + game.getGameId() + " instance id " + gameInstance.getGameInstanceId()); }
 		packetDistributor = (PacketDistributorTask) ((TaskManagerModule) ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).getTasksByType(PacketDistributorTask.class).get(0);
 		recievedPackets = new LinkedList<PacketClientData>();
 		players = new ArrayList<Player>();
@@ -132,6 +134,9 @@ public class GameInstanceTask extends Task implements ITask {
 			break;
 		case GAME_TEAMS:
 			GetTeams(packetClientData);
+			break;
+		case GAME_TEAMS_AND_PLAYERS:
+			GetTeamsAndPlayers(packetClientData);
 			break;
 		case SINGLE_BUTTON_PRESS:
 			SingleButtonPress(packetClientData);
@@ -347,6 +352,42 @@ public class GameInstanceTask extends Task implements ITask {
 		
 		//Send the packet
 		packetDistributor.AddPacketToSend(teams, packetClientData.clientData);
+	}
+	
+	private void GetTeamsAndPlayers(PacketClientData packetClientData) {
+		
+		//Get the packet
+		GameTeamsAndPlayersPacket teamsAndPlayers = (GameTeamsAndPlayersPacket) packetClientData.packet;
+		
+		List<Byte> teamPlayers = new ArrayList<Byte>();
+		
+		for(int i = 0; i < game.getTeamCount(); i++) {
+			for(int n = 0; n < game.getPlayersPerTeam(); n++) {
+				try {
+					available.acquire();
+					boolean alreadyExists = false;
+					for(Player p : players) {
+						if(p.teamPlayer.team == i && p.teamPlayer.player == n) {
+							alreadyExists = true;
+						}
+					}
+					if(!alreadyExists) {
+						teamPlayers.add((byte)i);
+						teamPlayers.add((byte)n);
+					}
+					available.release();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		//Set the team numbers
+		teamsAndPlayers.setTeamAndPlayerNumbers(teamPlayers);
+		
+		//Send the packet
+		packetDistributor.AddPacketToSend(teamsAndPlayers, packetClientData.clientData);
 	}
 	
 	private PlayerVM StartPlayerVM(UsernameClientData usernameClientData, TeamPlayer teamPlayer) {

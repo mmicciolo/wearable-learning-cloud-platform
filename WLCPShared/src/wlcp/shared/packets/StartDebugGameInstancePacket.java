@@ -6,7 +6,7 @@ import wlcp.shared.packet.IPacket;
 import wlcp.shared.packet.Packet;
 import wlcp.shared.packet.PacketTypes;
 
-public class StartDebugGameInstancePacket extends Packet implements IPacket {
+public class StartDebugGameInstancePacket extends ServerPacket implements IPacket {
 	
 	private String gameId;
 	private String usernameId;

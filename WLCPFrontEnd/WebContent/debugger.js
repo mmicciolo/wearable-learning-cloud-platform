@@ -9,6 +9,7 @@ var DebuggerWindow = {
 	},
 	
 	initDebugger : function() {
+		this.initParams("mmicciolo", "0");
 		Index.loadJQuery();
 		Index.loadExternalResources();
 		var app = new sap.m.App({id:"debuggerApp", initialPage:"debugger"});

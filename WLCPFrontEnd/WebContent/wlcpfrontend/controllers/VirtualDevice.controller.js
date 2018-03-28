@@ -4,7 +4,8 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 	username : "",
 	modelJSON : {
 			games : [],
-			teams : []
+			teams : [],
+			teamPlayers : []
 	},
 	model : new sap.ui.model.json.JSONModel(this.modelJSON),
 	gameInstanceId : 0,
@@ -177,8 +178,14 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 		case 13:
 			this.singleButtonPress(byteBuffer);
 			break;
+		case 14:
+			this.gameInstanceStarted(byteBuffer);
+			break;
 		case 16:
 			this.sequenceButtonPress(byteBuffer);
+			break;
+		case 18:
+			this.handleGameTeamsAndPlayers(byteBuffer);
 			break;
 		default:
 			break;
@@ -386,8 +393,56 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 	},
 	
 	startDebugGameInstance : function(username, debugGameId) {
-		console.log(username);
-		console.log(debugGameId);
+		var byteBuffer = new dcodeIO.ByteBuffer();
+		byteBuffer.writeByte(17);
+		byteBuffer.writeInt(0);
+		byteBuffer.writeInt(this.debugGameId.length);
+		byteBuffer.writeString(this.debugGameId);
+		byteBuffer.writeInt(this.username.length);
+		byteBuffer.writeString(this.username);
+		byteBuffer.writeInt(byteBuffer.offset, 1);
+		byteBuffer.flip();
+		this.socket.send(byteBuffer.toArrayBuffer());
+	},
+	
+	gameInstanceStarted : function(byteBuffer) {
+		if(!this.debugMode) {
+			
+		} else {
+			byteBuffer.readInt();
+			this.gameInstanceId = byteBuffer.readInt();
+			//Request the teams and players
+			var byteBuffer = new dcodeIO.ByteBuffer();
+			byteBuffer.writeByte(18);
+			byteBuffer.writeInt(0);
+			byteBuffer.writeInt(this.gameInstanceId);
+			byteBuffer.writeInt(0);
+			byteBuffer.writeInt(0);
+			byteBuffer.writeInt(0);
+			byteBuffer.writeInt(byteBuffer.offset, 1);
+			byteBuffer.flip();
+			this.socket.send(byteBuffer.toArrayBuffer());
+		}
+	},
+	
+	handleGameTeamsAndPlayers : function(byteBuffer) {
+		byteBuffer.readInt();
+		var gameInstanceId = byteBuffer.readInt();
+		byteBuffer.skip(8);
+		var teams = [];
+		var teamCount = byteBuffer.readInt();
+		for(var i = 0; i < teamCount; i = i + 2) {
+			var team = byteBuffer.readByte();
+			var player = byteBuffer.readByte();
+			this.modelJSON.teamPlayers.push({team : team, player : player, teamPlayer : "Team " + (team + 1) + " Player " + (player + 1)});
+		}
+		this.modelJSON.games = [];
+		this.model.setData(this.modelJSON);
+	},
+	
+	onDebugJoinPress : function(oEvent) {
+		var selectedTeamPlayer = this.model.getProperty(oEvent.getSource().getParent().getItems()[1].getSelectedItem().getBindingContext().getPath());
+		var i = 0;
 	},
 	
 	initVirtualDevice : function(username, debugGameId) {
@@ -416,7 +471,7 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 						navContainer.to(sap.ui.getCore().byId("virtualDevice--selectGameLobby"));	
 				  } else {
 						var navContainer = sap.ui.getCore().byId("debugger--virtualDeviceNavContainer");
-						navContainer.to(sap.ui.getCore().byId("debugger--selectTeamPlayer"));	
+						navContainer.to(sap.ui.getCore().byId("debugger--selectTeamPlayer"));
 				  }
 			  }
 		}, this);

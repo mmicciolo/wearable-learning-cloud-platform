@@ -32,6 +32,7 @@ import wlcp.shared.packets.ConnectPacket;
 import wlcp.shared.packets.DisconnectPacket;
 import wlcp.shared.packets.GameLobbiesPacket;
 import wlcp.shared.packets.GamePacket;
+import wlcp.shared.packets.GameTeamsAndPlayersPacket;
 import wlcp.shared.packets.GameTeamsPacket;
 import wlcp.shared.packets.HeartBeatPacket;
 import wlcp.shared.packets.SequenceButtonPressPacket;
@@ -88,6 +89,9 @@ public class PacketDistributorTask extends Task implements ITask {
 			break;
 		case GAME_TEAMS:
 			AddPacket(new GameTeamsPacket(), clientData);
+			break;
+		case GAME_TEAMS_AND_PLAYERS:
+			AddPacket(new GameTeamsAndPlayersPacket(), clientData);
 			break;
 		case CONNECT:
 			AddPacket(new ConnectPacket(), clientData);

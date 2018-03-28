@@ -30,10 +30,10 @@
 				<VBox fitContainer="true" justifyContent="Center" alignItems="Center" alignContent="Center" class="box">
 					<items>
 						<Text text="Choose a team and player" class="sapUiSmallMarginBottom"/>
-						<Select width="12em" placeholder="Team" items="{/teams}" value="{/mode}">
-							<core:Item key="{key}" text="{teamNumber}" />
+						<Select width="12em" placeholder="Team" items="{/teamPlayers}" value="{/mode}">
+							<core:Item key="{key}" text="{teamPlayer}" />
 						</Select>
-						<Button width="12em" text="Join" type="Emphasized" press="onTeamJoinPress"></Button>
+						<Button width="12em" text="Join" type="Emphasized" press="onDebugJoinPress"></Button>
 					</items>
 				</VBox>
 			</Page>

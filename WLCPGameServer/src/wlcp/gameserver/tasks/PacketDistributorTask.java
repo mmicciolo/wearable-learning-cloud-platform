@@ -37,6 +37,7 @@ import wlcp.shared.packets.HeartBeatPacket;
 import wlcp.shared.packets.SequenceButtonPressPacket;
 import wlcp.shared.packets.ServerPacket;
 import wlcp.shared.packets.SingleButtonPressPacket;
+import wlcp.shared.packets.StartDebugGameInstancePacket;
 import wlcp.shared.packets.StartGameInstancePacket;
 import wlcp.shared.packets.StopGameInstancePacket;
 
@@ -75,6 +76,9 @@ public class PacketDistributorTask extends Task implements ITask {
 		switch(packetType) {
 		case START_GAME_INSTANCE:
 			AddPacket(new StartGameInstancePacket(), clientData);
+			break;
+		case START_DEBUG_GAME_INSTANCE:
+			AddPacket(new StartDebugGameInstancePacket(), clientData);
 			break;
 		case STOP_GAME_INSTANCE:
 			AddPacket(new StopGameInstancePacket(), clientData);

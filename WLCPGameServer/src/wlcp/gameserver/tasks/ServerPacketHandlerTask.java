@@ -77,6 +77,9 @@ public class ServerPacketHandlerTask extends Task implements ITask {
 		case START_GAME_INSTANCE:
 			StartGameInstance(packetClientData);
 			break;
+		case START_DEBUG_GAME_INSTANCE:
+			StartDebugGameInstance(packetClientData);
+			break;
 		case STOP_GAME_INSTANCE:
 			StopGameInstance(packetClientData);
 			break;
@@ -160,6 +163,10 @@ public class ServerPacketHandlerTask extends Task implements ITask {
 		
 		//Send off the packet
 		packetDistributor.AddPacketToSend(packet, packetClientData.clientData);
+	}
+	
+	private void StartDebugGameInstance(PacketClientData packetClientData) {
+		
 	}
 	
 	private void StopGameInstance(PacketClientData packetClientData) {

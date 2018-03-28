@@ -142,7 +142,7 @@ public class ServerPacketHandlerTask extends Task implements ITask {
 		//Add it to the database
 		entityManager.getEntityManager().getTransaction().begin();
 		//GameLobby gameLobby = entityManager.getEntityManager().find(GameLobby.class, startGameInstancePacket.getGameLobbyId());
-		GameInstance gameInstance = new GameInstance(gameLobby, game, username);
+		GameInstance gameInstance = new GameInstance(gameLobby, game, username, false);
 		entityManager.getEntityManager().persist(gameInstance);
 		entityManager.getEntityManager().getTransaction().commit();
 		

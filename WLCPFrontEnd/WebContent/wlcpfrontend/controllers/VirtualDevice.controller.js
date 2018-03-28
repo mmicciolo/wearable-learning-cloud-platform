@@ -1,7 +1,7 @@
 sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 	
 	socket : null,
-	username : sap.ui.getCore().getModel("user").oData.username,
+	username : "",
 	modelJSON : {
 			games : [],
 			teams : []
@@ -11,6 +11,8 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 	team : 0,
 	player : 0,
 	transitionHandled : false,
+	debugMode : false,
+	debugGameId : null,
 	
 	redButtonPressed : function() {
 		if(!this.transitionHandled) {
@@ -141,7 +143,11 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 	onOpen : function(event) {
 		console.log("Connected");
 		//this.startGameInstance("estimateit", 1);
-		this.getActiveGameLobbies();
+		if(!this.debugMode) {
+			this.getActiveGameLobbies();
+		} else {
+			this.startDebugGameInstance(this.username, this.debugGameId);
+		}
 	},
 	
 	onMessage : function(event) {
@@ -378,6 +384,24 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 		byteBuffer.flip();
 		this.socket.send(byteBuffer.toArrayBuffer());
 	},
+	
+	startDebugGameInstance : function(username, debugGameId) {
+		console.log(username);
+		console.log(debugGameId);
+	},
+	
+	initVirtualDevice : function(username, debugGameId) {
+		if(!this.debugMode) {
+			this.username = sap.ui.getCore().getModel("user").oData.username;
+			this.setupSocketConnect();
+			sap.ui.getCore().setModel(this.model);
+		} else {
+			this.username = username;
+			this.debugGameId = debugGameId;
+			this.setupSocketConnect();
+			sap.ui.getCore().setModel(this.model);
+		}
+	},
 
 /**
 * Called when a controller is instantiated and its View controls (if available) are already created.
@@ -385,11 +409,17 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 * @memberOf wlcpfrontend.views.VirtualDevice
 */
 	onInit: function() {
-		this.setupSocketConnect();
-		sap.ui.getCore().setModel(this.model);
-		
-		//var navContainer = sap.ui.getCore().byId("virtualDevice--virtualDeviceNavContainer");
-		//navContainer.to(sap.ui.getCore().byId("virtualDevice--virtualDevicePage"));	
+		this.getView().addEventDelegate({
+			  onAfterRendering: function(){
+				  if(!this.debugMode) {
+						var navContainer = sap.ui.getCore().byId("virtualDevice--virtualDeviceNavContainer");
+						navContainer.to(sap.ui.getCore().byId("virtualDevice--selectGameLobby"));	
+				  } else {
+						var navContainer = sap.ui.getCore().byId("debugger--virtualDeviceNavContainer");
+						navContainer.to(sap.ui.getCore().byId("debugger--selectTeamPlayer"));	
+				  }
+			  }
+		}, this);
 	},
 
 /**

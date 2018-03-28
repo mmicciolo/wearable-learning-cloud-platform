@@ -328,11 +328,24 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 	
 	runSuccess : function() {
 		this.busy.close();
+		sap.m.MessageToast.show("Transpiled Successfully! Opening Debugger!");
+		this.openDebuggerWindow();
+		//debuggerWindow.DebuggerWindow.initParams(sap.ui.getCore().getModel("user").oData.username, this.gameModel.GameId);
 	},
 	
 	runError : function() {
 		sap.m.MessageBox.error("There was an error running...");
 		this.busy.close();
+	},
+	
+	openDebuggerWindow : function() {
+		this.debuggerWindow = window.open(window.location.href + "debugger.html");
+		this.debuggerWindow.addEventListener('load', $.proxy(this.debuggerWindowOpened, this), true); 
+	},
+	
+	debuggerWindowOpened : function() {
+		this.debuggerWindow.DebuggerWindow.initParams("mmicciolo", this.gameModel.GameId);
+		this.debuggerWindow.DebuggerWindow.initDebugger();
 	},
 	
 	resetEditor : function() {
@@ -346,7 +359,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		this.type = null;
 		
 		sap.ui.getCore().byId("gameEditor--saveButton").setEnabled(true);
-		sap.ui.getCore().byId("gameEditor--compileButton").setEnabled(true);
+		//sap.ui.getCore().byId("gameEditor--compileButton").setEnabled(true);
 		sap.ui.getCore().byId("gameEditor--runButton").setEnabled(true);
 		
 		GameEditor.resetScroll();

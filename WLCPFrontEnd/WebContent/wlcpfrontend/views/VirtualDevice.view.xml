@@ -3,6 +3,7 @@
 	<Page id="virtualDevice" showHeader="false" class="virtualDeviceBackground">
 		<content>
 			<NavContainer id="virtualDeviceNavContainer">
+			<Page id="initialPage" showHeader="false"></Page>
 			<Page id="selectGameLobby" showHeader="false">
 				<VBox fitContainer="true" justifyContent="Center" alignItems="Center" alignContent="Center" class="box">
 					<items>
@@ -18,6 +19,17 @@
 				<VBox fitContainer="true" justifyContent="Center" alignItems="Center" alignContent="Center" class="box">
 					<items>
 						<Text text="Select a team to join..." class="sapUiSmallMarginBottom"/>
+						<Select width="12em" placeholder="Team" items="{/teams}" value="{/mode}">
+							<core:Item key="{key}" text="{teamNumber}" />
+						</Select>
+						<Button width="12em" text="Join" type="Emphasized" press="onTeamJoinPress"></Button>
+					</items>
+				</VBox>
+			</Page>
+			<Page id="selectTeamPlayer" showHeader="false">
+				<VBox fitContainer="true" justifyContent="Center" alignItems="Center" alignContent="Center" class="box">
+					<items>
+						<Text text="Choose a team and player" class="sapUiSmallMarginBottom"/>
 						<Select width="12em" placeholder="Team" items="{/teams}" value="{/mode}">
 							<core:Item key="{key}" text="{teamNumber}" />
 						</Select>

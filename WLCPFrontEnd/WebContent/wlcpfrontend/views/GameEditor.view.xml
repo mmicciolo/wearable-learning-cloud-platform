@@ -28,12 +28,12 @@
 							<OverflowToolbarLayoutData priority="Low" />
 						</layoutData>
 					</Button>
-					<Button id="compileButton" text="Compile" type="Transparent" icon="sap-icon://database" enabled="false">
+<!-- 					<Button id="compileButton" text="Compile" type="Transparent" icon="sap-icon://database" enabled="false">
 						<layoutData>
 							<OverflowToolbarLayoutData priority="Low" />
 						</layoutData>
-					</Button>
-					<Button id="runButton" text="Run" type="Transparent" icon="sap-icon://begin" enabled="false" press="runGame">
+					</Button> -->
+					<Button id="runButton" text="Run and Debug" type="Transparent" icon="sap-icon://begin" enabled="false" press="runGame">
 						<layoutData>
 							<OverflowToolbarLayoutData priority="Low" />
 						</layoutData>

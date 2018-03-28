@@ -48,4 +48,21 @@ public class StartDebugGameInstancePacket extends Packet implements IPacket {
 		
 		return super.assembleOutputBytes();
 	}
+
+	public String getGameId() {
+		return gameId;
+	}
+
+	public void setGameId(String gameId) {
+		this.gameId = gameId;
+	}
+
+	public String getUsernameId() {
+		return usernameId;
+	}
+
+	public void setUsernameId(String usernameId) {
+		this.usernameId = usernameId;
+	}
+	
 }

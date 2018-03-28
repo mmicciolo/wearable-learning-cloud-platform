@@ -52,7 +52,7 @@ public class Transpile extends HttpServlet {
 		String gameId = request.getParameter("gameId");
 		
 		File programLocation = new File(this.getServletContext().getRealPath(this.getServletContext().getContextPath()));
-		String finalProgramLocation = programLocation.getParentFile().getParent() + "\\WLCPGameServer\\programs\\";
+		String finalProgramLocation = programLocation.getParentFile().getParent() + "/WLCPGameServer/programs/";
 	
 		String transpiledCode = transpiler.Transpile(gameId);
 		

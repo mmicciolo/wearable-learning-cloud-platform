@@ -30,15 +30,19 @@ public class GameInstance implements Serializable {
 	@JoinColumn(name = "USERNAME", referencedColumnName = "USERNAME_ID")
 	private Username username;
 	
+	@Column(name = "DEBUG_INSTANCE")
+	private boolean debugInstance;
+	
 	public GameInstance() {
 		super();
 	}
 
-	public GameInstance(GameLobby gameLobby, Game game, Username username) {
+	public GameInstance(GameLobby gameLobby, Game game, Username username, boolean debugInstance) {
 		super();
 		this.gameLobby = gameLobby;
 		this.game = game;
 		this.username = username;
+		this.debugInstance = debugInstance;
 	}
 
 	public Integer getGameInstanceId() {
@@ -71,6 +75,14 @@ public class GameInstance implements Serializable {
 
 	public void setUsername(Username username) {
 		this.username = username;
+	}
+
+	public boolean isDebugInstance() {
+		return debugInstance;
+	}
+
+	public void setDebugInstance(boolean debugInstance) {
+		this.debugInstance = debugInstance;
 	}
    
 }

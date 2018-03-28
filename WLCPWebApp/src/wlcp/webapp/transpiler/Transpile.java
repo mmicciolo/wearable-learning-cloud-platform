@@ -1,5 +1,6 @@
 package wlcp.webapp.transpiler;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -49,10 +50,14 @@ public class Transpile extends HttpServlet {
         transpiler = new JavaScriptTranspiler(entityManager);
 		
 		String gameId = request.getParameter("gameId");
+		
+		File programLocation = new File(this.getServletContext().getRealPath(this.getServletContext().getContextPath()));
+		String finalProgramLocation = programLocation.getParentFile().getParent() + "\\WLCPGameServer\\programs\\";
 	
 		String transpiledCode = transpiler.Transpile(gameId);
 		
-		PrintWriter pw = new PrintWriter(new FileOutputStream("C:/Users/Matt/git/wearable-learning-cloud-platform/WLCPGameServer/programs/" + gameId + ".js", false));
+		//PrintWriter pw = new PrintWriter(new FileOutputStream("C:/Users/Matt/git/wearable-learning-cloud-platform/WLCPGameServer/programs/" + gameId + ".js", false));
+		PrintWriter pw = new PrintWriter(new FileOutputStream(finalProgramLocation + gameId + ".js", false));
 		pw.println(transpiledCode);
 		pw.close();
 

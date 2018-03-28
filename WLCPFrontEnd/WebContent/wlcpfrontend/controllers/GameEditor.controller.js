@@ -11,8 +11,8 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		ConnectionIdCount : 0,
 		UsernameDetails : {
 			__metadata : {
-	             //uri : ODataModel.getODataModelURL() + "/Usernames('" + sap.ui.getCore().getModel("user").oData.username + "')"
-				uri : ODataModel.getODataModelURL() + "/Usernames('mmicciolo')"
+	            uri : ODataModel.getODataModelURL() + "/Usernames('" + sap.ui.getCore().getModel("user").oData.username + "')"
+				//uri : ODataModel.getODataModelURL() + "/Usernames('mmicciolo')"
 	         }
 		},
 		Visibility : true
@@ -201,6 +201,17 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 	loadGame : function() {
 		var fragment = sap.ui.xmlfragment("wlcpfrontend.fragments.GameEditor.LoadGame", sap.ui.controller("wlcpfrontend.controllers.CreateLoadGame"));
 		fragment.setModel(ODataModel.getODataModel());
+		fragment.addEventDelegate({
+			  onAfterRendering: function(){
+			        var oBinding = sap.ui.getCore().byId("loadGameComboBox").getBinding("items");
+			        var filter = new sap.ui.model.Filter({
+			        	filters : [new sap.ui.model.Filter("Username", "EQ", sap.ui.getCore().getModel("user").oData.username),
+			        			   new sap.ui.model.Filter("Visibility", "EQ", true)],
+			        	and : false
+			        });
+			        oBinding.filter(filter);
+			  }
+			}, this);
 		fragment.open();
 	},
 	

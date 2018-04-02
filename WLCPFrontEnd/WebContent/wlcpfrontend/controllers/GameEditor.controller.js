@@ -286,6 +286,9 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 
 	saveGame : function() {
 		
+		//This is a save without a run
+		this.saveRun = false;
+		
 		//Open the busy dialog
 		this.busy = new sap.m.BusyDialog();
 		this.busy.open();
@@ -328,14 +331,27 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 			saveJSON.transitions.push(this.transitionList[i].save());
 		}
 		
-		$.ajax({url: ODataModel.getWebAppURL() + "/SaveGame", type: 'POST', dataType: 'text', data: 'saveData=' + JSON.stringify(saveJSON), success : $.proxy(this.saveSuccess, this)});
+		$.ajax({url: ODataModel.getWebAppURL() + "/SaveGame", type: 'POST', dataType: 'text', data: 'saveData=' + JSON.stringify(saveJSON), success : $.proxy(this.saveSuccess, this), error : $.proxy(this.saveError, this)});
 	},
 	
 	saveSuccess : function() {
-		this.busy.close();
+		if(!this.saveRun) {
+			this.busy.close();
+		} else {
+			this.run();
+		}
+	},
+	
+	saveError : function() {
+		sap.m.MessageBox.error("There was an error saving the game!");
 	},
 	
 	runGame : function() {
+		this.saveRun = true;
+		this.save();
+	},
+	
+	run : function() {
 		//Open the busy dialog
 		this.busy = new sap.m.BusyDialog();
 		this.busy.open();

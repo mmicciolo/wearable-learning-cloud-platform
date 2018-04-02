@@ -42,7 +42,7 @@ public class TestDataLoader extends HttpServlet {
 		
 		//Setup an embedded db connection
 		Map<String, String> TEST_CONFIG_LOCALHOST = new HashMap<String, String>();
-		TEST_CONFIG_LOCALHOST.put(PersistenceUnitProperties.JDBC_URL, "jdbc:mysql://localhost/test");
+		TEST_CONFIG_LOCALHOST.put(PersistenceUnitProperties.JDBC_URL, "jdbc:mysql://localhost/wlcp");
 		TEST_CONFIG_LOCALHOST.put(PersistenceUnitProperties.JDBC_DRIVER, "com.mysql.jdbc.Driver");
 		TEST_CONFIG_LOCALHOST.put(PersistenceUnitProperties.JDBC_USER, "wlcp");
 		TEST_CONFIG_LOCALHOST.put(PersistenceUnitProperties.JDBC_PASSWORD, "wlcp");

@@ -79,7 +79,7 @@ public class LoadGame extends HttpServlet {
 	
 	private void initJPA() {
 		Map<Object, Object> properties = new HashMap<Object, Object>();
-		properties.put(PersistenceUnitProperties.JDBC_URL, "jdbc:mysql://localhost/test");
+		properties.put(PersistenceUnitProperties.JDBC_URL, "jdbc:mysql://localhost/wlcp");
 		properties.put(PersistenceUnitProperties.JDBC_DRIVER, "com.mysql.jdbc.Driver");
 		properties.put(PersistenceUnitProperties.JDBC_USER, "wlcp");
 		properties.put(PersistenceUnitProperties.JDBC_PASSWORD, "wlcp");

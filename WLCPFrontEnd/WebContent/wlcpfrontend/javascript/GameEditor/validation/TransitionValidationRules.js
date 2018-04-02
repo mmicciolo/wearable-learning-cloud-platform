@@ -184,6 +184,8 @@ var TransitionValidationRule = class TransitionValidationRule extends Validation
 				activeScopes.push(transition.modelJSON.iconTabs[i].scope);
 			} else if(transition.modelJSON.iconTabs[i].sequencePress.length > 0) {
 				activeScopes.push(transition.modelJSON.iconTabs[i].scope);
+			} else if(transition.modelJSON.iconTabs[i].keyboardField.length > 0) {
+				activeScopes.push(transition.modelJSON.iconTabs[i].scope);
 			} //else if(transition.modelJSON.iconTabs[i].sequencePress.length == 0) {
 //				var neighborConnections = GameEditor.getJsPlumbInstance().getConnections({source : transition.connection.sourceId});
 //				var neighborTransitions = [];
@@ -447,7 +449,7 @@ var TransitionSelectedTypeValidationRule = class TransitionSelectedTypeValidatio
 						var transitionTypes = transitionList[j].modelJSON.iconTabs[k].transitionTypes;
 						if(scopes[n].scope == transitionList[j].modelJSON.iconTabs[k].scope) {
 							for(var l = 0; l < transitionTypes.length; l++) {
-								if(activeList.includes("") && !activeList.includes("Single Button Press") && !activeList.includes("Sequence Button Press")) {
+								if(activeList.includes("") && !activeList.includes("Single Button Press") && !activeList.includes("Sequence Button Press") && !activeList.includes("Keyboard Input")) {
 									transitionTypes[l].visible = true;
 								} else if(activeList.includes(transitionTypes[l].title)) {
 									transitionTypes[l].visible = true;
@@ -472,7 +474,9 @@ var TransitionSelectedTypeValidationRule = class TransitionSelectedTypeValidatio
 					return "Single Button Press";
 				} else if(transition.modelJSON.iconTabs[i].sequencePress.length > 0) {
 					return "Sequence Button Press";
-				} 
+				} else if(transition.modelJSON.iconTabs[i].keyboardField.length > 0) {
+					return "Keyboard Input";
+				}
 			}
 		}
 		return "";

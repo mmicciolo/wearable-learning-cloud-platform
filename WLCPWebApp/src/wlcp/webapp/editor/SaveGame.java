@@ -23,6 +23,7 @@ import wlcp.model.master.connection.Connection;
 import wlcp.model.master.state.OutputState;
 import wlcp.model.master.state.StartState;
 import wlcp.model.master.state.StateType;
+import wlcp.model.master.transition.KeyboardInput;
 import wlcp.model.master.transition.SequenceButtonPress;
 import wlcp.model.master.transition.SingleButtonPress;
 import wlcp.model.master.transition.Transition;
@@ -136,10 +137,15 @@ public class SaveGame extends HttpServlet {
 				Transition t = new Transition(); t.setTransitionId(saveData.transitions[i].getTransitionId());
 				sequenceButtonPresses.put(entry.getKey(), new SequenceButtonPress(t, entry.getKey(), entry.getValue().getSequences()));
 			}
+			Map<String, KeyboardInput> keyboardInputs = new HashMap<String, KeyboardInput>();
+			for(Map.Entry<String, KeyboardInput> entry : saveData.transitions[i].getKeyboardInputs().entrySet()) {
+				Transition t = new Transition(); t.setTransitionId(saveData.transitions[i].getTransitionId());
+				keyboardInputs.put(entry.getKey(), new KeyboardInput(t, entry.getKey(), entry.getValue().getKeyboardInputs()));
+			}
 			entityManager.getTransaction().begin();
-			entityManager.merge(new Transition(saveData.transitions[i].getTransitionId(), saveData.game, saveData.transitions[i].getConnection(), new HashMap<String, String>(), new HashMap<String, SingleButtonPress>(), new HashMap<String, SequenceButtonPress>()));
+			entityManager.merge(new Transition(saveData.transitions[i].getTransitionId(), saveData.game, saveData.transitions[i].getConnection(), new HashMap<String, String>(), new HashMap<String, SingleButtonPress>(), new HashMap<String, SequenceButtonPress>(), new HashMap<String, KeyboardInput>()));
 			entityManager.flush();
-			entityManager.merge(new Transition(saveData.transitions[i].getTransitionId(), saveData.game, saveData.transitions[i].getConnection(), activeTransitions, singleButtonPresses, sequenceButtonPresses));
+			entityManager.merge(new Transition(saveData.transitions[i].getTransitionId(), saveData.game, saveData.transitions[i].getConnection(), activeTransitions, singleButtonPresses, sequenceButtonPresses, keyboardInputs));
 			entityManager.getTransaction().commit();
 		}
 		

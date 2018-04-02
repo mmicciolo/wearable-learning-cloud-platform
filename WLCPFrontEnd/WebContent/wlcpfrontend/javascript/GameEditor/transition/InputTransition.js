@@ -182,8 +182,16 @@ var InputTransition = class InputTransition extends Transition {
 						}
 					}
 				}
+			} else if(this.modelJSON.iconTabs[i].activeTransition == "Keyboard Input") {
+				for(var key in loadData.keyboardInputs) {
+					if(key == this.modelJSON.iconTabs[i].scope) {
+						for(var n = 0; n < loadData.keyboardInputs[key].keyboardInputs.length; n++) {
+							this.modelJSON.iconTabs[i].keyboardField.push({value: loadData.keyboardInputs[key].keyboardInputs[n]});
+						}
+					}
+				}
 			}
-		}
+		} 
 	}
 	
 	save() {
@@ -193,6 +201,7 @@ var InputTransition = class InputTransition extends Transition {
 		}
 		var singleButtonPresses = {};
 		var sequenceButtonPresses = {};
+		var keyboardInputs = {};
 		for(var i = 0; i < this.modelJSON.iconTabs.length; i++) {
 			if(this.modelJSON.iconTabs[i].activeTransition == "Single Button Press") {
 				if(this.modelJSON.iconTabs[i].singlePress[0].selected || this.modelJSON.iconTabs[i].singlePress[1].selected
@@ -216,15 +225,24 @@ var InputTransition = class InputTransition extends Transition {
 				sequenceButtonPresses[this.modelJSON.iconTabs[i].scope] = {
 					sequences : sequences
 				}
+			} else if(this.modelJSON.iconTabs[i].activeTransition == "Keyboard Input") {
+				var keyboardInputStrings = [];
+				for(var n = 0; n < this.modelJSON.iconTabs[i].keyboardField.length; n++) {
+					keyboardInputStrings.push(this.modelJSON.iconTabs[i].keyboardField[n].value);
+				}
+				keyboardInputs[this.modelJSON.iconTabs[i].scope] = {
+					keyboardInputs : keyboardInputStrings
+				}
 			}
-		}
+		} 
 		
 		var saveData = {
 			transitionId : this.overlayId,
 			connection : this.connection.id,
 			activeTransitions : activeTransitions,
 			singleButtonPresses : singleButtonPresses,
-			sequenceButtonPresses : sequenceButtonPresses
+			sequenceButtonPresses : sequenceButtonPresses,
+			keyboardInputs : keyboardInputs
 		}
 		
 		return saveData;
@@ -282,6 +300,12 @@ var InputTransition = class InputTransition extends Transition {
 				icon : "sap-icon://multiselect-none",
 				selected : false,
 				visible : true
+			},
+			{
+				title : "Keyboard Input",
+				icon : "sap-icon://keyboard-and-mouse",
+				selected : false,
+				visible : true
 			}],
 			singlePress : [
 				{
@@ -301,7 +325,8 @@ var InputTransition = class InputTransition extends Transition {
 					enabled : true
 				},
 			],
-			sequencePress : []
+			sequencePress : [],
+			keyboardField : []
 		}
 	}
 	
@@ -505,5 +530,28 @@ var InputTransition = class InputTransition extends Transition {
 				}
 			}
 		}
+	}
+	
+	addKeyboardField(oEvent) {
+		var path = oEvent.getSource().getParent().getParent().getContent()[1].getBindingContext().getPath();
+		var data = this.model.getProperty(path + "/keyboardField");
+		data.push({value : ""});
+		this.model.setProperty(path + "/keyboardField", data);
+		this.onChange();
+	}
+	
+	deleteKeyboardField(oEvent) {
+		this.deletePath = oEvent.getSource().getBindingContext().getPath();
+		this.deleteKeyboardPath = oEvent.getSource().getParent().getParent().getParent().getBindingContext().getPath() + "/keyboardField";
+		sap.m.MessageBox.confirm("Are you sure you want to delete this keyboard input?", {onClose : $.proxy(this.keyboardDeleteOnClose, this)});
+	}
+	
+	keyboardDeleteOnClose(oEvent) {
+		var splitPath = this.deletePath.split("/");
+		var index = parseInt(splitPath[splitPath.length - 1]);
+		var sequenceArray = this.model.getProperty(this.deleteKeyboardPath);
+		sequenceArray.splice(index, 1);
+		this.model.setProperty(this.deleteKeyboardPath, sequenceArray);
+		this.onChange();
 	}
 }

@@ -47,6 +47,10 @@ public class Transition implements Serializable {
 	@OneToMany(mappedBy="transition", orphanRemoval = true, cascade = CascadeType.PERSIST)
 	@MapKey(name = "scope")
 	private Map<String, SequenceButtonPress> sequenceButtonPresses = new HashMap<String, SequenceButtonPress>();
+	
+	@OneToMany(mappedBy="transition", orphanRemoval = true, cascade = CascadeType.PERSIST)
+	@MapKey(name = "scope")
+	private Map<String, KeyboardInput> keyboardInputs = new HashMap<String, KeyboardInput>();
 
 	public Transition() {
 		super();
@@ -54,7 +58,8 @@ public class Transition implements Serializable {
 
 	public Transition(String transitionId, Game game, String connection, Map<String, String> activeTransitions,
 			Map<String, SingleButtonPress> singleButtonPresses,
-			Map<String, SequenceButtonPress> sequenceButtonPresses) {
+			Map<String, SequenceButtonPress> sequenceButtonPresses,
+			Map<String, KeyboardInput> keyboardInputs) {
 		super();
 		this.transitionId = transitionId;
 		this.game = game;
@@ -62,6 +67,7 @@ public class Transition implements Serializable {
 		this.activeTransitions = activeTransitions;
 		this.singleButtonPresses = singleButtonPresses;
 		this.sequenceButtonPresses = sequenceButtonPresses;
+		this.keyboardInputs = keyboardInputs;
 	}
 
 	public String getTransitionId() {
@@ -110,6 +116,14 @@ public class Transition implements Serializable {
 
 	public void setSequenceButtonPresses(Map<String, SequenceButtonPress> sequenceButtonPresses) {
 		this.sequenceButtonPresses = sequenceButtonPresses;
+	}
+
+	public Map<String, KeyboardInput> getKeyboardInputs() {
+		return keyboardInputs;
+	}
+
+	public void setKeyboardInputs(Map<String, KeyboardInput> keyboardInputs) {
+		this.keyboardInputs = keyboardInputs;
 	}
 
 }

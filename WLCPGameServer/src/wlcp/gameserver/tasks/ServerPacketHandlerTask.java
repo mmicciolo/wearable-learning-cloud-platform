@@ -129,15 +129,17 @@ public class ServerPacketHandlerTask extends Task implements ITask {
 		
 		//4. Make sure a game instance of the lobby has not already been started
 		for(Task task : ((TaskManagerModule) ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).getTasksByType(GameInstanceTask.class)) {
-			if(((GameInstanceTask)task).getGameLobby().getGameLobbyId() == startGameInstancePacket.getGameLobbyId()) {
-				logger.write("Game has already been started with lobby " + ((GameInstanceTask)task).getGameLobby().getGameLobbyName());
-				//5. Send back success
-				//GameInstanceStartedPacket packet = new GameInstanceStartedPacket(((GameInstanceTask)task).getGameInstance().getGameInstanceId());
-				
-				//Send off the packet
-				//packetDistributor.AddPacketToSend(packet, packetClientData.clientData);
-				packetDistributor.AddPacketToSend(new GameInstanceErrorPacket(GameInstanceErrorPacket.GameInstanceErrorCode.GAME_ALREADY_STARTED), packetClientData.clientData);
-				return;
+			if(!((GameInstanceTask)task).getGameInstance().isDebugInstance()) {
+				if(((GameInstanceTask)task).getGameLobby().getGameLobbyId() == startGameInstancePacket.getGameLobbyId()) {
+					logger.write("Game has already been started with lobby " + ((GameInstanceTask)task).getGameLobby().getGameLobbyName());
+					//5. Send back success
+					//GameInstanceStartedPacket packet = new GameInstanceStartedPacket(((GameInstanceTask)task).getGameInstance().getGameInstanceId());
+					
+					//Send off the packet
+					//packetDistributor.AddPacketToSend(packet, packetClientData.clientData);
+					packetDistributor.AddPacketToSend(new GameInstanceErrorPacket(GameInstanceErrorPacket.GameInstanceErrorCode.GAME_ALREADY_STARTED), packetClientData.clientData);
+					return;
+				}
 			}
 		}
 		

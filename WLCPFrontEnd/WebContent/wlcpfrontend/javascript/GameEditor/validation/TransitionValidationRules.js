@@ -173,6 +173,16 @@ var TransitionValidationRule = class TransitionValidationRule extends Validation
 					}
 				}
 			}
+			
+			if(scopeCollection.length == 0 ) {
+				for(var j = 0; j < transitionList[0].modelJSON.iconTabs.length; j++) {
+					var trans = this.getTab(transitionList[0], transitionList[0].modelJSON.iconTabs[j].scope);
+					for(var button = 0; button < 4; button++) {
+						trans.singlePress[button].enabled = true;
+					}
+					this.setScopeData(transitionList[0], trans);
+				}
+			}
 		}
 	}
 	

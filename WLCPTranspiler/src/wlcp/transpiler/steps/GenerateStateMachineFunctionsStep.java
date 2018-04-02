@@ -16,6 +16,7 @@ import wlcp.transpiler.state.DisplayTextStateType;
 import wlcp.transpiler.state.IStateType;
 import wlcp.transpiler.state.StateType;
 import wlcp.transpiler.transition.ITransitionType;
+import wlcp.transpiler.transition.KeyboardInputTransitionType;
 import wlcp.transpiler.transition.SequenceButtonPressTransitionType;
 import wlcp.transpiler.transition.SingleButtonPressTransitionType;
 
@@ -62,6 +63,7 @@ public class GenerateStateMachineFunctionsStep implements ITranspilerStep {
 		stateTypes.add(new DisplayTextStateType());
 		transitionTypes.add(new SingleButtonPressTransitionType());
 		transitionTypes.add(new SequenceButtonPressTransitionType());
+		transitionTypes.add(new KeyboardInputTransitionType());
 	}
 	
 	private void GenerateFunctions(State state) {

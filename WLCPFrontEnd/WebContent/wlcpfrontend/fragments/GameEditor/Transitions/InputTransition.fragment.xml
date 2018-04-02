@@ -63,7 +63,7 @@
 									<content>
 										<FlexBox alignItems="Start" justifyContent="Center">
 											<items>
-												<Text text="Enter text you want a user to input in order to transition!"/>
+												<Text text="Enter text you want a user to input in order to transition! (case insensitive)"/>
 											</items>
 										</FlexBox>
 										<FlexBox alignItems="Start" justifyContent="Center">

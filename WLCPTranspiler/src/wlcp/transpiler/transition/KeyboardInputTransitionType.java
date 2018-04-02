@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 
 import wlcp.model.master.connection.Connection;
 import wlcp.model.master.transition.Transition;
+import wlcp.transpiler.helper.TranspilerHelpers;
 
 public class KeyboardInputTransitionType extends TransitionType implements ITransitionType {
 	
@@ -50,9 +51,9 @@ public class KeyboardInputTransitionType extends TransitionType implements ITran
 		int count = 0;
 		for(Entry<String, String> entry : keyboardInputMap.entrySet()) {
 			if(count == keyboardInputMap.size() - 1) {
-				stringBuilder.append("\"" + entry.getKey() + "\"], [");
+				stringBuilder.append("\"" + TranspilerHelpers.ReplaceEscapeSequences(entry.getKey()) + "\"], [");
 			} else {
-				stringBuilder.append("\"" + entry.getKey() + "\", ");
+				stringBuilder.append("\"" + TranspilerHelpers.ReplaceEscapeSequences(entry.getKey()) + "\", ");
 			}
 			count++;
 		}

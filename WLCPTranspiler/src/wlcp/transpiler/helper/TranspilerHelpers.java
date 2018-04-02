@@ -65,4 +65,14 @@ public class TranspilerHelpers {
 		}
 		return scope;
 	}
+	
+	public static String ReplaceEscapeSequences(String input) {
+		String returnString = input;
+		returnString = returnString.replace("\\", "\\\\");
+		returnString = returnString.replace("\"", "\\\"");
+		returnString = returnString.replace("\'", "\\\'");
+		returnString = returnString.replace("\n", "\\n");
+		returnString = returnString.replace("\r", "\\r");
+		return returnString;
+	}
 }

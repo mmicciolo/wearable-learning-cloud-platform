@@ -37,6 +37,7 @@ import wlcp.shared.packet.Packet;
 import wlcp.shared.packet.PacketTypes;
 import wlcp.shared.packets.ConnectAcceptedPacket;
 import wlcp.shared.packets.ConnectPacket;
+import wlcp.shared.packets.ConnectRejectedPacket;
 import wlcp.shared.packets.DebugConnectPacket;
 import wlcp.shared.packets.DisconnectCompletePacket;
 import wlcp.shared.packets.DisconnectPacket;
@@ -239,6 +240,11 @@ public class GameInstanceTask extends Task implements ITask {
 			}
 			if(count >= game.getTeamCount() + 1) {
 				//Team is full, handle
+				//Send the packet
+				packetDistributor.AddPacketToSend(new ConnectRejectedPacket(ConnectRejectedPacket.ConnectRejectedErrorCode.TEAM_FULL), packetClientData.clientData);
+				//Release the lock
+				available.release();
+				return;
 			}
 			
 			//They passed our tests, they can join
@@ -295,7 +301,9 @@ public class GameInstanceTask extends Task implements ITask {
 				if(player.teamPlayer.team == debugConnectPacket.getTeam()) { count++; }
 			}
 			if(count >= game.getTeamCount() + 1) {
-				//Team is full, handle
+				//We dont have to handle full teams
+				//Since debug is player based, if a team is full and the player tries to connect
+				//again it will just hit the reconnect case
 			}
 			
 			Username username = new Username();

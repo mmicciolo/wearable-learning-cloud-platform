@@ -184,6 +184,9 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 		case 6:
 			this.joinedGame(byteBuffer);
 			break;
+		case 7:
+			this.connectionRejected(byteBuffer);
+			break;
 		case 9:
 			this.disconnectComplete();
 			break;
@@ -294,6 +297,16 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 		$("#virtualDevice--colorListBlue").draggable({revert: false, helper: "clone", connectToSortable : "#virtualDevice--colorListSortable-listUl"});
 		$("#virtualDevice--colorListBlack").draggable({revert: false, helper: "clone", connectToSortable : "#virtualDevice--colorListSortable-listUl"});
 		$("#virtualDevice--colorListSortable-listUl").sortable();
+	},
+	
+	connectionRejected : function(byteBuffer) {
+		sap.m.MessageBox.error("The team you selected is full! Please try again!");
+		var navContainer = sap.ui.getCore().byId("virtualDevice--virtualDeviceNavContainer");
+		navContainer.to(sap.ui.getCore().byId("virtualDevice--selectGameLobby"));
+		this.modelJSON.games = [];
+		this.modelJSON.teams = [];
+		this.model.setData(this.modelJSON);
+		this.getActiveGameLobbies();
 	},
 	
 	joinedGame : function(byteBuffer) {

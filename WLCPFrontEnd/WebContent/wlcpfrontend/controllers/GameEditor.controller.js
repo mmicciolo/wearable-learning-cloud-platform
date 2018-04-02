@@ -142,7 +142,12 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 				sap.m.MessageBox.error("You cannot have mutliple connections with same source and target state!");
 				return false;
 			}
-		} 
+		}
+		//Check to make sure its not a loop back to itself
+		if(oEvent.sourceId == oEvent.targetId) {
+			sap.m.MessageBox.error("A state cannot loop back to itself!");
+			return false;
+		}
 		
 		//Else we need to create a new one
 		var connection = new Connection(oEvent.sourceId, oEvent.targetId, this.createConnectionId());

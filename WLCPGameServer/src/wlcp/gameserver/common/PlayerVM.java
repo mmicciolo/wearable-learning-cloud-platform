@@ -20,6 +20,7 @@ import wlcp.gameserver.modules.ConfigurationModule;
 import wlcp.gameserver.tasks.GameInstanceTask;
 import wlcp.shared.packet.IPacket;
 import wlcp.shared.packets.DisplayTextPacket;
+import wlcp.shared.packets.KeyboardInputPacket;
 import wlcp.shared.packets.SequenceButtonPressPacket;
 import wlcp.shared.packets.SingleButtonPressPacket;
 
@@ -187,6 +188,21 @@ public class PlayerVM extends Thread {
 		}
 		for(int i = 0; i < buttons.length; i++) {
 			if(buttons[i].equals("")) {
+				return transitions[i];
+			}
+		}
+		return -1;
+	}
+	
+	public int KeyboardInput(String[] keyboardInput, int[] transitions) throws ScriptException {
+		block = true;
+		gameInstanceTask.getPacketDistributor().AddPacketToSend(new KeyboardInputPacket(gameInstanceTask.getGameInstanceId(), team, player, ""), usernameClientData.clientData);
+		int state;
+		while((state = block()) == -2) {}
+		if(state != -2 && state != -1) { return state; }
+		KeyboardInputPacket packet = (KeyboardInputPacket) blockPacket;
+		for(int i = 0; i < keyboardInput.length; i++) {
+			if(keyboardInput[i].equals(packet.getKeyboardInput())) {
 				return transitions[i];
 			}
 		}

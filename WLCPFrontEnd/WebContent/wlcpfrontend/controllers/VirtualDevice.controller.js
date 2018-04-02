@@ -121,6 +121,24 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 		}
 	},
 	
+	submitKeyboardInput : function() {
+		if(!this.transitionHandled) {
+			var keyboardInput = sap.ui.getCore().byId("virtualDevice--keyboardInputField").getValue();
+			var byteBuffer = new dcodeIO.ByteBuffer();
+			byteBuffer.writeByte(20);
+			byteBuffer.writeInt(0);
+			byteBuffer.writeInt(this.gameInstanceId);
+			byteBuffer.writeInt(this.team);
+			byteBuffer.writeInt(this.player);
+			byteBuffer.writeInt(keyboardInput.length);
+			byteBuffer.writeString(keyboardInput);
+			byteBuffer.writeInt(byteBuffer.offset, 1);
+			byteBuffer.flip();
+			this.socket.send(byteBuffer.toArrayBuffer());
+			this.transitionHandled = true;
+		}
+	},
+	
 	disconnectPressed : function() {
 		var byteBuffer = new dcodeIO.ByteBuffer();
 		byteBuffer.writeByte(8);
@@ -188,6 +206,9 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 		case 18:
 			this.handleGameTeamsAndPlayers(byteBuffer);
 			break;
+		case 20:
+			this.keyboardInput(byteBuffer);
+			break;
 		default:
 			break;
 		}
@@ -244,6 +265,11 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 		this.transitionHandled = false;
 	},
 	
+	keyboardInput : function(byteBuffer) {
+		this.switchToTransitionType("KeyboardInput");
+		this.transitionHandled = false;
+	},
+	
 	switchToTransitionType : function(type) {
 		var navContainer = sap.ui.getCore().byId("virtualDevice--inputContainer");
 		switch(type) {
@@ -255,6 +281,9 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 			var page = sap.ui.getCore().byId("virtualDevice--sequenceButtonPress");
 			page.onAfterRendering = $.proxy(this.onAfterRenderingSequence, this);
 			navContainer.to(sap.ui.getCore().byId("virtualDevice--sequenceButtonPress"));
+			break;
+		case "KeyboardInput":
+			navContainer.to(sap.ui.getCore().byId("virtualDevice--keyboardInput"));
 			break;
 		}
 	},

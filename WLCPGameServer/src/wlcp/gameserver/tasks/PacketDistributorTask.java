@@ -36,6 +36,7 @@ import wlcp.shared.packets.GamePacket;
 import wlcp.shared.packets.GameTeamsAndPlayersPacket;
 import wlcp.shared.packets.GameTeamsPacket;
 import wlcp.shared.packets.HeartBeatPacket;
+import wlcp.shared.packets.KeyboardInputPacket;
 import wlcp.shared.packets.SequenceButtonPressPacket;
 import wlcp.shared.packets.ServerPacket;
 import wlcp.shared.packets.SingleButtonPressPacket;
@@ -111,6 +112,9 @@ public class PacketDistributorTask extends Task implements ITask {
 			break;
 		case SEQUENCE_BUTTON_PRESS:
 			AddPacket(new SequenceButtonPressPacket(), clientData);
+			break;
+		case KEYBOARD_INPUT:
+			AddPacket(new KeyboardInputPacket(), clientData);
 			break;
 		default:
 			break;

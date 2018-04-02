@@ -43,6 +43,7 @@ import wlcp.shared.packets.DisconnectPacket;
 import wlcp.shared.packets.GameTeamsAndPlayersPacket;
 import wlcp.shared.packets.GameTeamsPacket;
 import wlcp.shared.packets.HeartBeatPacket;
+import wlcp.shared.packets.KeyboardInputPacket;
 import wlcp.shared.packets.SequenceButtonPressPacket;
 import wlcp.shared.packets.SingleButtonPressPacket;
 
@@ -148,6 +149,9 @@ public class GameInstanceTask extends Task implements ITask {
 		case SEQUENCE_BUTTON_PRESS:
 			SequenceButtonPress(packetClientData);
 			break;
+		case KEYBOARD_INPUT:
+			KeyboardInput(packetClientData);
+			break;
 		default:
 			break;
 		}
@@ -173,6 +177,23 @@ public class GameInstanceTask extends Task implements ITask {
 	private void SequenceButtonPress(PacketClientData packetClientData) {
 		//Get the sequence button press packet
 		SequenceButtonPressPacket packet = (SequenceButtonPressPacket) packetClientData.packet;
+		try {
+			available.acquire();
+			for(Player player : players) {
+				if(player.teamPlayer.team == packet.getTeam() && player.teamPlayer.player == packet.getPlayer()) {
+					player.playerVM.unblock(packet);
+				}
+			}
+			available.release();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private void KeyboardInput(PacketClientData packetClientData) {
+		//Get the keyboard input packet
+		KeyboardInputPacket packet = (KeyboardInputPacket) packetClientData.packet;
 		try {
 			available.acquire();
 			for(Player player : players) {

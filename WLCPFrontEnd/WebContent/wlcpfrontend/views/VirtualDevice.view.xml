@@ -110,6 +110,18 @@
 							</items>
 						</FlexBox>
 					</Page>
+					<Page id="keyboardInput" showHeader="false" enableScrolling="false">
+						<FlexBox alignItems="Start" justifyContent="Center">
+							<items>
+								<Input id="keyboardInputField" placeholder="Enter keyboard input"></Input>
+							</items>
+						</FlexBox>
+						<FlexBox alignItems="Start" justifyContent="Center">
+							<items>
+								<Button text="Submit" press="submitKeyboardInput"></Button>
+							</items>
+						</FlexBox>
+					</Page>
 				</NavContainer>
 			</l:Splitter>
 			</Page>

@@ -332,6 +332,14 @@ public class GameInstanceTask extends Task implements ITask {
 		//Log the reconnect
 		logger.write("Reconnect from: " + player.usernameClientData.username.getUsernameId());
 		
+		//Close the old socket
+		try {
+			player.usernameClientData.clientData.getClientSocket().close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		//Set the new client data
 		player.usernameClientData.clientData = packetClientData.clientData;
 	}

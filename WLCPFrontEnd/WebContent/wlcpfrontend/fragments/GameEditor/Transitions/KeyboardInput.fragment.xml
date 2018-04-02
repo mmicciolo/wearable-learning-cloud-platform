@@ -1,0 +1,27 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:t="sap.ui.table"
+	xmlns:core="sap.ui.core"
+	xmlns:tnt="sap.tnt"
+	xmlns:l="sap.ui.layout"
+	xmlns:u="sap.ui.unified"
+	xmlns:html="http://www.w3.org/1999/xhtml"
+	xmlns:mvc="sap.ui.core.mvc">
+	
+	<Dialog id="keyboardInputDialog" title="Configure..." contentWidth="50%" contentHeight="50%">
+		<buttons>
+			<Button text="Submit" type="Accept" press="closeKeyboardInput"/>
+			<Button text="Close" type="Reject" press="closeDialog2"/>
+		</buttons>
+		<FlexBox alignItems="Start" justifyContent="Center">
+			<items>
+				<Text text="Enter text you want a user to input in order to transition! (case insensitive)"/>
+			</items>
+		</FlexBox>
+		<FlexBox alignItems="Start" justifyContent="Center">
+			<items>
+				<Input id="keyboardInput" placeholder="Enter text here!"></Input>
+			</items>
+		</FlexBox>
+	</Dialog>
+</core:FragmentDefinition>

@@ -424,6 +424,48 @@ var TransitionSequenceButtonPressValidationRule = class TransitionSequenceButton
 	}
 }
 
+var TransitionKeyboardInputValidationRule = class TransitionKeyboardInputValidationRule extends ValidationRule {
+	
+	validate(transition, keyboardInput, scope) {
+		
+		var transitionList = [];
+		
+		//Get a list of neighbor connections
+		var neighborConnections = GameEditor.getJsPlumbInstance().getConnections({source : transition.connection.sourceId});
+		
+		//Loop through the neighbor connections
+		for(var i = 0; i < neighborConnections.length; i++) {
+			for(var n = 0; n < GameEditor.getEditorController().transitionList.length; n++) {
+				if(neighborConnections[i].id == GameEditor.getEditorController().transitionList[n].connection.id) {
+					transitionList.push(GameEditor.getEditorController().transitionList[n]);
+				}
+			}
+		}
+		
+		//Loop through the transition list
+		for(var i = 0; i < transitionList.length; i++) {
+			for(var n = 0; n < transitionList[i].modelJSON.iconTabs.length; n++) {
+				if(scope == transitionList[i].modelJSON.iconTabs[n].scope) {
+					if(this.containsKeyboardInput(keyboardInput, transitionList[i].modelJSON.iconTabs[n].keyboardField)) {
+						return false;
+					}
+				}
+			}
+		}
+		
+		return true;
+	}
+	
+	containsKeyboardInput(keyboardInput, keyboardField) {
+		for(var i = 0; i < keyboardField.length; i++) {
+			if(keyboardField[i].value == keyboardInput) {
+				return true;
+			}
+		}
+		return false;
+	}
+}
+
 var TransitionSelectedTypeValidationRule = class TransitionSelectedTypeValidationRule extends ValidationRule {
 	
 	validate(transition) {

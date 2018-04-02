@@ -384,6 +384,11 @@ var InputTransition = class InputTransition extends Transition {
 		this.dialog.destroy();
 	}
 	
+	closeDialog2() {
+		this.dialog2.close();
+		this.dialog2.destroy();
+	}
+	
 	remove() {
 		
 		//Open a dialog so the user can confirm the delete
@@ -533,11 +538,29 @@ var InputTransition = class InputTransition extends Transition {
 	}
 	
 	addKeyboardField(oEvent) {
-		var path = oEvent.getSource().getParent().getParent().getContent()[1].getBindingContext().getPath();
-		var data = this.model.getProperty(path + "/keyboardField");
-		data.push({value : ""});
-		this.model.setProperty(path + "/keyboardField", data);
-		this.onChange();
+		//Create an instance of the dialog
+		this.dialog2 = sap.ui.xmlfragment("wlcpfrontend.fragments.GameEditor.Transitions.KeyboardInput", this);
+			
+		//Open the dialog
+		this.dialog2.open();
+		
+		//Store the scopes path
+		this.path23 = oEvent.getSource().getParent().getParent().getContent()[1].getBindingContext().getPath();
+	}
+	
+	closeKeyboardInput(oEvent) {
+		var keyboardInputValue = sap.ui.getCore().byId("keyboardInput").getValue().toLowerCase();
+		var keyboardValidation = new TransitionKeyboardInputValidationRule();
+		if(!keyboardValidation.validate(this, keyboardInputValue, this.model.getProperty(this.path23).scope)) {
+			sap.m.MessageBox.error("That keyboard input already exists in this scope (possibly in another neighbor transition)!");
+		} else {
+			var data = this.model.getProperty(this.path23 + "/keyboardField");
+			data.push({value : keyboardInputValue});
+			this.model.setProperty(this.path23 + "/keyboardField", data);
+			this.onChange();
+			this.dialog2.close();
+			this.dialog2.destroy();
+		}
 	}
 	
 	deleteKeyboardField(oEvent) {

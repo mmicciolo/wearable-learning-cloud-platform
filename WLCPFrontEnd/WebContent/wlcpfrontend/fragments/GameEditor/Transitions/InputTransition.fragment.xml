@@ -61,11 +61,11 @@
 								</Page>
 								<Page title="{scope} Keyboard Input">
 									<content>
-										<FlexBox alignItems="Start" justifyContent="Center">
+<!-- 										<FlexBox alignItems="Start" justifyContent="Center">
 											<items>
 												<Text text="Enter text you want a user to input in order to transition! (case insensitive)"/>
 											</items>
-										</FlexBox>
+										</FlexBox> -->
 										<FlexBox alignItems="Start" justifyContent="Center">
 											<items>
 												<Button text="Add Keyboard Field" press="addKeyboardField"></Button>
@@ -77,7 +77,7 @@
 													<CustomListItem xmlns="sap.m">
 														<content>
 															<HBox justifyContent="Start" alignItems="Center" height="50px">
-																<Input placeholder="Enter text here!" value="{value}"></Input>
+																<Input placeholder="Enter text here!" value="{value}" enabled="false"></Input>
 																<Button icon="sap-icon://delete" press="deleteKeyboardField" class="sequenceDeleteButton"></Button>
 															</HBox>
 														</content>

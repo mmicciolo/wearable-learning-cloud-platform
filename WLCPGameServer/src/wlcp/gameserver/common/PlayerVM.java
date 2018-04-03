@@ -206,6 +206,11 @@ public class PlayerVM extends Thread {
 				return transitions[i];
 			}
 		}
+		for(int i = 0; i < keyboardInput.length; i++) {
+			if(keyboardInput[i].equals("")) {
+				return transitions[i];
+			}
+		}
 		return -1;
 	}
 	

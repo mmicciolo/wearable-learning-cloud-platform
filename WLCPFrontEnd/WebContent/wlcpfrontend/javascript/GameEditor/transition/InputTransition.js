@@ -554,6 +554,9 @@ var InputTransition = class InputTransition extends Transition {
 		if(!keyboardValidation.validate(this, keyboardInputValue, this.model.getProperty(this.path23).scope)) {
 			sap.m.MessageBox.error("That keyboard input already exists in this scope (possibly in another neighbor transition)!");
 		} else {
+			if(keyboardInputValue == "") {
+				sap.m.MessageBox.information("Adding an empty keyboard input means the transition will occur if none of the defined strings are input (i.e. wrong sequence).");
+			}
 			var data = this.model.getProperty(this.path23 + "/keyboardField");
 			data.push({value : keyboardInputValue});
 			this.model.setProperty(this.path23 + "/keyboardField", data);

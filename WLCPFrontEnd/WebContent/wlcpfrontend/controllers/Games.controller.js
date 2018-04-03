@@ -61,7 +61,7 @@ sap.ui.controller("wlcpfrontend.controllers.Games", {
 	},
 	
 	deleteError : function() {
-		sap.m.MessageToast.show("Game could not be deleted!");
+		sap.m.MessageToast.show("Game could not be deleted! Make sure it is not running in game instances or being debugged!");
 	},
 
 /**

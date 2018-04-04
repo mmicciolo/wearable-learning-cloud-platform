@@ -24,9 +24,9 @@
 							<tnt:NavigationList class="navList">
 								<tnt:layoutData><l:SplitterLayoutData size="202px" resizable="false"/></tnt:layoutData>
 								<tnt:NavigationListItem text="Display Text" icon="sap-icon://discussion-2" select="navigationSelected" key="Display Text"/>
-								<tnt:NavigationListItem text="Display Image" icon="sap-icon://background" select="navigationSelected" key="Display Image"/>
+<!-- 								<tnt:NavigationListItem text="Display Image" icon="sap-icon://background" select="navigationSelected" key="Display Image"/>
 								<tnt:NavigationListItem text="Play Sound" icon="sap-icon://sound" select="navigationSelected"/>
-								<tnt:NavigationListItem text="Light" icon="sap-icon://lightbulb" select="navigationSelected"/>
+								<tnt:NavigationListItem text="Light" icon="sap-icon://lightbulb" select="navigationSelected"/> -->
 							</tnt:NavigationList>
 							<NavContainer width="100%" height="500px">
 								<layoutData><l:SplitterLayoutData minSize="500" resizable="false"/></layoutData>

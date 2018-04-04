@@ -136,6 +136,7 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 			byteBuffer.flip();
 			this.socket.send(byteBuffer.toArrayBuffer());
 			this.transitionHandled = true;
+			sap.ui.getCore().byId("virtualDevice--keyboardInputField").setValue("");
 		}
 	},
 	

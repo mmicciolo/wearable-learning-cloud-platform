@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Semaphore;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -36,6 +37,7 @@ import wlcp.model.master.transition.Transition;
 @WebServlet("/LoadGame")
 public class LoadGame extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private final Semaphore available = new Semaphore(1, true);
 	private EntityManagerFactory entityManagerFactory = null;
 	private EntityManager entityManager = null;
        
@@ -61,6 +63,13 @@ public class LoadGame extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		try {
+			available.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		String gameId = request.getParameter("gameId");
 		
 		Game game = entityManager.getReference(Game.class, gameId);
@@ -72,6 +81,8 @@ public class LoadGame extends HttpServlet {
 		response.getWriter().flush();
 		
 		entityManager.clear();
+		
+		available.release();
 		
 		// TODO Auto-generated method stub
 		//doGet(request, response);

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Semaphore;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -28,7 +29,7 @@ import wlcp.transpiler.JavaScriptTranspiler;
 @WebServlet("/Transpile")
 public class Transpile extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	
+	private final Semaphore available = new Semaphore(1, true);
 	private EntityManagerFactory entityManagerFactory = null;
 	private EntityManager entityManager = null;
 	private JavaScriptTranspiler transpiler = null;
@@ -46,6 +47,13 @@ public class Transpile extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
+		try {
+			available.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		initJPA();
         transpiler = new JavaScriptTranspiler(entityManager);
 		
@@ -56,8 +64,8 @@ public class Transpile extends HttpServlet {
 	
 		String transpiledCode = transpiler.Transpile(gameId);
 		
-		//PrintWriter pw = new PrintWriter(new FileOutputStream("C:/Users/Matt/git/wearable-learning-cloud-platform/WLCPGameServer/programs/" + gameId + ".js", false));
-		PrintWriter pw = new PrintWriter(new FileOutputStream(finalProgramLocation + gameId + ".js", false));
+		PrintWriter pw = new PrintWriter(new FileOutputStream("C:/Users/Matt/git/wearable-learning-cloud-platform/WLCPGameServer/programs/" + gameId + ".js", false));
+		//PrintWriter pw = new PrintWriter(new FileOutputStream(finalProgramLocation + gameId + ".js", false));
 		pw.println(transpiledCode);
 		pw.close();
 
@@ -66,6 +74,8 @@ public class Transpile extends HttpServlet {
 		
 		response.setContentType("text/plain");
 		response.setStatus(HttpServletResponse.SC_OK);
+		
+		available.release();
 	}
 
 	/**

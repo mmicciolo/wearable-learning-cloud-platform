@@ -27,6 +27,7 @@ import wlcp.model.master.Game;
 import wlcp.model.master.connection.Connection;
 import wlcp.model.master.state.OutputState;
 import wlcp.model.master.state.StartState;
+import wlcp.model.master.transition.KeyboardInput;
 import wlcp.model.master.transition.SequenceButtonPress;
 import wlcp.model.master.transition.Transition;
 
@@ -74,6 +75,9 @@ public class ExportGame extends HttpServlet {
 			transition.getSequenceButtonPresses().hashCode();
 			for(Entry<String, SequenceButtonPress> entry : transition.getSequenceButtonPresses().entrySet()) {
 				entry.getValue().getSequences().hashCode();
+			}
+			for(Entry<String, KeyboardInput> entry : transition.getKeyboardInputs().entrySet()) {
+				entry.getValue().getKeyboardInputs().hashCode();
 			}
 		}
 		

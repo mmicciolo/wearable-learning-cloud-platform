@@ -13,5 +13,6 @@
 		<class>wlcp.model.master.GameInstance</class>
 		<class>wlcp.model.master.transition.SequenceButtonPress</class>
 		<class>wlcp.model.master.transition.KeyboardInput</class>
+		<class>wlcp.model.log.EditorLog</class>
 	</persistence-unit>
 </persistence>

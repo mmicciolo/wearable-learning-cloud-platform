@@ -74,6 +74,7 @@ sap.ui.controller("wlcpfrontend.controllers.Games", {
 			  onAfterRendering: function(){
 			        var oBinding = this.getView().byId("gamesTileContainer").getBinding("tiles");
 			        oBinding.filter([new sap.ui.model.Filter("Username", "EQ", sap.ui.getCore().getModel("user").oData.username)]);
+			        oBinding.filter([new sap.ui.model.Filter("DataLog", "EQ", false)]);
 			  }
 			}, this);
 	},

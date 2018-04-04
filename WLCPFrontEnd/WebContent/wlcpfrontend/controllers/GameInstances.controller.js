@@ -22,6 +22,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameInstances", {
 	onAfterRenderingStartGameInstance : function () {
 		var gameBinding = sap.ui.getCore().byId("gameInstanceGame").getBinding("items");
 		gameBinding.filter([new sap.ui.model.Filter("Username", "EQ", sap.ui.getCore().getModel("user").oData.username)]);
+		gameBinding.filter([new sap.ui.model.Filter("DataLog", "EQ", false)]);
 		var gameLobbyBinding = sap.ui.getCore().byId("gameInstanceGameLobby").getBinding("items");
 		gameLobbyBinding.filter([new sap.ui.model.Filter("Username", "EQ", sap.ui.getCore().getModel("user").oData.username)]);
 	},

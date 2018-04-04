@@ -15,7 +15,8 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 				//uri : ODataModel.getODataModelURL() + "/Usernames('mmicciolo')"
 	         }
 		},
-		Visibility : true
+		Visibility : true,
+		DataLog : false
 	},
 	
 	gameModel : {
@@ -25,7 +26,8 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		StateIdCount : 0,
 		TransitionIdCount : 0,
 		ConnectionIdCount : 0,
-		Visibility : true
+		Visibility : true,
+		DataLog : false
 	},
 	
 	stateList : [],
@@ -102,6 +104,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 				outputState.setPositionX(State.absoluteToRelativeX(ui.position.left, 150) + GameEditor.getScrollLeftOffset()); outputState.setPositionY(State.absoluteToRelativeY(ui.position.top) + GameEditor.getScrollTopOffset());
 				outputState.draw();
 				this.stateList.push(outputState);
+				DataLogger.logGameEditor();
 				break;
 		}
 	},
@@ -121,6 +124,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 					this.stateList[i].onChange();
 				}
 			}
+			DataLogger.logGameEditor();
 		} else {
 			sap.m.MessageBox.error("A transition could not be placed there!");
 		}
@@ -162,6 +166,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 			for(var i = 0; i < this.connectionList.length; i++) {
 			if(this.connectionList[i].connectionId == oEvent.id) {
 				this.connectionList[i].detach();
+				DataLogger.logGameEditor();
 				break;
 				}
 			}
@@ -215,6 +220,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 			        	and : false
 			        });
 			        oBinding.filter(filter);
+			        oBinding.filter([new sap.ui.model.Filter("DataLog", "EQ", false)]);
 			  }
 			}, this);
 		fragment.open();

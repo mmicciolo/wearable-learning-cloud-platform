@@ -240,6 +240,7 @@ var OutputState = class OutputState extends State {
 	closeDialog() {
 		this.dialog.close();
 		this.dialog.destroy();
+		DataLogger.logGameEditor();
 	}
 	
 	navigationSelected(oEvent) {

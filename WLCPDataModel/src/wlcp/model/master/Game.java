@@ -39,19 +39,23 @@ public class Game implements Serializable {
 	
 	@Column(name = "CONNECTION_ID_COUNT")
 	private Integer connectionIdCount;
+	
+	@Column(name = "DATA_LOG")
+	private Boolean dataLog;
 
 	public Game() {
 		super();
 	}
 
 	public Game(String gameId, Integer teamCount, Integer playersPerTeam, Username username,
-			Boolean visibility) {
+			Boolean visibility, Boolean dataLog) {
 		super();
 		this.gameId = gameId;
 		this.teamCount = teamCount;
 		this.playersPerTeam = playersPerTeam;
 		this.username = username;
 		this.visibility = visibility;
+		this.dataLog = dataLog;
 	}
 
 	public String getGameId() {
@@ -116,6 +120,14 @@ public class Game implements Serializable {
 
 	public void setConnectionIdCount(Integer connectionIdCount) {
 		this.connectionIdCount = connectionIdCount;
+	}
+
+	public Boolean getDataLog() {
+		return dataLog;
+	}
+
+	public void setDataLog(Boolean dataLog) {
+		this.dataLog = dataLog;
 	}
 	
 }

@@ -73,7 +73,7 @@ var State = class State {
 		this.height = this.stateDiv.getBoundingClientRect().height;
 		
 		//Make it draggable
-		this.jsPlumbInstance.draggable(this.stateDiv.id, {containment : true, drag : $.proxy(this.moved, this), stop : $.proxy(this.moved, this)});
+		this.jsPlumbInstance.draggable(this.stateDiv.id, {containment : true, drag : $.proxy(this.moved, this), stop : $.proxy(this.stopped, this)});
 		//$("#" + this.stateDiv.id).draggable({containment : "parent", stop : $.proxy(this.moved, this)});
 		
 		if(!this.stateDiv.id.includes("start")) {
@@ -117,6 +117,9 @@ var State = class State {
 	        		}
 	    		}
 	    	}
+	    	
+	    	//Log it
+	    	DataLogger.logGameEditor();
 		}
 	}
 	
@@ -142,6 +145,12 @@ var State = class State {
 		if((this.positionY + this.height + 50) >= document.getElementById("gameEditor--pad").getBoundingClientRect().height) {
 			document.getElementById("gameEditor--pad").style.height = (document.getElementById("gameEditor--pad").getBoundingClientRect().height + 500) + "px";
 		}
+	}
+	
+	stopped() {
+		
+		//Log it
+		DataLogger.logGameEditor();
 	}
 	
 	save() {

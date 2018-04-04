@@ -382,6 +382,7 @@ var InputTransition = class InputTransition extends Transition {
 	closeDialog() {
 		this.dialog.close();
 		this.dialog.destroy();
+		DataLogger.logGameEditor();
 	}
 	
 	closeDialog2() {
@@ -421,6 +422,9 @@ var InputTransition = class InputTransition extends Transition {
 	        		}
 	    		}
 	    	}
+	    	
+	    	//Log it
+	    	DataLogger.logGameEditor();
 		}
 	}
 	

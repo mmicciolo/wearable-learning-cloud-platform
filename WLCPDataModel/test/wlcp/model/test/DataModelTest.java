@@ -116,7 +116,7 @@ public class DataModelTest {
 	public void testGame() {
 		
 		//Create a game
-		Game game = new Game("My Game", 3, 3, new Username("username", "password", "firstname", "lastname", "email"), true);
+		Game game = new Game("My Game", 3, 3, new Username("username", "password", "firstname", "lastname", "email"), true, false);
 		
 		//Persist the gane
 		manager.getTransaction().begin();

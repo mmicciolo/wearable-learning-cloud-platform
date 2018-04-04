@@ -18,7 +18,7 @@ var Connection = class Connection {
 			var editorConnection = new Connection(loadData[i].connectionFrom, loadData[i].connectionTo, loadData[i].connectionId);
 			editorConnection.isLoopBack = loadData[i].backwardsLoop;
 			GameEditor.getEditorController().connectionList.push(editorConnection);
-			if(loadData[i].connectionFrom == (GameEditor.getEditorController().gameModel.GameId + "_start")) {
+			if(loadData[i].connectionFrom == (GameEditor.getEditorController().gameModel.GameId + "_start") || loadData[i].connectionFrom.includes("_start")) {
 				var ep1 = GameEditor.getEditorController().jsPlumbInstance.selectEndpoints({element : loadData[i].connectionFrom}).get(0);
 				var ep2 = GameEditor.getEditorController().jsPlumbInstance.selectEndpoints({element : loadData[i].connectionTo}).get(0);
 				var connection = GameEditor.getEditorController().jsPlumbInstance.connect({ source: ep1 , target: ep2});

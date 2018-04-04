@@ -1,6 +1,6 @@
 var DataLogger = {
 		
-	loggingEnabled : true,
+	loggingEnabled : false,
 		
 	logGameEditor : function() {
 		

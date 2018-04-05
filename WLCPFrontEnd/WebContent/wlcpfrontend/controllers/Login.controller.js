@@ -96,6 +96,12 @@ sap.ui.controller("wlcpfrontend.controllers.Login", {
 		
 		//Setup the ODATA
 		ODataModel.setupODataModel();
+		
+//		this.getView().addEventDelegate({
+//			  onAfterRendering: function(){
+//				  this.onLoginPress();
+//			  }
+//			}, this);
 	},
 
 /**

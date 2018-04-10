@@ -10,8 +10,8 @@
 	
 	<Dialog id="outputStateDialog" title="Configure..." contentWidth="50%" contentHeight="50%">
 		<buttons>
-			<Button text="Accept" type="Accept"/>
-			<Button text="Close" type="Reject" press="closeDialog"/>
+			<Button text="Accept" type="Accept" press="closeDialog"/>
+			<!-- <Button text="Close" type="Reject" press="closeDialog"/> -->
 		</buttons>
 		<IconTabBar id="inputTransitionDialogIconTabBar" items="{/iconTabs}" showOverflowSelectList="false" applyContentPadding="false" expandable="false">
 			<items>

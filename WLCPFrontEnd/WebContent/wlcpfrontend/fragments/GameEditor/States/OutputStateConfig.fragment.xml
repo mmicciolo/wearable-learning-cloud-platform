@@ -9,8 +9,8 @@
 	
 	<Dialog id="outputStateDialog" title="Configure..." contentWidth="50%" contentHeight="50%">
 		<buttons>
-			<Button text="Accept" type="Accept"/>
-			<Button text="Close" type="Reject" press="closeDialog"/>
+			<Button text="Accept" type="Accept" press="closeDialog"/>
+			<!-- <Button text="Close" type="Reject" press="closeDialog"/> -->
 		</buttons>
 		<HBox justifyContent="Start" alignItems="Center" class="stateDescriptionHBox">
 			<Label text="State Description: " design="Bold" class="stateDescription"></Label>

@@ -60,32 +60,38 @@ public class LogGameEditor extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
 		try {
 			available.acquire();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		String text = request.getParameter("saveData");
-		Gson gson = new Gson();
-		LoadSaveDataJSON saveData = gson.fromJson(text, LoadSaveDataJSON.class);
 		
-		//Check to see if log data already exsits
-		EditorLog editorLog = entityManager.find(EditorLog.class, saveData.game.getGameId());
-		
-		if(editorLog == null) {
-			entityManager.getTransaction().begin();
-			editorLog = new EditorLog(saveData.game.getGameId(), 0);
-			entityManager.persist(editorLog);
-			entityManager.getTransaction().commit();
-		} else {
-			editorLog.setLogCount(editorLog.getLogCount() + 1);
-			entityManager.getTransaction().begin();
-			entityManager.merge(editorLog);
-			entityManager.getTransaction().commit();
+		try {
+			String text = request.getParameter("saveData");
+			Gson gson = new Gson();
+			LoadSaveDataJSON saveData = gson.fromJson(text, LoadSaveDataJSON.class);
+			
+			//Check to see if log data already exsits
+			EditorLog editorLog = entityManager.find(EditorLog.class, saveData.game.getGameId());
+			
+			if(editorLog == null) {
+				entityManager.getTransaction().begin();
+				editorLog = new EditorLog(saveData.game.getGameId(), 0);
+				entityManager.persist(editorLog);
+				entityManager.getTransaction().commit();
+			} else {
+				editorLog.setLogCount(editorLog.getLogCount() + 1);
+				entityManager.getTransaction().begin();
+				entityManager.merge(editorLog);
+				entityManager.getTransaction().commit();
+			}
+			
+			saveLogData(saveData, editorLog);
+		} catch (Exception e) {
+			
 		}
-		
-		saveLogData(saveData, editorLog);
 
 		response.setContentType("text/plain");
 		entityManager.clear();

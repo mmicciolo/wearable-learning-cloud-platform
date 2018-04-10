@@ -65,13 +65,19 @@ public class SaveGame extends HttpServlet {
 			e.printStackTrace();
 		}
 		String text = request.getParameter("saveData");
-		Gson gson = new Gson();
-		LoadSaveDataJSON saveData = gson.fromJson(text, LoadSaveDataJSON.class);
-		saveGame(saveData);
+		response.setContentType("text/plain");
+		
+		try {
+			Gson gson = new Gson();
+			LoadSaveDataJSON saveData = gson.fromJson(text, LoadSaveDataJSON.class);
+			saveGame(saveData);
+			response.setStatus(HttpServletResponse.SC_OK);
+		} catch (Exception e) {
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		
 		entityManager.close();
 		entityManagerFactory.close();
-		response.setContentType("text/plain");
-		response.setStatus(HttpServletResponse.SC_OK);
 		available.release();
 		// TODO Auto-generated method stub
 		//doGet(request, response);

@@ -74,11 +74,19 @@ public class LoadGame extends HttpServlet {
 		
 		Game game = entityManager.getReference(Game.class, gameId);
 		
-		response.setContentType("application/json");
-		response.setStatus(HttpServletResponse.SC_OK);
+		response.setContentType("text/plain");
+		//response.setContentType("application/json");
+		//response.setStatus(HttpServletResponse.SC_OK);
 
-		response.getWriter().println(loadGame(game));
-		response.getWriter().flush();
+		try {
+			response.setStatus(HttpServletResponse.SC_OK);
+			response.getWriter().println(loadGame(game));
+			response.getWriter().flush();
+		} catch(Exception e) {
+			response.setContentType("text/plain");
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			response.getWriter().flush();
+		}
 		
 		entityManager.clear();
 		

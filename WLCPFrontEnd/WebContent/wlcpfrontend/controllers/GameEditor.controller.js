@@ -232,7 +232,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		this.busy = new sap.m.BusyDialog();
 		this.busy.open();
 		
-		$.ajax({url: ODataModel.getWebAppURL() + "/LoadGame", type: 'POST',  dataType: 'application/json', data: 'gameId=' + this.gameModel.GameId, complete: $.proxy(this.loadSuccess, this)});
+		$.ajax({url: ODataModel.getWebAppURL() + "/LoadGame", type: 'POST',  dataType: 'text', data: 'gameId=' + this.gameModel.GameId, success: $.proxy(this.loadSuccess, this), error : $.proxy(this.loadError, this)});
 	},
 	
 	loadFromManager : function(gameInfo) {
@@ -249,7 +249,8 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 	
 	loadSuccess(data) {
 		
-		var loadedData = JSON.parse(data.responseText);
+		//var loadedData = JSON.parse(data.responseText);
+		var loadedData = JSON.parse(data);
 		
 		//Init jsPlumb
 		this.initJsPlumb();
@@ -287,6 +288,11 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 			this.stateList[i].onChange();
 		}
 	
+		this.busy.close();
+	},
+	
+	loadError : function() {
+		sap.m.MessageBox.error("There was an error loading the game!");
 		this.busy.close();
 	},
 
@@ -349,6 +355,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 	},
 	
 	saveError : function() {
+		this.busy.close();
 		sap.m.MessageBox.error("There was an error saving the game!");
 	},
 	

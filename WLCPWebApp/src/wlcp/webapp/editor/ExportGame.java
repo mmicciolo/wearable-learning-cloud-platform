@@ -1,5 +1,7 @@
 package wlcp.webapp.editor;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -88,7 +90,11 @@ public class ExportGame extends HttpServlet {
 		gameExport.connections = connections;
 		gameExport.transitions = transitions;
 		
-		FileOutputStream  fileOut = new FileOutputStream("C:/Users/Matt/git/wearable-learning-cloud-platform/WLCPGameServer/exports/" + gameId + ".wlcpgame");
+		File programLocation = new File(this.getServletContext().getRealPath(this.getServletContext().getContextPath()));
+		String finalProgramLocation = programLocation.getParentFile().getParent() + "/WLCPGameServer/exports/";
+		
+		FileOutputStream fileOut = new FileOutputStream(finalProgramLocation + gameId + ".wlcpgame");
+		//FileOutputStream fileOut = new FileOutputStream("C:/Users/Matt/git/wearable-learning-cloud-platform/WLCPGameServer/exports/" + gameId + ".wlcpgame");
 		ObjectOutputStream out = new ObjectOutputStream(fileOut);
 		out.writeObject(gameExport);
 		out.close();

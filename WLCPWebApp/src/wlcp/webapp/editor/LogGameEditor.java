@@ -152,12 +152,12 @@ public class LogGameEditor extends HttpServlet {
 			Map<String, SequenceButtonPress> sequenceButtonPresses = new HashMap<String, SequenceButtonPress>();
 			for(Map.Entry<String, SequenceButtonPress> entry : saveData.transitions[i].getSequenceButtonPresses().entrySet()) {
 				//sequenceButtonPresses.put(entry.getKey(), entry.getValue());
-				Transition t = new Transition(); t.setTransitionId(saveData.transitions[i].getTransitionId());
+				Transition t = new Transition(); t.setTransitionId(saveData.transitions[i].getTransitionId() + "_log_" + editorLog.getLogCount());
 				sequenceButtonPresses.put(entry.getKey(), new SequenceButtonPress(t, entry.getKey(), entry.getValue().getSequences()));
 			}
 			Map<String, KeyboardInput> keyboardInputs = new HashMap<String, KeyboardInput>();
 			for(Map.Entry<String, KeyboardInput> entry : saveData.transitions[i].getKeyboardInputs().entrySet()) {
-				Transition t = new Transition(); t.setTransitionId(saveData.transitions[i].getTransitionId());
+				Transition t = new Transition(); t.setTransitionId(saveData.transitions[i].getTransitionId() + "_log_" + editorLog.getLogCount());
 				keyboardInputs.put(entry.getKey(), new KeyboardInput(t, entry.getKey(), entry.getValue().getKeyboardInputs()));
 			}
 			while(entityManager.getTransaction().isActive()) {}

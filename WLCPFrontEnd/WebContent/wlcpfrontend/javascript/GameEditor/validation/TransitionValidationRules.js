@@ -100,40 +100,85 @@ var TransitionValidationRule = class TransitionValidationRule extends Validation
 				}
 				parentMask = parentMask | this.getActiveScopeMask(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, l);
 			}
-		    
-		    var playerReturn = true;
+			
+			var playerReturn = true;
 		    var playerReturns = [];
 		    
-		    //Check for player wide to team wide
-		    for(var team = 1; team < GameEditor.getEditorController().gameModel.TeamCount + 1; team++) {
-		    	for(var player = 1; player < GameEditor.getEditorController().gameModel.PlayersPerTeam + 1; player++) {
-		    		if(!this.getBit(parentMask, (GameEditor.getEditorController().gameModel.PlayersPerTeam * team) + player) == 0x01) {
-		    			playerReturn = false;
-	    	            break;
-		    	    }
-		    	}
-		    	if(playerReturn) {
-		    		playerReturns.push("Team " + team);
+		    var team = 1;
+			var player = 1;
+			var count = 1;
+			for(var n = 0; n < (GameEditor.getEditorController().gameModel.TeamCount * GameEditor.getEditorController().gameModel.PlayersPerTeam); n++) {
+				if(!this.getBit(parentMask, n + GameEditor.getEditorController().gameModel.TeamCount + 1) == 0x01) {
+	    			//playerReturn2 = false;
+//    	            break;
+	    	    } else {
+	    	    	count++;
+	    	    }
+				if(count == GameEditor.getEditorController().gameModel.PlayersPerTeam + 1) {
+					playerReturns.push("Team " + team);
 		    		for(var player = 1; player < GameEditor.getEditorController().gameModel.PlayersPerTeam + 1; player++) {
 		    			playerReturns.push("Team " + team + " Player " + player);
 		    		}
-		    	} else {
-		    		playerReturn = true;
-		    	}
-		    }
-		    
+				}
+//			    if(playerReturn2) {
+//		    		playerReturns2.push("Team " + team);
+//		    		for(var player = 1; player < GameEditor.getEditorController().gameModel.PlayersPerTeam + 1; player++) {
+//		    			playerReturns2.push("Team " + team + " Player " + player);
+//		    		}
+//		    	} else {
+//		    		playerReturn2 = true;
+//		    	}
+				if((n + 1) % GameEditor.getEditorController().gameModel.PlayersPerTeam == 0 && GameEditor.getEditorController().gameModel.TeamCount != 1 || GameEditor.getEditorController().gameModel.PlayersPerTeam == 1) { team ++; player = 1; count = 1; } else { player++; }
+			}
+		    	    
 		    if(playerReturns.length > 0) {
 				parentMask = parentMask | this.getActiveScopeMask(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, playerReturns);
 		    }
+		    
+//		    var playerReturn = true;
+//		    var playerReturns = [];
+//		    
+//		    //Check for player wide to team wide
+//		    for(var team = 1; team < GameEditor.getEditorController().gameModel.TeamCount + 1; team++) {
+//		    	for(var player = 1; player < GameEditor.getEditorController().gameModel.PlayersPerTeam + 1; player++) {
+//		    		if(!this.getBit(parentMask, (GameEditor.getEditorController().gameModel.PlayersPerTeam * team) + player) == 0x01) {
+//		    			playerReturn = false;
+//	    	            break;
+//		    	    }
+//		    	}
+//		    	if(playerReturn) {
+//		    		playerReturns.push("Team " + team);
+//		    		for(var player = 1; player < GameEditor.getEditorController().gameModel.PlayersPerTeam + 1; player++) {
+//		    			playerReturns.push("Team " + team + " Player " + player);
+//		    		}
+//		    	} else {
+//		    		playerReturn = true;
+//		    	}
+//		    }
+//		    
+//		    if(playerReturns.length > 0) {
+//				parentMask = parentMask | this.getActiveScopeMask(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, playerReturns);
+//		    }
 		  
 			//Get the active scope masks
 			var activeScopeMasks = this.getActiveScopeMasks(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, orMaskAll);
 			
+			var toGameWideMask = 0;
+			for(var n = 1; n < GameEditor.getEditorController().gameModel.TeamCount + (GameEditor.getEditorController().gameModel.TeamCount * GameEditor.getEditorController().gameModel.PlayersPerTeam) + 1; n++) {
+				toGameWideMask = this.setBit(toGameWideMask, n);
+			}
+			
 		    //Takes care of team to game wide
 		    //Takes care of player to game wide
-		    if((parentMask & 8190) == 8190) {
+		    if((parentMask & toGameWideMask) == toGameWideMask) {
 		    	parentMask = 0xffffffff;
 		    }
+			
+		    //Takes care of team to game wide
+		    //Takes care of player to game wide
+//		    if((parentMask & 8190) == 8190) {
+//		    	parentMask = 0xffffffff;
+//		    }
 
 			//Get the active scope masks
 			var activeScopeMasks = this.getActiveScopeMasks(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, orMaskAll);
@@ -307,7 +352,7 @@ var TransitionValidationRule = class TransitionValidationRule extends Validation
 	}
 	
 	getActiveScopeMasks(teamCount, playersPerTeam, activeMask) {
-		    
+	    
 	    var scopeMasks = [];
 	    
 	    //Check for game wide
@@ -320,39 +365,121 @@ var TransitionValidationRule = class TransitionValidationRule extends Validation
 	    //Check for team wide 
 	    for(var i = 1; i < teamCount + 1; i++) {
 	      if(this.getBit(activeMask, i) == 0x01) {
-	        var tempMask = 0;
-	        for(var n = 1; n < teamCount + (teamCount * playersPerTeam) + 1; n++) {
-	          if(!((n >= ((teamCount * i) + 1)) && (n < (teamCount * i) + 1 + playersPerTeam))) {
-	            tempMask = this.setBit(tempMask, n);
-	          }
-	        }
+//	        var tempMask = 0;
+//	        for(var n = 1; n < teamCount + (teamCount * playersPerTeam) + 1; n++) {
+//	          if(!((n >= ((teamCount * i) + 1)) && (n < (teamCount * i) + 1 + playersPerTeam))) {
+//	            tempMask = this.setBit(tempMask, n);
+//	          }
+//	        }
+		    var tempMask = 0;
+		    for(var n = 1; n < teamCount + 1; n++) {
+		    	tempMask = this.setBit(tempMask, n);
+		    }
+			var team = 1;
+			var player = 1;
+			for(var n = 0; n < (teamCount * playersPerTeam); n++) {
+				if(i != team) {
+					tempMask = this.setBit(tempMask, n + teamCount + 1);
+				}
+			    if((n + 1) % playersPerTeam == 0 && teamCount != 1 || playersPerTeam == 1) { team ++; player = 1; } else { player++; }
+		      }	  
 	       scopeMasks.push(tempMask);
 	      }
 	    }
 	    
 	    //Check for player wide
-	    for(var i = 1; i < teamCount + 1; i++) {
-	      for(var n = 1; n < playersPerTeam + 1; n++) {
-	        if(this.getBit(activeMask, (teamCount * i) + n) == 0x01) {
-	          var tempMask = 0;
-	          var found = false;
-	          for(var j = 1; j < teamCount + (teamCount * playersPerTeam) + 1; j++) {
-	            if(j != i) {
-	              tempMask = this.setBit(tempMask, j);
-	            } else {
-	              found = true;
-	            }
-	          }
-	          if(found) {
-	            scopeMasks.push(tempMask);
-	            break;
-	          }
-	        }
-	      }
-	    }
+		var team = 1;
+		var player = 1;
+		for(var i = 0; i < (teamCount * playersPerTeam); i++) {
+			if(this.getBit(activeMask, i + teamCount + 1) == 0x01) {
+				var tempMask = 0;
+		        var found = false;
+		        for(var j = 1; j < teamCount + (teamCount * playersPerTeam) + 1; j++) {
+		          if(j != team) {
+		            tempMask = this.setBit(tempMask, j);
+		          } else {
+		            found = true;
+		          }
+		        }
+		        if(found) {
+		          scopeMasks.push(tempMask);
+		          //team++;
+		          //break;
+		        }
+			}
+			//if((i + 1) % teamCount == 0 && teamCount != 1 || playersPerTeam == 1) { team++; player = 1;} else { player++; }
+			if((i + 1) % playersPerTeam == 0 && teamCount != 1 || playersPerTeam == 1) { team ++; player = 1; } else { player++; }
+		}
+//	    for(var i = 1; i < teamCount + 1; i++) {
+//	      for(var n = 1; n < playersPerTeam + 1; n++) {
+//	        if(this.getBit(activeMask, (teamCount * i) + n) == 0x01) {
+//	          var tempMask = 0;
+//	          var found = false;
+//	          for(var j = 1; j < teamCount + (teamCount * playersPerTeam) + 1; j++) {
+//	            if(j != i) {
+//	              tempMask = this.setBit(tempMask, j);
+//	            } else {
+//	              found = true;
+//	            }
+//	          }
+//	          if(found) {
+//	            scopeMasks.push(tempMask);
+//	            break;
+//	          }
+//	        }
+//	      }
+//	    }
 	    
 	    return scopeMasks;
 	}
+	
+//	getActiveScopeMasks(teamCount, playersPerTeam, activeMask) {
+//		    
+//	    var scopeMasks = [];
+//	    
+//	    //Check for game wide
+//	    if(this.getBit(activeMask, 0)) {
+//	      scopeMasks.push(0x01);
+//	    }
+//	    
+//	    var teamReturn = true;
+//	    
+//	    //Check for team wide 
+//	    for(var i = 1; i < teamCount + 1; i++) {
+//	      if(this.getBit(activeMask, i) == 0x01) {
+//	        var tempMask = 0;
+//	        for(var n = 1; n < teamCount + (teamCount * playersPerTeam) + 1; n++) {
+//	          if(!((n >= ((teamCount * i) + 1)) && (n < (teamCount * i) + 1 + playersPerTeam))) {
+//	            tempMask = this.setBit(tempMask, n);
+//	          }
+//	        }
+//	       scopeMasks.push(tempMask);
+//	      }
+//	    }
+//	    
+//	    //Check for player wide
+//	    for(var i = 1; i < teamCount + 1; i++) {
+//	      for(var n = 1; n < playersPerTeam + 1; n++) {
+//	        if(this.getBit(activeMask, (teamCount * i) + n) == 0x01) {
+//	          var tempMask = 0;
+//	          var found = false;
+//	          for(var j = 1; j < teamCount + (teamCount * playersPerTeam) + 1; j++) {
+//	            if(j != i) {
+//	              tempMask = this.setBit(tempMask, j);
+//	            } else {
+//	              found = true;
+//	            }
+//	          }
+//	          if(found) {
+//	            scopeMasks.push(tempMask);
+//	            break;
+//	          }
+//	        }
+//	      }
+//	    }
+//	    
+//	    return scopeMasks;
+//	}
 	  
     andScopeMasks(activeScopeMasks) {
 	    var returnScope = 0xffffffff;

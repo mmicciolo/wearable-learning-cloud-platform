@@ -238,7 +238,9 @@ public class GameInstanceTask extends Task implements ITask {
 			for(Player player : players) {
 				if(player.teamPlayer.team == connectPacket.getTeamNumber()) { count++; }
 			}
-			if(count >= game.getTeamCount() + 1) {
+			
+			//Check if the team is full
+			if(count >= game.getPlayersPerTeam() + 1) {
 				//Team is full, handle
 				//Send the packet
 				packetDistributor.AddPacketToSend(new ConnectRejectedPacket(ConnectRejectedPacket.ConnectRejectedErrorCode.TEAM_FULL), packetClientData.clientData);
@@ -424,13 +426,13 @@ public class GameInstanceTask extends Task implements ITask {
 		}
 		
 		//Loop through the teams
-		int[] playerArray = new int[game.getPlayersPerTeam()];
+		int[] teamArray = new int[game.getTeamCount()];
 		for(int i = 0; i < game.getTeamCount(); i++) {
 			try {
 				available.acquire();
 				for(Player p : players) {
 					if(p.teamPlayer.team == i) {
-						playerArray[p.teamPlayer.team - 1]++;
+						teamArray[p.teamPlayer.team - 1]++;
 					}
 				}
 				available.release();
@@ -442,8 +444,8 @@ public class GameInstanceTask extends Task implements ITask {
 		
 		//Add the teams
 		List<Byte> gameTeams = new ArrayList<Byte>();
-		for(int i = 0; i < playerArray.length; i++) {
-			if(playerArray[i] < game.getPlayersPerTeam()) {
+		for(int i = 0; i < teamArray.length; i++) {
+			if(teamArray[i] < game.getPlayersPerTeam()) {
 				gameTeams.add((byte)(i + 1));
 			}
 		}

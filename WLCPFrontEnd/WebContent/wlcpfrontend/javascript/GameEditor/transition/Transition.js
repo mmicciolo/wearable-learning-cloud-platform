@@ -9,6 +9,7 @@ var Transition = class Transition {
 		this.width = 0;
 		this.height = 0;
 		this.connection = connection;
+		this.wlcpConnection = null;
 		this.overlayId = overlayId;
 		this.htmlId = "";
 		this.gameEditor = gameEditor;

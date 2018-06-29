@@ -137,7 +137,12 @@ var ConnectionValidationSuccess = class ConnectionValidationSuccess extends Vali
 		} else if(neighborloopBack) {
 			sap.m.MessageBox.error("You cannot loop back to a neighbor.");
 			this.removeConnection(validationData);
+			return;
 		}
+		
+		//Store the connection in the states
+		state.inputConnections.push(validationData);
+		state2.outputConnections.push(validationData);
 
 		//Tell the state to update
 		this.getState(validationData.connectionTo).onChange();

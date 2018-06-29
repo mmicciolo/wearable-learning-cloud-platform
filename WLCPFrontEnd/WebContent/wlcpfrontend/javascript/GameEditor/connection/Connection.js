@@ -7,6 +7,7 @@ var Connection = class Connection {
 		this.connectionFrom = connectionFrom;
 		this.connectionTo = connectionTo;
 		this.connectionId = connectionId;
+		this.transition = null;
 		this.isLoopBack = false;
 		this.validationCounter = -1;
 		this.validationRules = [];
@@ -59,6 +60,22 @@ var Connection = class Connection {
 				//Remove it
 				GameEditor.getEditorController().transitionList[i].removeTransition(sap.m.MessageBox.Action.OK);
 				break;
+			}
+		}
+		
+		//Remove ourselves from states
+		for(var i = 0; i < GameEditor.getEditorController().stateList.length; i++) {
+			for(var n = 0; n < GameEditor.getEditorController().stateList[i].inputConnections.length; n++) {
+				if(GameEditor.getEditorController().stateList[i].inputConnections[n].connectionId == this.connectionId) {
+					GameEditor.getEditorController().stateList[i].inputConnections.splice(n, 1);
+					n--;
+				}
+			}
+			for(var n = 0; n < GameEditor.getEditorController().stateList[i].outputConnections.length; n++) {
+				if(GameEditor.getEditorController().stateList[i].outputConnections[n].connectionId == this.connectionId) {
+					GameEditor.getEditorController().stateList[i].outputConnections.splice(n, 1);
+					n--;
+				}
 			}
 		}
 		

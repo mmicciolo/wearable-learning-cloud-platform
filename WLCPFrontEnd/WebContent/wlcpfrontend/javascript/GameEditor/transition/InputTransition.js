@@ -407,6 +407,9 @@ var InputTransition = class InputTransition extends Transition {
 			//Remove it from the list
 			GameEditor.getEditorController().transitionList.splice(GameEditor.getEditorController().transitionList.indexOf(this), 1);
 			
+			//Remove the connections pointer to us
+			this.wlcpConnection.transition = null;
+			
 	    	//Revalidate the transitions
 	    	for(var i = 0; i < GameEditor.getEditorController().transitionList.length; i++) {
 	    		for(var n = 0; n < GameEditor.getEditorController().transitionList[i].validationRules.length; n++) {

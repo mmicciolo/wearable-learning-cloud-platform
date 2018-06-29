@@ -118,6 +118,13 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		if(connection != null) {
 			var inputTransition = new InputTransition("transition", connection, this.createTransitionId(), this);
 			this.transitionList.push(inputTransition);
+			for(var i = 0; i < this.connectionList.length; i++) {
+				if(this.connectionList[i].connectionId == connection.id) {
+					this.connectionList[i].transition = inputTransition;
+					inputTransition.wlcpConnection = this.connectionList[i];
+					break;
+				}
+			}
 			inputTransition.onChange(connection);
 			for(var i = 0; i < this.stateList.length; i++) {
 				if(this.stateList[i].htmlId == connection.targetId) {

@@ -143,6 +143,10 @@ var ConnectionValidationSuccess = class ConnectionValidationSuccess extends Vali
 		//Store the connection in the states
 		state.inputConnections.push(validationData);
 		state2.outputConnections.push(validationData);
+		
+		//Store the input and output state in the connection
+		validationData.connectionToState = state;
+		validationData.connectionFromState = state2;
 
 		//Tell the state to update
 		this.getState(validationData.connectionTo).onChange();

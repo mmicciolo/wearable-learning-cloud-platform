@@ -2,11 +2,13 @@ package wlcp.model.master.state;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.*;
 
 import wlcp.model.master.Game;
+import wlcp.model.master.connection.Connection;
 
 /**
  * Entity implementation class for Entity: OutputState
@@ -34,8 +36,8 @@ public class OutputState extends State implements Serializable {
 		setStateType(StateType.OUTPUT_STATE);
 	}
 	
-	public OutputState(String stateId, Game game, StateType stateType, Float positionX, Float positionY, String description, Map<String, String> displayText) {
-		super(stateId, game, stateType, positionX, positionY);
+	public OutputState(String stateId, Game game, StateType stateType, Float positionX, Float positionY, List<Connection> inputConnections, List<Connection> outputConnections, String description, Map<String, String> displayText) {
+		super(stateId, game, stateType, positionX, positionY, inputConnections, outputConnections);
 		this.description = description;
 		this.displayText = displayText;
 	}

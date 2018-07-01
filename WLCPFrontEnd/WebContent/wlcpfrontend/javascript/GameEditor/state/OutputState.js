@@ -289,13 +289,29 @@ var OutputState = class OutputState extends State {
 			}
 		}
 		
+		var tempInputConnections = [];
+		for(var i = 0; i < this.inputConnections.length; i++) {
+			tempInputConnections.push({
+				connectionId : this.inputConnections[i].connectionId
+			});
+		}
+		
+		var tempOutputConnections = [];
+		for(var i = 0; i < this.outputConnections.length; i++) {
+			tempOutputConnections.push({
+				connectionId : this.outputConnections[i].connectionId
+			});
+		}
+		
 		var saveData = {
 			stateId : this.htmlId,
 			positionX : this.positionX,
 			positionY : this.positionY,
 			stateType : "OUTPUT_STATE",
 			description : this.text,
-			displayText : outputStateData
+			displayText : outputStateData,
+			inputConnections : tempInputConnections,
+			outputConnections : tempOutputConnections
 		}
 		
 		return saveData;

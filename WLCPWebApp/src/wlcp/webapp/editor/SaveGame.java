@@ -23,6 +23,7 @@ import wlcp.model.master.Game;
 import wlcp.model.master.connection.Connection;
 import wlcp.model.master.state.OutputState;
 import wlcp.model.master.state.StartState;
+import wlcp.model.master.state.State;
 import wlcp.model.master.state.StateType;
 import wlcp.model.master.transition.KeyboardInput;
 import wlcp.model.master.transition.SequenceButtonPress;
@@ -114,7 +115,7 @@ public class SaveGame extends HttpServlet {
 			switch(saveData.states[i].getStateType()) {
 			case START_STATE:
 				entityManager.getTransaction().begin();
-				entityManager.merge(new StartState(saveData.states[i].getStateId(), saveData.game, StateType.START_STATE, saveData.states[i].getPositionX(), saveData.states[i].getPositionY()));
+				entityManager.merge(new StartState(saveData.states[i].getStateId(), saveData.game, StateType.START_STATE, saveData.states[i].getPositionX(), saveData.states[i].getPositionY(), saveData.states[i].getInputConnections(), saveData.states[i].getOutputConnections()));
 				entityManager.getTransaction().commit();
 				break;
 			case OUTPUT_STATE:
@@ -123,7 +124,7 @@ public class SaveGame extends HttpServlet {
 					displayText.put(entry.getKey(), entry.getValue());
 				}
 				entityManager.getTransaction().begin();
-				entityManager.merge(new OutputState(saveData.states[i].getStateId(), saveData.game, StateType.OUTPUT_STATE, saveData.states[i].getPositionX(), saveData.states[i].getPositionY(), saveData.states[i].getDescription(), displayText));
+				entityManager.merge(new OutputState(saveData.states[i].getStateId(), saveData.game, StateType.OUTPUT_STATE, saveData.states[i].getPositionX(), saveData.states[i].getPositionY(), saveData.states[i].getInputConnections(), saveData.states[i].getOutputConnections(), saveData.states[i].getDescription(), displayText));
 				entityManager.getTransaction().commit();
 				break;
 			}
@@ -132,7 +133,7 @@ public class SaveGame extends HttpServlet {
 		//Loop through all of the connections
 		for(int i = 0; i < saveData.connections.length; i++) {
 			entityManager.getTransaction().begin();
-			entityManager.merge(new Connection(saveData.connections[i].getConnectionId(), saveData.game, saveData.connections[i].getConnectionFrom(), saveData.connections[i].getConnectionTo(), saveData.connections[i].getBackwardsLoop()));
+			entityManager.merge(new Connection(saveData.connections[i].getConnectionId(), saveData.game, saveData.connections[i].getConnectionFrom(), saveData.connections[i].getConnectionTo(), saveData.connections[i].getBackwardsLoop(), entityManager.getReference(State.class, saveData.connections[i].getConnectionFromState().getStateId()), entityManager.getReference(State.class, saveData.connections[i].getConnectionToState().getStateId()), null));
 			entityManager.getTransaction().commit();
 		}
 		
@@ -158,9 +159,22 @@ public class SaveGame extends HttpServlet {
 				keyboardInputs.put(entry.getKey(), new KeyboardInput(t, entry.getKey(), entry.getValue().getKeyboardInputs()));
 			}
 			entityManager.getTransaction().begin();
-			entityManager.merge(new Transition(saveData.transitions[i].getTransitionId(), saveData.game, saveData.transitions[i].getConnection(), new HashMap<String, String>(), new HashMap<String, SingleButtonPress>(), new HashMap<String, SequenceButtonPress>(), new HashMap<String, KeyboardInput>()));
+			entityManager.merge(new Transition(saveData.transitions[i].getTransitionId(), saveData.game, saveData.transitions[i].getConnection(), new HashMap<String, String>(), new HashMap<String, SingleButtonPress>(), new HashMap<String, SequenceButtonPress>(), new HashMap<String, KeyboardInput>(), entityManager.getReference(Connection.class, saveData.transitions[i].getConnectionJPA().getConnectionId())));
 			entityManager.flush();
-			entityManager.merge(new Transition(saveData.transitions[i].getTransitionId(), saveData.game, saveData.transitions[i].getConnection(), activeTransitions, singleButtonPresses, sequenceButtonPresses, keyboardInputs));
+			entityManager.merge(new Transition(saveData.transitions[i].getTransitionId(), saveData.game, saveData.transitions[i].getConnection(), activeTransitions, singleButtonPresses, sequenceButtonPresses, keyboardInputs, entityManager.getReference(Connection.class, saveData.transitions[i].getConnectionJPA().getConnectionId())));
+			entityManager.getTransaction().commit();
+		}
+		
+		//Loop through all of the connections again to add transition
+		for(int i = 0; i < saveData.connections.length; i++) {
+			Transition transition = null;
+			try {
+				transition = entityManager.getReference(Transition.class, saveData.connections[i].getTransition().getTransitionId());
+			} catch(Exception e) {
+				
+			}
+			entityManager.getTransaction().begin();
+			entityManager.merge(new Connection(saveData.connections[i].getConnectionId(), saveData.game, saveData.connections[i].getConnectionFrom(), saveData.connections[i].getConnectionTo(), saveData.connections[i].getBackwardsLoop(), entityManager.getReference(State.class, saveData.connections[i].getConnectionFromState().getStateId()), entityManager.getReference(State.class, saveData.connections[i].getConnectionToState().getStateId()), transition));
 			entityManager.getTransaction().commit();
 		}
 		

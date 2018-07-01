@@ -1,6 +1,7 @@
 package wlcp.webapp.editor;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,7 @@ import wlcp.model.master.Game;
 import wlcp.model.master.connection.Connection;
 import wlcp.model.master.state.OutputState;
 import wlcp.model.master.state.StartState;
+import wlcp.model.master.state.State;
 import wlcp.model.master.state.StateType;
 import wlcp.model.master.transition.KeyboardInput;
 import wlcp.model.master.transition.SequenceButtonPress;
@@ -122,18 +124,64 @@ public class LoadGame extends HttpServlet {
 		
 		for(StartState state : startStates) {
 			state.setGame(null);
+			for(Connection c : state.getInputConnections()) {
+				c.setGame(null);
+				State connectionFromState = new State();
+				connectionFromState.setStateId(c.getConnectionFromState().getStateId());
+				State connectionToState = new State();
+				connectionToState.setStateId(c.getConnectionToState().getStateId());
+				c.setConnectionFromState(connectionFromState);
+				c.setConnectionToState(connectionToState);
+			}
+			for(Connection c : state.getOutputConnections()) {
+				c.setGame(null);
+				State connectionFromState = new State();
+				connectionFromState.setStateId(c.getConnectionFromState().getStateId());
+				State connectionToState = new State();
+				connectionToState.setStateId(c.getConnectionToState().getStateId());
+				c.setConnectionFromState(connectionFromState);
+				c.setConnectionToState(connectionToState);
+			}
 		}
 		
 		for(OutputState state : outputStates) {
 			state.setGame(null);
+			for(Connection c : state.getInputConnections()) {
+				c.setGame(null);
+				State connectionFromState = new State();
+				connectionFromState.setStateId(c.getConnectionFromState().getStateId());
+				State connectionToState = new State();
+				connectionToState.setStateId(c.getConnectionToState().getStateId());
+				c.setConnectionFromState(connectionFromState);
+				c.setConnectionToState(connectionToState);
+			}
+			for(Connection c : state.getOutputConnections()) {
+				c.setGame(null);
+				State connectionFromState = new State();
+				connectionFromState.setStateId(c.getConnectionFromState().getStateId());
+				State connectionToState = new State();
+				connectionToState.setStateId(c.getConnectionToState().getStateId());
+				c.setConnectionFromState(connectionFromState);
+				c.setConnectionToState(connectionToState);
+			}
 		}
 		
 		for(Connection connection : connections) {
 			connection.setGame(null);
+			if(connection.getTransition() != null) {
+				Transition transition = new Transition();
+				transition.setTransitionId(connection.getTransition().getTransitionId());
+				connection.setTransition(transition);
+			}
 		}
 		
 		for(Transition transition : transitions) {
 			transition.setGame(null);
+			if(transition.getConnection() != null) {
+				Connection connection = new Connection();
+				connection.setConnectionId(transition.getConnectionJPA().getConnectionId());
+				transition.setConnectionJPA(connection);
+			}
 			for(Map.Entry<String, SequenceButtonPress> entry : transition.getSequenceButtonPresses().entrySet()) {
 				entry.getValue().setTransition(null);
 			}
@@ -144,7 +192,7 @@ public class LoadGame extends HttpServlet {
 		
 		OutputState[] outputStateArray = new OutputState[startStates.size() + outputStates.size()];
 		outputStateArray = outputStates.toArray(outputStateArray);
-		outputStateArray[outputStateArray.length - 1] = new OutputState(startStates.get(0).getStateId(), startStates.get(0).getGame(), StateType.START_STATE, startStates.get(0).getPositionX(), startStates.get(0).getPositionY(), "", null);
+		outputStateArray[outputStateArray.length - 1] = new OutputState(startStates.get(0).getStateId(), startStates.get(0).getGame(), StateType.START_STATE, startStates.get(0).getPositionX(), startStates.get(0).getPositionY(), startStates.get(0).getInputConnections(), startStates.get(0).getOutputConnections(), "", null);
 		
 		Connection[] connectionArray = new Connection[connections.size()];
 		connectionArray = connections.toArray(connectionArray);

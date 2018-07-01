@@ -39,11 +39,19 @@ var StartState = class StartState extends State {
 	}
 	
 	save() {
+		var tempOutputConnections = [];
+		for(var i = 0; i < this.outputConnections.length; i++) {
+			tempOutputConnections.push({
+				connectionId : this.outputConnections[i].connectionId
+			});
+		}
 		var saveData = {
 			stateId : this.htmlId,
 			positionX : this.positionX,
 			positionY : this.positionY,
-			stateType : "START_STATE"
+			stateType : "START_STATE",
+			inputConnections : [],
+			outputConnections : tempOutputConnections
 		}
 		return saveData;
 	}

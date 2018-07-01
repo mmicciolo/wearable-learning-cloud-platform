@@ -51,6 +51,10 @@ public class Transition implements Serializable {
 	@OneToMany(mappedBy="transition", orphanRemoval = true, cascade = CascadeType.PERSIST)
 	@MapKey(name = "scope")
 	private Map<String, KeyboardInput> keyboardInputs = new HashMap<String, KeyboardInput>();
+	
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(name = "CONNECTION_JPA")
+	private Connection connectionJPA;
 
 	public Transition() {
 		super();
@@ -59,7 +63,8 @@ public class Transition implements Serializable {
 	public Transition(String transitionId, Game game, String connection, Map<String, String> activeTransitions,
 			Map<String, SingleButtonPress> singleButtonPresses,
 			Map<String, SequenceButtonPress> sequenceButtonPresses,
-			Map<String, KeyboardInput> keyboardInputs) {
+			Map<String, KeyboardInput> keyboardInputs,
+			Connection connectionJPA) {
 		super();
 		this.transitionId = transitionId;
 		this.game = game;
@@ -68,6 +73,7 @@ public class Transition implements Serializable {
 		this.singleButtonPresses = singleButtonPresses;
 		this.sequenceButtonPresses = sequenceButtonPresses;
 		this.keyboardInputs = keyboardInputs;
+		this.connectionJPA = connectionJPA;
 	}
 
 	public String getTransitionId() {
@@ -124,6 +130,14 @@ public class Transition implements Serializable {
 
 	public void setKeyboardInputs(Map<String, KeyboardInput> keyboardInputs) {
 		this.keyboardInputs = keyboardInputs;
+	}
+
+	public Connection getConnectionJPA() {
+		return connectionJPA;
+	}
+
+	public void setConnectionJPA(Connection connectionJPA) {
+		this.connectionJPA = connectionJPA;
 	}
 
 }

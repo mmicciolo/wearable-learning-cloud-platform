@@ -92,7 +92,16 @@ var Connection = class Connection {
 			connectionId : this.connectionId,
 			connectionFrom : this.connectionFrom,
 			connectionTo : this.connectionTo,
-			backwardsLoop : this.isLoopBack
+			backwardsLoop : this.isLoopBack,
+			connectionFromState : {
+				stateId : this.connectionFromState.htmlId
+			},
+			connectionToState : {
+				stateId : this.connectionToState.htmlId
+			},
+			transition : {
+				transitionId : this.transition == null ? "" : this.transition.overlayId
+			}
 		}
 		return saveData;
 	}

@@ -1,9 +1,12 @@
 package wlcp.model.master.state;
 
 import java.io.Serializable;
+import java.util.List;
+
 import javax.persistence.*;
 
 import wlcp.model.master.Game;
+import wlcp.model.master.connection.Connection;
 
 /**
  * Entity implementation class for Entity: StartState
@@ -22,8 +25,8 @@ public class StartState extends State implements Serializable {
 		setStateType(StateType.START_STATE);
 	}
 	
-	public StartState(String stateId, Game game, StateType stateType, Float positionX, Float positionY) {
-		super(stateId, game, stateType, positionX, positionY);
+	public StartState(String stateId, Game game, StateType stateType, Float positionX, Float positionY, List<Connection> inputConnections, List<Connection> outputConnections) {
+		super(stateId, game, stateType, positionX, positionY, inputConnections, outputConnections);
 	}
    
 }

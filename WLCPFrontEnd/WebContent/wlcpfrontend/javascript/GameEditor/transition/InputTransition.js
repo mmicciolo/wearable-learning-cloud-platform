@@ -242,7 +242,10 @@ var InputTransition = class InputTransition extends Transition {
 			activeTransitions : activeTransitions,
 			singleButtonPresses : singleButtonPresses,
 			sequenceButtonPresses : sequenceButtonPresses,
-			keyboardInputs : keyboardInputs
+			keyboardInputs : keyboardInputs,
+			connectionJPA : {
+				connectionId : this.wlcpConnection.connectionId
+			}
 		}
 		
 		return saveData;

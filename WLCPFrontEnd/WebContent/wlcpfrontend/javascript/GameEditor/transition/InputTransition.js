@@ -42,17 +42,17 @@ var InputTransition = class InputTransition extends Transition {
 	}
 	
 	onChange(oEvent) {
-		for(var i = 0; i < this.validationRules.length; i++) {
-			this.validationRules[i].validate(this);
-		}
-    	//Revalidate the states
-    	for(var i = 0; i < GameEditor.getEditorController().stateList.length; i++) {
-    		if(!GameEditor.getEditorController().stateList[i].htmlId.includes("start")) {
-        		for(var n = 0; n < GameEditor.getEditorController().stateList[i].validationRules.length; n++) {
-        			GameEditor.getEditorController().stateList[i].validationRules[n].validate(GameEditor.getEditorController().stateList[i]);
-        		}
-    		}
-    	}
+//		for(var i = 0; i < this.validationRules.length; i++) {
+//			this.validationRules[i].validate(this);
+//		}
+//    	//Revalidate the states
+//    	for(var i = 0; i < GameEditor.getEditorController().stateList.length; i++) {
+//    		if(!GameEditor.getEditorController().stateList[i].htmlId.includes("start")) {
+//        		for(var n = 0; n < GameEditor.getEditorController().stateList[i].validationRules.length; n++) {
+//        			GameEditor.getEditorController().stateList[i].validationRules[n].validate(GameEditor.getEditorController().stateList[i]);
+//        		}
+//    		}
+//    	}
 	}
 	
 	setScope(bitMask, teamCount, playersPerTeam) {

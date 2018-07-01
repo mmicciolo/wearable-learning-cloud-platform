@@ -212,25 +212,25 @@ var OutputState = class OutputState extends State {
 	}
 	
     onChange(oEvent) {
-    	for(var i = 0; i < this.validationRules.length; i++) {
-    		this.validationRules[i].validate(this);
-    	}
-    	
-    	//Revalidate the transitions
-    	for(var i = 0; i < GameEditor.getEditorController().transitionList.length; i++) {
-    		for(var n = 0; n < GameEditor.getEditorController().transitionList[i].validationRules.length; n++) {
-    			GameEditor.getEditorController().transitionList[i].validationRules[n].validate(GameEditor.getEditorController().transitionList[i]);
-    		}
-    	}
-    	
-    	//Revalidate the states
-    	for(var i = 0; i < GameEditor.getEditorController().stateList.length; i++) {
-    		if(!GameEditor.getEditorController().stateList[i].htmlId.includes("start")) {
-        		for(var n = 0; n < GameEditor.getEditorController().stateList[i].validationRules.length; n++) {
-        			GameEditor.getEditorController().stateList[i].validationRules[n].validate(GameEditor.getEditorController().stateList[i]);
-        		}
-    		}
-    	}
+//    	for(var i = 0; i < this.validationRules.length; i++) {
+//    		this.validationRules[i].validate(this);
+//    	}
+//    	
+//    	//Revalidate the transitions
+//    	for(var i = 0; i < GameEditor.getEditorController().transitionList.length; i++) {
+//    		for(var n = 0; n < GameEditor.getEditorController().transitionList[i].validationRules.length; n++) {
+//    			GameEditor.getEditorController().transitionList[i].validationRules[n].validate(GameEditor.getEditorController().transitionList[i]);
+//    		}
+//    	}
+//    	
+//    	//Revalidate the states
+//    	for(var i = 0; i < GameEditor.getEditorController().stateList.length; i++) {
+//    		if(!GameEditor.getEditorController().stateList[i].htmlId.includes("start")) {
+//        		for(var n = 0; n < GameEditor.getEditorController().stateList[i].validationRules.length; n++) {
+//        			GameEditor.getEditorController().stateList[i].validationRules[n].validate(GameEditor.getEditorController().stateList[i]);
+//        		}
+//    		}
+//    	}
     }
     
     revalidate(state) {

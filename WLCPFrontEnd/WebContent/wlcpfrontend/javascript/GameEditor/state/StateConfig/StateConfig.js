@@ -21,6 +21,10 @@ var StateConfig = class StateConfig {
 		return null;
 	}
 	
+	getActiveScopes() {
+		return [];
+	}
+	
 	setLoadData(loadData) {
 		
 	}

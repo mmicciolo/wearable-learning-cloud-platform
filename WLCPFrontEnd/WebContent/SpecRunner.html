@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Jasmine Spec Runner v3.1.0</title>
+
+  <link rel="shortcut icon" type="image/png" href="wlcpfrontend/jasmine/lib/jasmine-3.1.0/jasmine_favicon.png">
+  <link rel="stylesheet" href="wlcpfrontend/jasmine/lib/jasmine-3.1.0/jasmine.css">
+
+  <script src="wlcpfrontend/jasmine/lib/jasmine-3.1.0/jasmine.js"></script>
+  <script src="wlcpfrontend/jasmine/lib/jasmine-3.1.0/jasmine-html.js"></script>
+  <script src="wlcpfrontend/jasmine/lib/jasmine-3.1.0/boot.js"></script>
+  
+
+  <!-- include source files here... -->
+  <script src="https://openui5.hana.ondemand.com/resources/sap-ui-core.js"
+	id="sap-ui-bootstrap"
+	data-sap-ui-libs="sap.m"
+	data-sap-ui-theme="sap_belize"
+	data-sap-ui-xx-bindingSyntax="complex">
+  </script>
+
+  <script src="index.js"></script>
+  <script>
+  Index.main();
+  </script>
+
+  <!-- include spec files here... -->
+  <script src="wlcpfrontend/jasmine/spec/GameEditorTestingHelpers.js"></script>
+  <script src="wlcpfrontend/jasmine/spec/ValidationEngineHelpersSpec.js"></script>
+
+</head>
+
+	<body class="sapUiBody" role="application">
+		<div id="content"></div>
+	</body>
+</html>

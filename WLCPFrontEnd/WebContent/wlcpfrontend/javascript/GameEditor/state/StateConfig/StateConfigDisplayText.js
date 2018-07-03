@@ -22,6 +22,21 @@ var StateConfigDisplayText = class StateConfigDisplayText extends StateConfig {
 		return sap.ui.xmlfragment("wlcpfrontend.fragments.GameEditor.States.OutputStateDisplayTextConfig", this);
 	}
 	
+	getActiveScopes() {
+		var activeScopes = [];
+		var iconTabs = this.state.modelJSON.iconTabs;
+		for(var i = 0; i < iconTabs.length; i++) {
+			for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
+				if(iconTabs[i].navigationContainerPages[n].text = "Display Text") {
+					if(iconTabs[i].navigationContainerPages[n].displayText != "") {
+						activeScopes.push(iconTabs[i].scope);
+					}
+				}
+			}
+		}
+		return activeScopes;
+	}
+	
 	setLoadData(loadData) {
 		var iconTabs = this.state.modelJSON.iconTabs;
 		for(var key in loadData.displayText) {

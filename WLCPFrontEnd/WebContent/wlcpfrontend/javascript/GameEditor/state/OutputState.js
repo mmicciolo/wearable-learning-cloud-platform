@@ -354,8 +354,15 @@ var OutputState = class OutputState extends State {
 	}
 	
 	getActiveScopes() {
+		var activeScopes = [];
 		for(var i = 0; i < this.stateConfigs.length; i++) {
-			this.stateConfigs[i].getActiveScopes();
+			var tempActiveScopes = this.stateConfigs[i].getActiveScopes();
+			for(var n = 0; n < tempActiveScopes.length; n++) {
+				if(activeScopes.indexOf(tempActiveScopes[n]) == -1) {
+					activeScopes.push(tempActiveScopes[n]);
+				}
+			}
 		}
+		return activeScopes;
 	}
 }

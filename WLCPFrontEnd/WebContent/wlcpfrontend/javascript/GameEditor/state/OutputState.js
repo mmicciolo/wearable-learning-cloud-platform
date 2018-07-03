@@ -50,7 +50,7 @@ var OutputState = class OutputState extends State {
 	}
 	
 	setupStateConfigs() {
-		this.stateConfigs.push(new StateConfigDisplayText());
+		this.stateConfigs.push(new StateConfigDisplayText(this));
 	}
 	
 	setupValidationRules() {
@@ -344,12 +344,18 @@ var OutputState = class OutputState extends State {
 		}
 		
 		for(var i = 0; i < this.stateConfigs.length; i++) {
-			var data = this.stateConfigs[i].getSaveData(this.modelJSON.iconTabs);
+			var data = this.stateConfigs[i].getSaveData();
 			for(var key in data) {
 				saveData[key] = data[key];
 			}
 		}
 		
 		return saveData;
+	}
+	
+	getActiveScopes() {
+		for(var i = 0; i < this.stateConfigs.length; i++) {
+			this.stateConfigs[i].getActiveScopes();
+		}
 	}
 }

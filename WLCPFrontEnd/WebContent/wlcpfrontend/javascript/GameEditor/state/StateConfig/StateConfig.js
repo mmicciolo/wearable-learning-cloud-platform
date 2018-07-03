@@ -1,8 +1,7 @@
 var StateConfig = class StateConfig {
 
-	constructor(modelName, model) {
-		this.modelName = modelName;
-		this.model = model
+	constructor(state) {
+		this.state = state;
 	}
 	
 	getNavigationListItem() {
@@ -22,11 +21,11 @@ var StateConfig = class StateConfig {
 		return null;
 	}
 	
-	setLoadData(loadData, iconTabs) {
+	setLoadData(loadData) {
 		
 	}
 	
-	getSaveData(iconTabs) {
+	getSaveData() {
 		return {};
 	}
 }

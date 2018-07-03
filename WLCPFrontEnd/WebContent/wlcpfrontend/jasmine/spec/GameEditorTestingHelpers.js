@@ -40,7 +40,7 @@ var GameEditorTestingHelpers = {
 		GameEditor.getEditorController().stateList.push(startState);
 		GameEditor.getEditorController().initToolbox();
 		
-		return startState.htmlId;
+		return startState;
 
 	},
 	
@@ -53,7 +53,7 @@ var GameEditorTestingHelpers = {
 		outputState.setPositionX(State.absoluteToRelativeX(x + 315, 150) + GameEditor.getScrollLeftOffset()); outputState.setPositionY(State.absoluteToRelativeY(y) + GameEditor.getScrollTopOffset());
 		outputState.draw();
 		GameEditor.getEditorController().stateList.push(outputState);
-		return outputState.htmlId;
+		return outputState;
 	},
 	
 	addConnection : function(sourceState, targetState) {
@@ -66,7 +66,13 @@ var GameEditorTestingHelpers = {
 		}
 		
 		GameEditor.getEditorController().connectionDropped(oEvent);
-		return GameEditor.getJsPlumbInstance().getConnections({source : oEvent.sourceId, target : oEvent.targetId})[0].id;
+		var connectionId = GameEditor.getJsPlumbInstance().getConnections({source : oEvent.sourceId, target : oEvent.targetId})[0].id;
+		for(var i = 0; i < GameEditor.getEditorController().connectionList.length; i++) {
+			if(GameEditor.getEditorController().connectionList[i].connectionId == connectionId) {
+				return GameEditor.getEditorController().connectionList[i];
+			}
+		}
+		return null;
 	}
 
 }

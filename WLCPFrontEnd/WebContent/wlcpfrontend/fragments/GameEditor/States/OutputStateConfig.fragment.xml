@@ -21,38 +21,13 @@
 				<IconTabFilter icon="{icon}" text="{scope}" key="{scope}">
 					<content>
 						<l:Splitter>					
-							<tnt:NavigationList class="navList">
+							<tnt:NavigationList class="navList" items="{path : 'navigationListItems', templateShareable:false}">
 								<tnt:layoutData><l:SplitterLayoutData size="202px" resizable="false"/></tnt:layoutData>
-								<tnt:NavigationListItem text="Display Text" icon="sap-icon://discussion-2" select="navigationSelected" key="Display Text"/>
-<!-- 								<tnt:NavigationListItem text="Display Image" icon="sap-icon://background" select="navigationSelected" key="Display Image"/>
-								<tnt:NavigationListItem text="Play Sound" icon="sap-icon://sound" select="navigationSelected"/>
-								<tnt:NavigationListItem text="Light" icon="sap-icon://lightbulb" select="navigationSelected"/> -->
+								<tnt:NavigationListItem text="{text}" icon="{icon}" select="navigationSelected" key="{text}"></tnt:NavigationListItem>
 							</tnt:NavigationList>
-							<NavContainer width="100%" height="500px">
+							<NavContainer width="100%" height="500px" pages="{path : 'navigationContainerPages', templateShareable:false}">
 								<layoutData><l:SplitterLayoutData minSize="500" resizable="false"/></layoutData>
-								<Page title="{scope} Display Text">
-									<FlexBox alignItems="Start" justifyContent="Center">
-										<items>
-											<Text text="Enter text to be displayed on the client screen..."/>
-										</items>
-									</FlexBox>
-									<FlexBox alignItems="Start" justifyContent="Center">
-										<items>
-											<TextArea rows="8" value="{displayText}" liveChange="onChange" valueLiveUpdate="true"/>
-										</items>
-									</FlexBox>
-								</Page>
-								<Page title="{scope} Display Image">
-									<FlexBox alignItems="Start" justifyContent="Center">
-										<items>
-											<l:VerticalLayout>
-												<Text text="Select an image file to uplaod and be displayed on the client screen..."/>
-												<u:FileUploader/>
-												<Button text="Upload File" press="handleUploadPress"/>
-											</l:VerticalLayout>
-										</items>
-									</FlexBox>
-								</Page>
+								<Page title="{title}"/>
 							</NavContainer>
 						</l:Splitter>
 					</content>

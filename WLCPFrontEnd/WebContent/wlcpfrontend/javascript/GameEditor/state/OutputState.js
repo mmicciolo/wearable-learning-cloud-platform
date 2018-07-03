@@ -6,22 +6,12 @@ var OutputState = class OutputState extends State {
 	
 	constructor(topColorClass, bottomColorClass, text, htmlId, jsPlumbInstance) {
 		super(topColorClass, bottomColorClass, text, htmlId, jsPlumbInstance);
-		this.inputEndPoint = {
-				 endpoint:"Dot",
-				 isTarget:true,
-				 isSource:false,
-				 maxConnections: -1
-			};
-		this.outputEndPoint = {
-				 endpoint:"Dot",
-				 isTarget:false,
-				 isSource:true,
-				 maxConnections: -1,
-			};
 		this.modelJSON = {
 				description : this.text,
 				iconTabs : []
 		}
+		this.stateConfigs = [];
+		this.setupStateConfigs();
 		this.modelJSON.iconTabs = this.generateData(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam);
 		this.model = new sap.ui.model.json.JSONModel(this.modelJSON);
 		this.create();
@@ -35,12 +25,32 @@ var OutputState = class OutputState extends State {
 		//Call the super method
 		super.create();
 		
+		//Define the input end point style
+		this.inputEndPoint = {
+				 endpoint:"Dot",
+				 isTarget:true,
+				 isSource:false,
+				 maxConnections: -1
+		};
+		
+		//Define the output end point style
+		this.outputEndPoint = {
+				 endpoint:"Dot",
+				 isTarget:false,
+				 isSource:true,
+				 maxConnections: -1,
+		};
+		
 		//Setup the end points
 		this.jsPlumbInstance.addEndpoint(this.stateDiv.id, { id : this.htmlId + "input", anchor:"Top", paintStyle:{ fill: "#5E696E" } }, this.inputEndPoint);
 		this.jsPlumbInstance.addEndpoint(this.stateDiv.id, { id : this.htmlId + "output", anchor:"Bottom", paintStyle:{ fill: "#5E696E" } }, this.outputEndPoint);
 		
 		//Setup double click
 		$("#"+this.stateDiv.id).dblclick($.proxy(this.doubleClick, this));
+	}
+	
+	setupStateConfigs() {
+		this.stateConfigs.push(new StateConfigDisplayText());
 	}
 	
 	setupValidationRules() {
@@ -67,6 +77,17 @@ var OutputState = class OutputState extends State {
 		
 		//Set the model for the dialog
 		this.dialog.setModel(this.model);
+
+		//Setup the state config pages + models
+		var iconTabBar = sap.ui.getCore().byId("outputStateDialogIconTabBar").getItems();
+		for(var i = 0; i < iconTabBar.length; i++) {
+			for(var n = 0; n < iconTabBar[i].getContent()[0].getContentAreas()[1].getPages().length; n++) {
+				var iconTabBarPage = iconTabBar[i].getContent()[0].getContentAreas()[1].getPages()[n];
+				if(iconTabBarPage.getContent().length == 0) {
+					this.stateConfigs[n].getStateConfigFragment().forEach(function (oElement) {iconTabBarPage.addContent(oElement);});
+				}
+			}
+		}
 			
 		this.dialog.getContent()[0].addEventDelegate({
 			onAfterRendering : $.proxy(this.tabRendered, this)
@@ -94,10 +115,17 @@ var OutputState = class OutputState extends State {
 	}
 	
 	createData() {
+		var tempNavigationListItems = [];
+		var tempNavigationContainerPages = [];
+		for(var i = 0; i < this.stateConfigs.length; i++) {
+			tempNavigationListItems.push(this.stateConfigs[i].getNavigationListItem());
+			tempNavigationContainerPages.push(this.stateConfigs[i].getNavigationContainerPage());
+		}
 		return {
 			icon : "",
 			scope : "",
-			displayText : ""
+			navigationListItems : tempNavigationListItems,
+			navigationContainerPages : tempNavigationContainerPages,
 		}
 	}
 	
@@ -110,6 +138,9 @@ var OutputState = class OutputState extends State {
 		var data = this.createData();
 		data.icon = "sap-icon://globe";
 		data.scope = "Game Wide";
+		for(var i = 0; i < data.navigationContainerPages.length; i++) {
+			data.navigationContainerPages[i].scope = data.scope;
+		}
 		baseData.push(data);
 		
 		//Add the teams
@@ -209,6 +240,16 @@ var OutputState = class OutputState extends State {
 		
 		this.modelJSON.iconTabs = newTabs;
 		this.model.setData(this.modelJSON);
+		
+		var iconTabBar = sap.ui.getCore().byId("outputStateDialogIconTabBar").getItems();
+		for(var i = 0; i < iconTabBar.length; i++) {
+			for(var n = 0; n < iconTabBar[i].getContent()[0].getContentAreas()[1].getPages().length; n++) {
+				var iconTabBarPage = iconTabBar[i].getContent()[0].getContentAreas()[1].getPages()[n];
+				if(iconTabBarPage.getContent().length == 0) {
+					this.stateConfigs[n].getStateConfigFragment().forEach(function (oElement) {iconTabBarPage.addContent(oElement);});
+				}
+			}
+		}
 	}
 	
     onChange(oEvent) {
@@ -272,23 +313,12 @@ var OutputState = class OutputState extends State {
 	}
 	
 	loadComponents(loadData) {
-		for(var key in loadData.displayText) {
-			for(var n = 0; n < this.modelJSON.iconTabs.length; n++) {
-				if(key == this.modelJSON.iconTabs[n].scope) {
-					this.modelJSON.iconTabs[n].displayText = loadData.displayText[key];
-				}
-			}
+		for(var i = 0; i < this.stateConfigs.length; i++) {
+			this.stateConfigs[i].setLoadData(loadData, this.modelJSON.iconTabs);
 		}
 	}
 	
 	save() {
-		var outputStateData = {};
-		for(var i = 0; i < this.modelJSON.iconTabs.length; i++) {
-			if(this.modelJSON.iconTabs[i].displayText != "") {
-				outputStateData[this.modelJSON.iconTabs[i].scope] = this.modelJSON.iconTabs[i].displayText;
-			}
-		}
-		
 		var tempInputConnections = [];
 		for(var i = 0; i < this.inputConnections.length; i++) {
 			tempInputConnections.push({
@@ -309,9 +339,15 @@ var OutputState = class OutputState extends State {
 			positionY : this.positionY,
 			stateType : "OUTPUT_STATE",
 			description : this.text,
-			displayText : outputStateData,
 			inputConnections : tempInputConnections,
-			outputConnections : tempOutputConnections
+			outputConnections : tempOutputConnections//,
+		}
+		
+		for(var i = 0; i < this.stateConfigs.length; i++) {
+			var data = this.stateConfigs[i].getSaveData(this.modelJSON.iconTabs);
+			for(var key in data) {
+				saveData[key] = data[key];
+			}
 		}
 		
 		return saveData;

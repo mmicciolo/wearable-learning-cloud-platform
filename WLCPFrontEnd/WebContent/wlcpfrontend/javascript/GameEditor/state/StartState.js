@@ -59,4 +59,8 @@ var StartState = class StartState extends State {
 	onChange(oEvent) {
 		
 	}
+	
+	getActiveScopes() {
+		return ["Game Wide"];
+	}
 }

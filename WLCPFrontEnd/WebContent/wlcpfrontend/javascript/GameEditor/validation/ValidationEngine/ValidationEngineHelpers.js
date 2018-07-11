@@ -119,6 +119,81 @@ var ValidationEngineHelpers = class ValidationEngineHelpers {
 	    }
 	    return returnScope;
 	}
+    
+    /**
+     * This method check for the following:
+     * Game Wide -> Game Wide
+     * Game Wide -> Team Wide (make sure it has team + players for that team)
+     * Player Wide -> Team Wide
+     * Team -> Game Wide
+     * Player Wide -> Game Wide
+     * It then returns a modified mask
+     */
+    static checkForScopeChanges(teamCount, playersPerTeam, activeScopeMask) {
+    	
+    	var returnActiveScopeMask = activeScopeMask;
+    	
+    	//Check for Game Wide -> Game Wide
+		if(this.getBit(activeScopeMask, 0) == 0x01) {
+			returnActiveScopeMask = 0xffffffff;
+		}
+		
+		var teamList = [];
+		
+		//Game Wide -> Team Wide (make sure it has team + players for that team)
+		for(var team = 1; team < teamCount + 1; team++) {
+			if(this.getBit(activeScopeMask, team) == 0x01) {
+				teamList.push("Team " + team);
+		      }
+		}
+		
+		if(teamList.length > 0) {
+			var l = [];
+			for(var g = 0; g < teamList.length; g++) {
+				for(var c = 1; c < playersPerTeam + 1; c++) {
+					l.push(teamList[g] + " Player " + c);
+				}
+			}
+			returnActiveScopeMask = returnActiveScopeMask | this.getActiveScopeMask(teamCount, playersPerTeam, l);
+		}
+		
+		//Player Wide -> Team Wide
+	    var playerReturn = true;
+	    var playerReturns = [];
+	    
+	    var team = 1;
+		var player = 1;
+		var count = 1;
+		for(var n = 0; n < (teamCount * playersPerTeam); n++) {
+			if(this.getBit(activeScopeMask, n + teamCount + 1) == 0x01) {
+				count++;
+    	    }
+			if(count == playersPerTeam + 1) {
+				playerReturns.push("Team " + team);
+	    		for(var player = 1; player < playersPerTeam + 1; player++) {
+	    			playerReturns.push("Team " + team + " Player " + player);
+	    		}
+			}
+			if((n + 1) % playersPerTeam == 0 && teamCount != 1 || playersPerTeam == 1) { team ++; player = 1; count = 1; } else { player++; }
+		}
+		
+	    if(playerReturns.length > 0) {
+	    	returnActiveScopeMask = returnActiveScopeMask | this.getActiveScopeMask(teamCount, playersPerTeam, playerReturns);
+	    }
+	    
+		var toGameWideMask = 0;
+		for(var n = 1; n < teamCount + (teamCount * playersPerTeam) + 1; n++) {
+			toGameWideMask = this.setBit(toGameWideMask, n);
+		}
+		
+	    //Check for Team -> Game Wide
+	    //Check for Player Wide -> Game Wide
+	    if((returnActiveScopeMask & toGameWideMask) == toGameWideMask) {
+	    	returnActiveScopeMask = 0xffffffff;
+	    }
+		
+		return returnActiveScopeMask;
+    }
 	
 	/**
 	 * Sets an individual bit to 1 in a number

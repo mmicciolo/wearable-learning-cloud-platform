@@ -241,21 +241,23 @@ var OutputState = class OutputState extends State {
 		this.modelJSON.iconTabs = newTabs;
 		this.model.setData(this.modelJSON);
 		
-		var iconTabBar = sap.ui.getCore().byId("outputStateDialogIconTabBar").getItems();
-		for(var i = 0; i < iconTabBar.length; i++) {
-			for(var n = 0; n < iconTabBar[i].getContent()[0].getContentAreas()[1].getPages().length; n++) {
-				var iconTabBarPage = iconTabBar[i].getContent()[0].getContentAreas()[1].getPages()[n];
-				if(iconTabBarPage.getContent().length == 0) {
-					this.stateConfigs[n].getStateConfigFragment().forEach(function (oElement) {iconTabBarPage.addContent(oElement);});
+		if(typeof sap.ui.getCore().byId("outputStateDialogIconTabBar") !== "undefined") {
+			var iconTabBar = sap.ui.getCore().byId("outputStateDialogIconTabBar").getItems();
+			for(var i = 0; i < iconTabBar.length; i++) {
+				for(var n = 0; n < iconTabBar[i].getContent()[0].getContentAreas()[1].getPages().length; n++) {
+					var iconTabBarPage = iconTabBar[i].getContent()[0].getContentAreas()[1].getPages()[n];
+					if(iconTabBarPage.getContent().length == 0) {
+						this.stateConfigs[n].getStateConfigFragment().forEach(function (oElement) {iconTabBarPage.addContent(oElement);});
+					}
 				}
 			}
 		}
 	}
 	
     onChange(oEvent) {
-//    	for(var i = 0; i < this.validationRules.length; i++) {
-//    		this.validationRules[i].validate(this);
-//    	}
+    	for(var i = 0; i < this.validationRules.length; i++) {
+    		this.validationRules[i].validate(this);
+    	}
 //    	
 //    	//Revalidate the transitions
 //    	for(var i = 0; i < GameEditor.getEditorController().transitionList.length; i++) {

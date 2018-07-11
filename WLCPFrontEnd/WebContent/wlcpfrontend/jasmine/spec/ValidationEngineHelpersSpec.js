@@ -106,4 +106,25 @@ describe("A suite to test the Validation Engine helpers", function() {
 		var andActiveScopeMask = ValidationEngineHelpers.andActiveScopeMasks(activeScopeMasks);
 		expect(andActiveScopeMask).toEqual(8074);
 	});
+	it("Test checkForScopeChanges Game Wide -> Game Wide (3x3)", function() {
+		var activeScopeMask = ValidationEngineHelpers.checkForScopeChanges(3, 3, 1);
+		expect(activeScopeMask).toEqual(0xffffffff);
+	});
+	it("Test checkForScopeChanges Game Wide -> Team Wide (make sure it has team + players for that team) (3x3)", function() {
+		var activeScopeMask = ValidationEngineHelpers.checkForScopeChanges(3, 3, 2);
+		expect(activeScopeMask).toEqual(114);
+	});
+	it("Test checkForScopeChanges Player Wide -> Team Wide (3x3)", function() {
+		var activeScopeMask = ValidationEngineHelpers.checkForScopeChanges(3, 3, 112);
+		expect(activeScopeMask).toEqual(114);
+	});
+	
+	it("Test checkForScopeChanges Team -> Game Wide (3x3)", function() {
+		var activeScopeMask = ValidationEngineHelpers.checkForScopeChanges(3, 3, 14);
+		expect(activeScopeMask).toEqual(0xffffffff);
+	});
+	it("Test checkForScopeChanges Player Wide -> Game Wide (3x3)", function() {
+		var activeScopeMask = ValidationEngineHelpers.checkForScopeChanges(3, 3, 8176);
+		expect(activeScopeMask).toEqual(0xffffffff);
+	});
 });

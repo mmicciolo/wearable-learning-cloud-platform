@@ -4,6 +4,10 @@ var StateConfig = class StateConfig {
 		this.state = state;
 	}
 	
+	onChange(oEvent) {
+		this.state.onChange(oEvent);
+	}
+	
 	getNavigationListItem() {
 		return {
 			text : "",

@@ -133,9 +133,14 @@ var ValidationEngineHelpers = class ValidationEngineHelpers {
     	
     	var returnActiveScopeMask = activeScopeMask;
     	
+		var toGameWideMask = 0;
+		for(var n = 1; n < teamCount + (teamCount * playersPerTeam) + 1; n++) {
+			toGameWideMask = this.setBit(toGameWideMask, n);
+		}
+    	
     	//Check for Game Wide -> Game Wide
 		if(this.getBit(activeScopeMask, 0) == 0x01) {
-			returnActiveScopeMask = 0xffffffff;
+			returnActiveScopeMask = toGameWideMask + 1;
 		}
 		
 		var teamList = [];
@@ -180,16 +185,11 @@ var ValidationEngineHelpers = class ValidationEngineHelpers {
 	    if(playerReturns.length > 0) {
 	    	returnActiveScopeMask = returnActiveScopeMask | this.getActiveScopeMask(teamCount, playersPerTeam, playerReturns);
 	    }
-	    
-		var toGameWideMask = 0;
-		for(var n = 1; n < teamCount + (teamCount * playersPerTeam) + 1; n++) {
-			toGameWideMask = this.setBit(toGameWideMask, n);
-		}
 		
 	    //Check for Team -> Game Wide
 	    //Check for Player Wide -> Game Wide
 	    if((returnActiveScopeMask & toGameWideMask) == toGameWideMask) {
-	    	returnActiveScopeMask = 0xffffffff;
+	    	returnActiveScopeMask = toGameWideMask + 1;
 	    }
 		
 		return returnActiveScopeMask;

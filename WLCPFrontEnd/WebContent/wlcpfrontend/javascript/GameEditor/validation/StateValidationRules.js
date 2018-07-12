@@ -2,7 +2,7 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 
 	validate(state) {
 	
-		var nonTransitionMask = 0;
+		var parentMask = 0;
 		
 		//Loop through the parent states
 		for(var i = 0; i < state.inputConnections.length; i++) {
@@ -12,10 +12,8 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 			//Get the active scope mask
 			var activeScopeMask = ValidationEngineHelpers.getActiveScopeMask(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, activeScopes);
 			
-			nonTransitionMask = nonTransitionMask | activeScopeMask;
+			parentMask = parentMask | activeScopeMask;
 		}
-		
-		var parentMask = nonTransitionMask;
 		
 		parentMask = ValidationEngineHelpers.checkForScopeChanges(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, parentMask);
 		
@@ -32,6 +30,11 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 		var andScopeMasks = ValidationEngineHelpers.andActiveScopeMasks(activeScopeMasks);
 		
 		state.setScope(parentMask & andScopeMasks, GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam);
+		
+		//Recursively revalidate
+		for(var i = 0; i < state.outputConnections.length; i++) {
+			this.validate(state.outputConnections[i].connectionToState);
+		}
 	}
 
 }

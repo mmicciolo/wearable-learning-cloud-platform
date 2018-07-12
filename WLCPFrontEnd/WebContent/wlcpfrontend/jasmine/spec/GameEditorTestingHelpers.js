@@ -1,11 +1,11 @@
 var GameEditorTestingHelpers = {
 		
-	createNewGame : function() {
+	createNewGame : function(teamCount, playersPerTeam) {
 		
 		var newGameModel = {
 			GameId : "Test",
-			TeamCount : 3,
-			PlayersPerTeam : 3,
+			TeamCount : teamCount,
+			PlayersPerTeam : playersPerTeam,
 			StateIdCount : 0,
 			TransitionIdCount : 0,
 			ConnectionIdCount : 0,
@@ -21,8 +21,8 @@ var GameEditorTestingHelpers = {
 		
 		var gameModel = {
 			GameId : "Test",
-			TeamCount : 3,
-			PlayersPerTeam : 3,
+			TeamCount : teamCount,
+			PlayersPerTeam : playersPerTeam,
 			StateIdCount : 0,
 			TransitionIdCount : 0,
 			ConnectionIdCount : 0,

@@ -14,10 +14,16 @@ describe("A suite to test revalidation of states & transitions when onChange is 
 		
 		expect(outputState2.scopeMask).toEqual(8191);
 	});
+	it("State Neighbors Revalidation No Loopbacks (3x3)", function() {
+
+	});
 	it("State to State Revalidation Loopbacks (3x3)", function() {
 		
 	});
 	it("Connection Dropped (3x3)", function() {
+		
+	});
+	it("Connection Removed (3x3)", function() {
 		
 	});
 });

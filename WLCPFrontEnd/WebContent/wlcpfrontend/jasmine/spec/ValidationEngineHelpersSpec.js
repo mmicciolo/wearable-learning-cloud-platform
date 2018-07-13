@@ -3,7 +3,7 @@ describe("A suite to test the Validation Engine helpers", function() {
 		
 		GameEditorTestingHelpers.resetGameEditor();
 		
-		var startState = GameEditorTestingHelpers.createNewGame();
+		var startState = GameEditorTestingHelpers.createNewGame(3, 3);
 		var outputState = GameEditorTestingHelpers.addState(500, 500);
 		var connection = GameEditorTestingHelpers.addConnection(startState.htmlId, outputState.htmlId);
 		
@@ -15,7 +15,7 @@ describe("A suite to test the Validation Engine helpers", function() {
 		
 		GameEditorTestingHelpers.resetGameEditor();
 		
-		var startState = GameEditorTestingHelpers.createNewGame();
+		var startState = GameEditorTestingHelpers.createNewGame(3, 3);
 		var outputState = GameEditorTestingHelpers.addState(500, 500);
 		var connection = GameEditorTestingHelpers.addConnection(startState.htmlId, outputState.htmlId);
 		

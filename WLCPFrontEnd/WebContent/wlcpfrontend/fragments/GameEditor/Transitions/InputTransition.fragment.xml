@@ -18,13 +18,14 @@
 				<IconTabFilter icon="{icon}" text="{scope}" key="{scope}">
 					<content>
 						<l:Splitter>
-							<List class="navList" items="{path : 'transitionTypes', templateShareable:false}" mode="SingleSelectLeft" headerText="Select the Transition Type" selectionChange="transitionTypeSelected"> 
+							<List class="navList" items="{path : 'navigationListItems', templateShareable:false}" mode="SingleSelectLeft" headerText="Select the Transition Type" selectionChange="transitionTypeSelected"> 
 								<layoutData><l:SplitterLayoutData size="250px" resizable="false"/></layoutData>
 								<StandardListItem title="{title}" icon="{icon}" selected="{selected}" visible="{visible}"/>
 							</List>
-							<NavContainer width="100%" height="500px">
+							<NavContainer width="100%" height="500px" pages="{path : 'navigationContainerPages', templateShareable:false}">
 								<layoutData><l:SplitterLayoutData minSize="500" resizable="false"/></layoutData>
-								<Page title="{scope} Single Button Press">
+								<Page title="{title}"/>
+								<!-- <Page title="{scope} Single Button Press">
 									<FlexBox alignItems="Start" justifyContent="Center">
 										<items>
 											<VBox>
@@ -61,11 +62,11 @@
 								</Page>
 								<Page title="{scope} Keyboard Input">
 									<content>
-<!-- 										<FlexBox alignItems="Start" justifyContent="Center">
+										<FlexBox alignItems="Start" justifyContent="Center">
 											<items>
 												<Text text="Enter text you want a user to input in order to transition! (case insensitive)"/>
 											</items>
-										</FlexBox> -->
+										</FlexBox>
 										<FlexBox alignItems="Start" justifyContent="Center">
 											<items>
 												<Button text="Add Keyboard Field" press="addKeyboardField"></Button>
@@ -86,7 +87,7 @@
 											</items>
 										</FlexBox>
 									</content>
-								</Page>
+								</Page> -->
 							</NavContainer>
 						</l:Splitter>
 					</content>

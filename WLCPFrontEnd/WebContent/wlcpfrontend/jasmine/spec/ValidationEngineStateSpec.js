@@ -241,4 +241,45 @@ describe("A suite to test the Validation Engine State Functionality", function()
 		
 		expect(outputState.scopeMask == 8188 && outputState2.scopeMask == 8172).toBeTruthy();
 	});
+	it("Multiple Connection No Transition Team 1 Team 2 Team 3 Player 1 2 3 (Start) (3x3)", function() {
+		GameEditorTestingHelpers.resetGameEditor();
+		
+		var startState = GameEditorTestingHelpers.createNewGame(3, 3);
+		var outputState = GameEditorTestingHelpers.addState(500, 250);
+		var outputState2 = GameEditorTestingHelpers.addState(750, 250);
+		var outputState3 = GameEditorTestingHelpers.addState(1000, 250);
+		var connection = GameEditorTestingHelpers.addConnection(startState.htmlId, outputState.htmlId);
+		var connection2 = GameEditorTestingHelpers.addConnection(startState.htmlId, outputState2.htmlId);
+		var connection3 = GameEditorTestingHelpers.addConnection(startState.htmlId, outputState3.htmlId);
+		
+		outputState.modelJSON.iconTabs[1].navigationContainerPages[0].displayText = "Hello World!";
+		outputState.onChange();
+		outputState2.modelJSON.iconTabs[0].navigationContainerPages[0].displayText = "Hello World!";
+		outputState2.onChange();
+		outputState3.modelJSON.iconTabs[1].navigationContainerPages[0].displayText = "Hello World!";
+		outputState3.modelJSON.iconTabs[2].navigationContainerPages[0].displayText = "Hello World!";
+		outputState3.modelJSON.iconTabs[3].navigationContainerPages[0].displayText = "Hello World!";
+		outputState3.onChange();
+		
+		expect(outputState.scopeMask == 2 && outputState2.scopeMask == 4 && outputState3.scopeMask == 7168).toBeTruthy();
+	});
+	it("Multiple Connection No Transition Multiple Input (3x3)", function() {
+		GameEditorTestingHelpers.resetGameEditor();
+		
+		var startState = GameEditorTestingHelpers.createNewGame(3, 3);
+		var outputState = GameEditorTestingHelpers.addState(500, 250);
+		var outputState2 = GameEditorTestingHelpers.addState(1000, 250);
+		var outputState3 = GameEditorTestingHelpers.addState(750, 500);
+		var connection = GameEditorTestingHelpers.addConnection(startState.htmlId, outputState.htmlId);
+		var connection2 = GameEditorTestingHelpers.addConnection(startState.htmlId, outputState2.htmlId);
+		var connection3 = GameEditorTestingHelpers.addConnection(outputState.htmlId, outputState3.htmlId);
+		var connection4 = GameEditorTestingHelpers.addConnection(outputState2.htmlId, outputState3.htmlId);
+		
+		outputState.modelJSON.iconTabs[1].navigationContainerPages[0].displayText = "Hello World!";
+		outputState.onChange();
+		outputState2.modelJSON.iconTabs[0].navigationContainerPages[0].displayText = "Hello World!";
+		outputState2.onChange();
+		
+		expect(outputState.scopeMask == 7178 && outputState2.scopeMask == 7180 && outputState3.scopeMask == 1014).toBeTruthy();
+	});
 });

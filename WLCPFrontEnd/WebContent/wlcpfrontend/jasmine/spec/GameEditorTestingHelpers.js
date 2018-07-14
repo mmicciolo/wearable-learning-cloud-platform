@@ -56,6 +56,14 @@ var GameEditorTestingHelpers = {
 		return outputState;
 	},
 	
+	addTransition : function(connection) {
+		var jsConnection = GameEditor.getJsPlumbInstance().getConnections({source : connection.connectionFrom, target : connection.connectionTo})[0];
+		var inputTransition = new InputTransition("transition", jsConnection, GameEditor.getEditorController().createTransitionId(), GameEditor.getEditorController());
+		inputTransition.wlcpConnection = connection;
+		GameEditor.getEditorController().transitionList.push(inputTransition);
+		return inputTransition;
+	},
+	
 	addConnection : function(sourceState, targetState) {
 		var oEvent = {
 			sourceId : sourceState,

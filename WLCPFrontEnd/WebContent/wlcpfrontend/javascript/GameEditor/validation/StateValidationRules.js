@@ -54,7 +54,10 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 		
 		//Recursively revalidate the states below us
 		for(var i = 0; i < state.outputConnections.length; i++) {
-			this.validate(state.outputConnections[i].connectionToState, true);
+			//Ignore loop backs
+			if(!state.outputConnections[i].isLoopBack) {
+				this.validate(state.outputConnections[i].connectionToState, true)
+			}
 		}
 		
 		//Revalidate our neighbors but make sure they dont revalidate their neighbors

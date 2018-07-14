@@ -1,0 +1,18 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core">
+	
+	<Text text="{text}"/>
+	
+    <FlexBox alignItems="Start" justifyContent="Center">
+		<items>
+			<VBox>
+				<CheckBox text="Red" selected="{singlePress/0/selected}" enabled="{singlePress/0/enabled}" select="onChange"/>
+				<CheckBox text="Green" selected="{singlePress/1/selected}" enabled="{singlePress/1/enabled}" select="onChange"/>
+				<CheckBox text="Blue" selected="{singlePress/2/selected}" enabled="{singlePress/2/enabled}" select="onChange"/>
+				<CheckBox text="Black" selected="{singlePress/3/selected}" enabled="{singlePress/3/enabled}" select="onChange"/>
+			</VBox>
+		</items>
+	</FlexBox>
+
+</core:FragmentDefinition>

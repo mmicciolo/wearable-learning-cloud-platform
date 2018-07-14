@@ -32,7 +32,10 @@ var Index = {
 		
 		jQuery.sap.require("wlcpfrontend/javascript/GameEditor/transition/Transition");
 		jQuery.sap.require("wlcpfrontend/javascript/GameEditor/transition/InputTransition");
-	
+		
+		jQuery.sap.require("wlcpfrontend/javascript/GameEditor/transition/TransitionConfig/TransitionConfig");
+		jQuery.sap.require("wlcpfrontend/javascript/GameEditor/transition/TransitionConfig/TransitionConfigSingleButtonPress");
+		
 		jQuery.sap.require("wlcpfrontend/javascript/GameEditor/connection/Connection");
 		
 		jQuery.sap.require("wlcpfrontend/javascript/GameEditor/validation/ValidationRule");

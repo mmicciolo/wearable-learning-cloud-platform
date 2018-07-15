@@ -7,6 +7,9 @@ describe("A suite to test the Validation Engine Transition Functionality", funct
 		var connection = GameEditorTestingHelpers.addConnection(startState.htmlId, outputState.htmlId);
 		var transition = GameEditorTestingHelpers.addTransition(connection);
 		
-		expect(outputState.scopeMask).toEqual(1);
+		transition.modelJSON.iconTabs[0].navigationContainerPages[0].singlePress[0].selected = true;
+		transition.onChange();
+		
+		expect(transition.scopeMask).toEqual(1);
 	});
 });

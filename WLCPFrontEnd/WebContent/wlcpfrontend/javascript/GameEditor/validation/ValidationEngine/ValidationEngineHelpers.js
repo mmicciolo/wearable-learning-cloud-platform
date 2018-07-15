@@ -8,8 +8,25 @@ var ValidationEngineHelpers = class ValidationEngineHelpers {
 	 * This method gets the active scopes of a given state by calling that states
 	 * getActiveScopes. The scopes are returned as an array of strings.
 	 */
-	static getActiveScopes(state) {
+	static getActiveScopesState(state) {
 		return state.getActiveScopes();
+	}
+	
+	/** 
+	 * This method gets the active scopes of a given transition by calling that transitions
+	 * getActiveScopes. The scopes are returned as an array of strings.
+	 */
+	static getActiveScopesTransition(transition) {
+		return transition.getActiveScopes();
+	}
+	
+	/** 
+	 * This method gets the fully active scopes of a given transition by calling that transitions
+	 * getActiveScopes. The scopes are returned as an array of strings. A fully active scope is one where
+	 * the input transition it fully activated. For example, all single button press check boxes checked.
+	 */
+	static getFullyActiveScopesTransition(transition, neighborTransitions) {
+		return transition.getFullyActiveScopes(neighborTransitions);
 	}
 	
 	/**

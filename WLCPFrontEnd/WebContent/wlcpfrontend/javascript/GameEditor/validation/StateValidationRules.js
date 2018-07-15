@@ -7,7 +7,7 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 		//Loop through the parent states
 		for(var i = 0; i < state.inputConnections.length; i++) {
 			//Get the active scopes
-			var activeScopes = ValidationEngineHelpers.getActiveScopes(state.inputConnections[i].connectionFromState);
+			var activeScopes = ValidationEngineHelpers.getActiveScopesState(state.inputConnections[i].connectionFromState);
 			
 			//Get the active scope mask
 			var activeScopeMask = ValidationEngineHelpers.getActiveScopeMask(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, activeScopes);
@@ -24,7 +24,7 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 			for(var n = 0; n < state.inputConnections[i].connectionFromState.outputConnections.length; n++) {
 				if(state.inputConnections[i].connectionFromState.outputConnections[n].connectionToState.htmlId != state.htmlId) {
 					//Get the active scopes
-					var activeScopes = ValidationEngineHelpers.getActiveScopes(state.inputConnections[i].connectionFromState.outputConnections[n].connectionToState);
+					var activeScopes = ValidationEngineHelpers.getActiveScopesState(state.inputConnections[i].connectionFromState.outputConnections[n].connectionToState);
 					
 					//Get the active scope mask
 					var activeScopeMask = ValidationEngineHelpers.getActiveScopeMask(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, activeScopes);
@@ -39,7 +39,7 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 		}
 		
 		//Get the active scopes
-		var activeScopes = ValidationEngineHelpers.getActiveScopes(state);
+		var activeScopes = ValidationEngineHelpers.getActiveScopesState(state);
 		
 		//Get the active scope mask
 		var activeScopeMask = ValidationEngineHelpers.getActiveScopeMask(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, activeScopes);

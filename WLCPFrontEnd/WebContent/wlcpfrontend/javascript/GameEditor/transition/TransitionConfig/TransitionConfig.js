@@ -21,6 +21,14 @@ var TransitionConfig = class TransitionConfig {
 		return null;
 	}
 	
+	getActiveScopes() {
+		return [];
+	}
+	
+	getFullyActiveScopes(neighborTransitions) {
+		return [];
+	}
+	
 	setLoadData(loadData) {
 		
 	}

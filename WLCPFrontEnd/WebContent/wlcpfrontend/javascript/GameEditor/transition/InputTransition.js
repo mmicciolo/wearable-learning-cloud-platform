@@ -16,6 +16,7 @@ var InputTransition = class InputTransition extends Transition {
 		this.model = new sap.ui.model.json.JSONModel(this.modelJSON);
 		this.validationRules = [];
 		this.setupValidationRules();
+		this.scopeMask = 0xffffffff;
 	}
 	
 	create() {
@@ -48,9 +49,9 @@ var InputTransition = class InputTransition extends Transition {
 	}
 	
 	onChange(oEvent) {
-//		for(var i = 0; i < this.validationRules.length; i++) {
-//			this.validationRules[i].validate(this);
-//		}
+		for(var i = 0; i < this.validationRules.length; i++) {
+			this.validationRules[i].validate(this);
+		}
 //    	//Revalidate the states
 //    	for(var i = 0; i < GameEditor.getEditorController().stateList.length; i++) {
 //    		if(!GameEditor.getEditorController().stateList[i].htmlId.includes("start")) {
@@ -473,6 +474,32 @@ var InputTransition = class InputTransition extends Transition {
 	    	//Log it
 	    	DataLogger.logGameEditor();
 		}
+	}
+	
+	getActiveScopes() {
+		var activeScopes = [];
+		for(var i = 0; i < this.transitionConfigs.length; i++) {
+			var tempActiveScopes = this.transitionConfigs[i].getActiveScopes();
+			for(var n = 0; n < tempActiveScopes.length; n++) {
+				if(activeScopes.indexOf(tempActiveScopes[n]) == -1) {
+					activeScopes.push(tempActiveScopes[n]);
+				}
+			}
+		}
+		return activeScopes;
+	}
+	
+	getFullyActiveScopes(neighborTransitions) {
+		var activeScopes = [];
+		for(var i = 0; i < this.transitionConfigs.length; i++) {
+			var tempActiveScopes = this.transitionConfigs[i].getFullyActiveScopes(neighborTransitions);
+			for(var n = 0; n < tempActiveScopes.length; n++) {
+				if(activeScopes.indexOf(tempActiveScopes[n]) == -1) {
+					activeScopes.push(tempActiveScopes[n]);
+				}
+			}
+		}
+		return activeScopes;
 	}
 	
 //	addSequence(oEvent) {

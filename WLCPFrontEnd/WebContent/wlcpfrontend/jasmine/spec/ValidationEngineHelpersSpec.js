@@ -7,7 +7,7 @@ describe("A suite to test the Validation Engine helpers", function() {
 		var outputState = GameEditorTestingHelpers.addState(500, 500);
 		var connection = GameEditorTestingHelpers.addConnection(startState.htmlId, outputState.htmlId);
 		
-		var activeScopes = outputState.getActiveScopes();
+		var activeScopes = ValidationEngineHelpers.getActiveScopesState(outputState);
 		
 		expect(activeScopes).toEqual([]);
 	});
@@ -21,8 +21,95 @@ describe("A suite to test the Validation Engine helpers", function() {
 		
 		outputState.modelJSON.iconTabs[0].navigationContainerPages[0].displayText = "Hello World!";
 		
-		var activeScopes = outputState.getActiveScopes();
+		var activeScopes = ValidationEngineHelpers.getActiveScopesState(outputState);
 		
+		expect(activeScopes).toEqual(["Game Wide"]);
+	});
+	it("Test getActiveScopesTransition no active scopes", function() {
+		
+		GameEditorTestingHelpers.resetGameEditor();
+		
+		var startState = GameEditorTestingHelpers.createNewGame(3, 3);
+		var outputState = GameEditorTestingHelpers.addState(500, 500);
+		var connection = GameEditorTestingHelpers.addConnection(startState.htmlId, outputState.htmlId);
+		var transition = GameEditorTestingHelpers.addTransition(connection);
+		
+		var activeScopes = ValidationEngineHelpers.getActiveScopesTransition(transition);
+		
+		expect(activeScopes).toEqual([]);
+	});
+	it("Test getActiveScopesTransition active scopes (Single Button Press)", function() {
+		
+		GameEditorTestingHelpers.resetGameEditor();
+		
+		var startState = GameEditorTestingHelpers.createNewGame(3, 3);
+		var outputState = GameEditorTestingHelpers.addState(500, 500);
+		var connection = GameEditorTestingHelpers.addConnection(startState.htmlId, outputState.htmlId);
+		var transition = GameEditorTestingHelpers.addTransition(connection);
+		
+		transition.modelJSON.iconTabs[0].navigationContainerPages[0].singlePress[0].selected = true;
+		
+		var activeScopes = ValidationEngineHelpers.getActiveScopesTransition(transition);
+
+		expect(activeScopes).toEqual(["Game Wide"]);
+	});
+	it("Test getFullyActiveScopesTransition no active scopes", function() {
+		
+		GameEditorTestingHelpers.resetGameEditor();
+		
+		var startState = GameEditorTestingHelpers.createNewGame(3, 3);
+		var outputState = GameEditorTestingHelpers.addState(500, 500);
+		var connection = GameEditorTestingHelpers.addConnection(startState.htmlId, outputState.htmlId);
+		var transition = GameEditorTestingHelpers.addTransition(connection);
+		
+		var activeScopes = ValidationEngineHelpers.getFullyActiveScopesTransition(transition, []);
+		
+		expect(activeScopes).toEqual([]);
+	});
+	it("Test getFullyActiveScopesTransition active scopes single transition (Single Button Press)", function() {
+		
+		GameEditorTestingHelpers.resetGameEditor();
+		
+		var startState = GameEditorTestingHelpers.createNewGame(3, 3);
+		var outputState = GameEditorTestingHelpers.addState(250, 500);
+		var outputState2 = GameEditorTestingHelpers.addState(500, 500);
+		var connection = GameEditorTestingHelpers.addConnection(startState.htmlId, outputState.htmlId);
+		var connection2 = GameEditorTestingHelpers.addConnection(startState.htmlId, outputState2.htmlId);
+		var transition = GameEditorTestingHelpers.addTransition(connection);
+		var transition2 = GameEditorTestingHelpers.addTransition(connection2);
+		
+		transition2.modelJSON.iconTabs[0].navigationContainerPages[0].singlePress[0].selected = true;
+		transition2.modelJSON.iconTabs[0].navigationContainerPages[0].singlePress[1].selected = true;
+		transition2.modelJSON.iconTabs[0].navigationContainerPages[0].singlePress[2].selected = true;
+		transition2.modelJSON.iconTabs[0].navigationContainerPages[0].singlePress[3].selected = true;
+		
+		var activeScopes = ValidationEngineHelpers.getFullyActiveScopesTransition(transition, [transition2]);
+
+		expect(activeScopes).toEqual(["Game Wide"]);
+	});
+	it("Test getFullyActiveScopesTransition active scopes multiple transition (Single Button Press)", function() {
+		
+		GameEditorTestingHelpers.resetGameEditor();
+		
+		var startState = GameEditorTestingHelpers.createNewGame(3, 3);
+		var outputState = GameEditorTestingHelpers.addState(250, 500);
+		var outputState2 = GameEditorTestingHelpers.addState(500, 500);
+		var outputState3 = GameEditorTestingHelpers.addState(750, 500);
+		var connection = GameEditorTestingHelpers.addConnection(startState.htmlId, outputState.htmlId);
+		var connection2 = GameEditorTestingHelpers.addConnection(startState.htmlId, outputState2.htmlId);
+		var connection3 = GameEditorTestingHelpers.addConnection(startState.htmlId, outputState3.htmlId);
+		var transition = GameEditorTestingHelpers.addTransition(connection);
+		var transition2 = GameEditorTestingHelpers.addTransition(connection2);
+		var transition3 = GameEditorTestingHelpers.addTransition(connection3);
+		
+		transition.modelJSON.iconTabs[0].navigationContainerPages[0].singlePress[0].selected = true;
+		transition.modelJSON.iconTabs[0].navigationContainerPages[0].singlePress[1].selected = true;
+		
+		transition2.modelJSON.iconTabs[0].navigationContainerPages[0].singlePress[2].selected = true;
+		transition2.modelJSON.iconTabs[0].navigationContainerPages[0].singlePress[3].selected = true;
+		
+		var activeScopes = ValidationEngineHelpers.getFullyActiveScopesTransition(transition3, [transition, transition2]);
+
 		expect(activeScopes).toEqual(["Game Wide"]);
 	});
 	it("Test getActiveScopeMask Game Wide (3x3)", function() {

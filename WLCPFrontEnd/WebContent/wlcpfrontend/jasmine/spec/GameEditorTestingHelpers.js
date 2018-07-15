@@ -60,6 +60,7 @@ var GameEditorTestingHelpers = {
 		var jsConnection = GameEditor.getJsPlumbInstance().getConnections({source : connection.connectionFrom, target : connection.connectionTo})[0];
 		var inputTransition = new InputTransition("transition", jsConnection, GameEditor.getEditorController().createTransitionId(), GameEditor.getEditorController());
 		inputTransition.wlcpConnection = connection;
+		inputTransition.wlcpConnection.transition = inputTransition;
 		GameEditor.getEditorController().transitionList.push(inputTransition);
 		return inputTransition;
 	},

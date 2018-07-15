@@ -2,6 +2,23 @@ var TransitionValidationRule = class TransitionValidationRule extends Validation
 	
 	validate(transition) {
 		
+		var parentMask = 0;
+		
+		var state = transition.wlcpConnection.connectionToState;
+		
+		//Loop through the parent states
+		for(var i = 0; i < state.inputConnections.length; i++) {
+			//Get the active scopes
+			var activeScopes = ValidationEngineHelpers.getActiveScopesState(state.inputConnections[i].connectionFromState);
+			
+			//Get the active scope mask
+			var activeScopeMask = ValidationEngineHelpers.getActiveScopeMask(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, activeScopes);
+			
+			parentMask = parentMask | activeScopeMask;
+		}
+		
+		parentMask = ValidationEngineHelpers.checkForScopeChanges(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, parentMask);
+		
 		//Get the active scopes
 		var activeScopes = ValidationEngineHelpers.getActiveScopesTransition(transition);
 		
@@ -14,7 +31,10 @@ var TransitionValidationRule = class TransitionValidationRule extends Validation
 		//And the active scope mask together
 		var andScopeMasks = ValidationEngineHelpers.andActiveScopeMasks(activeScopeMasks);
 		
-		transition.setScope(andScopeMasks, GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam);
+		transition.setScope(parentMask & andScopeMasks, GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam);
+		
+		//Update the state below us
+		transition.wlcpConnection.connectionToState.onChange();
 	}
 	
 	setScopeData(transition, model) {

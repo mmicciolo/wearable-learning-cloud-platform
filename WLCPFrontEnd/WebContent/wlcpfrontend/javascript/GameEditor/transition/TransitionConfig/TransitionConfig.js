@@ -4,6 +4,10 @@ var TransitionConfig = class TransitionConfig {
 		this.transition = transition;
 	}
 	
+	onChange(oEvent) {
+		this.transition.onChange(oEvent);
+	}
+	
 	getNavigationListItem() {
 		return {
 			title : "",

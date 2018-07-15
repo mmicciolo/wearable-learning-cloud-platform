@@ -45,7 +45,7 @@ var InputTransition = class InputTransition extends Transition {
 	
 	setupValidationRules() {
 		this.validationRules.push(new TransitionValidationRule());
-		this.validationRules.push(new TransitionSelectedTypeValidationRule());
+		//this.validationRules.push(new TransitionSelectedTypeValidationRule());
 	}
 	
 	onChange(oEvent) {
@@ -133,6 +133,23 @@ var InputTransition = class InputTransition extends Transition {
 		
 		this.modelJSON.iconTabs = newTabs;
 		this.model.setData(this.modelJSON);
+		
+		if(typeof sap.ui.getCore().byId("inputTransitionDialogIconTabBar") !== "undefined") {
+			var iconTabBar = sap.ui.getCore().byId("inputTransitionDialogIconTabBar").getItems();
+			for(var i = 0; i < iconTabBar.length; i++) {
+				for(var n = 0; n < iconTabBar[i].getContent()[0].getContentAreas()[1].getPages().length; n++) {
+					var iconTabBarPage = iconTabBar[i].getContent()[0].getContentAreas()[1].getPages()[n];
+					if(iconTabBarPage.getContent().length == 0) {
+						var fragment = this.transitionConfigs[n].getTransitionConfigFragment();
+						if(typeof fragment === 'object' && fragment.constructor === Array) {
+							fragment.forEach(function (oElement) {iconTabBarPage.addContent(oElement);});
+						} else {
+							iconTabBarPage.addContent(fragment);
+						}
+					}
+				}
+			}
+		}
 	}
 	
 	updateActiveScope() {

@@ -1,0 +1,26 @@
+<core:FragmentDefinition
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core">
+	
+	<Dialog title = "Register New User">
+		<buttons>
+			<Button text="Register" type="Accept" press="confirmRegisterNewUser"/>
+			<Button text="Cancel" type="Reject" press="cancelRegisterNewUser"/>
+		</buttons>
+		<FlexBox height="250px" alignItems="Center" justifyContent="Center">
+			<items>
+				<VBox>
+					<Text text="Please enter the details below"/>
+					<Input width="12em" id="username" placeholder="Username"
+						value="{/newUser/UsernameId}"></Input>
+					<Input width="12em" id="password" placeholder="Password"
+						value="{/newUser/Password}" type="Password"></Input>
+					<Input width="12em" id="firstName" placeholder="Firstname"
+						value="{/newUser/FirstName}"></Input>
+					<Input width="12em" id="lastName" placeholder="Lastname"
+						value="{/newUser/LastName}"></Input>
+				</VBox>
+			</items>
+		</FlexBox>
+	</Dialog>
+</core:FragmentDefinition>

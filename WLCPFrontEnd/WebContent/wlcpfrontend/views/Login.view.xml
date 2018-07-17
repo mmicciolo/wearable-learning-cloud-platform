@@ -14,7 +14,7 @@
 					<HBox>
 						<items>
 							<Link text="Forgot Password?" class="sapUiSmallMarginTop sapUiTinyMarginEnd"/>
-							<Link text="Register" class="sapUiSmallMarginTop"/>
+							<Link text="Register" class="sapUiSmallMarginTop" press="registerNewUser"/>
 						</items>
 					</HBox>
 				</items>

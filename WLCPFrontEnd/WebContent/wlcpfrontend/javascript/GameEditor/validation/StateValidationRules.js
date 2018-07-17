@@ -48,25 +48,6 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 			}
 		}
 		
-//		var transitionMask = 0;
-//		
-//		//Loop through transitions above us and neighbors
-//		for(var i = 0; i < state.inputConnections.length; i++) {
-//			if(state.inputConnections[i].transition != null) {
-//				//Get the active scopes
-//				var activeScopes = ValidationEngineHelpers.getActiveScopesTransition(state.inputConnections[i].transition);
-//				
-//				//Get the active scope mask
-//				var activeScopeMask = ValidationEngineHelpers.getActiveScopeMask(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, activeScopes);
-//				
-//				transitionMask = transitionMask | activeScopeMask;
-//			}
-//		}
-//		
-//		if(transitionMask == 0) { transitionMask = 0xffffffff; }
-//		
-//		transitionMask = ValidationEngineHelpers.checkForScopeChanges(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, transitionMask);
-		
 		//Get the active scopes
 		var activeScopes = ValidationEngineHelpers.getActiveScopesState(state);
 		

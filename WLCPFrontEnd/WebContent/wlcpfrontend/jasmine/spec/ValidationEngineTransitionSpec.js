@@ -202,7 +202,6 @@ describe("A suite to test the Validation Engine Transition Functionality", funct
 
 		expect(outputState.scopeMask == 1 && transition.scopeMask == 8176 && outputState2.scopeMask == 8191).toBeTruthy();
 	});
-	
 	it("Single Connection Single Transition Random Active In Parent (Another State) (3x3)", function() {
 		GameEditorTestingHelpers.resetGameEditor();
 		
@@ -222,5 +221,27 @@ describe("A suite to test the Validation Engine Transition Functionality", funct
 		transition.onChange();
 
 		expect(outputState.scopeMask == 1 && transition.scopeMask == 7174 && outputState2.scopeMask == 5110).toBeTruthy();
+	});
+	it("Multiple Connection Multiple Transition Game Wide Active (Start) (3x3)", function() {
+		GameEditorTestingHelpers.resetGameEditor();
+		
+		var startState = GameEditorTestingHelpers.createNewGame(3, 3);
+		var outputState = GameEditorTestingHelpers.addState(500, 250);
+		var outputState2 = GameEditorTestingHelpers.addState(750, 250);
+		var connection = GameEditorTestingHelpers.addConnection(startState.htmlId, outputState.htmlId);
+		var connection2 = GameEditorTestingHelpers.addConnection(startState.htmlId, outputState2.htmlId);
+		var transition = GameEditorTestingHelpers.addTransition(connection);
+		var transition2 = GameEditorTestingHelpers.addTransition(connection2);
+		
+		transition.modelJSON.iconTabs[0].navigationContainerPages[0].singlePress[0].selected = true;
+		transition.onChange();
+		//transition.modelJSON.iconTabs[2].navigationContainerPages[0].singlePress[0].selected = true;
+		//transition.onChange();
+		
+		//outputState.modelJSON.iconTabs[0].navigationContainerPages[0].displayText = "Hello World!";
+		
+		//outputState.onChange();
+		
+		expect(transition.scopeMask == 1 && outputState.scopeMask == 8191 && transition2.scopeMask == 1 && outputState2.scopeMask == 8191).toBeTruthy();
 	});
 });

@@ -45,7 +45,7 @@ var TransitionConfigSingleButtonPress = class TransitionConfigSingleButtonPress 
 		var iconTabs = this.transition.modelJSON.iconTabs;
 		for(var i = 0; i < iconTabs.length; i++) {
 			for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
-				if(iconTabs[i].navigationContainerPages[n].text = "Single Button Press") {
+				if(iconTabs[i].navigationContainerPages[n].title == "Single Button Press") {
 					if(iconTabs[i].navigationContainerPages[n].singlePress[0].selected || iconTabs[i].navigationContainerPages[n].singlePress[1].selected || 
 				       iconTabs[i].navigationContainerPages[n].singlePress[2].selected || iconTabs[i].navigationContainerPages[n].singlePress[3].selected) {
 						activeScopes.push(iconTabs[i].scope);
@@ -71,9 +71,9 @@ var TransitionConfigSingleButtonPress = class TransitionConfigSingleButtonPress 
 			for(var n = 0; n < scopeCollection.length; n++) {
 				if((scopeCollection[i].model.scope == scopeCollection[n].model.scope) && !activeScopes.includes(scopeCollection[i].model.scope)) {
 					for(var button = 0; button < 4; button++) {
-						for(var j = 0; j < scopeCollection[i].model.navigationContainerPages.length; j++) {
-							if(scopeCollection[i].model.navigationContainerPages[j].text = "Single Button Press") {
-								if(scopeCollection[i].model.navigationContainerPages[j].singlePress[button].selected) {buttonsChecked++;}
+						for(var j = 0; j < scopeCollection[n].model.navigationContainerPages.length; j++) {
+							if(scopeCollection[n].model.navigationContainerPages[j].title == "Single Button Press") {
+								if(scopeCollection[n].model.navigationContainerPages[j].singlePress[button].selected) {buttonsChecked++;}
 							}
 						}
 					}
@@ -93,7 +93,7 @@ var TransitionConfigSingleButtonPress = class TransitionConfigSingleButtonPress 
 			for(var i = 0; i < iconTabs.length; i++) {
 				if(key == iconTabs[i].scope) {
 					for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
-						if(iconTabs[i].navigationContainerPages[n].text = "Single Button Press") {
+						if(iconTabs[i].navigationContainerPages[n].title == "Single Button Press") {
 							iconTabs[i].navigationContainerPages[n].singlePress[0].selected = loadData.singleButtonPresses[key].button1;
 							iconTabs[i].navigationContainerPages[n].singlePress[1].selected = loadData.singleButtonPresses[key].button2;
 							iconTabs[i].navigationContainerPages[n].singlePress[2].selected = loadData.singleButtonPresses[key].button3;
@@ -110,7 +110,7 @@ var TransitionConfigSingleButtonPress = class TransitionConfigSingleButtonPress 
 		var iconTabs = this.transition.modelJSON.iconTabs;
 		for(var i = 0; i < iconTabs.length; i++) {
 			for(var n = 0; n < iconTabs[i].navigationContainerPages.length; n++) {
-				if(iconTabs[i].navigationContainerPages[n].title = "Single Button Press") {
+				if(iconTabs[i].navigationContainerPages[n].title == "Single Button Press") {
 					if(iconTabs[i].navigationContainerPages[n].singlePress[0].selected || iconTabs[i].navigationContainerPages[n].singlePress[1].selected
 					 ||iconTabs[i].navigationContainerPages[n].singlePress[2].selected || iconTabs[i].navigationContainerPages[n].singlePress[3].selected) {
 						singleButtonPresses[iconTabs[i].scope] = {

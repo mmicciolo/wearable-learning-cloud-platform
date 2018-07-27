@@ -30,6 +30,10 @@ sap.ui.controller("wlcpfrontend.controllers.CreateLoadGame", {
 	 * Dialog. If it succeeds, createGameSuccess will be called.
 	 */
 	createGame : function() {
+		if(!GameEditor.getEditorController().newGameModel.GameId.match(/^[a-zA-Z]+$/)) {
+			sap.m.MessageBox.error("a-z upper case and lower case only game name");
+			return;
+		}
 		ODataModel.getODataModel().create("/Games", GameEditor.getEditorController().newGameModel, {success : this.createGameSuccess, error: this.createGameError});
 	},
 	

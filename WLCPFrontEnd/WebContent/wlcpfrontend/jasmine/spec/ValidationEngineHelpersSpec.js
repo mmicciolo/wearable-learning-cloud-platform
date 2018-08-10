@@ -87,7 +87,7 @@ describe("A suite to test the Validation Engine helpers", function() {
 
 		expect(activeScopes).toEqual(["Game Wide"]);
 	});
-	it("Test getFullyActiveScopesTransition active scopes multiple transition (Single Button Press)", function() {
+	it("Test getFullyActiveScopesTransition active scopes multiple transition (3) (Single Button Press)", function() {
 		
 		GameEditorTestingHelpers.resetGameEditor();
 		
@@ -111,6 +111,35 @@ describe("A suite to test the Validation Engine helpers", function() {
 		var activeScopes = ValidationEngineHelpers.getFullyActiveScopesTransition(transition3, [transition, transition2]);
 
 		expect(activeScopes).toEqual(["Game Wide"]);
+	});
+	it("Test getFullyActiveScopesTransition active scopes multiple transition (3) check transition (Single Button Press)", function() {
+		
+		GameEditorTestingHelpers.resetGameEditor();
+		
+		var startState = GameEditorTestingHelpers.createNewGame(3, 3);
+		var outputState = GameEditorTestingHelpers.addState(250, 500);
+		var outputState2 = GameEditorTestingHelpers.addState(500, 500);
+		var outputState3 = GameEditorTestingHelpers.addState(750, 500);
+		var connection = GameEditorTestingHelpers.addConnection(startState.htmlId, outputState.htmlId);
+		var connection2 = GameEditorTestingHelpers.addConnection(startState.htmlId, outputState2.htmlId);
+		var connection3 = GameEditorTestingHelpers.addConnection(startState.htmlId, outputState3.htmlId);
+		var transition = GameEditorTestingHelpers.addTransition(connection);
+		var transition2 = GameEditorTestingHelpers.addTransition(connection2);
+		var transition3 = GameEditorTestingHelpers.addTransition(connection3);
+		
+		transition.modelJSON.iconTabs[0].navigationContainerPages[0].singlePress[0].selected = true;
+		transition.modelJSON.iconTabs[0].navigationContainerPages[0].singlePress[1].selected = true;
+		
+		transition.onChange();
+		
+		transition2.modelJSON.iconTabs[0].navigationContainerPages[0].singlePress[2].selected = true;
+		transition2.modelJSON.iconTabs[0].navigationContainerPages[0].singlePress[3].selected = true;
+		
+		transition2.onChange();
+		
+		var activeScopes = ValidationEngineHelpers.getFullyActiveScopesTransition(transition3, [transition, transition2]);
+
+		expect(activeScopes.length == 1 && activeScopes.includes("Game Wide") && transition3.scopeMask == 0).toBeTruthy();
 	});
 	it("Test getActiveScopeMask Game Wide (3x3)", function() {
 		var activeScopeMask = ValidationEngineHelpers.getActiveScopeMask(3, 3, ["Game Wide"]);

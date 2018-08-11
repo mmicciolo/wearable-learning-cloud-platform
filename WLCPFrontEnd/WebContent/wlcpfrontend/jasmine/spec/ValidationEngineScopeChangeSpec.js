@@ -273,7 +273,7 @@ describe("A suite to test different scope changes for states & transitions like 
 		
 		expect(outputState.scopeMask == 1 && transition.scopeMask == 8188 && outputState2.scopeMask == 114).toBeTruthy();
 	});
-	it("Single Connection Single Transition Player Wide -> Team Wide Different States Single Team (3x3)", function() {
+	it("Single Connection Multiple Transition Player Wide -> Team Wide Different States Single Team (3x3)", function() {
 		GameEditorTestingHelpers.resetGameEditor();
 		
 		var startState = GameEditorTestingHelpers.createNewGame(3, 3);
@@ -341,7 +341,7 @@ describe("A suite to test different scope changes for states & transitions like 
 		
 		expect(outputState.scopeMask == 1 && transition.scopeMask == 14 && outputState2.scopeMask == 8191).toBeTruthy();
 	});
-	it("Single Connection Single Transition Team Wide -> Game Wide Different States (3x3)", function() {
+	it("Single Connection Multiple Transition Team Wide -> Game Wide Different States (3x3)", function() {
 		GameEditorTestingHelpers.resetGameEditor();
 		
 		var startState = GameEditorTestingHelpers.createNewGame(3, 3);
@@ -403,7 +403,7 @@ describe("A suite to test different scope changes for states & transitions like 
 		
 		expect(outputState.scopeMask == 1 && transition.scopeMask == 8176 && outputState2.scopeMask == 8191).toBeTruthy();
 	});
-	it("Single Connection Single Transition Player Wide -> Game Wide Different States (3x3)", function() {
+	it("Single Connection Multiple Transition Player Wide -> Game Wide Different States (3x3)", function() {
 		
 		GameEditorTestingHelpers.resetGameEditor();
 		

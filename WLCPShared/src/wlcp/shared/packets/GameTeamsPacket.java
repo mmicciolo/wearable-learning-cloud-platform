@@ -17,6 +17,13 @@ public class GameTeamsPacket extends GamePacket implements IPacket {
 		super(PacketTypes.GAME_TEAMS);
 	}
 	
+	public GameTeamsPacket(int gameInstanceId, int gameLobbyId, String username) {
+		super(PacketTypes.GAME_TEAMS);
+		this.gameInstanceId = gameInstanceId;
+		this.gameLobbyId = gameLobbyId;
+		this.username = username;
+	}
+	
 	public GameTeamsPacket(String username, List<Byte> teamNumbers) {
 		super(PacketTypes.GAME_TEAMS);
 		this.username = username;
@@ -35,8 +42,11 @@ public class GameTeamsPacket extends GamePacket implements IPacket {
 		//Get the username
 		username = getString();
 		
+		//Get the team count
+		int teamCount = getInt();
+		
 		//Loop through the team numbers
-		for(int i = 0; i < getInt(); i++) {
+		for(int i = 0; i < teamCount; i++) {
 			teamNumbers.add(getByte());
 		}
 	}

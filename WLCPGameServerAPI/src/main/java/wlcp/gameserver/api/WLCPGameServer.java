@@ -12,8 +12,10 @@ import java.util.concurrent.Semaphore;
 import wlcp.gameserver.api.exception.CouldNotConnectToWLCPException;
 import wlcp.shared.packet.IPacket;
 import wlcp.shared.packet.PacketTypes;
+import wlcp.shared.packets.ConnectAcceptedPacket;
+import wlcp.shared.packets.ConnectRejectedPacket;
 import wlcp.shared.packets.GameLobbiesPacket;
-import wlcp.shared.packets.GameLobbyInfo;
+import wlcp.shared.packets.GameTeamsPacket;
 
 public class WLCPGameServer extends Thread implements IWLCPGameServer  {
 	
@@ -124,9 +126,24 @@ public class WLCPGameServer extends Thread implements IWLCPGameServer  {
 		byteBuffer.flip();
 		switch(PacketTypes.values()[byteBuffer.get(0)]) {
 		case GAME_LOBBIES:
-			GameLobbiesPacket packet = new GameLobbiesPacket();
-			packet.populateData(byteBuffer);
-			listener.GameLobbiesRecieved(packet);
+			GameLobbiesPacket gameLobbiesPacket = new GameLobbiesPacket();
+			gameLobbiesPacket.populateData(byteBuffer);
+			listener.gameLobbiesRecieved(this, gameLobbiesPacket);
+			break;
+		case GAME_TEAMS:
+			GameTeamsPacket gameTeamsPacket = new GameTeamsPacket();
+			gameTeamsPacket.populateData(byteBuffer);
+			listener.gameTeamsRecieved(this, gameTeamsPacket);
+			break;
+		case CONNECT_ACCEPTED:
+			ConnectAcceptedPacket connectAcceptedPacket = new ConnectAcceptedPacket();
+			connectAcceptedPacket.populateData(byteBuffer);
+			listener.connectToGameAccepted(this, connectAcceptedPacket);
+			break;
+		case CONNECT_REJECTED:
+			ConnectRejectedPacket connectRejectedPacket = new ConnectRejectedPacket();
+			connectRejectedPacket.populateData(byteBuffer);
+			listener.connectToGameRejected(this, connectRejectedPacket);
 			break;
 		default:
 			break;

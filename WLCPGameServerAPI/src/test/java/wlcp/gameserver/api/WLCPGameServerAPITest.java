@@ -4,11 +4,14 @@ import java.nio.channels.CompletionHandler;
 import java.util.Scanner;
 
 import wlcp.shared.packets.ConnectAcceptedPacket;
-import wlcp.shared.packets.ConnectPacket;
 import wlcp.shared.packets.ConnectRejectedPacket;
+import wlcp.shared.packets.DisplayTextPacket;
 import wlcp.shared.packets.GameLobbiesPacket;
 import wlcp.shared.packets.GameLobbyInfo;
 import wlcp.shared.packets.GameTeamsPacket;
+import wlcp.shared.packets.KeyboardInputPacket;
+import wlcp.shared.packets.SequenceButtonPressPacket;
+import wlcp.shared.packets.SingleButtonPressPacket;
 
 public class WLCPGameServerAPITest {
 	
@@ -27,41 +30,28 @@ public class WLCPGameServerAPITest {
 		wlcpGameServer.connect(new CompletionHandler<Void, WLCPGameServer>() {
             @Override
             public void completed(Void result, WLCPGameServer channel ) {  
-            	ConnectedToServer();
+            	
+            	//The TCP Connection was successful
+            	//Get the avaliable game lobbies for the user
+            	wlcpGameServer.getGameLobbiesForUsername("mmicciolo");
             }
 
             @Override
             public void failed(Throwable exc, WLCPGameServer channel) {
+            	
+            	//The connection failed. Better handling should be implemented other than
+            	//print the stack trace such as a pop up message.
             	exc.printStackTrace();
             }}, null);
 		
+		//Loop forever
 		while(true) {
 			
 		}
 	}
-	
-	private static void ConnectedToServer() {
-		GameLobbiesPacket packet = new GameLobbiesPacket("mmicciolo");
-		wlcpGameServer.SendPacket(packet, new CompletionHandler<Void, Void>() {
-			@Override
-			public void completed(Void result, Void attachment) {
-				//Packet sent successfully
-			}
-
-			@Override
-			public void failed(Throwable exc, Void attachment) {
-				//Error sending packet
-				exc.getMessage();
-			}	
-		}, null);
-	}
 }
 
 class WLCPGameServerListenerimpl extends WLCPBaseGameServerListener implements WLCPGameServerListener {
-	
-	private String username = "mmicciolo";
-	private int gameInstanceId;
-	private int gameLobbyId;
 	
 	@Override
 	public void gameLobbiesRecieved(IWLCPGameServer gameServer, GameLobbiesPacket packet) {
@@ -71,22 +61,11 @@ class WLCPGameServerListenerimpl extends WLCPBaseGameServerListener implements W
 		}
 		Scanner sc = new Scanner(System.in);
 		int i = sc.nextInt();
+		//sc.close();
 		System.out.println(i + " selected " + packet.getGameLobbyInfo().get(i).gameLobbyName + " getting avaliable teams.");
 		gameInstanceId = packet.getGameLobbyInfo().get(i).gameInstanceId;
 		gameLobbyId = packet.getGameLobbyInfo().get(i).gameLobbyId;
-		GameTeamsPacket gameTeamsPacket = new GameTeamsPacket(packet.getGameLobbyInfo().get(i).gameInstanceId, packet.getGameLobbyInfo().get(i).gameLobbyId, "mmicciolo");
-		gameServer.SendPacket(gameTeamsPacket, new CompletionHandler<Void, Void>() {
-			@Override
-			public void completed(Void result, Void attachment) {
-				//Packet sent successfully
-			}
-
-			@Override
-			public void failed(Throwable exc, Void attachment) {
-				//Error sending packet
-				exc.getMessage();
-			}	
-		}, null);
+		gameServer.getTeamsForGameLobby(gameInstanceId, gameLobbyId, username);
 	}
 	
 	@Override
@@ -98,30 +77,52 @@ class WLCPGameServerListenerimpl extends WLCPBaseGameServerListener implements W
 		}
 		Scanner sc = new Scanner(System.in);
 		int i = sc.nextInt();
+		//sc.close();
 		System.out.println(i + " selected team " + packet.getTeamNumbers().get(i) + " joining game.");
-		ConnectPacket connectPacket = new ConnectPacket(gameInstanceId, username, gameLobbyId, packet.getTeamNumbers().get(i));
-		gameServer.SendPacket(connectPacket, new CompletionHandler<Void, Void>() {
-			@Override
-			public void completed(Void result, Void attachment) {
-				// TODO Auto-generated method stub
-				
-			}
-			@Override
-			public void failed(Throwable exc, Void attachment) {
-				// TODO Auto-generated method stub
-			}
-		}, null);
+		gameServer.joinGameLobby(gameInstanceId, gameLobbyId, packet.getTeamNumbers().get(i), username);
 	}
 	
 	@Override
 	public void connectToGameAccepted(IWLCPGameServer gameServer, ConnectAcceptedPacket packet) {
-		// TODO Auto-generated method stub
+		team = packet.getTeam();
+		player = packet.getPlayer();
 		System.out.println("ACCEPTED!");
 	}
 
 	@Override
 	public void connectToGameRejected(IWLCPGameServer gameServer, ConnectRejectedPacket packet) {
-		// TODO Auto-generated method stub
-		
+		//Could not connect to game!
+	}
+	
+	@Override
+	public void recievedDisplayText(IWLCPGameServer gameServer, DisplayTextPacket packet) {
+		System.out.println(packet.getDisplayText());
+	}
+	
+	@Override
+	public void requestSingleButtonPress(IWLCPGameServer gameServer, SingleButtonPressPacket packet) {
+		System.out.print("Please enter a button 1-4: ");
+		Scanner sc = new Scanner(System.in);
+		int i = sc.nextInt();
+		System.out.println("");
+		gameServer.sendSingleButtonPress(gameInstanceId, team, player, i);
+	}
+
+	@Override
+	public void requestSequenceButtonPress(IWLCPGameServer gameServer, SequenceButtonPressPacket packet) {
+		System.out.print("Please enter a button sequence (eg 1234): ");
+		Scanner sc = new Scanner(System.in);
+		String i = sc.nextLine();
+		System.out.println("");
+		gameServer.sendSequenceButtonPress(gameInstanceId, team, player, i);
+	}
+
+	@Override
+	public void requestKeyboardInput(IWLCPGameServer gameServer, KeyboardInputPacket packet) {
+		System.out.print("Please input using the keyboard: ");
+		Scanner sc = new Scanner(System.in);
+		String i = sc.nextLine();
+		System.out.println("");
+		gameServer.sendKeyboardInput(gameInstanceId, team, player, i);
 	}
 }

@@ -13,9 +13,15 @@ import wlcp.gameserver.api.exception.CouldNotConnectToWLCPException;
 import wlcp.shared.packet.IPacket;
 import wlcp.shared.packet.PacketTypes;
 import wlcp.shared.packets.ConnectAcceptedPacket;
+import wlcp.shared.packets.ConnectPacket;
 import wlcp.shared.packets.ConnectRejectedPacket;
+import wlcp.shared.packets.DisplayTextPacket;
 import wlcp.shared.packets.GameLobbiesPacket;
 import wlcp.shared.packets.GameTeamsPacket;
+import wlcp.shared.packets.HeartBeatPacket;
+import wlcp.shared.packets.KeyboardInputPacket;
+import wlcp.shared.packets.SequenceButtonPressPacket;
+import wlcp.shared.packets.SingleButtonPressPacket;
 
 public class WLCPGameServer extends Thread implements IWLCPGameServer  {
 	
@@ -125,6 +131,11 @@ public class WLCPGameServer extends Thread implements IWLCPGameServer  {
 	private void handlePacket(ByteBuffer byteBuffer) {
 		byteBuffer.flip();
 		switch(PacketTypes.values()[byteBuffer.get(0)]) {
+		case HEARTBEAT:
+			HeartBeatPacket heartBeatPacket = new HeartBeatPacket();
+			heartBeatPacket.populateData(byteBuffer);
+			listener.recievedHearbeat(this, heartBeatPacket);
+			break;
 		case GAME_LOBBIES:
 			GameLobbiesPacket gameLobbiesPacket = new GameLobbiesPacket();
 			gameLobbiesPacket.populateData(byteBuffer);
@@ -144,6 +155,26 @@ public class WLCPGameServer extends Thread implements IWLCPGameServer  {
 			ConnectRejectedPacket connectRejectedPacket = new ConnectRejectedPacket();
 			connectRejectedPacket.populateData(byteBuffer);
 			listener.connectToGameRejected(this, connectRejectedPacket);
+			break;
+		case DISPLAY_TEXT:
+			DisplayTextPacket displayTextPacket = new DisplayTextPacket();
+			displayTextPacket.populateData(byteBuffer);
+			listener.recievedDisplayText(this, displayTextPacket);
+			break;
+		case SINGLE_BUTTON_PRESS:
+			SingleButtonPressPacket singleButtonPressPacket = new SingleButtonPressPacket();
+			singleButtonPressPacket.populateData(byteBuffer);
+			listener.requestSingleButtonPress(this, singleButtonPressPacket);
+			break;
+		case SEQUENCE_BUTTON_PRESS:
+			SequenceButtonPressPacket sequenceButtonPressPacket = new SequenceButtonPressPacket();
+			sequenceButtonPressPacket.populateData(byteBuffer);
+			listener.requestSequenceButtonPress(this, sequenceButtonPressPacket);
+			break;
+		case KEYBOARD_INPUT:
+			KeyboardInputPacket keyboardInputPacket = new KeyboardInputPacket();
+			keyboardInputPacket.populateData(byteBuffer);
+			listener.requestKeyboardInput(this, keyboardInputPacket);
 			break;
 		default:
 			break;
@@ -185,6 +216,87 @@ public class WLCPGameServer extends Thread implements IWLCPGameServer  {
 				
 			}	
 		}, null);	
+	}
+
+	@Override
+	public void getTeamsForGameLobby(int gameInstanceId, int gameLobbyId, String username) {
+		GameTeamsPacket gameTeamsPacket = new GameTeamsPacket(gameInstanceId, gameLobbyId, username);
+		SendPacket(gameTeamsPacket, new CompletionHandler<Void, Void>() {
+			@Override
+			public void completed(Void result, Void attachment) {
+				//Packet sent successfully
+			}
+
+			@Override
+			public void failed(Throwable exc, Void attachment) {
+				//Error sending packet
+				exc.getMessage();
+			}	
+		}, null);
+	}
+
+	@Override
+	public void joinGameLobby(int gameInstanceId, int gameLobbyId, byte team, String username) {
+		ConnectPacket connectPacket = new ConnectPacket(gameInstanceId, username, gameLobbyId, team);
+		SendPacket(connectPacket, new CompletionHandler<Void, Void>() {
+			@Override
+			public void completed(Void result, Void attachment) {
+				// TODO Auto-generated method stub
+				
+			}
+			@Override
+			public void failed(Throwable exc, Void attachment) {
+				// TODO Auto-generated method stub
+			}
+		}, null);	
+	}
+
+	@Override
+	public void sendSingleButtonPress(int gameInstanceId, int team, int player, int buttonPress) {
+		SingleButtonPressPacket singleButtonPressPacket = new SingleButtonPressPacket(gameInstanceId, team, player, buttonPress);
+		SendPacket(singleButtonPressPacket, new CompletionHandler<Void, Void>() {
+			@Override
+			public void completed(Void result, Void attachment) {
+				// TODO Auto-generated method stub
+				
+			}
+			@Override
+			public void failed(Throwable exc, Void attachment) {
+				// TODO Auto-generated method stub
+			}
+		}, null);
+	}
+
+	@Override
+	public void sendSequenceButtonPress(int gameInstanceId, int team, int player, String sequenceButtonPress) {
+		SequenceButtonPressPacket sequenceButtonPressPacket = new SequenceButtonPressPacket(gameInstanceId, team, player, sequenceButtonPress);
+		SendPacket(sequenceButtonPressPacket, new CompletionHandler<Void, Void>() {
+			@Override
+			public void completed(Void result, Void attachment) {
+				// TODO Auto-generated method stub
+				
+			}
+			@Override
+			public void failed(Throwable exc, Void attachment) {
+				// TODO Auto-generated method stub
+			}
+		}, null);
+	}
+
+	@Override
+	public void sendKeyboardInput(int gameInstanceId, int team, int player, String keyboardInput) {
+		KeyboardInputPacket keyboardInputPacket = new KeyboardInputPacket(gameInstanceId, team, player, keyboardInput);
+		SendPacket(keyboardInputPacket, new CompletionHandler<Void, Void>() {
+			@Override
+			public void completed(Void result, Void attachment) {
+				// TODO Auto-generated method stub
+				
+			}
+			@Override
+			public void failed(Throwable exc, Void attachment) {
+				// TODO Auto-generated method stub
+			}
+		}, null);
 	}
 }
 

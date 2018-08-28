@@ -3,6 +3,7 @@ package wlcp.gameserver.api;
 import java.nio.channels.CompletionHandler;
 import java.util.Scanner;
 
+import wlcp.shared.packet.PacketTypes;
 import wlcp.shared.packets.ConnectAcceptedPacket;
 import wlcp.shared.packets.ConnectRejectedPacket;
 import wlcp.shared.packets.DisplayTextPacket;
@@ -17,14 +18,17 @@ public class WLCPGameServerAPITest {
 	
 	private static IWLCPGameServer wlcpGameServer = null;
 	static final String username = "mmicciolo";
+	static TransitionType currentTransition = TransitionType.NONE;
+	private static Scanner scanner = new Scanner(System.in);
+	private static WLCPGameServerListenerimpl wlcpGameServerListenerImpl = new WLCPGameServerListenerimpl();
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 		
 		//Create our server container
 		wlcpGameServer = WLCPGameServerFactory.createServer("192.168.0.100", 3333);
 		
 		//Register our event listener callbacks
-		wlcpGameServer.registerEventListener(new WLCPGameServerListenerimpl());
+		wlcpGameServer.registerEventListener(wlcpGameServerListenerImpl);
 		
 		//Make the TCP connection
 		wlcpGameServer.connect(new CompletionHandler<Void, WLCPGameServer>() {
@@ -44,11 +48,50 @@ public class WLCPGameServerAPITest {
             	exc.printStackTrace();
             }}, null);
 		
-		//Loop forever
+		//Loop forever and target 16ms frame time
 		while(true) {
-			
+			long startTime = System.currentTimeMillis();
+			handleInput();
+			long endTime = System.currentTimeMillis();
+			long finalTime = endTime - startTime;
+			if(16 - finalTime > 0) {
+				Thread.sleep(16 - finalTime);
+			}
 		}
 	}
+	
+	//Handle non blocking input
+	private static void handleInput() {
+		switch(currentTransition) {
+		case NONE:
+			break;
+		case SINGLE:
+			int buttonPress = scanner.nextInt();
+			System.out.println("");
+			wlcpGameServer.sendSingleButtonPress(wlcpGameServerListenerImpl.gameInstanceId, wlcpGameServerListenerImpl.team, wlcpGameServerListenerImpl.player, buttonPress);
+			currentTransition = TransitionType.NONE;
+			break;
+		case SEQUENCE:
+			String sequenceButtonPress = scanner.next();
+			System.out.println("");
+			wlcpGameServer.sendSequenceButtonPress(wlcpGameServerListenerImpl.gameInstanceId, wlcpGameServerListenerImpl.team, wlcpGameServerListenerImpl.player, sequenceButtonPress);
+			currentTransition = TransitionType.NONE;
+			break;
+		case KEYBOARD:
+			String keyboardInput = scanner.next();
+			System.out.println("");
+			wlcpGameServer.sendKeyboardInput(wlcpGameServerListenerImpl.gameInstanceId, wlcpGameServerListenerImpl.team, wlcpGameServerListenerImpl.player, keyboardInput);
+			currentTransition = TransitionType.NONE;
+			break;
+		}
+	}
+}
+
+enum TransitionType {
+	NONE,
+	SINGLE,
+	SEQUENCE,
+	KEYBOARD
 }
 
 class WLCPGameServerListenerimpl extends WLCPBaseGameServerListener implements WLCPGameServerListener {
@@ -105,27 +148,18 @@ class WLCPGameServerListenerimpl extends WLCPBaseGameServerListener implements W
 	@Override
 	public void requestSingleButtonPress(IWLCPGameServer gameServer, SingleButtonPressPacket packet) {
 		System.out.print("Please enter a button 1-4: ");
-		int buttonPress = scanner.nextInt();
-		scanner.reset();
-		System.out.println("");
-		gameServer.sendSingleButtonPress(gameInstanceId, team, player, buttonPress);
+		WLCPGameServerAPITest.currentTransition = TransitionType.SINGLE;
 	}
 
 	@Override
 	public void requestSequenceButtonPress(IWLCPGameServer gameServer, SequenceButtonPressPacket packet) {
 		System.out.print("Please enter a button sequence (eg 1234): ");
-		String sequenceButtonPress = scanner.next();
-		scanner.reset();
-		System.out.println("");
-		gameServer.sendSequenceButtonPress(gameInstanceId, team, player, sequenceButtonPress);
+		WLCPGameServerAPITest.currentTransition = TransitionType.SEQUENCE;
 	}
 
 	@Override
 	public void requestKeyboardInput(IWLCPGameServer gameServer, KeyboardInputPacket packet) {
 		System.out.print("Please input using the keyboard: ");
-		String keyboardInput = scanner.next();
-		scanner.reset();
-		System.out.println("");
-		gameServer.sendKeyboardInput(gameInstanceId, team, player, keyboardInput);
+		WLCPGameServerAPITest.currentTransition = TransitionType.KEYBOARD;
 	}
 }

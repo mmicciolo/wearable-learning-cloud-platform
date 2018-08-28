@@ -236,6 +236,7 @@ public class WLCPGameServer extends Thread implements IWLCPGameServer  {
 	 */
 	public void AddPacket(ByteBuffer byteBuffer) {
 		try {
+			if(byteBuffer.getInt(0) == 10) { handlePacket(byteBuffer); return; }
 			accquire();
 			recievedPackets.add(byteBuffer);
 			release();

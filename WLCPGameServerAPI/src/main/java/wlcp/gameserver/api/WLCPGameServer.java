@@ -112,6 +112,7 @@ public class WLCPGameServer extends Thread implements IWLCPGameServer  {
 	 */
 	public void run() {
 		while(true) {
+			long startTime = System.currentTimeMillis();
 			try {
 				accquire();
 				for(ByteBuffer byteBuffer : recievedPackets) {
@@ -119,6 +120,15 @@ public class WLCPGameServer extends Thread implements IWLCPGameServer  {
 					recievedPackets.remove(byteBuffer);
 				}
 				release();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			long finalTime = System.currentTimeMillis() - startTime;
+			try {
+				if(16 - finalTime > 0) {
+					Thread.sleep(16 - finalTime);
+				}
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

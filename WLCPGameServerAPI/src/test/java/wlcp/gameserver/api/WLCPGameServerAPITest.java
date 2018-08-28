@@ -106,6 +106,7 @@ class WLCPGameServerListenerimpl extends WLCPBaseGameServerListener implements W
 	public void requestSingleButtonPress(IWLCPGameServer gameServer, SingleButtonPressPacket packet) {
 		System.out.print("Please enter a button 1-4: ");
 		int buttonPress = scanner.nextInt();
+		scanner.reset();
 		System.out.println("");
 		gameServer.sendSingleButtonPress(gameInstanceId, team, player, buttonPress);
 	}
@@ -113,7 +114,8 @@ class WLCPGameServerListenerimpl extends WLCPBaseGameServerListener implements W
 	@Override
 	public void requestSequenceButtonPress(IWLCPGameServer gameServer, SequenceButtonPressPacket packet) {
 		System.out.print("Please enter a button sequence (eg 1234): ");
-		String sequenceButtonPress = scanner.nextLine();
+		String sequenceButtonPress = scanner.next();
+		scanner.reset();
 		System.out.println("");
 		gameServer.sendSequenceButtonPress(gameInstanceId, team, player, sequenceButtonPress);
 	}
@@ -121,7 +123,8 @@ class WLCPGameServerListenerimpl extends WLCPBaseGameServerListener implements W
 	@Override
 	public void requestKeyboardInput(IWLCPGameServer gameServer, KeyboardInputPacket packet) {
 		System.out.print("Please input using the keyboard: ");
-		String keyboardInput = scanner.nextLine();
+		String keyboardInput = scanner.next();
+		scanner.reset();
 		System.out.println("");
 		gameServer.sendKeyboardInput(gameInstanceId, team, player, keyboardInput);
 	}

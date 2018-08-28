@@ -12,6 +12,13 @@ public class HeartBeatPacket extends GamePacket implements IPacket {
 		super(PacketTypes.HEARTBEAT);
 	}
 	
+	public HeartBeatPacket(int gameInstanceId, int team, int player) {
+		super(PacketTypes.HEARTBEAT);
+		this.gameInstanceId = gameInstanceId;
+		this.team = team;
+		this.player = player;
+	}
+	
 	@Override
 	public void populateData(ByteBuffer byteBuffer) {
 		

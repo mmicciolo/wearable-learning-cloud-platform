@@ -3,10 +3,10 @@ package wlcp.shared.packets;
 
 public class GameLobbyInfo {
 	
-	String gameName;
-	String gameLobbyName;
-	int gameLobbyId;
-	int gameInstanceId;
+	public String gameName;
+	public String gameLobbyName;
+	public int gameLobbyId;
+	public int gameInstanceId;
 	
 	public GameLobbyInfo(String gameName, String gameLobbyName, int gameLobbyId, int gameInstanceId) {
 		super();

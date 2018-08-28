@@ -23,6 +23,13 @@ import wlcp.shared.packets.KeyboardInputPacket;
 import wlcp.shared.packets.SequenceButtonPressPacket;
 import wlcp.shared.packets.SingleButtonPressPacket;
 
+/**
+ * This class implements methods defined in the IWLCPGameServer interface.
+ * The purpose of this class is to provide connectivity and to the server
+ * as well as a way to interact with it.
+ * @author Matthew Micciolo
+ *
+ */
 public class WLCPGameServer extends Thread implements IWLCPGameServer  {
 	
 	private String ipAddress;
@@ -38,6 +45,11 @@ public class WLCPGameServer extends Thread implements IWLCPGameServer  {
 		this.ipPort = ipPort;
 	}
 	
+	/**
+	 * Call this method in order to attempt to make a TCP connection to the game server.
+	 * If the call succeeds the completed method of your completion handler will be called.
+	 * If the call fails the failed method will be called.
+	 */
 	public <A> void connect(CompletionHandler<Void, ? super A> completionHandler, A attachment) {
 		
 		//Open up an async socket channel
@@ -76,6 +88,11 @@ public class WLCPGameServer extends Thread implements IWLCPGameServer  {
             }});
 		} 
 	
+	/**
+	 * Call this method to disconnect the TCP socket connection.
+	 * If the call succeeds the completed method of your completion handler will be called.
+	 * If the call fails the failed method will be called.
+	 */
 	public <A> void disconnect(CompletionHandler<Void, ? super A> completionHandler, A attachment) {
 		
 		//Try to close the channel
@@ -89,6 +106,10 @@ public class WLCPGameServer extends Thread implements IWLCPGameServer  {
 		}
 	}
 	
+	/**
+	 * Main packet processing queue. Pull packets off as they are 
+	 * available and process them.
+	 */
 	public void run() {
 		while(true) {
 			try {
@@ -105,6 +126,12 @@ public class WLCPGameServer extends Thread implements IWLCPGameServer  {
 		}
 	}
 	
+	/**
+	 * Call this method in order to send a packet to the game server. Any type of IPacket can be sent.
+	 * These packets are defined in the WLCP Shared library.
+	 * If the call succeeds the completed method of your completion handler will be called.
+	 * If the call fails the failed method will be called.
+	 */
 	public <A> void SendPacket(IPacket packet, CompletionHandler<Void, ? super A> completionHandler, A attachment) {
 		ByteBuffer byteBuffer = packet.assemblePacket();
 		channel.write(packet.assemblePacket(), channel, new CompletionHandler<Integer, AsynchronousSocketChannel >() {
@@ -124,10 +151,21 @@ public class WLCPGameServer extends Thread implements IWLCPGameServer  {
 		});
 	}
 	
+	/**
+	 * This method registers a WLCPGameServerListener. This is a collection of methods which
+	 * will be called when certain packets from the server are recieved. The API provides
+	 * a base implementation of a listener called WLCPBaseGameServerListener that should be
+	 * used in most cases.
+	 */
 	public void registerEventListener(WLCPGameServerListener listener) {
 		this.listener = listener;
 	}
 	
+	/**
+	 * This private method is called by the recieved packets queue in run().
+	 * It will distribute the packets recieved to the appropriate listener.
+	 * @param byteBuffer
+	 */
 	private void handlePacket(ByteBuffer byteBuffer) {
 		byteBuffer.flip();
 		switch(PacketTypes.values()[byteBuffer.get(0)]) {
@@ -181,6 +219,11 @@ public class WLCPGameServer extends Thread implements IWLCPGameServer  {
 		}
 	}
 	
+	/**
+	 * This method is called by the ReadWriteHandler for the async socket connection.
+	 * It is used to add a newly recieved packet to the processing queue.
+	 * @param byteBuffer
+	 */
 	public void AddPacket(ByteBuffer byteBuffer) {
 		try {
 			accquire();
@@ -192,14 +235,27 @@ public class WLCPGameServer extends Thread implements IWLCPGameServer  {
 		}
 	}
 	
+	/**
+	 * Accquire the packet queue sempahore
+	 * @throws InterruptedException
+	 */
 	private void accquire() throws InterruptedException {
 		available.acquire();
 	}
 	
+	/**
+	 * Release the packet queue semaphore
+	 */
 	private void release() {
 		available.release();
 	}
 
+	/**
+	 * Get the game lobbies that currently have games instances running
+	 * in them for a username.
+	 * If the call succeeds the completed method of your completion handler will be called.
+	 * If the call fails the failed method will be called.
+	 */
 	@Override
 	public void getGameLobbiesForUsername(String username) {
 		GameLobbiesPacket packet = new GameLobbiesPacket(username);
@@ -218,6 +274,11 @@ public class WLCPGameServer extends Thread implements IWLCPGameServer  {
 		}, null);	
 	}
 
+	/**
+	 * Get the available teams for a given game lobby.
+	 * If the call succeeds the completed method of your completion handler will be called.
+	 * If the call fails the failed method will be called.
+	 */
 	@Override
 	public void getTeamsForGameLobby(int gameInstanceId, int gameLobbyId, String username) {
 		GameTeamsPacket gameTeamsPacket = new GameTeamsPacket(gameInstanceId, gameLobbyId, username);
@@ -235,6 +296,11 @@ public class WLCPGameServer extends Thread implements IWLCPGameServer  {
 		}, null);
 	}
 
+	/**
+	 * Joins a game lobby.
+	 * If the call suceeds the completed method of your completion handler will be called.
+	 * If the call fails the failed method will be called.
+	 */
 	@Override
 	public void joinGameLobby(int gameInstanceId, int gameLobbyId, byte team, String username) {
 		ConnectPacket connectPacket = new ConnectPacket(gameInstanceId, username, gameLobbyId, team);
@@ -251,6 +317,11 @@ public class WLCPGameServer extends Thread implements IWLCPGameServer  {
 		}, null);	
 	}
 
+	/**
+	 * Sends a single button press in the format of 1-4 (red, green, blue, black).
+	 * If the call suceeds the completed method of your completion handler will be called.
+	 * If the call fails the failed method will be called.
+	 */
 	@Override
 	public void sendSingleButtonPress(int gameInstanceId, int team, int player, int buttonPress) {
 		SingleButtonPressPacket singleButtonPressPacket = new SingleButtonPressPacket(gameInstanceId, team, player, buttonPress);
@@ -267,6 +338,11 @@ public class WLCPGameServer extends Thread implements IWLCPGameServer  {
 		}, null);
 	}
 
+	/**
+	 * Sends a sequence button press in the format of 1234 (red, green, blue, black).
+	 * If the call suceeds the completed method of your completion handler will be called.
+	 * If the call fails the failed method will be called.
+	 */
 	@Override
 	public void sendSequenceButtonPress(int gameInstanceId, int team, int player, String sequenceButtonPress) {
 		SequenceButtonPressPacket sequenceButtonPressPacket = new SequenceButtonPressPacket(gameInstanceId, team, player, sequenceButtonPress);
@@ -283,6 +359,11 @@ public class WLCPGameServer extends Thread implements IWLCPGameServer  {
 		}, null);
 	}
 
+	/**
+	 * Sends keyboard input (text).
+	 * If the call suceeds the completed method of your completion handler will be called.
+	 * If the call fails the failed method will be called.
+	 */
 	@Override
 	public void sendKeyboardInput(int gameInstanceId, int team, int player, String keyboardInput) {
 		KeyboardInputPacket keyboardInputPacket = new KeyboardInputPacket(gameInstanceId, team, player, keyboardInput);
@@ -300,6 +381,12 @@ public class WLCPGameServer extends Thread implements IWLCPGameServer  {
 	}
 }
 
+/**
+ * Internal class used by the async sockets for when reading of the
+ * socket needs to be handled.
+ * @author Matthew Micciolo
+ *
+ */
 class ReadWriteHandler implements CompletionHandler<Integer, Server> {
 
 	public void completed(Integer result, Server server) {
@@ -352,6 +439,11 @@ class ReadWriteHandler implements CompletionHandler<Integer, Server> {
 	
 }
 
+/**
+ * Internal class used to hold information about the server we are connected to.
+ * @author Matthew Micciolo
+ *
+ */
 class Server {
 	
 	public AsynchronousSocketChannel serverSocket;
@@ -365,5 +457,3 @@ class Server {
 		this.wlcpGameServer = wlcpGameServer;
 	}
 }
-
-

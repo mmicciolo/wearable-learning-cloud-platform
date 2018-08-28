@@ -10,8 +10,13 @@ import wlcp.shared.packets.KeyboardInputPacket;
 import wlcp.shared.packets.SequenceButtonPressPacket;
 import wlcp.shared.packets.SingleButtonPressPacket;
 
+/**
+ * Listeners that must be implemented in order for basic functionality
+ * of the game client.
+ * @author Matthew Micciolo
+ *
+ */
 public interface WLCPGameServerListener {
-
 	void recievedHearbeat(IWLCPGameServer gameServer, HeartBeatPacket packet);
 	void gameLobbiesRecieved(IWLCPGameServer gameServer, GameLobbiesPacket packet);
 	void gameTeamsRecieved(IWLCPGameServer gameServer, GameTeamsPacket packet);

@@ -12,9 +12,17 @@ import wlcp.shared.packets.KeyboardInputPacket;
 import wlcp.shared.packets.SequenceButtonPressPacket;
 import wlcp.shared.packets.SingleButtonPressPacket;
 
+/**
+ * This is a base listener that has been provided for convience and 
+ * as well as something to start with. Mostly all listeners can be
+ * implemented differently, but some such as heart beat can
+ * be implemented generically.
+ * @author Matthew Micciolo
+ *
+ */
 public class WLCPBaseGameServerListener implements WLCPGameServerListener {
 	
-	protected String username = "mmicciolo";
+	protected String username;
 	protected int gameInstanceId;
 	protected int gameLobbyId;
 	protected int team;

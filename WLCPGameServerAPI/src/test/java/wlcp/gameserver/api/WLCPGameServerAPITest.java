@@ -16,7 +16,7 @@ import wlcp.shared.packets.SingleButtonPressPacket;
 public class WLCPGameServerAPITest {
 	
 	private static IWLCPGameServer wlcpGameServer = null;
-	private String username = "mmicciolo";
+	static final String username = "mmicciolo";
 
 	public static void main(String[] args) {
 		
@@ -33,7 +33,7 @@ public class WLCPGameServerAPITest {
             	
             	//The TCP Connection was successful
             	//Get the avaliable game lobbies for the user
-            	wlcpGameServer.getGameLobbiesForUsername("mmicciolo");
+            	wlcpGameServer.getGameLobbiesForUsername(username);
             }
 
             @Override
@@ -53,18 +53,22 @@ public class WLCPGameServerAPITest {
 
 class WLCPGameServerListenerimpl extends WLCPBaseGameServerListener implements WLCPGameServerListener {
 	
+	private Scanner scanner = new Scanner(System.in);
+	
+	public WLCPGameServerListenerimpl() {
+		username = WLCPGameServerAPITest.username;
+	}
+	
 	@Override
 	public void gameLobbiesRecieved(IWLCPGameServer gameServer, GameLobbiesPacket packet) {
 		System.out.println("The following lobbies are available to join: ");
 		for(GameLobbyInfo info : packet.getGameLobbyInfo()) {
 			System.out.println(packet.getGameLobbyInfo().indexOf(info) + ". " + info.gameLobbyName);
 		}
-		Scanner sc = new Scanner(System.in);
-		int i = sc.nextInt();
-		//sc.close();
-		System.out.println(i + " selected " + packet.getGameLobbyInfo().get(i).gameLobbyName + " getting avaliable teams.");
-		gameInstanceId = packet.getGameLobbyInfo().get(i).gameInstanceId;
-		gameLobbyId = packet.getGameLobbyInfo().get(i).gameLobbyId;
+		int gameLobby = scanner.nextInt();
+		System.out.println(gameLobby + " selected " + packet.getGameLobbyInfo().get(gameLobby).gameLobbyName + " getting avaliable teams.");
+		gameInstanceId = packet.getGameLobbyInfo().get(gameLobby).gameInstanceId;
+		gameLobbyId = packet.getGameLobbyInfo().get(gameLobby).gameLobbyId;
 		gameServer.getTeamsForGameLobby(gameInstanceId, gameLobbyId, username);
 	}
 	
@@ -75,11 +79,9 @@ class WLCPGameServerListenerimpl extends WLCPBaseGameServerListener implements W
 			int teamNumber = (int) b;
 			System.out.println(packet.getTeamNumbers().indexOf(b) + ". " + "Team " + teamNumber);
 		}
-		Scanner sc = new Scanner(System.in);
-		int i = sc.nextInt();
-		//sc.close();
-		System.out.println(i + " selected team " + packet.getTeamNumbers().get(i) + " joining game.");
-		gameServer.joinGameLobby(gameInstanceId, gameLobbyId, packet.getTeamNumbers().get(i), username);
+		int team = scanner.nextInt();
+		System.out.println(team + " selected team " + packet.getTeamNumbers().get(team) + " joining game.");
+		gameServer.joinGameLobby(gameInstanceId, gameLobbyId, packet.getTeamNumbers().get(team), username);
 	}
 	
 	@Override
@@ -92,6 +94,7 @@ class WLCPGameServerListenerimpl extends WLCPBaseGameServerListener implements W
 	@Override
 	public void connectToGameRejected(IWLCPGameServer gameServer, ConnectRejectedPacket packet) {
 		//Could not connect to game!
+		System.out.println("Could not connect to game!");
 	}
 	
 	@Override
@@ -102,27 +105,24 @@ class WLCPGameServerListenerimpl extends WLCPBaseGameServerListener implements W
 	@Override
 	public void requestSingleButtonPress(IWLCPGameServer gameServer, SingleButtonPressPacket packet) {
 		System.out.print("Please enter a button 1-4: ");
-		Scanner sc = new Scanner(System.in);
-		int i = sc.nextInt();
+		int buttonPress = scanner.nextInt();
 		System.out.println("");
-		gameServer.sendSingleButtonPress(gameInstanceId, team, player, i);
+		gameServer.sendSingleButtonPress(gameInstanceId, team, player, buttonPress);
 	}
 
 	@Override
 	public void requestSequenceButtonPress(IWLCPGameServer gameServer, SequenceButtonPressPacket packet) {
 		System.out.print("Please enter a button sequence (eg 1234): ");
-		Scanner sc = new Scanner(System.in);
-		String i = sc.nextLine();
+		String sequenceButtonPress = scanner.nextLine();
 		System.out.println("");
-		gameServer.sendSequenceButtonPress(gameInstanceId, team, player, i);
+		gameServer.sendSequenceButtonPress(gameInstanceId, team, player, sequenceButtonPress);
 	}
 
 	@Override
 	public void requestKeyboardInput(IWLCPGameServer gameServer, KeyboardInputPacket packet) {
 		System.out.print("Please input using the keyboard: ");
-		Scanner sc = new Scanner(System.in);
-		String i = sc.nextLine();
+		String keyboardInput = scanner.nextLine();
 		System.out.println("");
-		gameServer.sendKeyboardInput(gameInstanceId, team, player, i);
+		gameServer.sendKeyboardInput(gameInstanceId, team, player, keyboardInput);
 	}
 }

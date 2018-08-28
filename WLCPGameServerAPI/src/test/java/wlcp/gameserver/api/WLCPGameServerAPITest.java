@@ -3,7 +3,6 @@ package wlcp.gameserver.api;
 import java.nio.channels.CompletionHandler;
 import java.util.Scanner;
 
-import wlcp.shared.packet.PacketTypes;
 import wlcp.shared.packets.ConnectAcceptedPacket;
 import wlcp.shared.packets.ConnectRejectedPacket;
 import wlcp.shared.packets.DisplayTextPacket;

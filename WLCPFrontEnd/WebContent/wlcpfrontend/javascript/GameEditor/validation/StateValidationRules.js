@@ -75,7 +75,9 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 			for(var i = 0; i < state.inputConnections.length; i++) {
 				for(var n = 0; n < state.inputConnections[i].connectionFromState.outputConnections.length; n++) {
 					if(state.inputConnections[i].connectionFromState.outputConnections[n].connectionToState.htmlId != state.htmlId) {
-						this.validate(state.inputConnections[i].connectionFromState.outputConnections[n].connectionToState, false);
+						if(!state.inputConnections[i].connectionFromState.outputConnections[n].isLoopBack) {
+							this.validate(state.inputConnections[i].connectionFromState.outputConnections[n].connectionToState, false);
+						}
 					}
 				}
 			}

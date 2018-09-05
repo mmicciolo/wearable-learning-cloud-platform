@@ -33,8 +33,15 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 		for(var i = 0; i < state.inputConnections.length; i++) {
 			for(var n = 0; n < state.inputConnections[i].connectionFromState.outputConnections.length; n++) {
 				if(state.inputConnections[i].connectionFromState.outputConnections[n].connectionToState.htmlId != state.htmlId) {
-					//Get the active scopes
-					var activeScopes = ValidationEngineHelpers.getActiveScopesState(state.inputConnections[i].connectionFromState.outputConnections[n].connectionToState);
+					
+					//If its a loopback and transition, the only neighbors we care about are the ones in the transition
+					if(state.inputConnections[i].connectionFromState.outputConnections[n].isLoopBack && state.inputConnections[i].connectionFromState.outputConnections[n].transition != null) {
+						//Get the active scopes
+						var activeScopes = ValidationEngineHelpers.getActiveScopesTransition(state.inputConnections[i].connectionFromState.outputConnections[n].transition);
+					} else {
+						//Get the active scopes
+						var activeScopes = ValidationEngineHelpers.getActiveScopesState(state.inputConnections[i].connectionFromState.outputConnections[n].connectionToState);
+					}
 					
 					//Get the active scope mask
 					var activeScopeMask = ValidationEngineHelpers.getActiveScopeMask(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, activeScopes);

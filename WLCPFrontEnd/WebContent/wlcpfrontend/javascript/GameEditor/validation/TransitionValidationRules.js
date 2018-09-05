@@ -58,8 +58,19 @@ var TransitionValidationRule = class TransitionValidationRule extends Validation
 			
 			neighborTransitions[i].setScope(parentMask & (~neighborMask), GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam);
 			
-			//Update the state below us
-			transition.wlcpConnection.connectionToState.onChange();
+			if(!transition.wlcpConnection.isLoopBack) {
+				//Update the state below us
+				transition.wlcpConnection.connectionToState.onChange();
+			}
+		}
+		
+		//If the transition is a loopback Revalidate our neighbors states but make sure they dont revalidate their neighbors
+		if(transition.wlcpConnection.isLoopBack) {
+			for(var i = 0; i < transition.wlcpConnection.connectionFromState.outputConnections.length; i++) {
+				if(transition.wlcpConnection.connectionFromState.outputConnections[i].transition == null) {
+					transition.wlcpConnection.connectionFromState.outputConnections[i].connectionToState.onChange();
+				}
+			}
 		}
 	}
 	

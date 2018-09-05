@@ -55,6 +55,47 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 			}
 		}
 		
+		var transitionNeighborMask = 0;
+		//Loop through the neighbor transitions
+		
+		//Loop through my input connections output connections
+		//Some but not all
+		
+		var transitionCount = 0;
+		
+		for(var i = 0; i < state.inputConnections.length; i++) {
+			if(state.inputConnections[i].transition != null) {
+				transitionCount++;
+			}
+		}
+		
+		if(transitionCount != state.inputConnections.length) {
+			for(var i = 0; i < state.inputConnections.length; i++) {
+				transitionCount = 0;
+				for(var n = 0; n < state.inputConnections[i].connectionFromState.outputConnections.length; n++) {
+					if(state.inputConnections[i].connectionFromState.outputConnections[n].transition != null) {
+						transitionCount++;
+					}
+				}
+				if(transitionCount != state.inputConnections[i].connectionFromState.outputConnections.length) {
+					for(var n = 0; n < state.inputConnections[i].connectionFromState.outputConnections.length; n++) {
+						if(state.inputConnections[i].connectionFromState.outputConnections[n].transition != null && state.inputConnections[i].connectionFromState.outputConnections[n].connectionToState.htmlId != state.htmlId) {
+							var activeScopes = ValidationEngineHelpers.getActiveScopesTransition(state.inputConnections[i].connectionFromState.outputConnections[n].transition);
+							
+							//Get the active scope mask
+							var activeScopeMask = ValidationEngineHelpers.getActiveScopeMask(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, activeScopes);
+							
+							var activeScopeMasks = ValidationEngineHelpers.getActiveScopeMasks(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, activeScopeMask);
+							
+							var notActiveScopeMasks = ~ValidationEngineHelpers.andActiveScopeMasks(activeScopeMasks);
+							
+							transitionNeighborMask = transitionNeighborMask | (activeScopeMask | notActiveScopeMasks);
+						}
+					}
+				}
+			}
+		}
+		
 		//Get the active scopes
 		var activeScopes = ValidationEngineHelpers.getActiveScopesState(state);
 		
@@ -67,7 +108,7 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 		//And the active scope mask together
 		var andScopeMasks = ValidationEngineHelpers.andActiveScopeMasks(activeScopeMasks);
 		
-		state.setScope(parentMask & andScopeMasks & (~neighborMask), GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam);
+		state.setScope(parentMask & andScopeMasks & (~neighborMask) & (~transitionNeighborMask), GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam);
 		
 		//Recursively revalidate the states below us
 		for(var i = 0; i < state.outputConnections.length; i++) {
@@ -83,7 +124,11 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 				for(var n = 0; n < state.inputConnections[i].connectionFromState.outputConnections.length; n++) {
 					if(state.inputConnections[i].connectionFromState.outputConnections[n].connectionToState.htmlId != state.htmlId) {
 						if(!state.inputConnections[i].connectionFromState.outputConnections[n].isLoopBack) {
-							this.validate(state.inputConnections[i].connectionFromState.outputConnections[n].connectionToState, false);
+							if(state.inputConnections[i].connectionFromState.outputConnections[n].transition == null) {
+								this.validate(state.inputConnections[i].connectionFromState.outputConnections[n].connectionToState, false);
+							} else {
+								state.inputConnections[i].connectionFromState.outputConnections[n].transition.validationRules[0].validate(state.inputConnections[i].connectionFromState.outputConnections[n].transition, false);
+							}
 						}
 					}
 				}

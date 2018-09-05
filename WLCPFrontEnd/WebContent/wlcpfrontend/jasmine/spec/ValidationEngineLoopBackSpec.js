@@ -200,6 +200,6 @@ describe("A suite to test the Validation Engine Loop Back Mechanisms for both st
 		transition.modelJSON.iconTabs[0].navigationContainerPages[0].singlePress[0].selected = true;
 		transition.onChange();
 
-		//expect(outputState.scopeMask == 7182 && transition.scopeMask == 2 && outputState2.scopeMask == 900).toBeTruthy();
+		expect(outputState.scopeMask == 7182 && transition.scopeMask == 902 && outputState2.scopeMask == 900).toBeTruthy();
 	});
 });

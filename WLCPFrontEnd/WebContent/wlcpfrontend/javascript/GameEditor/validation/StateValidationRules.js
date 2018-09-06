@@ -27,12 +27,20 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 		
 		parentMask = ValidationEngineHelpers.checkForScopeChanges(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, parentMask);
 		
+		var transitionCount = 0;
+		
+		for(var i = 0; i < state.inputConnections.length; i++) {
+			if(state.inputConnections[i].transition != null) {
+				transitionCount++;
+			}
+		}
+		
 		var neighborMask = 0;
 		
 		//Loop through the neighbor states
 		for(var i = 0; i < state.inputConnections.length; i++) {
 			for(var n = 0; n < state.inputConnections[i].connectionFromState.outputConnections.length; n++) {
-				if(state.inputConnections[i].connectionFromState.outputConnections[n].connectionToState.htmlId != state.htmlId) {
+				if(state.inputConnections[i].connectionFromState.outputConnections[n].connectionToState.htmlId != state.htmlId && state.inputConnections[i].connectionFromState.outputConnections[n].transition == null) {
 					
 					//If its a loopback and transition, the only neighbors we care about are the ones in the transition
 					if(state.inputConnections[i].connectionFromState.outputConnections[n].isLoopBack && state.inputConnections[i].connectionFromState.outputConnections[n].transition != null) {
@@ -60,14 +68,6 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 		
 		//Loop through my input connections output connections
 		//Some but not all
-		
-		var transitionCount = 0;
-		
-		for(var i = 0; i < state.inputConnections.length; i++) {
-			if(state.inputConnections[i].transition != null) {
-				transitionCount++;
-			}
-		}
 		
 		if(transitionCount != state.inputConnections.length) {
 			for(var i = 0; i < state.inputConnections.length; i++) {
@@ -110,11 +110,13 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 		
 		state.setScope(parentMask & andScopeMasks & (~neighborMask) & (~transitionNeighborMask), GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam);
 		
-		//Recursively revalidate the states below us
-		for(var i = 0; i < state.outputConnections.length; i++) {
-			//Ignore loop backs
-			if(!state.outputConnections[i].isLoopBack) {
-				this.validate(state.outputConnections[i].connectionToState, true)
+		if(updateNeighbors) {
+			//Recursively revalidate the states below us
+			for(var i = 0; i < state.outputConnections.length; i++) {
+				//Ignore loop backs
+				if(!state.outputConnections[i].isLoopBack) {
+					this.validate(state.outputConnections[i].connectionToState, true)
+				}
 			}
 		}
 		
@@ -135,11 +137,14 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 			}
 		}
 		
-		//Revalidate the transitions below us
-		for(var i = 0; i < state.outputConnections.length; i++) {
-			if(state.outputConnections[i].transition != null) {
-				state.outputConnections[i].transition.onChange();
-			}
-		}	
+		if(updateNeighbors) {
+			//Revalidate the transitions below us
+			for(var i = 0; i < state.outputConnections.length; i++) {
+				if(state.outputConnections[i].transition != null) {
+					//state.outputConnections[i].transition.onChange();
+					state.outputConnections[i].transition.validationRules[0].validate(state.outputConnections[i].transition, false);
+				}
+			}	
+		}
 	}
 }

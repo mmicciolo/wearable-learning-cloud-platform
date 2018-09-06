@@ -86,11 +86,13 @@ var TransitionValidationRule = class TransitionValidationRule extends Validation
 			}
 		}
 		
-		//If the transition is a loopback Revalidate our neighbors states but make sure they dont revalidate their neighbors
-		if(transition.wlcpConnection.isLoopBack) {
-			for(var i = 0; i < transition.wlcpConnection.connectionFromState.outputConnections.length; i++) {
-				if(transition.wlcpConnection.connectionFromState.outputConnections[i].transition == null) {
-					transition.wlcpConnection.connectionFromState.outputConnections[i].connectionToState.onChange();
+		if(updateNeighbors) {
+			//If the transition is a loopback Revalidate our neighbors states but make sure they dont revalidate their neighbors
+			if(transition.wlcpConnection.isLoopBack) {
+				for(var i = 0; i < transition.wlcpConnection.connectionFromState.outputConnections.length; i++) {
+					if(transition.wlcpConnection.connectionFromState.outputConnections[i].transition == null) {
+						transition.wlcpConnection.connectionFromState.outputConnections[i].connectionToState.validationRules[0].validate(transition.wlcpConnection.connectionFromState.outputConnections[i].connectionToState,false);
+					}
 				}
 			}
 		}

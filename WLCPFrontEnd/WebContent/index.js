@@ -27,14 +27,8 @@ var Index = {
 		jQuery.sap.require("wlcpfrontend/javascript/GameEditor/state/StartState");
 		jQuery.sap.require("wlcpfrontend/javascript/GameEditor/state/OutputState");
 		
-		jQuery.sap.require("wlcpfrontend/javascript/GameEditor/state/StateConfig/StateConfig");
-		jQuery.sap.require("wlcpfrontend/javascript/GameEditor/state/StateConfig/StateConfigDisplayText");
-		
 		jQuery.sap.require("wlcpfrontend/javascript/GameEditor/transition/Transition");
 		jQuery.sap.require("wlcpfrontend/javascript/GameEditor/transition/InputTransition");
-		
-		jQuery.sap.require("wlcpfrontend/javascript/GameEditor/transition/TransitionConfig/TransitionConfig");
-		jQuery.sap.require("wlcpfrontend/javascript/GameEditor/transition/TransitionConfig/TransitionConfigSingleButtonPress");
 		
 		jQuery.sap.require("wlcpfrontend/javascript/GameEditor/connection/Connection");
 		
@@ -44,6 +38,12 @@ var Index = {
 		jQuery.sap.require("wlcpfrontend/javascript/GameEditor/validation/ConnectionValidationRules");
 		jQuery.sap.require("wlcpfrontend/javascript/GameEditor/validation/StateValidationRules");
 		jQuery.sap.require("wlcpfrontend/javascript/GameEditor/validation/TransitionValidationRules");
+		
+		jQuery.sap.require("wlcpfrontend/javascript/GameEditor/state/StateConfig/StateConfig");
+		jQuery.sap.require("wlcpfrontend/javascript/GameEditor/state/StateConfig/StateConfigDisplayText");
+		
+		jQuery.sap.require("wlcpfrontend/javascript/GameEditor/transition/TransitionConfig/TransitionConfig");
+		jQuery.sap.require("wlcpfrontend/javascript/GameEditor/transition/TransitionConfig/TransitionConfigSingleButtonPress");
 		
 		jQuery.sap.require("wlcpfrontend/javascript/GameEditor/GameEditor");
 		jQuery.sap.require("wlcpfrontend/javascript/ODataModel");

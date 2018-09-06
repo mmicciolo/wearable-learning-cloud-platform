@@ -2,6 +2,7 @@ var TransitionConfigSingleButtonPress = class TransitionConfigSingleButtonPress 
 	
 	constructor(transition) {
 		super(transition);
+		this.validationRules.push(new SingleButtonPressValidationRule());
 	}
 	
 	getNavigationListItem() {
@@ -128,4 +129,87 @@ var TransitionConfigSingleButtonPress = class TransitionConfigSingleButtonPress 
 		};
 	}
 	
+}
+
+var SingleButtonPressValidationRule = class SingleButtonPressValidationRule extends ValidationRule {
+	
+	validate(transition) {
+		
+		var state = transition.wlcpConnection.connectionFromState;
+		
+		var transitionList = [];
+		
+		for(var i = 0; i < state.outputConnections.length; i++) {
+			if(state.outputConnections[i].transition != null) {
+				transitionList.push(state.outputConnections[i].transition);
+			}
+		}
+		
+		for(var i = 0; i < transitionList.length; i++) {
+			
+			var scopeCollection = [];
+			for(var n = 0; n < transitionList.length; n++) {
+				if(transitionList[i].overlayId != transitionList[n].overlayId) {
+					for(var j = 0; j < transitionList[n].modelJSON.iconTabs.length; j++) {
+						scopeCollection.push({transition : transitionList[n], model : transitionList[n].modelJSON.iconTabs[j]});
+					}
+				}
+			}
+
+			for(var button = 0; button < 4; button++) {
+				for(var n = 0; n < scopeCollection.length; n++) {
+					var selected = false;
+					for(var j = 0; j < scopeCollection.length; j++) {
+						if(scopeCollection[n].model.scope == scopeCollection[j].model.scope) {
+							for(var k = 0; k < scopeCollection[j].model.navigationContainerPages.length; k++) {
+								if(scopeCollection[j].model.navigationContainerPages[k].title == "Single Button Press") {									
+									if(scopeCollection[j].model.navigationContainerPages[k].singlePress[button].selected) {
+										selected = true;
+									}
+								}
+							}
+						}
+					}
+					var trans = this.getTab(transitionList[i], scopeCollection[n].model.scope);
+					if(trans != null) {
+						trans.singleButtonPress.singlePress[button].enabled = !selected;
+						this.setScopeData(transitionList[i], trans.iconTab);
+					}
+				}
+			}
+			
+			if(scopeCollection.length == 0 ) {
+				for(var j = 0; j < transitionList[0].modelJSON.iconTabs.length; j++) {
+					var trans = this.getTab(transitionList[0], transitionList[0].modelJSON.iconTabs[j].scope);
+					for(var button = 0; button < 4; button++) {
+						trans.singleButtonPress.singlePress[button].enabled = true;
+					}
+					this.setScopeData(transitionList[0], trans.iconTab);
+				}
+			}
+		}
+	}
+	
+	getTab(transition, scope) {
+		for(var i = 0; i < transition.modelJSON.iconTabs.length; i++) {
+			if(transition.modelJSON.iconTabs[i].scope == scope) {
+				for(var n = 0; n < transition.modelJSON.iconTabs[i].navigationContainerPages.length; n++) {
+					if(transition.modelJSON.iconTabs[i].navigationContainerPages[n].title == "Single Button Press") {
+						return { iconTab : transition.modelJSON.iconTabs[i], singleButtonPress :  transition.modelJSON.iconTabs[i].navigationContainerPages[n]}
+					}
+				}
+			}
+		}
+		return null;
+	}
+	
+	setScopeData(transition, model) {
+		for(var i = 0; i < transition.modelJSON.iconTabs.length; i++) {
+			if(transition.modelJSON.iconTabs[i].scope == model.scope) {
+				transition.modelJSON.iconTabs[i] = model;
+				transition.model.setData(transition.modelJSON);
+				break;
+			}
+		}
+	}
 }

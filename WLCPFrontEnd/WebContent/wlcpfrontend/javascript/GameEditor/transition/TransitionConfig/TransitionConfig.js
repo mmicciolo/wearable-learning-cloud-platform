@@ -2,10 +2,14 @@ var TransitionConfig = class TransitionConfig {
 
 	constructor(transition) {
 		this.transition = transition;
+		this.validationRules = [];
 	}
 	
 	onChange(oEvent) {
 		this.transition.onChange(oEvent);
+		for(var i = 0; i < this.validationRules.length; i++) {
+			this.validationRules[i].validate(this.transition);
+		}
 	}
 	
 	getNavigationListItem() {
@@ -40,4 +44,5 @@ var TransitionConfig = class TransitionConfig {
 	getSaveData() {
 		return {};
 	}
+	
 }

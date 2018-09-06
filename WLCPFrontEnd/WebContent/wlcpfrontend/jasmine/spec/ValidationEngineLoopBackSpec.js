@@ -202,4 +202,32 @@ describe("A suite to test the Validation Engine Loop Back Mechanisms for both st
 
 		expect(outputState.scopeMask == 7182 && transition.scopeMask == 902 && outputState2.scopeMask == 900).toBeTruthy();
 	});
+	it("Self Loopback Transition State Below Loops Back (3x3)", function() {
+		GameEditorTestingHelpers.resetGameEditor();
+		
+		var startState = GameEditorTestingHelpers.createNewGame(3, 3);
+		var outputState = GameEditorTestingHelpers.addState(750, 350);
+		var outputState2 = GameEditorTestingHelpers.addState(750, 550);
+		
+		var connection = GameEditorTestingHelpers.addConnection(startState.htmlId, outputState.htmlId);
+		var connection2 = GameEditorTestingHelpers.addConnection(outputState.htmlId, outputState.htmlId);
+		var connection3 = GameEditorTestingHelpers.addConnection(outputState.htmlId, outputState2.htmlId);
+		
+		var transition = GameEditorTestingHelpers.addTransition(connection2);
+		
+		outputState.modelJSON.iconTabs[1].navigationContainerPages[0].displayText = "Hello World!";
+		outputState.modelJSON.iconTabs[2].navigationContainerPages[0].displayText = "Hello World!";
+		outputState.onChange();
+		
+		transition.modelJSON.iconTabs[0].navigationContainerPages[0].singlePress[0].selected = true;
+		transition.onChange();
+		
+		outputState2.modelJSON.iconTabs[0].navigationContainerPages[0].displayText = "Hello World!";
+		outputState2.onChange();
+		
+		//var connection4 =  GameEditorTestingHelpers.addConnection(outputState2.htmlId, outputState.htmlId);
+
+		//expect(outputState.scopeMask == 7182 && transition.scopeMask == 902 && outputState2.scopeMask == 900).toBeTruthy();
+	});
+	
 });

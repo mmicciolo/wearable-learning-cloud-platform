@@ -52,6 +52,11 @@ var InputTransition = class InputTransition extends Transition {
 		for(var i = 0; i < this.validationRules.length; i++) {
 			this.validationRules[i].validate(this);
 		}
+		for(var i = 0; i < this.transitionConfigs.length; i++) {
+			for(var n = 0; n < this.transitionConfigs[i].validationRules.length; n++) {
+				this.transitionConfigs[i].validationRules[n].validate(this);
+			}
+		}
 //    	//Revalidate the states
 //    	for(var i = 0; i < GameEditor.getEditorController().stateList.length; i++) {
 //    		if(!GameEditor.getEditorController().stateList[i].htmlId.includes("start")) {

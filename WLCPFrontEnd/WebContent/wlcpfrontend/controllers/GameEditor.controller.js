@@ -280,16 +280,6 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 			InputTransition.load(loadedData.transitions[i]);
 		}
 		
-		//Have the transitions revalidate
-		for(var i = 0; i < this.transitionList.length; i++) {
-			this.transitionList[i].onChange();
-		}
-		
-		//Have the states revalidate
-		for(var i = 0; i < this.stateList.length; i++) {
-			this.stateList[i].onChange();
-		}
-		
 		//Load state connections
 		for(var i = 0; i < loadedData.states.length; i++) {
 			for(var n = 0; n < this.stateList.length; n++) {
@@ -318,7 +308,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		for(var i = 0; i < loadedData.connections.length; i++) {
 			if(typeof loadedData.connections[i].transition !== "undefined") {
 				for(var n = 0; n < this.connectionList.length; n++) {
-					if(this.connectionList[n].connectionId == loadedData.connections[n].connectionId) {
+					if(this.connectionList[n].connectionId == loadedData.connections[i].connectionId) {
 						for(var j = 0; j < this.transitionList.length; j++) {
 							if(this.transitionList[j].overlayId == loadedData.connections[i].transition.transitionId) {
 								this.connectionList[n].transition = this.transitionList[j];
@@ -342,6 +332,16 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 					}
 				}
 			}
+		}
+		
+		//Have the transitions revalidate
+		for(var i = 0; i < this.transitionList.length; i++) {
+			this.transitionList[i].onChange();
+		}
+		
+		//Have the states revalidate
+		for(var i = 0; i < this.stateList.length; i++) {
+			this.stateList[i].onChange();
 		}
 
 		this.busy.close();

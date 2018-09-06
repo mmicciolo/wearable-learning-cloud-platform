@@ -44,6 +44,8 @@ var Index = {
 		
 		jQuery.sap.require("wlcpfrontend/javascript/GameEditor/transition/TransitionConfig/TransitionConfig");
 		jQuery.sap.require("wlcpfrontend/javascript/GameEditor/transition/TransitionConfig/TransitionConfigSingleButtonPress");
+		jQuery.sap.require("wlcpfrontend/javascript/GameEditor/transition/TransitionConfig/TransitionConfigSequenceButtonPress");
+		jQuery.sap.require("wlcpfrontend/javascript/GameEditor/transition/TransitionConfig/TransitionConfigKeyboardInput");
 		
 		jQuery.sap.require("wlcpfrontend/javascript/GameEditor/GameEditor");
 		jQuery.sap.require("wlcpfrontend/javascript/ODataModel");

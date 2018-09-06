@@ -11,7 +11,7 @@
 	<Dialog id="keyboardInputDialog" title="Configure..." contentWidth="50%" contentHeight="50%">
 		<buttons>
 			<Button text="Submit" type="Accept" press="closeKeyboardInput"/>
-			<Button text="Close" type="Reject" press="closeDialog2"/>
+			<Button text="Close" type="Reject" press="closeDialog"/>
 		</buttons>
 		<FlexBox alignItems="Start" justifyContent="Center">
 			<items>

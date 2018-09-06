@@ -10,8 +10,8 @@
 	
 	<Dialog id="sequencePressDialog" title="Configure..." contentWidth="50%" contentHeight="50%">
 		<buttons>
-			<Button text="Submit" type="Accept" press="closeSequence"/>
-			<Button text="Close" type="Reject" press="closeDialog2"/>
+			<Button text="Submit" type="Accept" press="acceptSequence"/>
+			<Button text="Close" type="Reject" press="closeDialog"/>
 		</buttons>
 		<FlexBox alignItems="Start" justifyContent="Center">
 			<items>

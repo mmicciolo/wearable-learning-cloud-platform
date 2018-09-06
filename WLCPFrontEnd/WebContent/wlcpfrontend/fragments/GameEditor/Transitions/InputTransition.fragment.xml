@@ -25,69 +25,6 @@
 							<NavContainer width="100%" height="500px" pages="{path : 'navigationContainerPages', templateShareable:false}">
 								<layoutData><l:SplitterLayoutData minSize="500" resizable="false"/></layoutData>
 								<Page title="{title}"/>
-								<!-- <Page title="{scope} Single Button Press">
-									<FlexBox alignItems="Start" justifyContent="Center">
-										<items>
-											<VBox>
-												<CheckBox text="Red" selected="{singlePress/0/selected}" enabled="{singlePress/0/enabled}" select="onChange"></CheckBox>
-												<CheckBox text="Green" selected="{singlePress/1/selected}" enabled="{singlePress/1/enabled}" select="onChange"></CheckBox>
-												<CheckBox text="Blue" selected="{singlePress/2/selected}" enabled="{singlePress/2/enabled}" select="onChange"></CheckBox>
-												<CheckBox text="Black" selected="{singlePress/3/selected}" enabled="{singlePress/3/enabled}" select="onChange"></CheckBox>
-											</VBox>
-										</items>
-									</FlexBox>
-								</Page>
-								<Page title="{scope} Sequence Button Press">
-									<content>
-										<FlexBox alignItems="Start" justifyContent="Center">
-											<items>
-												<Button text="Add Sequence" press="addSequence"></Button>
-											</items>
-										</FlexBox>
-										<FlexBox alignItems="Start" justifyContent="Center">
-											<items>
-												<List showSeparators="None" items="{path:'sequencePress', templateShareable:false}" noDataText="No Button Sequence">
-													<CustomListItem xmlns="sap.m">
-														<content>
-															<List showSeparators="None" items="{path:'buttons', templateShareable:false}" noDataText="Empty Sequence">
-																<StandardListItem/>
-															</List>
-															<Button icon="sap-icon://delete" press="deleteSequence" class="sequenceDeleteButton"></Button>
-														</content>
-													</CustomListItem>
-												</List>
-											</items>
-										</FlexBox>
-									</content>
-								</Page>
-								<Page title="{scope} Keyboard Input">
-									<content>
-										<FlexBox alignItems="Start" justifyContent="Center">
-											<items>
-												<Text text="Enter text you want a user to input in order to transition! (case insensitive)"/>
-											</items>
-										</FlexBox>
-										<FlexBox alignItems="Start" justifyContent="Center">
-											<items>
-												<Button text="Add Keyboard Field" press="addKeyboardField"></Button>
-											</items>
-										</FlexBox>
-										<FlexBox alignItems="Start" justifyContent="Center">
-											<items>
-												<List showSeparators="None" items="{path:'keyboardField', templateShareable:false}" noDataText="No Keyboard Field">
-													<CustomListItem xmlns="sap.m">
-														<content>
-															<HBox justifyContent="Start" alignItems="Center" height="50px">
-																<Input placeholder="Enter text here!" value="{value}" enabled="false"></Input>
-																<Button icon="sap-icon://delete" press="deleteKeyboardField" class="sequenceDeleteButton"></Button>
-															</HBox>
-														</content>
-													</CustomListItem>
-												</List>
-											</items>
-										</FlexBox>
-									</content>
-								</Page> -->
 							</NavContainer>
 						</l:Splitter>
 					</content>

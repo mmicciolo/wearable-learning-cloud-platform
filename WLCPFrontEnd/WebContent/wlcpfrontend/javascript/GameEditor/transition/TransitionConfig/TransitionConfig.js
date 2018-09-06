@@ -45,4 +45,8 @@ var TransitionConfig = class TransitionConfig {
 		return {};
 	}
 	
+	onAfterRenderingDialog() {
+		
+	}
+	
 }

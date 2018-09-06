@@ -110,8 +110,8 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 		
 		state.setScope(parentMask & andScopeMasks & (~neighborMask) & (~transitionNeighborMask), GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam);
 		
+		//Recursively revalidate the states below us
 		if(updateNeighbors) {
-			//Recursively revalidate the states below us
 			for(var i = 0; i < state.outputConnections.length; i++) {
 				//Ignore loop backs
 				if(!state.outputConnections[i].isLoopBack) {
@@ -137,11 +137,10 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 			}
 		}
 		
+		//Revalidate the transitions below us
 		if(updateNeighbors) {
-			//Revalidate the transitions below us
 			for(var i = 0; i < state.outputConnections.length; i++) {
 				if(state.outputConnections[i].transition != null) {
-					//state.outputConnections[i].transition.onChange();
 					state.outputConnections[i].transition.validationRules[0].validate(state.outputConnections[i].transition, false);
 				}
 			}	

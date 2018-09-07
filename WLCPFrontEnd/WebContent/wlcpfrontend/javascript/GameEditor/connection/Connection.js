@@ -57,7 +57,7 @@ var Connection = class Connection {
 		for(var i = 0; i < GameEditor.getEditorController().transitionList.length; i++) {
 			
 			//If we found the transition on this connection remove it
-			if(GameEditor.getEditorController().transitionList[i].connection.id == this.connectionId) {
+			if(GameEditor.getEditorController().transitionList[i].wlcpConnection.connectionId == this.connectionId) {
 				
 				//Remove it
 				GameEditor.getEditorController().transitionList[i].removeTransition(sap.m.MessageBox.Action.OK);

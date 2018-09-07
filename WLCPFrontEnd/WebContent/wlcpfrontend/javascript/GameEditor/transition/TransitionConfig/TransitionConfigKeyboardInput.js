@@ -143,12 +143,12 @@ var TransitionKeyboardInputValidationRule = class TransitionKeyboardInputValidat
 		var transitionList = [];
 		
 		//Get a list of neighbor connections
-		var neighborConnections = GameEditor.getJsPlumbInstance().getConnections({source : transition.connection.sourceId});
+		var neighborConnections = GameEditor.getJsPlumbInstance().getConnections({source : transition.wlcpConnection.connectionFromState.htmlId});
 		
 		//Loop through the neighbor connections
 		for(var i = 0; i < neighborConnections.length; i++) {
 			for(var n = 0; n < GameEditor.getEditorController().transitionList.length; n++) {
-				if(neighborConnections[i].id == GameEditor.getEditorController().transitionList[n].connection.id) {
+				if(neighborConnections[i].id == GameEditor.getEditorController().transitionList[n].wlcpConnection.connectionId) {
 					transitionList.push(GameEditor.getEditorController().transitionList[n]);
 				}
 			}

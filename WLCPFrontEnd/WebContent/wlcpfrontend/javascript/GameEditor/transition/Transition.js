@@ -5,11 +5,9 @@ var Transition = class Transition {
 	
 	constructor(cssClass, connection, overlayId, gameEditor) {
 		this.cssClass = cssClass;
-		//this.text = text;
 		this.width = 0;
 		this.height = 0;
-		this.connection = connection;
-		this.wlcpConnection = null;
+		this.wlcpConnection = connection;
 		this.overlayId = overlayId;
 		this.htmlId = "";
 		this.gameEditor = gameEditor;

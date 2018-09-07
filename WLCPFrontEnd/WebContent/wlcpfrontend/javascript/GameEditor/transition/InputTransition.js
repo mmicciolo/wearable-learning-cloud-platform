@@ -21,13 +21,15 @@ var InputTransition = class InputTransition extends Transition {
 	
 	create() {
 		
+		this.jsPlumbConnection = GameEditor.getJsPlumbInstance().getConnections({ source : this.wlcpConnection.connectionFrom, target : this.wlcpConnection.connectionTo})[0];
+		
 		//Add the overlay
-		this.connection.addOverlay([ "Label", {id : this.overlayId, label: "<div id=" + "\"" + this.overlayId + "_delete\"" + "class=\"close2-thik\"></div><div class=\"centerTransitionText\"/><div>Input</div><div>Transition</div></div>", cssClass : this.cssClass + " jtk-drag-select"}]);
+		this.jsPlumbConnection.addOverlay([ "Label", {id : this.overlayId, label: "<div id=" + "\"" + this.overlayId + "_delete\"" + "class=\"close2-thik\"></div><div class=\"centerTransitionText\"/><div>Input</div><div>Transition</div></div>", cssClass : this.cssClass + " jtk-drag-select"}]);
 		
 		//Store the id
-		for(var key in this.connection.getOverlays()) {
-			if(this.connection.getOverlays()[key].hasOwnProperty("label")) {
-				  this.htmlId = this.connection.getOverlays()[key].canvas.id;
+		for(var key in this.jsPlumbConnection.getOverlays()) {
+			if(this.jsPlumbConnection.getOverlays()[key].hasOwnProperty("label")) {
+				  this.htmlId = this.jsPlumbConnection.getOverlays()[key].canvas.id;
 				  break;
 			}
 		}
@@ -163,6 +165,14 @@ var InputTransition = class InputTransition extends Transition {
 			}
 		}
 		
+		if(typeof loadData.connectionJPA !== "undefined") {
+			for(var i = 0; i < GameEditor.getEditorController().connectionList.length; i++) {
+				if(GameEditor.getEditorController().connectionList[i].connectionId == loadData.connectionJPA.connectionId) {
+					connection = GameEditor.getEditorController().connectionList[i];
+				}
+			}
+		}
+		
 		//Place the transition
 		var inputTransition = new InputTransition("transition", connection, loadData.transitionId, this);
 		GameEditor.getEditorController().transitionList.push(inputTransition);
@@ -192,7 +202,7 @@ var InputTransition = class InputTransition extends Transition {
 		
 		var saveData = {
 			transitionId : this.overlayId,
-			connection : this.connection.id,
+			connection : this.wlcpConnection.connectionId,
 			activeTransitions : activeTransitions,
 			connectionJPA : {
 				connectionId : this.wlcpConnection.connectionId
@@ -346,7 +356,7 @@ var InputTransition = class InputTransition extends Transition {
 		if(oAction == sap.m.MessageBox.Action.OK) {
 			
 			//Remove the overlay
-			this.connection.removeOverlay(this.overlayId);
+			this.jsPlumbConnection.removeOverlay(this.overlayId);
 			
 			//Remove it from the list
 			GameEditor.getEditorController().transitionList.splice(GameEditor.getEditorController().transitionList.indexOf(this), 1);

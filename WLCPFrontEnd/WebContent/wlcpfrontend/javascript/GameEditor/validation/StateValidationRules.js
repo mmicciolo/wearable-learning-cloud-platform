@@ -8,7 +8,7 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 		for(var i = 0; i < state.inputConnections.length; i++) {
 			if(state.inputConnections[i].transition == null) {
 				//Get the active scopes
-				var activeScopes = ValidationEngineHelpers.getActiveScopesState(state.inputConnections[i].connectionFromState);
+				var activeScopes = ValidationEngineHelpers.getActiveScopesState(state.inputConnections[i].connectionFrom);
 				
 				//Get the active scope mask
 				var activeScopeMask = ValidationEngineHelpers.getActiveScopeMask(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, activeScopes);
@@ -39,16 +39,16 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 		
 		//Loop through the neighbor states
 		for(var i = 0; i < state.inputConnections.length; i++) {
-			for(var n = 0; n < state.inputConnections[i].connectionFromState.outputConnections.length; n++) {
-				if(state.inputConnections[i].connectionFromState.outputConnections[n].connectionToState.htmlId != state.htmlId && state.inputConnections[i].connectionFromState.outputConnections[n].transition == null) {
+			for(var n = 0; n < state.inputConnections[i].connectionFrom.outputConnections.length; n++) {
+				if(state.inputConnections[i].connectionFrom.outputConnections[n].connectionTo.htmlId != state.htmlId && state.inputConnections[i].connectionFrom.outputConnections[n].transition == null) {
 					
 					//If its a loopback and transition, the only neighbors we care about are the ones in the transition
-					if(state.inputConnections[i].connectionFromState.outputConnections[n].isLoopBack && state.inputConnections[i].connectionFromState.outputConnections[n].transition != null) {
+					if(state.inputConnections[i].connectionFrom.outputConnections[n].isLoopBack && state.inputConnections[i].connectionFrom.outputConnections[n].transition != null) {
 						//Get the active scopes
-						var activeScopes = ValidationEngineHelpers.getActiveScopesTransition(state.inputConnections[i].connectionFromState.outputConnections[n].transition);
+						var activeScopes = ValidationEngineHelpers.getActiveScopesTransition(state.inputConnections[i].connectionFrom.outputConnections[n].transition);
 					} else {
 						//Get the active scopes
-						var activeScopes = ValidationEngineHelpers.getActiveScopesState(state.inputConnections[i].connectionFromState.outputConnections[n].connectionToState);
+						var activeScopes = ValidationEngineHelpers.getActiveScopesState(state.inputConnections[i].connectionFrom.outputConnections[n].connectionTo);
 					}
 					
 					//Get the active scope mask
@@ -72,15 +72,15 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 		if(transitionCount != state.inputConnections.length) {
 			for(var i = 0; i < state.inputConnections.length; i++) {
 				transitionCount = 0;
-				for(var n = 0; n < state.inputConnections[i].connectionFromState.outputConnections.length; n++) {
-					if(state.inputConnections[i].connectionFromState.outputConnections[n].transition != null) {
+				for(var n = 0; n < state.inputConnections[i].connectionFrom.outputConnections.length; n++) {
+					if(state.inputConnections[i].connectionFrom.outputConnections[n].transition != null) {
 						transitionCount++;
 					}
 				}
-				if(transitionCount != state.inputConnections[i].connectionFromState.outputConnections.length) {
-					for(var n = 0; n < state.inputConnections[i].connectionFromState.outputConnections.length; n++) {
-						if(state.inputConnections[i].connectionFromState.outputConnections[n].transition != null && state.inputConnections[i].connectionFromState.outputConnections[n].connectionToState.htmlId != state.htmlId) {
-							var activeScopes = ValidationEngineHelpers.getActiveScopesTransition(state.inputConnections[i].connectionFromState.outputConnections[n].transition);
+				if(transitionCount != state.inputConnections[i].connectionFrom.outputConnections.length) {
+					for(var n = 0; n < state.inputConnections[i].connectionFrom.outputConnections.length; n++) {
+						if(state.inputConnections[i].connectionFrom.outputConnections[n].transition != null && state.inputConnections[i].connectionFrom.outputConnections[n].connectionTo.htmlId != state.htmlId) {
+							var activeScopes = ValidationEngineHelpers.getActiveScopesTransition(state.inputConnections[i].connectionFrom.outputConnections[n].transition);
 							
 							//Get the active scope mask
 							var activeScopeMask = ValidationEngineHelpers.getActiveScopeMask(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, activeScopes);
@@ -115,7 +115,7 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 			for(var i = 0; i < state.outputConnections.length; i++) {
 				//Ignore loop backs
 				if(!state.outputConnections[i].isLoopBack) {
-					this.validate(state.outputConnections[i].connectionToState, true)
+					this.validate(state.outputConnections[i].connectionTo, true)
 				}
 			}
 		}
@@ -123,13 +123,13 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 		//Revalidate our neighbors but make sure they dont revalidate their neighbors
 		if(updateNeighbors) {
 			for(var i = 0; i < state.inputConnections.length; i++) {
-				for(var n = 0; n < state.inputConnections[i].connectionFromState.outputConnections.length; n++) {
-					if(state.inputConnections[i].connectionFromState.outputConnections[n].connectionToState.htmlId != state.htmlId) {
-						if(!state.inputConnections[i].connectionFromState.outputConnections[n].isLoopBack) {
-							if(state.inputConnections[i].connectionFromState.outputConnections[n].transition == null) {
-								this.validate(state.inputConnections[i].connectionFromState.outputConnections[n].connectionToState, false);
+				for(var n = 0; n < state.inputConnections[i].connectionFrom.outputConnections.length; n++) {
+					if(state.inputConnections[i].connectionFrom.outputConnections[n].connectionTo.htmlId != state.htmlId) {
+						if(!state.inputConnections[i].connectionFrom.outputConnections[n].isLoopBack) {
+							if(state.inputConnections[i].connectionFrom.outputConnections[n].transition == null) {
+								this.validate(state.inputConnections[i].connectionFrom.outputConnections[n].connectionTo, false);
 							} else {
-								state.inputConnections[i].connectionFromState.outputConnections[n].transition.validationRules[0].validate(state.inputConnections[i].connectionFromState.outputConnections[n].transition, false);
+								state.inputConnections[i].connectionFrom.outputConnections[n].transition.validationRules[0].validate(state.inputConnections[i].connectionFrom.outputConnections[n].transition, false);
 							}
 						}
 					}

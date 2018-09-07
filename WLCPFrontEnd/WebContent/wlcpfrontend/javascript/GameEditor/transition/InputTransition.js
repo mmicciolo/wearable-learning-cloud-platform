@@ -21,7 +21,7 @@ var InputTransition = class InputTransition extends Transition {
 	
 	create() {
 		
-		this.jsPlumbConnection = GameEditor.getJsPlumbInstance().getConnections({ source : this.connection.connectionFrom, target : this.connection.connectionTo})[0];
+		this.jsPlumbConnection = GameEditor.getJsPlumbInstance().getConnections({ source : this.connection.connectionFrom.htmlId, target : this.connection.connectionTo.htmlId})[0];
 		
 		//Add the overlay
 		this.jsPlumbConnection.addOverlay([ "Label", {id : this.overlayId, label: "<div id=" + "\"" + this.overlayId + "_delete\"" + "class=\"close2-thik\"></div><div class=\"centerTransitionText\"/><div>Input</div><div>Transition</div></div>", cssClass : this.cssClass + " jtk-drag-select"}]);
@@ -169,6 +169,9 @@ var InputTransition = class InputTransition extends Transition {
 			for(var i = 0; i < GameEditor.getEditorController().connectionList.length; i++) {
 				if(GameEditor.getEditorController().connectionList[i].connectionId == loadData.connectionJPA.connectionId) {
 					connection = GameEditor.getEditorController().connectionList[i];
+					connection.connectionFrom = { htmlId : connection.connectionFrom };
+					connection.connectionTo = { htmlid : connection.connectionTo };
+					break;
 				}
 			}
 		}

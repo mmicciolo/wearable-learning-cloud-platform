@@ -3,12 +3,10 @@
  */
 
 var Connection = class Connection {
-	constructor(connectionFrom, connectionTo, connectionId) {
+	constructor(connectionId, connectionFrom, connectionTo) {
+		this.connectionId = connectionId;
 		this.connectionFrom = connectionFrom;
 		this.connectionTo = connectionTo;
-		this.connectionId = connectionId;
-		this.connectionFromState = null;
-		this.connectionToState = null;
 		this.transition = null;
 		this.isLoopBack = false;
 		this.validationCounter = -1;
@@ -18,10 +16,10 @@ var Connection = class Connection {
 	
 	static load(loadData) {
 		for(var i = 0; i < loadData.length; i++) {
-			var editorConnection = new Connection(loadData[i].connectionFrom, loadData[i].connectionTo, loadData[i].connectionId);
+			var editorConnection = new Connection(loadData[i].connectionId, loadData[i].connectionFrom, loadData[i].connectionTo);
 			editorConnection.isLoopBack = loadData[i].backwardsLoop;
 			GameEditor.getEditorController().connectionList.push(editorConnection);
-			if(loadData[i].connectionFrom == (GameEditor.getEditorController().gameModel.GameId + "_start") || loadData[i].connectionFrom.includes("_start")) {
+			if(loadData[i].connectionFrom.htmlId == (GameEditor.getEditorController().gameModel.GameId + "_start") || loadData[i].connectionFrom.includes("_start")) {
 				var ep1 = GameEditor.getEditorController().jsPlumbInstance.selectEndpoints({element : loadData[i].connectionFrom}).get(0);
 				var ep2 = GameEditor.getEditorController().jsPlumbInstance.selectEndpoints({element : loadData[i].connectionTo}).get(0);
 				var connection = GameEditor.getEditorController().jsPlumbInstance.connect({ source: ep1 , target: ep2});
@@ -90,14 +88,14 @@ var Connection = class Connection {
 	save() {
 		var saveData = {
 			connectionId : this.connectionId,
-			connectionFrom : this.connectionFrom,
-			connectionTo : this.connectionTo,
+			connectionFrom : this.connectionFrom.htmlId,
+			connectionTo : this.connectionTo.htmlId,
 			backwardsLoop : this.isLoopBack,
 			connectionFromState : {
-				stateId : this.connectionFromState.htmlId
+				stateId : this.connectionFrom.htmlId
 			},
 			connectionToState : {
-				stateId : this.connectionToState.htmlId
+				stateId : this.connectionTo.htmlId
 			},
 			transition : {
 				transitionId : this.transition == null ? "" : this.transition.overlayId

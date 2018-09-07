@@ -4,7 +4,7 @@ var TransitionValidationRule = class TransitionValidationRule extends Validation
 		
 		var parentMask = 0;
 		
-		var state = transition.connection.connectionFromState;
+		var state = transition.connection.connectionFrom;
 		
 		//Get the active scopes
 		var activeScopes = ValidationEngineHelpers.getActiveScopesState(state);
@@ -40,9 +40,9 @@ var TransitionValidationRule = class TransitionValidationRule extends Validation
 		
 		var stateNeighborMask = 0;
 		
-		for(var i = 0; i < transition.connection.connectionFromState.outputConnections.length; i++) {
-			if(transition.connection.connectionFromState.outputConnections[i].transition == null) {
-				var activeScopes = ValidationEngineHelpers.getActiveScopesState(transition.connection.connectionFromState.outputConnections[i].connectionToState);
+		for(var i = 0; i < transition.connection.connectionFrom.outputConnections.length; i++) {
+			if(transition.connection.connectionFrom.outputConnections[i].transition == null) {
+				var activeScopes = ValidationEngineHelpers.getActiveScopesState(transition.connection.connectionFrom.outputConnections[i].connectionTo.htmlId);
 
 				var activeScopeMask = ValidationEngineHelpers.getActiveScopeMask(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, activeScopes);
 				
@@ -75,7 +75,7 @@ var TransitionValidationRule = class TransitionValidationRule extends Validation
 		
 		if(!transition.connection.isLoopBack) {
 			//Update the state below us
-			transition.connection.connectionToState.validationRules[0].validate(transition.connection.connectionToState, updateNeighbors);
+			transition.connection.connectionTo.validationRules[0].validate(transition.connection.connectionTo, updateNeighbors);
 		}
 		
 		if(updateNeighbors) {
@@ -89,9 +89,9 @@ var TransitionValidationRule = class TransitionValidationRule extends Validation
 		if(updateNeighbors) {
 			//If the transition is a loopback Revalidate our neighbors states but make sure they dont revalidate their neighbors
 			if(transition.connection.isLoopBack) {
-				for(var i = 0; i < transition.connection.connectionFromState.outputConnections.length; i++) {
-					if(transition.connection.connectionFromState.outputConnections[i].transition == null) {
-						transition.connection.connectionFromState.outputConnections[i].connectionToState.validationRules[0].validate(transition.connection.connectionFromState.outputConnections[i].connectionToState,false);
+				for(var i = 0; i < transition.connection.connectionFrom.outputConnections.length; i++) {
+					if(transition.connection.connectionFrom.outputConnections[i].transition == null) {
+						transition.connection.connectionFrom.outputConnections[i].connectionTo.validationRules[0].validate(transition.connection.connectionFrom.outputConnections[i].connectionTo,false);
 					}
 				}
 			}
@@ -125,7 +125,7 @@ var TransitionSelectedTypeValidationRule = class TransitionSelectedTypeValidatio
 		var transitionList = [];
 		
 		//Get a list of neighbor connections
-		var neighborConnections = GameEditor.getJsPlumbInstance().getConnections({source : transition.connection.connectionFromState.htmlId});
+		var neighborConnections = GameEditor.getJsPlumbInstance().getConnections({source : transition.connection.connectionFrom.htmlId});
 		
 		//Loop through the neighbor connections
 		for(var i = 0; i < neighborConnections.length; i++) {

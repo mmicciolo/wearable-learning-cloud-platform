@@ -145,11 +145,11 @@ var ConnectionValidationSuccess = class ConnectionValidationSuccess extends Vali
 		state2.outputConnections.push(validationData);
 		
 		//Store the input and output state in the connection
-		validationData.connectionToState = state;
-		validationData.connectionFromState = state2;
+		validationData.connectionTo = state;
+		validationData.connectionFrom = state2;
 
 		//Tell the state to update
-		this.getState(validationData.connectionTo).onChange();
+		this.getState(validationData.connectionTo.htmlId).onChange();
 		
 		//Log it
 		DataLogger.logGameEditor();

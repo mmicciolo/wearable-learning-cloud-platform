@@ -9,7 +9,7 @@ var ValidationRule = class ValidationRule {
 	}
 	
 	removeConnection(connection) {
-		GameEditor.getJsPlumbInstance().deleteConnection(GameEditor.getJsPlumbInstance().getConnections({source:connection.connectionFrom,target:connection.connectionTo})[0]);
+		GameEditor.getJsPlumbInstance().deleteConnection(GameEditor.getJsPlumbInstance().getConnections({source:connection.connectionFrom.htmlId,target:connection.connectionTo.htmlId})[0]);
 		connection.detach();
 	}
 }

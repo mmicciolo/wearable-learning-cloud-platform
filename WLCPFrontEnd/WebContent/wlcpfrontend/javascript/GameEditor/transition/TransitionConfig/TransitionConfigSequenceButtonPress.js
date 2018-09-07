@@ -220,7 +220,7 @@ var TransitionSequenceButtonPressValidationRule = class TransitionSequenceButton
 		var transitionList = [];
 		
 		//Get a list of neighbor connections
-		var neighborConnections = GameEditor.getJsPlumbInstance().getConnections({source : transition.connection.connectionFromState.htmlId});
+		var neighborConnections = GameEditor.getJsPlumbInstance().getConnections({source : transition.connection.connectionFrom.htmlId});
 		
 		//Loop through the neighbor connections
 		for(var i = 0; i < neighborConnections.length; i++) {

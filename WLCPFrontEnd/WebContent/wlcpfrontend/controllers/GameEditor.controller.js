@@ -115,6 +115,13 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		document.getElementById("gameEditor--toolbox").style["overflow-y"] = "auto";
 		
 		var connection = Transition.getClosestConnection(ui.position.left, ui.position.top, this.jsPlumbInstance);
+		for(var i = 0; i < GameEditor.getEditorController().connectionList.length; i++) {
+			if(GameEditor.getEditorController().connectionList[i].connectionId == connection.id) {
+				connection = GameEditor.getEditorController().connectionList[i];
+				break;
+			}
+		}
+		
 		if(connection != null) {
 			var inputTransition = new InputTransition("transition", connection, this.createTransitionId(), this);
 			this.transitionList.push(inputTransition);
@@ -149,14 +156,14 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		for(var i = 0; i < this.connectionList.length; i++) {
 			if(oEvent.connection.id == this.connectionList[i].connectionId) {
 				return false;
-			} else if(oEvent.sourceId == this.connectionList[i].connectionFrom && oEvent.targetId == this.connectionList[i].connectionTo) {
+			} else if(oEvent.sourceId == this.connectionList[i].connectionFrom.htmlId && oEvent.targetId == this.connectionList[i].connectionTo.htmlId) {
 				sap.m.MessageBox.error("You cannot have mutliple connections with same source and target state!");
 				return false;
 			}
 		}
 		
 		//Else we need to create a new one
-		var connection = new Connection(oEvent.sourceId, oEvent.targetId, this.createConnectionId());
+		var connection = new Connection( this.createConnectionId(), oEvent.sourceId, oEvent.targetId);
 		this.connectionList.push(connection);
 		connection.validate();
 		return false;
@@ -288,7 +295,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 						for(var l = 0; l < this.connectionList.length; l++) {
 							if(loadedData.states[i].inputConnections[j].connectionId == this.connectionList[l].connectionId) {
 								this.stateList[n].inputConnections.push(this.connectionList[l]);
-								this.connectionList[l].connectionToState = this.stateList[n];
+								this.connectionList[l].connectionTo = this.stateList[n];
 							}
 						}
 					}
@@ -296,7 +303,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 						for(var l = 0; l < this.connectionList.length; l++) {
 							if(loadedData.states[i].outputConnections[j].connectionId == this.connectionList[l].connectionId) {
 								this.stateList[n].outputConnections.push(this.connectionList[l]);
-								this.connectionList[l].connectionFromState = this.stateList[n];
+								this.connectionList[l].connectionFrom = this.stateList[n];
 							}
 						}
 					}

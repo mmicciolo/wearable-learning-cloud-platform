@@ -115,14 +115,14 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		document.getElementById("gameEditor--toolbox").style["overflow-y"] = "auto";
 		
 		var connection = Transition.getClosestConnection(ui.position.left, ui.position.top, this.jsPlumbInstance);
-		for(var i = 0; i < GameEditor.getEditorController().connectionList.length; i++) {
-			if(GameEditor.getEditorController().connectionList[i].connectionId == connection.id) {
-				connection = GameEditor.getEditorController().connectionList[i];
-				break;
-			}
-		}
 		
 		if(connection != null) {
+			for(var i = 0; i < GameEditor.getEditorController().connectionList.length; i++) {
+				if(GameEditor.getEditorController().connectionList[i].connectionId == connection.id) {
+					connection = GameEditor.getEditorController().connectionList[i];
+					break;
+				}
+			}
 			var inputTransition = new InputTransition("transition", connection, this.createTransitionId(), this);
 			inputTransition.connection.transition = inputTransition;
 			this.transitionList.push(inputTransition);

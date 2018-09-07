@@ -135,7 +135,7 @@ var SingleButtonPressValidationRule = class SingleButtonPressValidationRule exte
 	
 	validate(transition) {
 		
-		var state = transition.wlcpConnection.connectionFromState;
+		var state = transition.connection.connectionFromState;
 		
 		var transitionList = [];
 		

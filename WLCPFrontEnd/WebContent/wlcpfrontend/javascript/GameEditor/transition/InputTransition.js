@@ -21,7 +21,7 @@ var InputTransition = class InputTransition extends Transition {
 	
 	create() {
 		
-		this.jsPlumbConnection = GameEditor.getJsPlumbInstance().getConnections({ source : this.wlcpConnection.connectionFrom, target : this.wlcpConnection.connectionTo})[0];
+		this.jsPlumbConnection = GameEditor.getJsPlumbInstance().getConnections({ source : this.connection.connectionFrom, target : this.connection.connectionTo})[0];
 		
 		//Add the overlay
 		this.jsPlumbConnection.addOverlay([ "Label", {id : this.overlayId, label: "<div id=" + "\"" + this.overlayId + "_delete\"" + "class=\"close2-thik\"></div><div class=\"centerTransitionText\"/><div>Input</div><div>Transition</div></div>", cssClass : this.cssClass + " jtk-drag-select"}]);
@@ -202,10 +202,10 @@ var InputTransition = class InputTransition extends Transition {
 		
 		var saveData = {
 			transitionId : this.overlayId,
-			connection : this.wlcpConnection.connectionId,
+			connection : this.connection.connectionId,
 			activeTransitions : activeTransitions,
 			connectionJPA : {
-				connectionId : this.wlcpConnection.connectionId
+				connectionId : this.connection.connectionId
 			}
 		}
 		
@@ -362,7 +362,7 @@ var InputTransition = class InputTransition extends Transition {
 			GameEditor.getEditorController().transitionList.splice(GameEditor.getEditorController().transitionList.indexOf(this), 1);
 			
 			//Remove the connections pointer to us
-			this.wlcpConnection.transition = null;
+			this.connection.transition = null;
 			
 	    	//Revalidate the transitions
 	    	for(var i = 0; i < GameEditor.getEditorController().transitionList.length; i++) {

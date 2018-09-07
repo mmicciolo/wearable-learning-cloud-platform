@@ -4,7 +4,7 @@ var TransitionValidationRule = class TransitionValidationRule extends Validation
 		
 		var parentMask = 0;
 		
-		var state = transition.wlcpConnection.connectionFromState;
+		var state = transition.connection.connectionFromState;
 		
 		//Get the active scopes
 		var activeScopes = ValidationEngineHelpers.getActiveScopesState(state);
@@ -40,9 +40,9 @@ var TransitionValidationRule = class TransitionValidationRule extends Validation
 		
 		var stateNeighborMask = 0;
 		
-		for(var i = 0; i < transition.wlcpConnection.connectionFromState.outputConnections.length; i++) {
-			if(transition.wlcpConnection.connectionFromState.outputConnections[i].transition == null) {
-				var activeScopes = ValidationEngineHelpers.getActiveScopesState(transition.wlcpConnection.connectionFromState.outputConnections[i].connectionToState);
+		for(var i = 0; i < transition.connection.connectionFromState.outputConnections.length; i++) {
+			if(transition.connection.connectionFromState.outputConnections[i].transition == null) {
+				var activeScopes = ValidationEngineHelpers.getActiveScopesState(transition.connection.connectionFromState.outputConnections[i].connectionToState);
 
 				var activeScopeMask = ValidationEngineHelpers.getActiveScopeMask(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, activeScopes);
 				
@@ -73,9 +73,9 @@ var TransitionValidationRule = class TransitionValidationRule extends Validation
 		//Set the transitions scope
 		transition.setScope(parentMask & (~neighborMask) & (~stateNeighborMask), GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam);
 		
-		if(!transition.wlcpConnection.isLoopBack) {
+		if(!transition.connection.isLoopBack) {
 			//Update the state below us
-			transition.wlcpConnection.connectionToState.validationRules[0].validate(transition.wlcpConnection.connectionToState, updateNeighbors);
+			transition.connection.connectionToState.validationRules[0].validate(transition.connection.connectionToState, updateNeighbors);
 		}
 		
 		if(updateNeighbors) {
@@ -88,10 +88,10 @@ var TransitionValidationRule = class TransitionValidationRule extends Validation
 		
 		if(updateNeighbors) {
 			//If the transition is a loopback Revalidate our neighbors states but make sure they dont revalidate their neighbors
-			if(transition.wlcpConnection.isLoopBack) {
-				for(var i = 0; i < transition.wlcpConnection.connectionFromState.outputConnections.length; i++) {
-					if(transition.wlcpConnection.connectionFromState.outputConnections[i].transition == null) {
-						transition.wlcpConnection.connectionFromState.outputConnections[i].connectionToState.validationRules[0].validate(transition.wlcpConnection.connectionFromState.outputConnections[i].connectionToState,false);
+			if(transition.connection.isLoopBack) {
+				for(var i = 0; i < transition.connection.connectionFromState.outputConnections.length; i++) {
+					if(transition.connection.connectionFromState.outputConnections[i].transition == null) {
+						transition.connection.connectionFromState.outputConnections[i].connectionToState.validationRules[0].validate(transition.connection.connectionFromState.outputConnections[i].connectionToState,false);
 					}
 				}
 			}
@@ -125,12 +125,12 @@ var TransitionSelectedTypeValidationRule = class TransitionSelectedTypeValidatio
 		var transitionList = [];
 		
 		//Get a list of neighbor connections
-		var neighborConnections = GameEditor.getJsPlumbInstance().getConnections({source : transition.wlcpConnection.connectionFromState.htmlId});
+		var neighborConnections = GameEditor.getJsPlumbInstance().getConnections({source : transition.connection.connectionFromState.htmlId});
 		
 		//Loop through the neighbor connections
 		for(var i = 0; i < neighborConnections.length; i++) {
 			for(var n = 0; n < GameEditor.getEditorController().transitionList.length; n++) {
-				if(neighborConnections[i].id == GameEditor.getEditorController().transitionList[n].wlcpConnection.connectionId) {
+				if(neighborConnections[i].id == GameEditor.getEditorController().transitionList[n].connection.connectionId) {
 					transitionList.push(GameEditor.getEditorController().transitionList[n]);
 				}
 			}

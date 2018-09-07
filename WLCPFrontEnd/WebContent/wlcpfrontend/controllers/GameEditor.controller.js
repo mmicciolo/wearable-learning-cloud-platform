@@ -121,7 +121,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 			for(var i = 0; i < this.connectionList.length; i++) {
 				if(this.connectionList[i].connectionId == connection.id) {
 					this.connectionList[i].transition = inputTransition;
-					inputTransition.wlcpConnection = this.connectionList[i];
+					inputTransition.connection = this.connectionList[i];
 					break;
 				}
 			}
@@ -326,7 +326,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 					if(this.transitionList[n].overlayId == loadedData.transitions[n].transitionId) {
 						for(var j = 0; j < this.connectionList.length; j++) {
 							if(this.connectionList[j].connectionId == loadedData.transitions[n].connectionJPA.connectionId) {
-								this.transitionList[n].wlcpConnection = this.connectionList[j];
+								this.transitionList[n].connection = this.connectionList[j];
 							}
 						}
 					}

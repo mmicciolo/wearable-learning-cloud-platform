@@ -170,7 +170,7 @@ var InputTransition = class InputTransition extends Transition {
 				if(GameEditor.getEditorController().connectionList[i].connectionId == loadData.connectionJPA.connectionId) {
 					connection = GameEditor.getEditorController().connectionList[i];
 					connection.connectionFrom = { htmlId : connection.connectionFrom };
-					connection.connectionTo = { htmlid : connection.connectionTo };
+					connection.connectionTo = { htmlId : connection.connectionTo };
 					break;
 				}
 			}

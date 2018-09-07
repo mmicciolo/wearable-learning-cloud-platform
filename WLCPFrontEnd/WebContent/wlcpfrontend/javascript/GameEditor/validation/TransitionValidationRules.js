@@ -42,7 +42,7 @@ var TransitionValidationRule = class TransitionValidationRule extends Validation
 		
 		for(var i = 0; i < transition.connection.connectionFrom.outputConnections.length; i++) {
 			if(transition.connection.connectionFrom.outputConnections[i].transition == null) {
-				var activeScopes = ValidationEngineHelpers.getActiveScopesState(transition.connection.connectionFrom.outputConnections[i].connectionTo.htmlId);
+				var activeScopes = ValidationEngineHelpers.getActiveScopesState(transition.connection.connectionFrom.outputConnections[i].connectionTo);
 
 				var activeScopeMask = ValidationEngineHelpers.getActiveScopeMask(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, activeScopes);
 				

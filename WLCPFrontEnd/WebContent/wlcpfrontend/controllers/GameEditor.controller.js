@@ -124,6 +124,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		
 		if(connection != null) {
 			var inputTransition = new InputTransition("transition", connection, this.createTransitionId(), this);
+			inputTransition.connection.transition = inputTransition;
 			this.transitionList.push(inputTransition);
 			for(var i = 0; i < this.connectionList.length; i++) {
 				if(this.connectionList[i].connectionId == connection.id) {

@@ -13,7 +13,7 @@ public class TranspilerHelpers {
 	public static List<Connection> GetFromConnections(List<Connection> connections, State state) {
 		List<Connection> fromConnections = new ArrayList<Connection>();
 		for(Connection connection : connections) {
-			if(connection.getConnectionFrom().equals(state.getStateId())) {
+			if(connection.getConnectionFrom().getStateId().equals(state.getStateId())) {
 				fromConnections.add(connection);
 			}
 		}
@@ -22,7 +22,7 @@ public class TranspilerHelpers {
 	
 	public static Transition GetConnectionTransition(List<Transition> transitions, Connection connection) {
 		for(Transition transition : transitions) {
-			if(transition.getConnection().equals(connection.getConnectionId())) {
+			if(transition.getConnection().getConnectionId().equals(connection.getConnectionId())) {
 				return transition;
 			}
 		}
@@ -31,7 +31,7 @@ public class TranspilerHelpers {
 	
 	public static State GetToState(List<OutputState> outputStates, Connection connection) {
 		for(State state : outputStates) {
-			if(state.getStateId().equals(connection.getConnectionTo())) {
+			if(state.getStateId().equals(connection.getConnectionTo().getStateId())) {
 				return state;
 			}
 		}

@@ -15,9 +15,9 @@ public class TransitionType implements ITransitionType {
 	public static String GenerateTransitionStateChange(String scope, Connection connection) {
 		StringBuilder stringBuilder = new StringBuilder();
 		if(scope.equals("Game Wide")) {
-			stringBuilder.append("         " + "this.state = states." + connection.getConnectionTo() + ";\n");
+			stringBuilder.append("         " + "this.state = states." + connection.getConnectionTo().getStateId() + ";\n");
 		} else {
-			stringBuilder.append("            " + "this.state = states." + connection.getConnectionTo() + ";\n");
+			stringBuilder.append("            " + "this.state = states." + connection.getConnectionTo().getStateId() + ";\n");
 		}
 		return stringBuilder.toString();
 	}

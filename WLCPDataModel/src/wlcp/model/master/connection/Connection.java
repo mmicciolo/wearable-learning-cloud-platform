@@ -27,22 +27,16 @@ public class Connection implements Serializable {
 	@JoinColumn(name = "GAME")
 	private Game game;
 	
-	@Column(length = 40, name = "CONNECTION_FROM")
-	private String connectionFrom;
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(name = "CONNECTION_FROM")
+	private State connectionFrom;
 	
-	@Column(length = 40, name = "CONNECTION_TO")
-	private String connectionTo;
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(name = "CONNECTION_TO")
+	private State connectionTo;
 	
 	@Column(name = "BACKWARDS_LOOP")
 	private Boolean backwardsLoop;
-	
-	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(name = "CONNECTION_FROM_STATE")
-	private State connectionFromState;
-	
-	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(name = "CONNECTION_TO_STATE")
-	private State connectionToState;
 	
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "TRANSITION")
@@ -52,25 +46,14 @@ public class Connection implements Serializable {
 		super();
 	}
 
-//	public Connection(String connectionId, Game game, String connectionFrom, String connectionTo, Boolean backwardsLoop) {
-//		super();
-//		this.connectionId = connectionId;
-//		this.game = game;
-//		this.connectionFrom = connectionFrom;
-//		this.connectionTo = connectionTo;
-//		this.backwardsLoop = backwardsLoop;
-//	}
-	
-	public Connection(String connectionId, Game game, String connectionFrom, String connectionTo, Boolean backwardsLoop,
-			State connectionFromState, State connectionToState, Transition transition) {
+	public Connection(String connectionId, Game game, State connectionFrom, State connectionTo, Boolean backwardsLoop,
+		   Transition transition) {
 		super();
 		this.connectionId = connectionId;
 		this.game = game;
 		this.connectionFrom = connectionFrom;
 		this.connectionTo = connectionTo;
-		this.backwardsLoop = backwardsLoop;
-		this.connectionFromState = connectionFromState;
-		this.connectionToState = connectionToState;
+		this.backwardsLoop = backwardsLoop;;
 		this.transition = transition;
 	}
 
@@ -90,19 +73,19 @@ public class Connection implements Serializable {
 		this.game = game;
 	}
 
-	public String getConnectionFrom() {
+	public State getConnectionFrom() {
 		return connectionFrom;
 	}
 
-	public void setConnectionFrom(String connectionFrom) {
+	public void setConnectionFrom(State connectionFrom) {
 		this.connectionFrom = connectionFrom;
 	}
 
-	public String getConnectionTo() {
+	public State getConnectionTo() {
 		return connectionTo;
 	}
 
-	public void setConnectionTo(String connectionTo) {
+	public void setConnectionTo(State connectionTo) {
 		this.connectionTo = connectionTo;
 	}
 
@@ -112,22 +95,6 @@ public class Connection implements Serializable {
 
 	public void setBackwardsLoop(Boolean backwardsLoop) {
 		this.backwardsLoop = backwardsLoop;
-	}
-
-	public State getConnectionFromState() {
-		return connectionFromState;
-	}
-
-	public void setConnectionFromState(State connectionFromState) {
-		this.connectionFromState = connectionFromState;
-	}
-
-	public State getConnectionToState() {
-		return connectionToState;
-	}
-
-	public void setConnectionToState(State connectionToState) {
-		this.connectionToState = connectionToState;
 	}
 
 	public Transition getTransition() {

@@ -165,9 +165,9 @@ var InputTransition = class InputTransition extends Transition {
 			}
 		}
 		
-		if(typeof loadData.connectionJPA !== "undefined") {
+		if(typeof loadData.connection !== "undefined") {
 			for(var i = 0; i < GameEditor.getEditorController().connectionList.length; i++) {
-				if(GameEditor.getEditorController().connectionList[i].connectionId == loadData.connectionJPA.connectionId) {
+				if(GameEditor.getEditorController().connectionList[i].connectionId == loadData.connection.connectionId) {
 					connection = GameEditor.getEditorController().connectionList[i];
 					connection.connectionFrom = { htmlId : connection.connectionFrom };
 					connection.connectionTo = { htmlId : connection.connectionTo };
@@ -205,11 +205,10 @@ var InputTransition = class InputTransition extends Transition {
 		
 		var saveData = {
 			transitionId : this.overlayId,
-			connection : this.connection.connectionId,
-			activeTransitions : activeTransitions,
-			connectionJPA : {
+			connection : {
 				connectionId : this.connection.connectionId
-			}
+			},
+			activeTransitions : activeTransitions,
 		}
 		
 		for(var i = 0; i < this.transitionConfigs.length; i++) {

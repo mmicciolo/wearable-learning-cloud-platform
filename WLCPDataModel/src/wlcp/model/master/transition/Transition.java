@@ -31,8 +31,9 @@ public class Transition implements Serializable {
 	@JoinColumn(name = "GAME")
 	private Game game;
 	
-	@Column(name = "CONNECTION")
-	private String connection;
+	@ManyToOne(cascade = CascadeType.PERSIST)
+	@JoinColumn(name = "CONNECTION")
+	private Connection connection;
 	
 	@ElementCollection()
     @CollectionTable(name = "ACTIVE_TRANSITIONS")
@@ -51,20 +52,15 @@ public class Transition implements Serializable {
 	@OneToMany(mappedBy="transition", orphanRemoval = true, cascade = CascadeType.PERSIST)
 	@MapKey(name = "scope")
 	private Map<String, KeyboardInput> keyboardInputs = new HashMap<String, KeyboardInput>();
-	
-	@ManyToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(name = "CONNECTION_JPA")
-	private Connection connectionJPA;
 
 	public Transition() {
 		super();
 	}
 
-	public Transition(String transitionId, Game game, String connection, Map<String, String> activeTransitions,
+	public Transition(String transitionId, Game game, Connection connection, Map<String, String> activeTransitions,
 			Map<String, SingleButtonPress> singleButtonPresses,
 			Map<String, SequenceButtonPress> sequenceButtonPresses,
-			Map<String, KeyboardInput> keyboardInputs,
-			Connection connectionJPA) {
+			Map<String, KeyboardInput> keyboardInputs) {
 		super();
 		this.transitionId = transitionId;
 		this.game = game;
@@ -73,7 +69,6 @@ public class Transition implements Serializable {
 		this.singleButtonPresses = singleButtonPresses;
 		this.sequenceButtonPresses = sequenceButtonPresses;
 		this.keyboardInputs = keyboardInputs;
-		this.connectionJPA = connectionJPA;
 	}
 
 	public String getTransitionId() {
@@ -92,11 +87,11 @@ public class Transition implements Serializable {
 		this.game = game;
 	}
 
-	public String getConnection() {
+	public Connection getConnection() {
 		return connection;
 	}
 
-	public void setConnection(String connection) {
+	public void setConnection(Connection connection) {
 		this.connection = connection;
 	}
 	
@@ -130,14 +125,6 @@ public class Transition implements Serializable {
 
 	public void setKeyboardInputs(Map<String, KeyboardInput> keyboardInputs) {
 		this.keyboardInputs = keyboardInputs;
-	}
-
-	public Connection getConnectionJPA() {
-		return connectionJPA;
-	}
-
-	public void setConnectionJPA(Connection connectionJPA) {
-		this.connectionJPA = connectionJPA;
 	}
 
 }

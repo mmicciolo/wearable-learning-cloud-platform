@@ -135,7 +135,7 @@ public class LogGameEditor extends HttpServlet {
 		//Loop through all of the connections
 		for(int i = 0; i < saveData.connections.length; i++) {
 			entityManager.getTransaction().begin();
-			entityManager.merge(new Connection(saveData.connections[i].getConnectionId() + "_log_" + editorLog.getLogCount(), game, saveData.connections[i].getConnectionFrom() + "_log_" + editorLog.getLogCount(), saveData.connections[i].getConnectionTo() + "_log_" + editorLog.getLogCount(), saveData.connections[i].getBackwardsLoop(), saveData.connections[i].getConnectionFromState(), saveData.connections[i].getConnectionToState(), null));
+			//entityManager.merge(new Connection(saveData.connections[i].getConnectionId() + "_log_" + editorLog.getLogCount(), game, saveData.connections[i].getConnectionFrom() + "_log_" + editorLog.getLogCount(), saveData.connections[i].getConnectionTo() + "_log_" + editorLog.getLogCount(), saveData.connections[i].getBackwardsLoop(), saveData.connections[i].getConnectionFromState(), saveData.connections[i].getConnectionToState(), null));
 			entityManager.getTransaction().commit();
 		}
 		
@@ -162,9 +162,9 @@ public class LogGameEditor extends HttpServlet {
 			}
 			while(entityManager.getTransaction().isActive()) {}
 			entityManager.getTransaction().begin();
-			entityManager.merge(new Transition(saveData.transitions[i].getTransitionId() + "_log_" + editorLog.getLogCount(), game, saveData.transitions[i].getConnection() + "_log_" + editorLog.getLogCount(), new HashMap<String, String>(), new HashMap<String, SingleButtonPress>(), new HashMap<String, SequenceButtonPress>(), new HashMap<String, KeyboardInput>(), null));
+			//entityManager.merge(new Transition(saveData.transitions[i].getTransitionId() + "_log_" + editorLog.getLogCount(), game, saveData.transitions[i].getConnection() + "_log_" + editorLog.getLogCount(), new HashMap<String, String>(), new HashMap<String, SingleButtonPress>(), new HashMap<String, SequenceButtonPress>(), new HashMap<String, KeyboardInput>()));
 			entityManager.flush();
-			entityManager.merge(new Transition(saveData.transitions[i].getTransitionId() + "_log_" + editorLog.getLogCount(), game, saveData.transitions[i].getConnection() + "_log_" + editorLog.getLogCount(), activeTransitions, singleButtonPresses, sequenceButtonPresses, keyboardInputs, null));
+			//entityManager.merge(new Transition(saveData.transitions[i].getTransitionId() + "_log_" + editorLog.getLogCount(), game, saveData.transitions[i].getConnection() + "_log_" + editorLog.getLogCount(), activeTransitions, singleButtonPresses, sequenceButtonPresses, keyboardInputs));
 			entityManager.getTransaction().commit();
 		}
 	}

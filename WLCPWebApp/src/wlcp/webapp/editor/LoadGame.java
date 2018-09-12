@@ -126,21 +126,21 @@ public class LoadGame extends HttpServlet {
 			state.setGame(null);
 			for(Connection c : state.getInputConnections()) {
 				c.setGame(null);
-				State connectionFromState = new State();
-				connectionFromState.setStateId(c.getConnectionFromState().getStateId());
+				State connectionFrom = new State();
+				connectionFrom.setStateId(c.getConnectionFrom().getStateId());
 				State connectionToState = new State();
-				connectionToState.setStateId(c.getConnectionToState().getStateId());
-				c.setConnectionFromState(connectionFromState);
-				c.setConnectionToState(connectionToState);
+				connectionToState.setStateId(c.getConnectionTo().getStateId());
+				c.setConnectionFrom(connectionFrom);
+				c.setConnectionTo(connectionToState);
 			}
 			for(Connection c : state.getOutputConnections()) {
 				c.setGame(null);
-				State connectionFromState = new State();
-				connectionFromState.setStateId(c.getConnectionFromState().getStateId());
-				State connectionToState = new State();
-				connectionToState.setStateId(c.getConnectionToState().getStateId());
-				c.setConnectionFromState(connectionFromState);
-				c.setConnectionToState(connectionToState);
+				State connectionFrom = new State();
+				connectionFrom.setStateId(c.getConnectionFrom().getStateId());
+				State connectionTo = new State();
+				connectionTo.setStateId(c.getConnectionTo().getStateId());
+				c.setConnectionFrom(connectionFrom);
+				c.setConnectionTo(connectionTo);
 			}
 		}
 		
@@ -148,21 +148,21 @@ public class LoadGame extends HttpServlet {
 			state.setGame(null);
 			for(Connection c : state.getInputConnections()) {
 				c.setGame(null);
-				State connectionFromState = new State();
-				connectionFromState.setStateId(c.getConnectionFromState().getStateId());
-				State connectionToState = new State();
-				connectionToState.setStateId(c.getConnectionToState().getStateId());
-				c.setConnectionFromState(connectionFromState);
-				c.setConnectionToState(connectionToState);
+				State connectionFrom = new State();
+				connectionFrom.setStateId(c.getConnectionFrom().getStateId());
+				State connectionTo = new State();
+				connectionTo.setStateId(c.getConnectionTo().getStateId());
+				c.setConnectionFrom(connectionFrom);
+				c.setConnectionTo(connectionTo);
 			}
 			for(Connection c : state.getOutputConnections()) {
 				c.setGame(null);
-				State connectionFromState = new State();
-				connectionFromState.setStateId(c.getConnectionFromState().getStateId());
-				State connectionToState = new State();
-				connectionToState.setStateId(c.getConnectionToState().getStateId());
-				c.setConnectionFromState(connectionFromState);
-				c.setConnectionToState(connectionToState);
+				State connectionFrom = new State();
+				connectionFrom.setStateId(c.getConnectionFrom().getStateId());
+				State connectionTo = new State();
+				connectionTo.setStateId(c.getConnectionTo().getStateId());
+				c.setConnectionFrom(connectionFrom);
+				c.setConnectionTo(connectionTo);
 			}
 		}
 		
@@ -179,8 +179,7 @@ public class LoadGame extends HttpServlet {
 			transition.setGame(null);
 			if(transition.getConnection() != null) {
 				Connection connection = new Connection();
-				connection.setConnectionId(transition.getConnectionJPA().getConnectionId());
-				transition.setConnectionJPA(connection);
+				connection.setConnectionId(transition.getConnection().getConnectionId());
 			}
 			for(Map.Entry<String, SequenceButtonPress> entry : transition.getSequenceButtonPresses().entrySet()) {
 				entry.getValue().setTransition(null);

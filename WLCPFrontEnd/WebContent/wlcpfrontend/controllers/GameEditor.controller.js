@@ -329,11 +329,11 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		
 		//Load transition connection
 		for(var i = 0; i < loadedData.transitions.length; i++) {
-			if(typeof loadedData.transitions[i].connectionJPA !== "undefined") {
+			if(typeof loadedData.transitions[i].connection !== "undefined") {
 				for(var n = 0; n < this.transitionList.length; n++) {
 					if(this.transitionList[n].overlayId == loadedData.transitions[n].transitionId) {
 						for(var j = 0; j < this.connectionList.length; j++) {
-							if(this.connectionList[j].connectionId == loadedData.transitions[n].connectionJPA.connectionId) {
+							if(this.connectionList[j].connectionId == loadedData.transitions[n].connection.connectionId) {
 								this.transitionList[n].connection = this.connectionList[j];
 							}
 						}

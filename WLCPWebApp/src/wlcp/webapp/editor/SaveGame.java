@@ -133,7 +133,7 @@ public class SaveGame extends HttpServlet {
 		//Loop through all of the connections
 		for(int i = 0; i < saveData.connections.length; i++) {
 			entityManager.getTransaction().begin();
-			entityManager.merge(new Connection(saveData.connections[i].getConnectionId(), saveData.game, saveData.connections[i].getConnectionFrom(), saveData.connections[i].getConnectionTo(), saveData.connections[i].getBackwardsLoop(), entityManager.getReference(State.class, saveData.connections[i].getConnectionFromState().getStateId()), entityManager.getReference(State.class, saveData.connections[i].getConnectionToState().getStateId()), null));
+			entityManager.merge(new Connection(saveData.connections[i].getConnectionId(), saveData.game, saveData.connections[i].getConnectionFrom(), saveData.connections[i].getConnectionTo(), saveData.connections[i].getBackwardsLoop(), null));
 			entityManager.getTransaction().commit();
 		}
 		
@@ -159,9 +159,9 @@ public class SaveGame extends HttpServlet {
 				keyboardInputs.put(entry.getKey(), new KeyboardInput(t, entry.getKey(), entry.getValue().getKeyboardInputs()));
 			}
 			entityManager.getTransaction().begin();
-			entityManager.merge(new Transition(saveData.transitions[i].getTransitionId(), saveData.game, saveData.transitions[i].getConnection(), new HashMap<String, String>(), new HashMap<String, SingleButtonPress>(), new HashMap<String, SequenceButtonPress>(), new HashMap<String, KeyboardInput>(), entityManager.getReference(Connection.class, saveData.transitions[i].getConnectionJPA().getConnectionId())));
+			entityManager.merge(new Transition(saveData.transitions[i].getTransitionId(), saveData.game, saveData.transitions[i].getConnection(), new HashMap<String, String>(), new HashMap<String, SingleButtonPress>(), new HashMap<String, SequenceButtonPress>(), new HashMap<String, KeyboardInput>()));
 			entityManager.flush();
-			entityManager.merge(new Transition(saveData.transitions[i].getTransitionId(), saveData.game, saveData.transitions[i].getConnection(), activeTransitions, singleButtonPresses, sequenceButtonPresses, keyboardInputs, entityManager.getReference(Connection.class, saveData.transitions[i].getConnectionJPA().getConnectionId())));
+			entityManager.merge(new Transition(saveData.transitions[i].getTransitionId(), saveData.game, saveData.transitions[i].getConnection(), activeTransitions, singleButtonPresses, sequenceButtonPresses, keyboardInputs));
 			entityManager.getTransaction().commit();
 		}
 		
@@ -174,7 +174,7 @@ public class SaveGame extends HttpServlet {
 				
 			}
 			entityManager.getTransaction().begin();
-			entityManager.merge(new Connection(saveData.connections[i].getConnectionId(), saveData.game, saveData.connections[i].getConnectionFrom(), saveData.connections[i].getConnectionTo(), saveData.connections[i].getBackwardsLoop(), entityManager.getReference(State.class, saveData.connections[i].getConnectionFromState().getStateId()), entityManager.getReference(State.class, saveData.connections[i].getConnectionToState().getStateId()), transition));
+			entityManager.merge(new Connection(saveData.connections[i].getConnectionId(), saveData.game, saveData.connections[i].getConnectionFrom(), saveData.connections[i].getConnectionTo(), saveData.connections[i].getBackwardsLoop(), transition));
 			entityManager.getTransaction().commit();
 		}
 		

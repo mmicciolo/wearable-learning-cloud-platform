@@ -26,7 +26,7 @@ public class SequenceButtonPressTransitionType extends TransitionType implements
 		for(Entry<Connection, Transition> entry : connectionTransitions.entrySet()) {
 			if(entry.getValue().getSequenceButtonPresses().containsKey(scope)) {
 				for(String sequence : entry.getValue().getSequenceButtonPresses().get(scope).getSequences()) {
-					sequenceMap.put(sequence, entry.getKey().getConnectionTo());
+					sequenceMap.put(sequence, entry.getKey().getConnectionTo().getStateId());
 				}
 			}
 		}

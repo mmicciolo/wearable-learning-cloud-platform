@@ -27,16 +27,16 @@ public class SingleButtonPressTransitionType extends TransitionType implements I
 		for(Entry<Connection, Transition> entry : connectionTransitions.entrySet()) {
 			if(entry.getValue().getSingleButtonPresses().containsKey(scope)) {
 				if(entry.getValue().getSingleButtonPresses().get(scope).getButton1()) {
-					buttonMap.put("1", entry.getKey().getConnectionTo());
+					buttonMap.put("1", entry.getKey().getConnectionTo().getStateId());
 				}
 				if(entry.getValue().getSingleButtonPresses().get(scope).getButton2()) {
-					buttonMap.put("2", entry.getKey().getConnectionTo());
+					buttonMap.put("2", entry.getKey().getConnectionTo().getStateId());
 				}
 				if(entry.getValue().getSingleButtonPresses().get(scope).getButton3()) {
-					buttonMap.put("3", entry.getKey().getConnectionTo());
+					buttonMap.put("3", entry.getKey().getConnectionTo().getStateId());
 				}
 				if(entry.getValue().getSingleButtonPresses().get(scope).getButton4()) {
-					buttonMap.put("4", entry.getKey().getConnectionTo());
+					buttonMap.put("4", entry.getKey().getConnectionTo().getStateId());
 				}
 			}
 		}

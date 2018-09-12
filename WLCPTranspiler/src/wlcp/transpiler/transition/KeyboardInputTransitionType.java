@@ -27,7 +27,7 @@ public class KeyboardInputTransitionType extends TransitionType implements ITran
 		for(Entry<Connection, Transition> entry : connectionTransitions.entrySet()) {
 			if(entry.getValue().getKeyboardInputs().containsKey(scope)) {
 				for(String keyboardInput : entry.getValue().getKeyboardInputs().get(scope).getKeyboardInputs()) {
-					keyboardInputMap.put(keyboardInput, entry.getKey().getConnectionTo());
+					keyboardInputMap.put(keyboardInput, entry.getKey().getConnectionTo().getStateId());
 				}
 			}
 		}

@@ -17,7 +17,13 @@ sap.ui.controller("wlcpfrontend.controllers.Login", {
 				key : "A",
 				text : "Player"
 			}
-		]
+		],
+		newUser : {
+			UsernameId : "",
+			Password : "",
+			FirstName : "",
+			LastName : "",
+		}
 	},
 	
 	model : new sap.ui.model.json.JSONModel(),
@@ -78,6 +84,60 @@ sap.ui.controller("wlcpfrontend.controllers.Login", {
 	
 	oDataError : function(oData) {
 		sap.m.MessageBox.error("There was an error validating the login credentials!");
+	},
+	
+	registerNewUser : function() {
+		
+		//Load username data
+		ODataModel.getODataModel().read("/Usernames");
+		
+		//Create an instance of the dialog
+		this.registerNewUserDialog = sap.ui.xmlfragment("wlcpfrontend.fragments.RegisterNewUser", this);
+		
+		//Set the model for the dialog
+		this.registerNewUserDialog.setModel(this.model);
+		
+		//Open the dialog
+		this.registerNewUserDialog.open();
+	},
+	
+	confirmRegisterNewUser : function() {
+		var registerData = this.model.getData().newUser;
+		
+		//Make sure username and password are filled out
+		if(registerData.UsernameId == "" || registerData.Password == "") {
+			sap.m.MessageBox.error("Please make sure username and password is filled out!");
+			return;
+		}
+		
+		//Make sure a-z A-Z only
+		if(!registerData.UsernameId.match(/^[a-zA-Z]+$/)) {
+			sap.m.MessageBox.error("a-z upper case and lower case only username");
+			return;
+		}
+		
+		//Check to make sure that username doesnt already exist
+		if(typeof ODataModel.getODataModel().getProperty("/Usernames('" + registerData.UsernameId + "')") !== "undefined") {
+			sap.m.MessageBox.error("That username already exists!");
+			return;
+		}
+		
+		//If we get here we can register them
+		ODataModel.getODataModel().create("/Usernames", registerData, {success : $.proxy(this.registerSuccess, this), error : $.proxy(this.registerError, this)});
+	},
+	
+	registerSuccess : function() {
+		sap.m.MessageBox.success("You have been registered!");
+		this.cancelRegisterNewUser();
+	},
+	
+	registerError : function() {
+		
+	},
+	
+	cancelRegisterNewUser : function() {
+		this.registerNewUserDialog.close();
+		this.registerNewUserDialog.destroy();
 	},
 
 /**

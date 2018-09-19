@@ -7,7 +7,6 @@
   	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
   <build>
-    <sourceDirectory>src</sourceDirectory>
     <resources>
       <resource>
         <directory>src</directory>
@@ -42,13 +41,13 @@
     	<groupId>junit</groupId>
     	<artifactId>junit</artifactId>
     	<version>4.12</version>
-    	<scope>test</scope>
+    	<scope>src/test</scope>
 	</dependency>
 	<dependency>
     	<groupId>org.apache.derby</groupId>
     	<artifactId>derby</artifactId>
     	<version>10.13.1.1</version>
-    	<scope>test</scope>
+    	<scope>src/test</scope>
 	</dependency>
 	<dependency>
     	<groupId>mysql</groupId>

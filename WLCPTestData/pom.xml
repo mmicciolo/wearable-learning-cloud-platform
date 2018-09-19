@@ -5,7 +5,6 @@
   <version>0.0.1-SNAPSHOT</version>
   <packaging>war</packaging>
   <build>
-    <sourceDirectory>src</sourceDirectory>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -22,7 +21,7 @@
           <warSourceDirectory>WebContent</warSourceDirectory>
           <webResources>
           	<resource>
-          		<directory>TestData</directory>
+          		<directory>src/main/resources/TestData</directory>
           		<targetPath>TestData</targetPath>
           	</resource>
           </webResources>

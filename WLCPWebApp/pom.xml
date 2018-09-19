@@ -1,6 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>WLCPWebApp</groupId>
+  <groupId>wlcp.webapp</groupId>
   <artifactId>WLCPWebApp</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>war</packaging>
@@ -105,17 +105,17 @@
 		<version>8.5.34</version>
 	</dependency>
 	<dependency>
-		<groupId>WLCPDataModel</groupId>
+		<groupId>wlcp.model</groupId>
 		<artifactId>WLCPDataModel</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</dependency>
 	<dependency>
-		<groupId>WLCPTranspiler</groupId>
+		<groupId>wlcp.transpiler</groupId>
 		<artifactId>WLCPTranspiler</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</dependency>
 	<dependency>
- 		<groupId>WLCPShared</groupId>
+ 		<groupId>wlcp.shared</groupId>
 		<artifactId>WLCPShared</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
  	</dependency>

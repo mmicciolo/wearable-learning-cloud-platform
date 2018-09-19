@@ -50,7 +50,7 @@ public class WLCPGameServer extends Thread implements IWLCPGameServer  {
 	 * If the call succeeds the completed method of your completion handler will be called.
 	 * If the call fails the failed method will be called.
 	 */
-	public <A> void connect(CompletionHandler<Void, ? super A> completionHandler, A attachment) {
+	public <A> void connect(final CompletionHandler<Void, ? super A> completionHandler, final A attachment) {
 		
 		//Open up an async socket channel
 		try {
@@ -62,7 +62,7 @@ public class WLCPGameServer extends Thread implements IWLCPGameServer  {
 		
 		//Connect
 		channel.connect(new InetSocketAddress(ipAddress, ipPort), this, new CompletionHandler<Void, WLCPGameServer>() {
-            @Override
+            
             public void completed(Void result, WLCPGameServer wlcpGameServer ) {  
             	
             	//Start the processing thread
@@ -81,7 +81,7 @@ public class WLCPGameServer extends Thread implements IWLCPGameServer  {
     			completionHandler.completed(result, attachment);
             }
 
-            @Override
+            
             public void failed(Throwable exc, WLCPGameServer channel) {
             	//Call the users completion handler
                 completionHandler.failed(new CouldNotConnectToWLCPException("IOException. Could not connect to server. Verify ip and port are set correctly."), attachment);
@@ -142,10 +142,10 @@ public class WLCPGameServer extends Thread implements IWLCPGameServer  {
 	 * If the call succeeds the completed method of your completion handler will be called.
 	 * If the call fails the failed method will be called.
 	 */
-	public <A> void SendPacket(IPacket packet, CompletionHandler<Void, ? super A> completionHandler, A attachment) {
-		ByteBuffer byteBuffer = packet.assemblePacket();
+	public <A> void SendPacket(final IPacket packet, final CompletionHandler<Void, ? super A> completionHandler, final A attachment) {
+		final ByteBuffer byteBuffer = packet.assemblePacket();
 		channel.write(packet.assemblePacket(), channel, new CompletionHandler<Integer, AsynchronousSocketChannel >() {
-            @Override
+            
             public void completed(Integer result, AsynchronousSocketChannel channel ) {
             	if(result != packet.getPacketSize()) {
             		//Keep writing
@@ -154,7 +154,7 @@ public class WLCPGameServer extends Thread implements IWLCPGameServer  {
             	completionHandler.completed(null, attachment);
             }
 
-            @Override
+            
             public void failed(Throwable exc, AsynchronousSocketChannel channel) {
             	completionHandler.failed(exc, attachment);
             }
@@ -267,17 +267,16 @@ public class WLCPGameServer extends Thread implements IWLCPGameServer  {
 	 * If the call succeeds the completed method of your completion handler will be called.
 	 * If the call fails the failed method will be called.
 	 */
-	@Override
 	public void getGameLobbiesForUsername(String username) {
 		GameLobbiesPacket packet = new GameLobbiesPacket(username);
 		SendPacket(packet, new CompletionHandler<Void, Void>() {
-			@Override
+			
 			public void completed(Void result, Void attachment) {
 				// TODO Auto-generated method stub
 				
 			}
 	
-			@Override
+			
 			public void failed(Throwable exc, Void attachment) {
 				// TODO Auto-generated method stub
 				
@@ -290,16 +289,15 @@ public class WLCPGameServer extends Thread implements IWLCPGameServer  {
 	 * If the call succeeds the completed method of your completion handler will be called.
 	 * If the call fails the failed method will be called.
 	 */
-	@Override
 	public void getTeamsForGameLobby(int gameInstanceId, int gameLobbyId, String username) {
 		GameTeamsPacket gameTeamsPacket = new GameTeamsPacket(gameInstanceId, gameLobbyId, username);
 		SendPacket(gameTeamsPacket, new CompletionHandler<Void, Void>() {
-			@Override
+			
 			public void completed(Void result, Void attachment) {
 				//Packet sent successfully
 			}
 
-			@Override
+			
 			public void failed(Throwable exc, Void attachment) {
 				//Error sending packet
 				exc.getMessage();
@@ -312,16 +310,15 @@ public class WLCPGameServer extends Thread implements IWLCPGameServer  {
 	 * If the call suceeds the completed method of your completion handler will be called.
 	 * If the call fails the failed method will be called.
 	 */
-	@Override
 	public void joinGameLobby(int gameInstanceId, int gameLobbyId, byte team, String username) {
 		ConnectPacket connectPacket = new ConnectPacket(gameInstanceId, username, gameLobbyId, team);
 		SendPacket(connectPacket, new CompletionHandler<Void, Void>() {
-			@Override
+			
 			public void completed(Void result, Void attachment) {
 				// TODO Auto-generated method stub
 				
 			}
-			@Override
+			
 			public void failed(Throwable exc, Void attachment) {
 				// TODO Auto-generated method stub
 			}
@@ -333,16 +330,15 @@ public class WLCPGameServer extends Thread implements IWLCPGameServer  {
 	 * If the call suceeds the completed method of your completion handler will be called.
 	 * If the call fails the failed method will be called.
 	 */
-	@Override
 	public void sendSingleButtonPress(int gameInstanceId, int team, int player, int buttonPress) {
 		SingleButtonPressPacket singleButtonPressPacket = new SingleButtonPressPacket(gameInstanceId, team, player, buttonPress);
 		SendPacket(singleButtonPressPacket, new CompletionHandler<Void, Void>() {
-			@Override
+			
 			public void completed(Void result, Void attachment) {
 				// TODO Auto-generated method stub
 				
 			}
-			@Override
+			
 			public void failed(Throwable exc, Void attachment) {
 				// TODO Auto-generated method stub
 			}
@@ -354,16 +350,15 @@ public class WLCPGameServer extends Thread implements IWLCPGameServer  {
 	 * If the call suceeds the completed method of your completion handler will be called.
 	 * If the call fails the failed method will be called.
 	 */
-	@Override
 	public void sendSequenceButtonPress(int gameInstanceId, int team, int player, String sequenceButtonPress) {
 		SequenceButtonPressPacket sequenceButtonPressPacket = new SequenceButtonPressPacket(gameInstanceId, team, player, sequenceButtonPress);
 		SendPacket(sequenceButtonPressPacket, new CompletionHandler<Void, Void>() {
-			@Override
+			
 			public void completed(Void result, Void attachment) {
 				// TODO Auto-generated method stub
 				
 			}
-			@Override
+			
 			public void failed(Throwable exc, Void attachment) {
 				// TODO Auto-generated method stub
 			}
@@ -375,16 +370,15 @@ public class WLCPGameServer extends Thread implements IWLCPGameServer  {
 	 * If the call suceeds the completed method of your completion handler will be called.
 	 * If the call fails the failed method will be called.
 	 */
-	@Override
 	public void sendKeyboardInput(int gameInstanceId, int team, int player, String keyboardInput) {
 		KeyboardInputPacket keyboardInputPacket = new KeyboardInputPacket(gameInstanceId, team, player, keyboardInput);
 		SendPacket(keyboardInputPacket, new CompletionHandler<Void, Void>() {
-			@Override
+			
 			public void completed(Void result, Void attachment) {
 				// TODO Auto-generated method stub
 				
 			}
-			@Override
+			
 			public void failed(Throwable exc, Void attachment) {
 				// TODO Auto-generated method stub
 			}

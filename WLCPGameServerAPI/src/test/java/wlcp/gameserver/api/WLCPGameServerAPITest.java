@@ -31,7 +31,7 @@ public class WLCPGameServerAPITest {
 		
 		//Make the TCP connection
 		wlcpGameServer.connect(new CompletionHandler<Void, WLCPGameServer>() {
-            @Override
+            
             public void completed(Void result, WLCPGameServer channel ) {  
             	
             	//The TCP Connection was successful
@@ -39,7 +39,7 @@ public class WLCPGameServerAPITest {
             	wlcpGameServer.getGameLobbiesForUsername(username);
             }
 
-            @Override
+            
             public void failed(Throwable exc, WLCPGameServer channel) {
             	
             	//The connection failed. Better handling should be implemented other than

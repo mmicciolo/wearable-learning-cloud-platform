@@ -1,4 +1,3 @@
-.classpath
-.settings/
 target/
 bin/
+.log

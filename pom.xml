@@ -9,6 +9,12 @@
 
 	<modules>
 		<module>WLCPDataModel</module>
+		<module>WLCPTestData</module>
 		<module>WLCPShared</module>
+		<module>WLCPGameServer</module>
+		<module>WLCPGameServerAPI</module>
+		<module>WLCPTranspiler</module>
+		<module>WLCPWebApp</module>
+		<module>WLCPFrontEnd</module>
 	</modules>
 </project>

@@ -45,24 +45,24 @@ public class ServerPacketHandlerTaskTest {
 
 	@Test
 	public void test() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-		StartGameInstancePacket packet = new StartGameInstancePacket("game", 1, "username");
-		PacketClientData packetClientData = new PacketClientData(packet, null);
-		//when(entityManager.getEntityManager().find(Game.class, Mockito.any(Object.class))).thenReturn(new Game());
-		when(entityManager.getEntityManager().find(any(), any())).thenAnswer(new Answer() {
-			@Override
-			public Object answer(InvocationOnMock invocation) throws Throwable {
-				if(Game.class == invocation.getArguments()[0]) {
-					return new Game();
-				} else if(GameLobby.class == invocation.getArguments()[0]) {
-					return new GameLobby();
-				} else if(Username.class == invocation.getArguments()[0]) {
-					return new Username();
-				}
-				return null;
-			}
-		});
-		serverPacketHandlerTask.DistributePacket(packetClientData);
-		serverPacketHandlerTask.Update();
+//		StartGameInstancePacket packet = new StartGameInstancePacket("game", 1, "username");
+//		PacketClientData packetClientData = new PacketClientData(packet, null);
+//		//when(entityManager.getEntityManager().find(Game.class, Mockito.any(Object.class))).thenReturn(new Game());
+//		when(entityManager.getEntityManager().find(any(), any())).thenAnswer(new Answer() {
+//			@Override
+//			public Object answer(InvocationOnMock invocation) throws Throwable {
+//				if(Game.class == invocation.getArguments()[0]) {
+//					return new Game();
+//				} else if(GameLobby.class == invocation.getArguments()[0]) {
+//					return new GameLobby();
+//				} else if(Username.class == invocation.getArguments()[0]) {
+//					return new Username();
+//				}
+//				return null;
+//			}
+//		});
+//		serverPacketHandlerTask.DistributePacket(packetClientData);
+//		serverPacketHandlerTask.Update();
 		
 		//Method privateMethod = ServerPacketHandlerTask.class.getDeclaredMethod("StartGameInstance", PacketClientData.class);
 		//privateMethod.setAccessible(true);

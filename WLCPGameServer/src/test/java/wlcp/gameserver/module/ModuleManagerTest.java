@@ -16,6 +16,9 @@ import wlcp.gameserver.modules.LoggerModule;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+
 @RunWith(MockitoJUnitRunner.class)
 public class ModuleManagerTest {
 	
@@ -25,8 +28,11 @@ public class ModuleManagerTest {
 	private static boolean setup = false;
 	
 	@Before
-	public void before() {
+	public void before() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 		if(!setup) {
+			Field f = ModuleManager.class.getDeclaredField("modules");
+			f.setAccessible(true);
+			f.set(null, new ArrayList<Module>());
 			when(loggerModule.getModule()).thenReturn(Modules.LOGGER);
 			doNothing().when(loggerModule).write("");
 			ModuleManager.getInstance().addModule(loggerModule);

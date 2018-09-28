@@ -76,7 +76,7 @@ public class WLCPGameServer {
 		}
 		
 		((TaskManagerModule)ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).addTask(new PacketDistributorTask());
-		((TaskManagerModule)ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).addTask(new ServerPacketHandlerTask());
+		((TaskManagerModule)ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).addTask(new ServerPacketHandlerTask(new JPAEntityManager(), (PacketDistributorTask) ((TaskManagerModule) ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).getTasksByType(PacketDistributorTask.class).get(0), (LoggerModule) ModuleManager.getInstance().getModule(Modules.LOGGER)));
 	}
 	
 	private static void Setup() {

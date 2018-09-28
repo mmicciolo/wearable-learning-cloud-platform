@@ -30,17 +30,19 @@ import wlcp.shared.packets.StopGameInstancePacket;
 
 public class ServerPacketHandlerTask extends Task implements ITask {
 	
-	private LinkedList<PacketClientData> recievedPackets;
+	private LinkedList<PacketClientData> recievedPackets = new LinkedList<PacketClientData>();
 	private JPAEntityManager entityManager;
 	private PacketDistributorTask packetDistributor;
 	private LoggerModule logger;
 
-	public ServerPacketHandlerTask() {
+	public ServerPacketHandlerTask(JPAEntityManager entityManager, PacketDistributorTask packetDistributor, LoggerModule logger) {
 		super("Server Packet Handler");
-		recievedPackets = new LinkedList<PacketClientData>();
-		entityManager = new JPAEntityManager();
-		packetDistributor = (PacketDistributorTask) ((TaskManagerModule) ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).getTasksByType(PacketDistributorTask.class).get(0);
-		logger = (LoggerModule) ModuleManager.getInstance().getModule(Modules.LOGGER);
+		this.entityManager = entityManager;
+		this.packetDistributor = packetDistributor;
+		this.logger = logger;
+//		entityManager = new JPAEntityManager();
+//		packetDistributor = (PacketDistributorTask) ((TaskManagerModule) ModuleManager.getInstance().getModule(Modules.TASK_MANAGER)).getTasksByType(PacketDistributorTask.class).get(0);
+//		logger = (LoggerModule) ModuleManager.getInstance().getModule(Modules.LOGGER);
 	}
 	
 	public void DistributePacket(PacketClientData packetClientData) {

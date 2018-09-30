@@ -21,6 +21,7 @@ public class TestServer extends Thread {
 	private static boolean running = true;
 	
 	public void run() {
+		JPAEntityManager.testing = true;
 		Setup();
 		SetupModuleManager();
 		

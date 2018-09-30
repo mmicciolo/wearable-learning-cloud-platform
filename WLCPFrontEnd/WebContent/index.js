@@ -3,6 +3,11 @@ var Index = {
 	showMainPage : true,
 	
 	main : function() {
+		if(window.location.href.includes("localhost") && !window.location.href.includes("8080")) {
+			if(!window.location.href.includes("SpecRunner")) {
+				window.location = window.location + "SpecRunner.html";
+			}
+		}
 		this.loadJQuery();
 		this.loadExternalResources();
 		this.loadPage();

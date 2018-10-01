@@ -5,7 +5,10 @@ var Index = {
 	main : function() {
 		if(window.location.href.includes("localhost") && !window.location.href.includes("8080")) {
 			if(!window.location.href.includes("SpecRunner")) {
+				this.showMainPage = false;
 				window.location = window.location + "SpecRunner.html";
+			} else {
+				this.showMainPage = false;
 			}
 		}
 		this.loadJQuery();
@@ -74,6 +77,7 @@ var Index = {
 			var page = sap.ui.view({id:"idView1", viewName:"wlcpfrontend.views.Login", type:sap.ui.core.mvc.ViewType.XML});
 			page.addStyleClass("myBackgroundStyle");
 		} else {
+			sap.ui.getCore().setModel(new sap.ui.model.json.JSONModel({username : "mmicciolo"}), "user");
 			app = new sap.m.App({id:"app1", initialPage:"gameEditor"});
 			var page = sap.ui.view({id:"gameEditor", viewName:"wlcpfrontend.views.GameEditor", type:sap.ui.core.mvc.ViewType.XML});
 		}

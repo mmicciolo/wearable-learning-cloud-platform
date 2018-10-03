@@ -95,8 +95,8 @@ var Connection = class Connection {
 				stateId : this.connectionTo.htmlId
 			},
 			backwardsLoop : this.isLoopBack,
-			transition : {
-				transitionId : this.transition == null ? "" : this.transition.overlayId
+			transition : this.transition == null ? null : {
+				transitionId : this.transition.overlayId
 			}
 		}
 		return saveData;

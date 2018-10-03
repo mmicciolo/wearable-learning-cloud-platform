@@ -4,10 +4,28 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import wlcp.model.master.Game;
-import wlcp.model.master.GameLobby;
 import wlcp.model.master.connection.Connection;
 
 /**
@@ -17,6 +35,8 @@ import wlcp.model.master.connection.Connection;
 @Entity
 @Table(name = "STATE")
 @Inheritance(strategy = InheritanceType.JOINED)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property="stateType", defaultImpl=State.class)
+@JsonSubTypes({@Type(value = StartState.class, name="START_STATE"), @Type(value = OutputState.class, name = "OUTPUT_STATE")})
 public class State implements Serializable {
 
 	
@@ -28,6 +48,7 @@ public class State implements Serializable {
 	
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "GAME")
+	@JsonIgnore
 	private Game game;
 	
 	@Enumerated(EnumType.ORDINAL)
@@ -42,24 +63,17 @@ public class State implements Serializable {
 	
 	@JoinTable(name = "INPUT_CONNECTIONS", joinColumns = @JoinColumn(name = "STATE_ID", referencedColumnName = "STATE_ID"), inverseJoinColumns = @JoinColumn(name = "CONNECTION_ID", referencedColumnName = "CONNECTION_ID"))
 	@OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
-	List<Connection> inputConnections = new ArrayList<Connection>();;
+	@JsonIgnoreProperties(value = {"game", "connectionFrom", "connectionTo", "transition", "backwardsLoop"})
+	List<Connection> inputConnections = new ArrayList<Connection>();
 	
 	@JoinTable(name = "OUTPUT_CONNECTIONS", joinColumns = @JoinColumn(name = "STATE_ID", referencedColumnName = "STATE_ID"), inverseJoinColumns = @JoinColumn(name = "CONNECTION_ID", referencedColumnName = "CONNECTION_ID"))
 	@OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
-	List<Connection> outputConnections = new ArrayList<Connection>();;
+	@JsonIgnoreProperties(value = {"game", "connectionFrom", "connectionTo", "transition", "backwardsLoop"})
+	List<Connection> outputConnections = new ArrayList<Connection>();
 
 	public State() {
 		super();
 	}
-	
-//	public State(String stateId, Game game, StateType stateType, Float positionX, Float positionY) {
-//		super();
-//		this.stateId = stateId;
-//		this.game = game;
-//		this.stateType = stateType;
-//		this.positionX = positionX;
-//		this.positionY = positionY;
-//	}
 	
 	public State(String stateId, Game game, StateType stateType, Float positionX, Float positionY,
 			List<Connection> inputConnections, List<Connection> outputConnections) {

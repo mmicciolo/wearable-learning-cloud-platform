@@ -1,15 +1,26 @@
 package wlcp.model.master.transition;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.MapKey;
+import javax.persistence.MapKeyColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import wlcp.model.master.Game;
-import wlcp.model.master.GameLobby;
 import wlcp.model.master.connection.Connection;
 
 /**
@@ -29,10 +40,12 @@ public class Transition implements Serializable {
 	
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "GAME")
+	@JsonIgnore
 	private Game game;
 	
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "CONNECTION")
+	@JsonIgnoreProperties(value= {"game", "connectionFrom", "connectionTo", "backwardsLoop", "transition"})
 	private Connection connection;
 	
 	@ElementCollection()

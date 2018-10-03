@@ -2,7 +2,16 @@ package wlcp.model.master.connection;
 
 import java.io.Serializable;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import wlcp.model.master.Game;
 import wlcp.model.master.state.State;
@@ -25,14 +34,17 @@ public class Connection implements Serializable {
 	
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "GAME")
+	@JsonIgnore
 	private Game game;
 	
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "CONNECTION_FROM")
+	@JsonIgnoreProperties(value= {"game", "stateType", "positionX", "positionY", "inputConnections", "outputConnections", "description", "displayText"})
 	private State connectionFrom;
 	
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "CONNECTION_TO")
+	@JsonIgnoreProperties(value= {"game", "stateType", "positionX", "positionY", "inputConnections", "outputConnections", "description", "displayText"})
 	private State connectionTo;
 	
 	@Column(name = "BACKWARDS_LOOP")
@@ -40,6 +52,7 @@ public class Connection implements Serializable {
 	
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "TRANSITION")
+	@JsonIgnoreProperties(value= {"game", "connection", "activeTransitions", "singleButtonPresses", "sequenceButtonPresses", "keyboardInputs"})
 	private Transition transition;
 
 	public Connection() {

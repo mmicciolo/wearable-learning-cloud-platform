@@ -242,7 +242,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		this.busy = new sap.m.BusyDialog();
 		this.busy.open();
 		
-		$.ajax({url: ODataModel.getWebAppURL() + "/LoadGame", type: 'POST',  dataType: 'text', data: 'gameId=' + this.gameModel.GameId, success: $.proxy(this.loadSuccess, this), error : $.proxy(this.loadError, this)});
+		$.ajax({url: ODataModel.getWebAppURL() + "/Rest/Controllers/loadGame?gameId=" + this.gameModel.GameId, type: 'GET', success: $.proxy(this.loadSuccess, this), error : $.proxy(this.loadError, this)});
 	},
 	
 	loadFromManager : function(gameInfo) {
@@ -257,10 +257,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		GameEditor.getEditorController().load();
 	},
 	
-	loadSuccess(data) {
-		
-		//var loadedData = JSON.parse(data.responseText);
-		var loadedData = JSON.parse(data);
+	loadSuccess(loadedData) {
 		
 		//Init jsPlumb
 		this.initJsPlumb();
@@ -314,7 +311,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		
 		//Load connection transition
 		for(var i = 0; i < loadedData.connections.length; i++) {
-			if(typeof loadedData.connections[i].transition !== "undefined") {
+			if(loadedData.connections[i].transition != null) {
 				for(var n = 0; n < this.connectionList.length; n++) {
 					if(this.connectionList[n].connectionId == loadedData.connections[i].connectionId) {
 						for(var j = 0; j < this.transitionList.length; j++) {
@@ -329,7 +326,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		
 		//Load transition connection
 		for(var i = 0; i < loadedData.transitions.length; i++) {
-			if(typeof loadedData.transitions[i].connection !== "undefined") {
+			if(loadedData.transitions[i].connection != null) {
 				for(var n = 0; n < this.transitionList.length; n++) {
 					if(this.transitionList[n].overlayId == loadedData.transitions[n].transitionId) {
 						for(var j = 0; j < this.connectionList.length; j++) {
@@ -380,12 +377,16 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		
 		//Container for all of the data to be sent
 		var saveJSON = {
-				game : {
-					gameId : this.gameModel.GameId,
-					teamCount : this.gameModel.TeamCount,
-					playersPerTeam : this.gameModel.PlayersPerTeam,
-					stateIdCount : this.gameModel.StateIdCount,
-					visibility : this.gameModel.Visibility,
+				gameId : this.gameModel.GameId,
+				teamCount : this.gameModel.TeamCount,
+				playersPerTeam : this.gameModel.PlayersPerTeam,
+				stateIdCount : this.gameModel.StateIdCount,
+				transitionIdCount : this.gameModel.TransitionIdCount,
+				connectionIdCount : this.gameModel.ConnectionIdCount,
+				visibility : this.gameModel.Visibility,
+				dataLog : this.gameModel.DataLog,
+				username : {
+					usernameId : sap.ui.getCore().getModel("user").oData.username
 				},
 				states : [],
 				connections : [],
@@ -418,7 +419,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 			    return val;
 			});
 		
-		$.ajax({url: ODataModel.getWebAppURL() + "/SaveGame", type: 'POST', dataType: 'text', data: 'saveData=' + JSON.stringify(saveJSON), success : $.proxy(this.saveSuccess, this), error : $.proxy(this.saveError, this)});
+		$.ajax({headers : { 'Accept': 'application/json', 'Content-Type': 'application/json'}, url: ODataModel.getWebAppURL() + "/Rest/Controllers/saveGame", type: 'POST', dataType: 'json', data: JSON.stringify(saveJSON), success : $.proxy(this.saveSuccess, this), error : $.proxy(this.saveError, this)});
 	},
 	
 	saveSuccess : function() {

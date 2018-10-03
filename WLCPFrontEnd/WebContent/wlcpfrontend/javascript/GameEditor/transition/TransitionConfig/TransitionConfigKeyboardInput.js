@@ -73,8 +73,12 @@ var TransitionConfigKeyboardInput = class TransitionConfigKeyboardInput extends 
 					for(var k = 0; k < iconTabs[i].navigationContainerPages[n].keyboardField.length; k++) {
 						keyboardInputStrings.push(iconTabs[i].navigationContainerPages[n].keyboardField[k].value);
 					}
-					keyboardInputs[iconTabs[i].scope] = {
-						keyboardInputs : keyboardInputStrings
+					if(keyboardInputStrings.length > 0) {
+						keyboardInputs[iconTabs[i].scope] = {
+							transition : { transitionId : this.transition.overlayId },
+							scope : iconTabs[i].scope,
+							keyboardInputs : keyboardInputStrings
+						}
 					}
 				}
 			}

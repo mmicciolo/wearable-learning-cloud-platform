@@ -81,8 +81,12 @@ var TransitionConfigSequenceButtonPress = class TransitionConfigSequenceButtonPr
 						}
 						sequences.push(buttons);
 					}
-					sequenceButtonPresses[iconTabs[i].scope] = {
-						sequences : sequences
+					if(sequences.length > 0) {
+						sequenceButtonPresses[iconTabs[i].scope] = {
+							transition : { transitionId : this.transition.overlayId },
+							scope : iconTabs[i].scope,
+							sequences : sequences
+						}
 					}
 				}
 			}

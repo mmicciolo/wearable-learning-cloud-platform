@@ -6,6 +6,13 @@
 	<artifactId>WLCPFrontEnd</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
+	<repositories>
+		<repository>
+			<id>embodied-nexus-repository</id>
+			<name>Embodied Nexus Repository</name>
+			<url>http://nexus.embodied.wpi.edu/repository/maven-releases/</url>
+		</repository>
+	</repositories>
 	<build>
 		<plugins>
 			<plugin>
@@ -61,4 +68,11 @@
 			</plugin>
 		</plugins>
 	</build>
+	<dependencies>
+		<dependency>
+			<groupId>com.sap.ui5</groupId>
+			<artifactId>resource</artifactId>
+			<version>1.56.0</version>
+		</dependency>
+	</dependencies>
 </project>

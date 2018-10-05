@@ -4,9 +4,11 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.io.DataOutput;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -15,6 +17,7 @@ import javax.sql.DataSource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -24,7 +27,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import wlcp.model.master.Game;
@@ -69,25 +71,24 @@ public class LoadSaveControllerTest {
     
     @Test
     @Transactional
-    public void testLoadGame() throws Exception {
+    public void testLoadSaveGame() throws Exception {
     	Game game = createGame();
     	StartState state = new StartState();
     	state.setStateId("start_state");
     	state.setGame(game);
     	game.getStates().add(state);
     	entityManager.persist(game);
-    	//entityManager.persist(state);
     	ObjectMapper objectMapper = new ObjectMapper();
     	String s = objectMapper.writeValueAsString(game);
     	System.out.println(s);
     	MvcResult result = mockMvc.perform(get("/Controllers/loadGame?gameId=test")).andExpect(status().isOk()).andReturn();
     	assertThat(result.getResponse().getContentAsString(), is(equalTo(s)));
-    	//assertThat(result.getResponse().getContentAsString(), is(equalTo("{\"gameId\":\"test\",\"teamCount\":3,\"playersPerTeam\":3,\"username\":{\"usernameId\":\"Test\"},\"visibility\":true,\"stateIdCount\":null,\"transitionIdCount\":null,\"connectionIdCount\":null,\"dataLog\":false,\"states\":[{\"stateType\":\"START_STATE\",\"stateId\":\"state1\",\"stateType\":\"START_STATE\",\"positionX\":null,\"positionY\":null,\"inputConnections\":[],\"outputConnections\":[]}],\"connections\":[],\"transitions\":[]}")));
+    	mockMvc.perform(post("/Controllers/saveGame").contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isOk());
     }
     
     @Test
     @Transactional
-    public void testLoadGameState() throws Exception {
+    public void testLoadSaveGameState() throws Exception {
     	Game game = createGame();
     	StartState state = new StartState();
     	state.setStateId("start_state");
@@ -102,17 +103,19 @@ public class LoadSaveControllerTest {
     	System.out.println(s);
     	MvcResult result = mockMvc.perform(get("/Controllers/loadGame?gameId=test")).andExpect(status().isOk()).andReturn();
     	assertThat(result.getResponse().getContentAsString(), is(equalTo(s)));
+    	mockMvc.perform(post("/Controllers/saveGame").contentType(MediaType.APPLICATION_JSON).content(s)).andExpect(status().isOk());
     }
     
     @Test
     @Transactional
-    public void testLoadGameConnection() throws Exception {
+    public void testLoadSaveGameConnection() throws Exception {
     	Game game = createGame();
     	StartState state = new StartState();
     	state.setStateId("start_state");
     	state.setGame(game);
     	game.getStates().add(state);
     	OutputState outputState = new OutputState();
+    	outputState.setStateId("output_state");
     	outputState.setGame(game);
     	game.getStates().add(outputState);
     	Connection connection = new Connection("connection", game, state, outputState, false, null);
@@ -120,11 +123,13 @@ public class LoadSaveControllerTest {
     	state.getOutputConnections().add(connection);
     	outputState.getInputConnections().add(connection);
     	entityManager.persist(game);
+    	entityManager.persist(connection);
     	ObjectMapper objectMapper = new ObjectMapper();
     	String s = objectMapper.writeValueAsString(game);
     	System.out.println(s);
     	MvcResult result = mockMvc.perform(get("/Controllers/loadGame?gameId=test")).andExpect(status().isOk()).andReturn();
     	assertThat(result.getResponse().getContentAsString(), is(equalTo(s)));
+    	mockMvc.perform(post("/Controllers/saveGame").contentType(MediaType.APPLICATION_JSON).content(result.getResponse().getContentAsString())).andExpect(status().isOk());
     }
     
     @Test
@@ -149,17 +154,14 @@ public class LoadSaveControllerTest {
     	connection.setTransition(transition);
     	game.getTransitions().add(transition);
     	entityManager.persist(game);
+    	entityManager.persist(connection);
+    	entityManager.persist(transition);
     	ObjectMapper objectMapper = new ObjectMapper();
     	String s = objectMapper.writeValueAsString(game);
     	System.out.println(s);
     	MvcResult result = mockMvc.perform(get("/Controllers/loadGame?gameId=test")).andExpect(status().isOk()).andReturn();
     	assertThat(result.getResponse().getContentAsString(), is(equalTo(s)));
+    	mockMvc.perform(post("/Controllers/saveGame").contentType(MediaType.APPLICATION_JSON).content(result.getResponse().getContentAsString())).andExpect(status().isOk());
     }
-    
-	@Test
-	@Transactional
-	public void testSaveGame() {
-		
-	}
 
 }

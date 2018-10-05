@@ -28,7 +28,7 @@ public class LoadSaveController {
 
 	@GetMapping(value="/loadGame")
     @ResponseBody()
-	public Game enqueueCalculation(@RequestParam("gameId") String gameId) {
+	public Game loadGame(@RequestParam("gameId") String gameId) {
 		return entityManager.find(Game.class, gameId);
 	}
 	

@@ -9,6 +9,8 @@ import wlcp.model.master.Game;
 import wlcp.model.master.connection.Connection;
 import wlcp.model.master.state.OutputState;
 import wlcp.model.master.state.StartState;
+import wlcp.model.master.state.State;
+import wlcp.model.master.state.StateType;
 import wlcp.model.master.transition.Transition;
 import wlcp.transpiler.steps.GenerateNameSpaceAndVariablesStep;
 import wlcp.transpiler.steps.GenerateSetGameVariablesStep;
@@ -37,10 +39,20 @@ public class JavaScriptTranspiler implements ITranspiler {
 	@Override
 	public void LoadData(String gameId) {
 		game = entityManager.find(Game.class, gameId);
-		startState = entityManager.createQuery("SELECT s FROM StartState s WHERE s.game.gameId = '" + game.getGameId() + "'", StartState.class).getResultList().get(0);
-		outputStates = entityManager.createQuery("SELECT s FROM OutputState s WHERE s.game.gameId = '" + game.getGameId() + "'", OutputState.class).getResultList();
-		connections = entityManager.createQuery("SELECT s FROM Connection s WHERE s.game.gameId = '" + game.getGameId() + "'", Connection.class).getResultList();
-		transitions = entityManager.createQuery("SELECT s FROM Transition s WHERE s.game.gameId = '" + game.getGameId() + "'", Transition.class).getResultList();
+		outputStates = new ArrayList<OutputState>();
+		for(State state : game.getStates()) {
+			if(state.getStateType().equals(StateType.START_STATE)) {
+				startState = (StartState) state;
+			} else {
+				outputStates.add((OutputState) state);
+			}
+		}
+		connections = game.getConnections();
+		transitions = game.getTransitions();
+		//startState = entityManager.createQuery("SELECT s FROM StartState s WHERE s.game.gameId = '" + game.getGameId() + "'", StartState.class).getResultList().get(0);
+		//outputStates = entityManager.createQuery("SELECT s FROM OutputState s WHERE s.game.gameId = '" + game.getGameId() + "'", OutputState.class).getResultList();
+		//connections = entityManager.createQuery("SELECT s FROM Connection s WHERE s.game.gameId = '" + game.getGameId() + "'", Connection.class).getResultList();
+		//transitions = entityManager.createQuery("SELECT s FROM Transition s WHERE s.game.gameId = '" + game.getGameId() + "'", Transition.class).getResultList();
 	}
 
 	@Override

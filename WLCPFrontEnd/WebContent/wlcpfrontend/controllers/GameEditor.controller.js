@@ -444,7 +444,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		//Open the busy dialog
 		this.busy = new sap.m.BusyDialog();
 		this.busy.open();
-		$.ajax({url: ODataModel.getWebAppURL() + "/Transpile", type: 'POST', dataType: 'text', data: 'gameId=' + this.gameModel.GameId, success : $.proxy(this.runSuccess, this), error : $.proxy(this.runError, this)});
+		$.ajax({url: ODataModel.getWebAppURL() + "/Rest/Controllers/transpileGame?gameId=" + this.gameModel.GameId + "&write=true", type: 'GET', success : $.proxy(this.runSuccess, this), error : $.proxy(this.runError, this)});
 	},
 	
 	runSuccess : function() {

@@ -4,8 +4,23 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>wlcp</groupId>
 	<artifactId>wlcp</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>${revision}</version>
 	<packaging>pom</packaging>
+
+	<properties>
+		<revision>0.0.1-SNAPSHOT</revision>
+	</properties>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>nexus-snapshots</id>
+			<url>http://nexus.embodied.wpi.edu/repository/maven-snapshots/</url>
+		</snapshotRepository>
+		<repository>
+			<id>nexus-releases</id>
+			<url>http://nexus.embodied.wpi.edu/repository/maven-releases/</url>
+		</repository>
+	</distributionManagement>
 
 	<modules>
 		<module>WLCPDataModel</module>

@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -33,6 +34,7 @@ public class KeyboardInput implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer keyboardInputId;
 	
+	@ManyToOne
 	@JoinColumn(name = "TRANSITION_ID")
 	@JsonIgnoreProperties(value= {"game", "connection", "activeTransitions", "singleButtonPresses", "sequenceButtonPresses", "keyboardInputs"})
 	private Transition transition;

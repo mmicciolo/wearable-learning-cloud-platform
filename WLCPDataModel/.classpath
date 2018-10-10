@@ -25,7 +25,7 @@
 			<attribute name="org.eclipse.jst.component.nondependency" value=""/>
 		</attributes>
 	</classpathentry>
-	<classpathentry excluding="**|main/resources/" kind="src" output="target/classes" path="src">
+	<classpathentry excluding="**" kind="src" output="target/classes" path="src">
 		<attributes>
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>

@@ -27,7 +27,7 @@
 							</tnt:NavigationList>
 							<NavContainer width="100%" height="500px" pages="{path : 'navigationContainerPages', templateShareable:false}">
 								<layoutData><l:SplitterLayoutData minSize="500" resizable="false"/></layoutData>
-								<Page title="{title}"/>
+								<Page/>
 							</NavContainer>
 						</l:Splitter>
 					</content>

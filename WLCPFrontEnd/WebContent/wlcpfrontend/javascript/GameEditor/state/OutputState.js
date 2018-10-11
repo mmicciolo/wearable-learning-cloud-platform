@@ -209,7 +209,7 @@ var OutputState = class OutputState extends State {
 				}
 				if(!exists) {
 					var data = this.createData();
-					data.icon = "sap-icon://globe";
+					data.icon = "sap-icon://group";
 					data.scope = "Team " + (i + 1);
 					newTabs.push(data);
 				}
@@ -230,7 +230,7 @@ var OutputState = class OutputState extends State {
 					}
 					if(!exists) {
 						var data = this.createData();
-						data.icon = "sap-icon://globe";
+						data.icon = "sap-icon://employee";
 						data.scope = "Team " + (i + 1) + " Player " + (n + 1);
 						newTabs.push(data);
 					}

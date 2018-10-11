@@ -148,6 +148,7 @@ var InputTransition = class InputTransition extends Transition {
 							iconTabBarPage.addContent(fragment);
 						}
 					}
+					iconTabBarPage.setTitle(iconTabBar[i].getProperty("text") + " " + this.transitionConfigs[n].getNavigationContainerPage().title);
 				}
 			}
 		}
@@ -242,6 +243,7 @@ var InputTransition = class InputTransition extends Transition {
 						iconTabBarPage.addContent(fragment);
 					}
 				}
+				iconTabBarPage.setTitle(iconTabBar[i].getProperty("text") + " " + this.transitionConfigs[n].getNavigationContainerPage().title);
 			}
 		}
 		

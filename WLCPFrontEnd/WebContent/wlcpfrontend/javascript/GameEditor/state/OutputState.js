@@ -86,6 +86,7 @@ var OutputState = class OutputState extends State {
 				if(iconTabBarPage.getContent().length == 0) {
 					this.stateConfigs[n].getStateConfigFragment().forEach(function (oElement) {iconTabBarPage.addContent(oElement);});
 				}
+				iconTabBarPage.setTitle(iconTabBar[i].getProperty("text") + " " + this.stateConfigs[n].getNavigationContainerPage().title);
 			}
 		}
 			
@@ -249,6 +250,7 @@ var OutputState = class OutputState extends State {
 					if(iconTabBarPage.getContent().length == 0) {
 						this.stateConfigs[n].getStateConfigFragment().forEach(function (oElement) {iconTabBarPage.addContent(oElement);});
 					}
+					iconTabBarPage.setTitle(iconTabBar[i].getProperty("text") + " " + this.stateConfigs[n].getNavigationContainerPage().title);
 				}
 			}
 		}

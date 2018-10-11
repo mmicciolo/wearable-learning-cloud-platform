@@ -8,7 +8,7 @@
 	<packaging>pom</packaging>
 
 	<properties>
-		<revision>0.0.1-SNAPSHOT</revision>
+		<revision>0.0.1-RELEASE</revision>
 	</properties>
 
 	<distributionManagement>

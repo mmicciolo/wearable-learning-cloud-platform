@@ -10,6 +10,8 @@ var Index = {
 			} else {
 				this.showMainPage = false;
 			}
+		} else if(window.location.href.includes("wlcp.embodied.wpi.edu/SpecRunner.html")) {
+			this.showMainPage = false;
 		}
 		this.loadJQuery();
 		this.loadExternalResources();

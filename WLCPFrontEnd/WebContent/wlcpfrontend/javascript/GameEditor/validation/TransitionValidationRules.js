@@ -67,8 +67,11 @@ var TransitionValidationRule = class TransitionValidationRule extends Validation
 		//Get the active scope masks
 		var activeScopeMasks = ValidationEngineHelpers.getActiveScopeMasks(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, orMaskAll);
 
+		//And the active scope mask together
+		var andScopeMasks = ValidationEngineHelpers.checkForReverseScopeChanges(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, parentMask, ValidationEngineHelpers.andActiveScopeMasks(activeScopeMasks));
+		
 		//And all of the masks together to get our new scope mask
-		parentMask = parentMask & ValidationEngineHelpers.andActiveScopeMasks(activeScopeMasks);
+		parentMask = parentMask & andScopeMasks;
 		
 		//Set the transitions scope
 		transition.setScope(parentMask & (~neighborMask) & (~stateNeighborMask), GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam);

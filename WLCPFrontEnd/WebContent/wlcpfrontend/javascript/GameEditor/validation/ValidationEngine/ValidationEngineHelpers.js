@@ -211,6 +211,27 @@ var ValidationEngineHelpers = class ValidationEngineHelpers {
 		
 		return returnActiveScopeMask;
     }
+    
+    /**
+     * This method check for the following:
+     * Team -> Game Wide
+     * Player Wide -> Game Wide
+     * It then returns a modified mask
+     */
+    static checkForReverseScopeChanges(teamCount, playersPerTeam, parentMask, andScopeMask) {
+    	
+    	var toGameWideMask = 0;
+		for(var n = 0; n < teamCount + (teamCount * playersPerTeam) + 1; n++) {
+			toGameWideMask = this.setBit(toGameWideMask, n);
+		}
+		
+		if(parentMask != toGameWideMask && andScopeMask == 1) {
+			return parentMask;
+		} else {
+			return andScopeMask;
+		}
+		
+    }
 	
 	/**
 	 * Sets an individual bit to 1 in a number

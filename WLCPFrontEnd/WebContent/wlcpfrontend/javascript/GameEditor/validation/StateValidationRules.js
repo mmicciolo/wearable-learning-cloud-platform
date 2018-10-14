@@ -106,8 +106,9 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 		var activeScopeMasks = ValidationEngineHelpers.getActiveScopeMasks(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, activeScopeMask);
 		
 		//And the active scope mask together
-		var andScopeMasks = ValidationEngineHelpers.andActiveScopeMasks(activeScopeMasks);
+		var andScopeMasks = ValidationEngineHelpers.checkForReverseScopeChanges(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam, parentMask, ValidationEngineHelpers.andActiveScopeMasks(activeScopeMasks));
 		
+		//Set the states scope
 		state.setScope(parentMask & andScopeMasks & (~neighborMask) & (~transitionNeighborMask), GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam);
 		
 		//Recursively revalidate the states below us

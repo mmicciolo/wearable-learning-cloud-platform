@@ -10,6 +10,7 @@ var OutputState = class OutputState extends State {
 				description : this.text,
 				iconTabs : []
 		}
+		this.oldModelJSON = {};
 		this.stateConfigs = [];
 		this.setupStateConfigs();
 		this.modelJSON.iconTabs = this.generateData(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam);
@@ -93,6 +94,9 @@ var OutputState = class OutputState extends State {
 		this.dialog.getContent()[0].addEventDelegate({
 			onAfterRendering : $.proxy(this.tabRendered, this)
 		});
+		
+		//Set the old scope mask
+		this.oldModelJSON = JSON.parse(JSON.stringify(this.modelJSON));
 		
 		//Open the dialog
 		this.dialog.open();
@@ -260,29 +264,24 @@ var OutputState = class OutputState extends State {
     	for(var i = 0; i < this.validationRules.length; i++) {
     		this.validationRules[i].validate(this);
     	}
-//    	
-//    	//Revalidate the transitions
-//    	for(var i = 0; i < GameEditor.getEditorController().transitionList.length; i++) {
-//    		for(var n = 0; n < GameEditor.getEditorController().transitionList[i].validationRules.length; n++) {
-//    			GameEditor.getEditorController().transitionList[i].validationRules[n].validate(GameEditor.getEditorController().transitionList[i]);
-//    		}
-//    	}
-//    	
-//    	//Revalidate the states
-//    	for(var i = 0; i < GameEditor.getEditorController().stateList.length; i++) {
-//    		if(!GameEditor.getEditorController().stateList[i].htmlId.includes("start")) {
-//        		for(var n = 0; n < GameEditor.getEditorController().stateList[i].validationRules.length; n++) {
-//        			GameEditor.getEditorController().stateList[i].validationRules[n].validate(GameEditor.getEditorController().stateList[i]);
-//        		}
-//    		}
-//    	}
     }
     
-    revalidate(state) {
-    	
+    revalidate() {
+    	for(var i = 0; i < this.validationRules.length; i++) {
+    		this.validationRules[i].validate(this, true, true);
+    	}
+    }
+    
+    acceptDialog() {
+		this.validationRules[0].validate(this, true, true);
+		this.dialog.close();
+		this.dialog.destroy();
+		DataLogger.logGameEditor();
     }
 	
 	closeDialog() {
+		this.modelJSON = JSON.parse(JSON.stringify(this.oldModelJSON));
+		this.model.setData(this.modelJSON);
 		this.dialog.close();
 		this.dialog.destroy();
 		DataLogger.logGameEditor();

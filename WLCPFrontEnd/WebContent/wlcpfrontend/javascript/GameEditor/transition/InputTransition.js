@@ -10,6 +10,7 @@ var InputTransition = class InputTransition extends Transition {
 		this.modelJSON = {
 				iconTabs : []
 		}
+		this.oldModelJSON = {};
 		this.transitionConfigs = [];
 		this.setupTransitionConfigs();
 		this.modelJSON.iconTabs = this.generateData(GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam);
@@ -55,6 +56,17 @@ var InputTransition = class InputTransition extends Transition {
 	onChange(oEvent) {
 		for(var i = 0; i < this.validationRules.length; i++) {
 			this.validationRules[i].validate(this);
+		}
+		for(var i = 0; i < this.transitionConfigs.length; i++) {
+			for(var n = 0; n < this.transitionConfigs[i].validationRules.length; n++) {
+				this.transitionConfigs[i].validationRules[n].validate(this);
+			}
+		}
+	}
+	
+	revalidate() {
+		for(var i = 0; i < this.validationRules.length; i++) {
+			this.validationRules[i].validate(this, true, true);
 		}
 		for(var i = 0; i < this.transitionConfigs.length; i++) {
 			for(var n = 0; n < this.transitionConfigs[i].validationRules.length; n++) {
@@ -247,6 +259,9 @@ var InputTransition = class InputTransition extends Transition {
 			}
 		}
 		
+		//Set the old scope mask
+		this.oldModelJSON = JSON.parse(JSON.stringify(this.modelJSON));
+		
 		//Set the on after rendering
 		this.dialog.onAfterRendering = $.proxy(this.onAfterRenderingDialog, this);
 			
@@ -342,7 +357,16 @@ var InputTransition = class InputTransition extends Transition {
 		}
 	}
 	
+    acceptDialog() {
+		this.validationRules[0].validate(this, true, true);
+		this.dialog.close();
+		this.dialog.destroy();
+		DataLogger.logGameEditor();
+    }
+	
 	closeDialog() {
+		this.modelJSON = JSON.parse(JSON.stringify(this.oldModelJSON));
+		this.model.setData(this.modelJSON);
 		this.dialog.close();
 		this.dialog.destroy();
 		DataLogger.logGameEditor();

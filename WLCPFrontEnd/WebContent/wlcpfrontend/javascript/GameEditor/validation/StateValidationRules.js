@@ -1,6 +1,6 @@
 var StateScopeValidationRule = class StateScopeValidationRule extends ValidationRule {
 
-	validate(state, updateNeighbors = true) {
+	validate(state, updateNeighbors = true, revalidate = false) {
 	
 		var parentMask = 0;
 		
@@ -111,40 +111,42 @@ var StateScopeValidationRule = class StateScopeValidationRule extends Validation
 		//Set the states scope
 		state.setScope(parentMask & andScopeMasks & (~neighborMask) & (~transitionNeighborMask), GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam);
 		
-		//Recursively revalidate the states below us
-		if(updateNeighbors) {
-			for(var i = 0; i < state.outputConnections.length; i++) {
-				//Ignore loop backs
-				if(!state.outputConnections[i].isLoopBack) {
-					this.validate(state.outputConnections[i].connectionTo, true)
+		if(revalidate) {
+			//Recursively revalidate the states below us
+			if(updateNeighbors) {
+				for(var i = 0; i < state.outputConnections.length; i++) {
+					//Ignore loop backs
+					if(!state.outputConnections[i].isLoopBack) {
+						this.validate(state.outputConnections[i].connectionTo, true, revalidate)
+					}
 				}
 			}
-		}
-		
-		//Revalidate our neighbors but make sure they dont revalidate their neighbors
-		if(updateNeighbors) {
-			for(var i = 0; i < state.inputConnections.length; i++) {
-				for(var n = 0; n < state.inputConnections[i].connectionFrom.outputConnections.length; n++) {
-					if(state.inputConnections[i].connectionFrom.outputConnections[n].connectionTo.htmlId != state.htmlId) {
-						if(!state.inputConnections[i].connectionFrom.outputConnections[n].isLoopBack) {
-							if(state.inputConnections[i].connectionFrom.outputConnections[n].transition == null) {
-								this.validate(state.inputConnections[i].connectionFrom.outputConnections[n].connectionTo, false);
-							} else {
-								state.inputConnections[i].connectionFrom.outputConnections[n].transition.validationRules[0].validate(state.inputConnections[i].connectionFrom.outputConnections[n].transition, false);
+			
+			//Revalidate our neighbors but make sure they dont revalidate their neighbors
+			if(updateNeighbors) {
+				for(var i = 0; i < state.inputConnections.length; i++) {
+					for(var n = 0; n < state.inputConnections[i].connectionFrom.outputConnections.length; n++) {
+						if(state.inputConnections[i].connectionFrom.outputConnections[n].connectionTo.htmlId != state.htmlId) {
+							if(!state.inputConnections[i].connectionFrom.outputConnections[n].isLoopBack) {
+								if(state.inputConnections[i].connectionFrom.outputConnections[n].transition == null) {
+									this.validate(state.inputConnections[i].connectionFrom.outputConnections[n].connectionTo, false, revalidate);
+								} else {
+									state.inputConnections[i].connectionFrom.outputConnections[n].transition.validationRules[0].validate(state.inputConnections[i].connectionFrom.outputConnections[n].transition, false, revalidate);
+								}
 							}
 						}
 					}
 				}
 			}
-		}
-		
-		//Revalidate the transitions below us
-		if(updateNeighbors) {
-			for(var i = 0; i < state.outputConnections.length; i++) {
-				if(state.outputConnections[i].transition != null) {
-					state.outputConnections[i].transition.validationRules[0].validate(state.outputConnections[i].transition, false);
-				}
-			}	
+			
+			//Revalidate the transitions below us
+			if(updateNeighbors) {
+				for(var i = 0; i < state.outputConnections.length; i++) {
+					if(state.outputConnections[i].transition != null) {
+						state.outputConnections[i].transition.validationRules[0].validate(state.outputConnections[i].transition, false, revalidate);
+					}
+				}	
+			}
 		}
 	}
 }

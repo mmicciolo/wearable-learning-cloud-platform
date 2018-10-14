@@ -1,6 +1,6 @@
 var TransitionValidationRule = class TransitionValidationRule extends ValidationRule {
 	
-	validate(transition, updateNeighbors = true) {
+	validate(transition, updateNeighbors = true, revalidate = false) {
 		
 		var parentMask = 0;
 		
@@ -76,25 +76,27 @@ var TransitionValidationRule = class TransitionValidationRule extends Validation
 		//Set the transitions scope
 		transition.setScope(parentMask & (~neighborMask) & (~stateNeighborMask), GameEditor.getEditorController().gameModel.TeamCount, GameEditor.getEditorController().gameModel.PlayersPerTeam);
 		
-		if(!transition.connection.isLoopBack) {
-			//Update the state below us
-			transition.connection.connectionTo.validationRules[0].validate(transition.connection.connectionTo, updateNeighbors);
-		}
-		
-		if(updateNeighbors) {
-			for(var i = 0; i < neighborTransitions.length; i++) {
-				if(neighborTransitions[i].overlayId != transition.overlayId) {
-					this.validate(neighborTransitions[i], false);
+		if(revalidate) {
+			if(!transition.connection.isLoopBack) {
+				//Update the state below us
+				transition.connection.connectionTo.validationRules[0].validate(transition.connection.connectionTo, updateNeighbors, revalidate);
+			}
+			
+			if(updateNeighbors) {
+				for(var i = 0; i < neighborTransitions.length; i++) {
+					if(neighborTransitions[i].overlayId != transition.overlayId) {
+						this.validate(neighborTransitions[i], false, revalidate);
+					}
 				}
 			}
-		}
-		
-		if(updateNeighbors) {
-			//If the transition is a loopback Revalidate our neighbors states but make sure they dont revalidate their neighbors
-			if(transition.connection.isLoopBack) {
-				for(var i = 0; i < transition.connection.connectionFrom.outputConnections.length; i++) {
-					if(transition.connection.connectionFrom.outputConnections[i].transition == null) {
-						transition.connection.connectionFrom.outputConnections[i].connectionTo.validationRules[0].validate(transition.connection.connectionFrom.outputConnections[i].connectionTo,false);
+			
+			if(updateNeighbors) {
+				//If the transition is a loopback Revalidate our neighbors states but make sure they dont revalidate their neighbors
+				if(transition.connection.isLoopBack) {
+					for(var i = 0; i < transition.connection.connectionFrom.outputConnections.length; i++) {
+						if(transition.connection.connectionFrom.outputConnections[i].transition == null) {
+							transition.connection.connectionFrom.outputConnections[i].connectionTo.validationRules[0].validate(transition.connection.connectionFrom.outputConnections[i].connectionTo,false,revalidate);
+						}
 					}
 				}
 			}

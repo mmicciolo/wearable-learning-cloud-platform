@@ -52,6 +52,7 @@ var GameEditorTestingHelpers = {
 		var outputState = new OutputState("toolboxOutputStateTopColor", "toolboxOutputStateBottomColor", "Output State" , GameEditor.getEditorController().createStateId(), GameEditor.getJsPlumbInstance());
 		outputState.setPositionX(State.absoluteToRelativeX(x + 315, 150) + GameEditor.getScrollLeftOffset()); outputState.setPositionY(State.absoluteToRelativeY(y) + GameEditor.getScrollTopOffset());
 		outputState.draw();
+		outputState.onChange = outputState.revalidate;
 		GameEditor.getEditorController().stateList.push(outputState);
 		return outputState;
 	},
@@ -61,6 +62,7 @@ var GameEditorTestingHelpers = {
 		var inputTransition = new InputTransition("transition", connection, GameEditor.getEditorController().createTransitionId(), GameEditor.getEditorController());
 		//inputTransition.connection = connection;
 		inputTransition.connection.transition = inputTransition;
+		inputTransition.onChange = inputTransition.revalidate;
 		GameEditor.getEditorController().transitionList.push(inputTransition);
 		return inputTransition;
 	},

@@ -19,6 +19,7 @@ var OutputState = class OutputState extends State {
 		this.validationRules = [];
 		this.setupValidationRules();
 		this.scopeMask = 0xffffffff;
+		this.oldActiveScopes = [];
 	}
 	
 	create() {
@@ -97,6 +98,9 @@ var OutputState = class OutputState extends State {
 		
 		//Set the old scope mask
 		this.oldModelJSON = JSON.parse(JSON.stringify(this.modelJSON));
+		
+		//Set the old active scopes
+		this.oldActiveScopes = this.getActiveScopes();
 		
 		//Open the dialog
 		this.dialog.open();
@@ -273,10 +277,23 @@ var OutputState = class OutputState extends State {
     }
     
     acceptDialog() {
+    	if(JSON.stringify(this.oldActiveScopes) != JSON.stringify(this.getActiveScopes())) {
+    		sap.m.MessageBox.confirm("By clicking OK, the validation engine will revalidate causing possible data loss in states and transitions below!", {title:"Confirm Revalidation?", onClose : $.proxy(this.acceptRevalidation, this)});
+    		return;
+    	}
 		this.validationRules[0].validate(this, true, true);
 		this.dialog.close();
 		this.dialog.destroy();
 		DataLogger.logGameEditor();
+    }
+    
+    acceptRevalidation(oEvent) {
+    	if(oEvent == sap.m.MessageBox.Action.OK) {
+    		this.validationRules[0].validate(this, true, true);
+    		this.dialog.close();
+    		this.dialog.destroy();
+    		DataLogger.logGameEditor();
+    	}
     }
 	
 	closeDialog() {

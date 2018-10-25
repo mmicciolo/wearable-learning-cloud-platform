@@ -6,7 +6,7 @@ node {
       mvnHome = tool 'M3'
   }
   stage('Build') {
-      sh "'${mvnHome}/bin/mvn' clean package -DskipTests"
+      sh "'${mvnHome}/bin/mvn' clean install -Pbuild -DskipTests"
   }
   stage('Unit Testing') {
       sh "'${mvnHome}/bin/mvn' test"

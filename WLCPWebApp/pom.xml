@@ -114,6 +114,7 @@
 			<groupId>wlcp.model</groupId>
 			<artifactId>WLCPDataModel</artifactId>
 			<version>${revision}</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>wlcp.transpiler</groupId>

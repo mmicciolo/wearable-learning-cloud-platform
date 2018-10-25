@@ -18,9 +18,7 @@ node {
       //junit "WLCPWebApp/target/surefire-reports/*.xml"
   //}
   stage('Integration Testing') {
-  	  sh "cd WLCPFrontEnd"
-  	  sh "'${mvnHome}/bin/mvn' test -Pintegration-tests"
-  	  sh "cd .."
+  	  sh "'${mvnHome}/bin/mvn' -f WLCPFrontend/pom.xml test -Pintegration-tests"
   	  junit "WLCPFrontEnd/target/surefire-reports/*.xml"
   }
   stage('Publish') {

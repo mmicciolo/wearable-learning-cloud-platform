@@ -16,7 +16,7 @@ public class TestPageLoading {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		System.setProperty("webdriver.chrome.driver","C:/Users/Matt/Desktop/chromedriver.exe");
+		//System.setProperty("webdriver.chrome.driver","C:/Users/Matt/Desktop/chromedriver.exe");
         ChromeOptions chromeOptions = new ChromeOptions();
         chromeOptions.addArguments("--headless", "--remote-debugging-port=9222");
 	    driver = new ChromeDriver(chromeOptions);

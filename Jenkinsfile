@@ -8,11 +8,18 @@ node {
   }
   stage('Build') {
       // Run the maven build
-      sh "'${mvnHome}/bin/mvn' clean package"
+      sh "'${mvnHome}/bin/mvn' clean package -DskipTests"
+  }
+  stage('Unit Testing') {
+      sh "'${mvnHome}/bin/mvn' test"
       junit "WLCPDataModel/target/surefire-reports/*.xml"
       junit "WLCPFrontEnd/target/surefire-reports/*.xml"
       junit "WLCPGameServer/target/surefire-reports/*.xml"
       junit "WLCPWebApp/target/surefire-reports/*.xml"
+  }
+  stage('Integration Testing') {
+  	  sh "'${mvnHome}/bin/mvn' test -Pintegration-tests"
+  	  junit "WLCPFrontEnd/target/surefire-reports/*.xml"
   }
   stage('Publish') {
     withCredentials([file(credentialsId: 'settingsFile', variable: 'FILE')]) {

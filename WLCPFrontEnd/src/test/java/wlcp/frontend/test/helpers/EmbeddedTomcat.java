@@ -26,7 +26,7 @@ public class EmbeddedTomcat {
 		tomcat.getHost().setAppBase(workingDirectory);
 		tomcat.getHost().setAutoDeploy(true);
 		tomcat.getHost().setDeployOnStartup(true);
-		//tomcat.addWebapp("WLCPTestData", getTestDataPath());
+		//tomcat.addWebapp("/WLCPWebApp", getWebAppPath());
 		tomcat.addWebapp("/WLCPFrontEnd", getFrontEndPath());
 		tomcat.start();
 	}
@@ -45,9 +45,9 @@ public class EmbeddedTomcat {
 		  return tomcat.getConnector().getLocalPort();
 	}
 	
-	private String getTestDataPath() {
+	private String getWebAppPath() {
 		File file = new File(System.getProperty("user.dir")).getParentFile();
-		File frontEnd = new File(file.getPath() + "/WLCPTestData/target");
+		File frontEnd = new File(file.getPath() + "/WLCPWebApp/target");
 		File[] files = frontEnd.listFiles();
 		for(File f : files) {
 			if(f.getPath().contains(".war")) {
@@ -59,13 +59,6 @@ public class EmbeddedTomcat {
 	
 	private String getFrontEndPath() {
 		File file = new File(System.getProperty("user.dir")).getParentFile();
-//		File file = new File(System.getProperty("user.dir"));
-//		File frontEnd = null;
-//		if(file.getName().equals("wearable-learning-cloud-platform")) {
-//			frontEnd = new File(file.getPath() + "/WLCPFrontEnd/target");
-//		} else  {
-//			frontEnd = new File(file.getPath() + "/target");
-//		}
 		File frontEnd = new File(file.getPath() + "/WLCPFrontEnd/target");
 		File[] files = frontEnd.listFiles();
 		for(File f : files) {

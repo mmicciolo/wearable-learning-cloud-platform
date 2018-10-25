@@ -16,14 +16,13 @@ public class TestPageLoading {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		//System.setProperty("webdriver.chrome.driver","C:/Users/Matt/Desktop/chromedriver.exe");
         ChromeOptions chromeOptions = new ChromeOptions();
         chromeOptions.addArguments("--headless", "--remote-debugging-port=9222");
 	    driver = new ChromeDriver(chromeOptions);
 	}
 
 	@Test
-	public void test() {
+	public void loadPage() {
 		driver.navigate().to("http://wlcp.embodied.wpi.edu");
 		assertThat(driver.getCurrentUrl(), is(equalTo("http://wlcp.embodied.wpi.edu/")));
 	}

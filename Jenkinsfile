@@ -36,7 +36,6 @@ node {
 	        sh "cp WLCPTestData/target/*.war /home/wlcp/tomcat/webapps/WLCPTestData.war"
 	        sh "cp WLCPWebApp/target/*.war /home/wlcp/tomcat/webapps/WLCPWebApp.war"
 	       }
-	       notifyBuild('SUCCESSFUL')
 	   }
   } catch (e) {
   	currentBuild.result = "FAILED"

@@ -12,7 +12,9 @@ node {
 	      sh "'${mvnHome}/bin/mvn' clean install -Pbuild -DskipTests"
 	  }
 	  stage('Unit Testing') {
+	  	 if(params.unit) {
 	      sh "'${mvnHome}/bin/mvn' test"
+	     }
 	  }
 	  stage('Integration Testing') {
 	  	  sh "'${mvnHome}/bin/mvn' -f WLCPFrontEnd/pom.xml test -Pintegration-tests -Djava.io.tmpdir=/var/lib/jenkins/workspace/WLCP"

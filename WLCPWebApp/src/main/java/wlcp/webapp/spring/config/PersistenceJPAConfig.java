@@ -2,19 +2,18 @@ package wlcp.webapp.spring.config;
 
 import java.util.Properties;
 
+import javax.naming.NamingException;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.jndi.JndiObjectFactoryBean;
+import org.springframework.jndi.JndiTemplate;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.EclipseLinkJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-
-import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
 @EnableTransactionManagement
 @EnableJpaRepositories("")
@@ -39,11 +38,19 @@ public class PersistenceJPAConfig {
    
    @Bean
    public DataSource dataSource() {
-	   MysqlDataSource dataSource = new MysqlDataSource();
-	   dataSource.setUrl("jdbc:mysql://localhost/wlcp");
-	   dataSource.setUser("wlcp");
-	   dataSource.setPassword("wlcp");
-	   return dataSource;
+//	   MysqlDataSource dataSource = new MysqlDataSource();
+//	   dataSource.setUrl("jdbc:mysql://localhost/wlcp");
+//	   dataSource.setUser("wlcp");
+//	   dataSource.setPassword("wlcp");
+//	   return dataSource;
+	   DataSource dataSource = null;
+       JndiTemplate jndi = new JndiTemplate();
+       try {
+           dataSource = jndi.lookup("java:comp/env/jdbc/DefaultDB", DataSource.class);
+       } catch (NamingException e) {
+           e.printStackTrace();
+       }
+       return dataSource;
    }
    
    @Bean

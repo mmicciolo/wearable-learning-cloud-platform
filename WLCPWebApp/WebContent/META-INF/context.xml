@@ -1,0 +1,7 @@
+<Context>
+
+	<ResourceLink name="jdbc/DefaultDB"
+     global="wlcp.webapp.defaultDataSource"
+     type="javax.sql.DataSource" />
+     
+</Context>

@@ -4,9 +4,12 @@ import java.io.File;
 
 import javax.servlet.ServletException;
 
+import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.LifecycleState;
 import org.apache.catalina.startup.Tomcat;
+import org.apache.tomcat.util.descriptor.web.ContextResource;
+import org.apache.tomcat.util.descriptor.web.ContextResourceLink;
 
 public class EmbeddedTomcat {
 	
@@ -19,14 +22,26 @@ public class EmbeddedTomcat {
 	}
 	
 	public void Start() throws ServletException, LifecycleException {
-		getFrontEndPath();
+		removeClassPath();
 		tomcat = new Tomcat();
 		tomcat.setPort(0);
 		tomcat.setBaseDir(workingDirectory);
 		tomcat.getHost().setAppBase(workingDirectory);
 		tomcat.getHost().setAutoDeploy(true);
 		tomcat.getHost().setDeployOnStartup(true);
-		//tomcat.addWebapp("/WLCPWebApp", getWebAppPath());
+		tomcat.enableNaming();
+		ContextResource resource = new ContextResource();
+		resource.setName("wlcp.webapp.defaultDataSource");
+		resource.setType("javax.sql.DataSource");
+		resource.setProperty("driverClassName", "org.apache.derby.jdbc.EmbeddedDriver");
+		resource.setProperty("url", "jdbc:derby:memory:DefaultDB;create=true");
+		tomcat.getServer().getGlobalNamingResources().addResource(resource);
+		Context context = tomcat.addWebapp("/WLCPWebApp", getWebAppPath());
+		ContextResourceLink resource2 = new ContextResourceLink();
+		resource2.setName("jdbc/DefaultDB");
+		resource2.setType("javax.sql.DataSource");
+		resource2.setProperty("global", "wlcp.webapp.defaultDataSource");
+		//context.getNamingResources().addResourceLink(resource2);
 		tomcat.addWebapp("/WLCPFrontEnd", getFrontEndPath());
 		tomcat.start();
 	}
@@ -43,6 +58,15 @@ public class EmbeddedTomcat {
 	
 	public int getPort() {
 		  return tomcat.getConnector().getLocalPort();
+	}
+	
+	private void removeClassPath() {
+		File file = new File(System.getProperty("user.dir")).getParentFile();
+		File persistence = new File(file.getPath() + "/WLCPDataModel/target/classes/META-INF/persistence.xml");
+		if(persistence.exists()) {
+			persistence.renameTo(new File(file.getPath() + "/WLCPDataModel/target/classes/META-INF/persistence.xml.bak"));
+			//persistence.delete();
+		}
 	}
 	
 	private String getWebAppPath() {

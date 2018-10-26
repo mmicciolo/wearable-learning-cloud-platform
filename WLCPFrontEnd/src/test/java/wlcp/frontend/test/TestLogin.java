@@ -1,5 +1,6 @@
 package wlcp.frontend.test;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,11 +14,16 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertThat;
+
 import wlcp.frontend.test.helpers.EmbeddedTomcat;
+import wlcp.model.master.Username;
 
 public class TestLogin {
 
@@ -34,16 +40,22 @@ public class TestLogin {
 	    driver = new ChromeDriver(chromeOptions);
 	    tomcat = new EmbeddedTomcat();
 	    tomcat.Start();
-	    System.out.println(tomcat.getPort());
-	    driver.navigate().to("http://127.0.0.1:" + tomcat.getPort() + "/WLCPFrontEnd");
+	    SetupJPA();
+	    SetupUsername();
 	}
 	
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
 		tomcat.Stop();
+		driver.close();
 	}
 	
 	private static void SetupJPA() {
+		File file = new File(System.getProperty("user.dir")).getParentFile();
+		File persistence = new File(file.getPath() + "/WLCPDataModel/target/classes/META-INF/persistence.xml.bak");
+		if(persistence.exists()) {
+			persistence.renameTo(new File(file.getPath() + "/WLCPDataModel/target/classes/META-INF/persistence.xml"));
+		}
 		// Setup an embedded db connection
 		Map<String, String> TEST_CONFIG_LOCALHOST = new HashMap<String, String>();
 		TEST_CONFIG_LOCALHOST.put(PersistenceUnitProperties.JDBC_URL, "jdbc:derby:memory:DefaultDB;create=true");
@@ -57,21 +69,37 @@ public class TestLogin {
 
 		// Create a new entity manager
 		manager = factory.createEntityManager();
-		
-//		Username username = new Username("test", "password", "firstname", "lastname", "email");
-//		manager.getTransaction().begin();
-//		manager.persist(username);
-//		manager.getTransaction().commit();
+	}
+	
+	private static void SetupUsername() {
+		Username username = new Username("test", "password", "firstname", "lastname", "email");
+		manager.getTransaction().begin();
+		manager.persist(username);
+		manager.getTransaction().commit();
 	}
 
 	@Test
-	public void basicLogin() throws InterruptedException {
+	public void basicLoginPositive() throws InterruptedException {
+		 driver.navigate().to("http://127.0.0.1:" + tomcat.getPort() + "/WLCPFrontEnd");
 		driver.findElement(By.id("idView1--uid-inner")).sendKeys("test");
-		driver.findElement(By.id("idView1--pasw-inner")).sendKeys("test");
+		driver.findElement(By.id("idView1--pasw-inner")).sendKeys("password");
+		driver.findElement(By.id("__box0-inner")).sendKeys("Game Editor");
+		driver.findElement(By.id("__box0-inner")).sendKeys(Keys.ENTER);
+		driver.findElement(By.id("__button0")).sendKeys(Keys.ENTER);
+		Thread.sleep(5000);
+		assertThat(driver.findElement(By.id("gameEditor")), is(not(equalTo(null))));
+	}
+	
+	@Test(expected = NoSuchElementException.class)
+	public void basicLoginNegative() throws InterruptedException {
+		driver.navigate().to("http://127.0.0.1:" + tomcat.getPort() + "/WLCPFrontEnd");
+		driver.findElement(By.id("idView1--uid-inner")).sendKeys("test");
+		driver.findElement(By.id("idView1--pasw-inner")).sendKeys("password");
 		driver.findElement(By.id("__box0-inner")).sendKeys("Game Manager");
-		driver.findElement(By.id("__box0-inner")).sendKeys(Keys.RETURN);
-		//Thread.sleep(1000);
-		//driver.findElement(By.id("__button0")).click();
+		driver.findElement(By.id("__box0-inner")).sendKeys(Keys.ENTER);
+		driver.findElement(By.id("__button0")).sendKeys(Keys.ENTER);
+		Thread.sleep(5000);
+		driver.findElement(By.id("gameEditor"));
 	}
 
 }

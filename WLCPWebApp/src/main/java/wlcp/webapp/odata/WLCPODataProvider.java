@@ -29,24 +29,25 @@ public class WLCPODataProvider extends ODataJPAServiceFactory {
 	@Override
 	public ODataJPAContext initializeODataJPAContext() throws ODataJPARuntimeException {
 		
-		//try {
+		try {
 			
 			//Create and intial Context to get our data source
-			//InitialContext ctx = new InitialContext();
+			InitialContext ctx = new InitialContext();
 			
 			//Get the datasource
-			//DataSource ds = (DataSource) ctx.lookup("java:comp/env/jdbc/DefaultDB");
+			DataSource ds = (DataSource) ctx.lookup("java:comp/env/jdbc/DefaultDB");
 			
 			//Setup the entity manager factory properties
 			Map<Object, Object> properties = new HashMap<Object, Object>();
-            //properties.put(PersistenceUnitProperties.NON_JTA_DATASOURCE, ds);
+            properties.put(PersistenceUnitProperties.NON_JTA_DATASOURCE, ds);
     		//properties.put("eclipselink.ddl-generation", "none");
-			properties.put(PersistenceUnitProperties.JDBC_URL, "jdbc:mysql://localhost/wlcp");
-			properties.put(PersistenceUnitProperties.JDBC_DRIVER, "com.mysql.jdbc.Driver");
-			properties.put(PersistenceUnitProperties.JDBC_USER, "wlcp");
-			properties.put(PersistenceUnitProperties.JDBC_PASSWORD, "wlcp");
-			properties.put("eclipselink.ddl-generation", "none");
-			properties.put("eclipselink.target-database", "MySQL");
+			
+//			properties.put(PersistenceUnitProperties.JDBC_URL, "jdbc:mysql://localhost/wlcp");
+//			properties.put(PersistenceUnitProperties.JDBC_DRIVER, "com.mysql.jdbc.Driver");
+//			properties.put(PersistenceUnitProperties.JDBC_USER, "wlcp");
+//			properties.put(PersistenceUnitProperties.JDBC_PASSWORD, "wlcp");
+//			properties.put("eclipselink.ddl-generation", "none");
+//			properties.put("eclipselink.target-database", "MySQL");
     		
     		//Get the current ODataJPAContext
             oDataJPAContext = this.getODataJPAContext();
@@ -67,13 +68,13 @@ public class WLCPODataProvider extends ODataJPAServiceFactory {
 			//Return the context
 			return oDataJPAContext;
 			
-//		} catch (NamingException e) {
-//			
-//			//Something went wrong
-//			e.printStackTrace();
-//			
-//			return null;
-//		}
+		} catch (NamingException e) {
+			
+			//Something went wrong
+			e.printStackTrace();
+			
+			return null;
+		}
 	}
 
 }

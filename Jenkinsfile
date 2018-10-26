@@ -15,7 +15,7 @@ node {
 	      sh "'${mvnHome}/bin/mvn' test"
 	  }
 	  stage('Integration Testing') {
-	  	  sh "'${mvnHome}/bin/mvn' -f WLCPFrontEnd/pom.xml test -Pintegration-tests"
+	  	  sh "'${mvnHome}/bin/mvn' -f WLCPFrontEnd/pom.xml test -Pintegration-tests -Djava.io.tmpdir=/var/lib/jenkins/workspace/WLCP"
 	  }
 	  stage('Publish Test Results') {
 	      junit "WLCPDataModel/target/surefire-reports/*.xml"

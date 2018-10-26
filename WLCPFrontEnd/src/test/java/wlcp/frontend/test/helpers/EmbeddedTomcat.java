@@ -1,15 +1,17 @@
 package wlcp.frontend.test.helpers;
 
 import java.io.File;
+import java.io.IOException;
 
 import javax.servlet.ServletException;
 
-import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.LifecycleState;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.tomcat.util.descriptor.web.ContextResource;
-import org.apache.tomcat.util.descriptor.web.ContextResourceLink;
+
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
 
 public class EmbeddedTomcat {
 	
@@ -21,8 +23,7 @@ public class EmbeddedTomcat {
 		
 	}
 	
-	public void Start() throws ServletException, LifecycleException {
-		removeClassPath();
+	public void Start() throws ServletException, LifecycleException, IOException, ZipException {
 		tomcat = new Tomcat();
 		tomcat.setPort(0);
 		tomcat.setBaseDir(workingDirectory);
@@ -30,18 +31,25 @@ public class EmbeddedTomcat {
 		tomcat.getHost().setAutoDeploy(true);
 		tomcat.getHost().setDeployOnStartup(true);
 		tomcat.enableNaming();
+		
 		ContextResource resource = new ContextResource();
 		resource.setName("wlcp.webapp.defaultDataSource");
 		resource.setType("javax.sql.DataSource");
 		resource.setProperty("driverClassName", "org.apache.derby.jdbc.EmbeddedDriver");
 		resource.setProperty("url", "jdbc:derby:memory:DefaultDB;create=true");
 		tomcat.getServer().getGlobalNamingResources().addResource(resource);
-		Context context = tomcat.addWebapp("/WLCPWebApp", getWebAppPath());
-		ContextResourceLink resource2 = new ContextResourceLink();
-		resource2.setName("jdbc/DefaultDB");
-		resource2.setType("javax.sql.DataSource");
-		resource2.setProperty("global", "wlcp.webapp.defaultDataSource");
-		//context.getNamingResources().addResourceLink(resource2);
+		
+		ZipFile zipFile = new ZipFile(getWebAppPath());
+		zipFile.extractAll(System.getProperty("java.io.tmpdir") + "WLCPWebApp");
+		
+		File[] files = new File(System.getProperty("java.io.tmpdir") + "WLCPWebApp/WEB-INF/lib/").listFiles();
+		for(File f : files) {
+			if(f.getPath().contains("WLCPDataModel") && f.getPath().contains(".jar")) {
+				f.delete();
+			}
+		}
+		
+		tomcat.addWebapp("/WLCPWebApp", System.getProperty("java.io.tmpdir") + "WLCPWebApp");
 		tomcat.addWebapp("/WLCPFrontEnd", getFrontEndPath());
 		tomcat.start();
 	}
@@ -58,15 +66,6 @@ public class EmbeddedTomcat {
 	
 	public int getPort() {
 		  return tomcat.getConnector().getLocalPort();
-	}
-	
-	private void removeClassPath() {
-		File[] files = new File(System.getProperty("java.io.tmpdir") + "WLCPWebApp/WEB-INF/lib/").listFiles();
-		for(File f : files) {
-			if(f.getPath().contains("WLCPDataModel") && f.getPath().contains(".jar")) {
-				f.renameTo(new File(f.getPath().concat(".bak")));
-			}
-		}
 	}
 	
 	private String getWebAppPath() {

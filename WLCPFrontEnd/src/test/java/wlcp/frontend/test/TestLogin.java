@@ -45,9 +45,13 @@ public class TestLogin {
 	}
 	
 	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-		tomcat.Stop();
-		driver.close();
+	public static void tearDownAfterClass() {
+		try {
+			tomcat.Stop();
+			driver.close();
+		} catch (Exception e) {
+			
+		}
 	}
 	
 	private static void SetupJPA() {

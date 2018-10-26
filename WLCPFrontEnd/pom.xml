@@ -199,12 +199,6 @@
 			<version>2.5.2</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.derby</groupId>
-			<artifactId>derby</artifactId>
-			<version>10.13.1.1</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
 			<groupId>com.sap.ui5</groupId>
 			<artifactId>resource</artifactId>
 			<version>1.56.0</version>

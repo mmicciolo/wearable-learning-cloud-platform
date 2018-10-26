@@ -61,11 +61,11 @@ public class EmbeddedTomcat {
 	}
 	
 	private void removeClassPath() {
-		File file = new File(System.getProperty("user.dir")).getParentFile();
-		File persistence = new File(file.getPath() + "/WLCPDataModel/target/classes/META-INF/persistence.xml");
-		if(persistence.exists()) {
-			persistence.renameTo(new File(file.getPath() + "/WLCPDataModel/target/classes/META-INF/persistence.xml.bak"));
-			//persistence.delete();
+		File[] files = new File(System.getProperty("java.io.tmpdir") + "WLCPWebApp/WEB-INF/lib/").listFiles();
+		for(File f : files) {
+			if(f.getPath().contains("WLCPDataModel") && f.getPath().contains(".jar")) {
+				f.renameTo(new File(f.getPath().concat(".bak")));
+			}
 		}
 	}
 	

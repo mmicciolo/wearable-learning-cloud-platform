@@ -51,10 +51,11 @@ public class TestLogin {
 	}
 	
 	private static void SetupJPA() {
-		File file = new File(System.getProperty("user.dir")).getParentFile();
-		File persistence = new File(file.getPath() + "/WLCPDataModel/target/classes/META-INF/persistence.xml.bak");
-		if(persistence.exists()) {
-			persistence.renameTo(new File(file.getPath() + "/WLCPDataModel/target/classes/META-INF/persistence.xml"));
+		File[] files = new File(System.getProperty("java.io.tmpdir") + "WLCPWebApp/WEB-INF/lib/").listFiles();
+		for(File f : files) {
+			if(f.getPath().contains(".jar.bak")) {
+				f.renameTo(new File(f.getPath().replaceAll(".bak", "")));
+			}
 		}
 		// Setup an embedded db connection
 		Map<String, String> TEST_CONFIG_LOCALHOST = new HashMap<String, String>();

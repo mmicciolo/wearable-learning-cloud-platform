@@ -159,19 +159,18 @@ public class PlayerVM extends Thread {
 		int state;
 		while((state = block()) == -2) {}
 		if(state != -2 && state != -1) { return state; }
-		SingleButtonPressPacket packet = (SingleButtonPressPacket) blockPacket;
+		SingleButtonPressPacket packet = null;
+		if(blockPacket instanceof SingleButtonPressPacket) {
+			packet = (SingleButtonPressPacket) blockPacket;
+		} else {
+			return gotoSameState();
+		}
 		for(int i = 0; i < buttons.length; i++) {
 			if(buttons[i].equals(Integer.toString(packet.getButtonPress()))) {
 				return transitions[i];
 			}
 		}
-		try {
-			scriptEngine.eval("FSMGame.oldState = FSMGame.oldState - 1");
-		} catch (ScriptException e) {
-			e.printStackTrace();
-		}
-		return (int) ((JSObject)scriptEngine.get("FSMGame")).getMember("state");
-		//return -1;
+		return gotoSameState();
 	}
 	
 	public int SequenceButtonPress(String[] buttons, int[] transitions) throws ScriptException {
@@ -180,7 +179,12 @@ public class PlayerVM extends Thread {
 		int state;
 		while((state = block()) == -2) {}
 		if(state != -2 && state != -1) { return state; }
-		SequenceButtonPressPacket packet = (SequenceButtonPressPacket) blockPacket;
+		SequenceButtonPressPacket packet = null;
+		if(blockPacket instanceof SequenceButtonPressPacket) {
+			packet = (SequenceButtonPressPacket) blockPacket;
+		} else {
+			return gotoSameState();
+		}
 		for(int i = 0; i < buttons.length; i++) {
 			if(buttons[i].equals(packet.getSequenceButtonPress())) {
 				return transitions[i];
@@ -191,7 +195,7 @@ public class PlayerVM extends Thread {
 				return transitions[i];
 			}
 		}
-		return -1;
+		return gotoSameState();
 	}
 	
 	public int KeyboardInput(String[] keyboardInput, int[] transitions) throws ScriptException {
@@ -200,7 +204,12 @@ public class PlayerVM extends Thread {
 		int state;
 		while((state = block()) == -2) {}
 		if(state != -2 && state != -1) { return state; }
-		KeyboardInputPacket packet = (KeyboardInputPacket) blockPacket;
+		KeyboardInputPacket packet = null;
+		if(blockPacket instanceof KeyboardInputPacket) {
+			packet = (KeyboardInputPacket) blockPacket;
+		} else {
+			return gotoSameState();
+		}
 		for(int i = 0; i < keyboardInput.length; i++) {
 			if(keyboardInput[i].equals(packet.getKeyboardInput())) {
 				return transitions[i];
@@ -211,7 +220,16 @@ public class PlayerVM extends Thread {
 				return transitions[i];
 			}
 		}
-		return -1;
+		return gotoSameState();
+	}
+	
+	private int gotoSameState() {
+		try {
+			scriptEngine.eval("FSMGame.oldState = FSMGame.oldState - 1");
+		} catch (ScriptException e) {
+			e.printStackTrace();
+		}
+		return (int) ((JSObject)scriptEngine.get("FSMGame")).getMember("state");
 	}
 	
 	public int SingleButtonPress2(String[] buttons, int[] transitions) {

@@ -68,7 +68,7 @@ public class PlayerVMService extends Thread {
 		scriptEngine.eval("FSMGame.gameInstanceId = " + gameInstanceService.getGameInstance().getGameInstanceId() + ";");
 		Object json = scriptEngine.get("FSMGame");
 		Invocable invocable = (Invocable) scriptEngine;
-		invocable.invokeFunction("SetGameVariables", gameInstanceService.getGameInstance().getGameInstanceId(), player.teamPlayer.team, player.teamPlayer.player, this);
+		invocable.invokeFunction("SetGameVariables", gameInstanceService.getGameInstance().getGameInstanceId(), player.teamPlayer.team + 1, player.teamPlayer.player + 1, this);
 		invocable.invokeMethod(json, "start");
 	}
 	

@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,6 +46,9 @@ public class GameInstanceController {
 	
 	@Autowired
 	private UsernameRepository usernameRepository;
+	
+	@Autowired
+	SimpMessagingTemplate messageTemplate;
 	
 	public CopyOnWriteArrayList<GameInstanceService> gameInstances = new CopyOnWriteArrayList<GameInstanceService>();
 	
@@ -85,7 +89,7 @@ public class GameInstanceController {
 	}
 	
 	@MessageMapping("/gameInstance/{gameInstanceId}/connectToGameInstance/{usernameId}/{team}/{player}")
-	@SendTo("/topic/connectionResult")
+	//@SendTo("/topic/connectionResult")
 	public IMessage connectToGameInstance(@DestinationVariable int gameInstanceId, @DestinationVariable String usernameId, @DestinationVariable int team, @DestinationVariable int player) {
 		for(GameInstanceService instance : gameInstances) {
 			if(instance.getGameInstance().getGameInstanceId().equals(gameInstanceId)) {
@@ -94,19 +98,21 @@ public class GameInstanceController {
 				msg.usernameId = usernameId;
 				msg.team = team;
 				msg.player = player;
-				return instance.userConnect(msg);
+				messageTemplate.convertAndSend("/topic/connectionResult/" + usernameId + "/" + team + "/" + player, instance.userConnect(msg));
+				//return instance.userConnect(msg);
 			}
 		}
 		return null;
 	}
 	
 	@MessageMapping("/gameInstance/{gameInstanceId}/disconnectFromGameInstance/{usernameId}/{team}/{player}")
-	@SendTo("/topic/disconnectionResult")
+	//@SendTo("/topic/disconnectionResult")
 	public String disconnectFromGameInstance(@DestinationVariable int gameInstanceId, @DestinationVariable String usernameId, @DestinationVariable int team, @DestinationVariable int player) {
 		for(GameInstanceService instance : gameInstances) {
 			if(instance.getGameInstance().getGameInstanceId().equals(gameInstanceId)) {
 			   instance.userDisconnect(team, player);
-			   return "";
+			   messageTemplate.convertAndSend("/topic/disconnectionResult/" + usernameId + "/" + team + "/" + player, "{}");
+			   //return "";
 			}
 		}
 		return null;

@@ -106,7 +106,7 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 	
 	connectToGameInstance(gameInstanceId, team, player) {
 		var that = this;
-	    this.connectionResultSubscription = this.stompClient.subscribe("/topic/connectionResult", function(response) {
+	    this.connectionResultSubscription = this.stompClient.subscribe("/topic/connectionResult/" + this.username + "/" + team + "/" + player, function(response) {
 	    	var jsonResponse = JSON.parse(response.body);
 	    	if(jsonResponse.code == "FAIL") { 
 				var navContainer = sap.ui.getCore().byId("virtualDevice--virtualDeviceNavContainer");
@@ -147,7 +147,7 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 	
 	disconnectPressed : function() {
 		var that = this;
-	    this.disconnectResultSubscription = this.stompClient.subscribe("/topic/disconnectionResult", function(response) {
+	    this.disconnectResultSubscription = this.stompClient.subscribe("/topic/disconnectionResult/" + this.username + "/" + this.team + "/" + this.player, function(response) {
 	    	that.disconnectResultSubscription.unsubscribe();
 	    	that.stompClient.disconnect();
 	    	that.socket.close();

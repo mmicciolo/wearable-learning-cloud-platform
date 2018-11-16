@@ -142,6 +142,7 @@ public class GameInstanceService extends Thread {
 		ConnectResponseMessage msg = new ConnectResponseMessage();
 		msg.team = teamPlayer.team;
 		msg.player = teamPlayer.player;
+		msg.code = Code.SUCCESS;
 		return msg;
 	}
 	

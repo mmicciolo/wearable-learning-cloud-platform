@@ -2,6 +2,7 @@ package wlcp.gameserver.spring.service;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -63,6 +64,8 @@ public class GameInstanceService extends Thread {
 	private CopyOnWriteArrayList<IMessage> messages = new CopyOnWriteArrayList<IMessage>();
 	private CopyOnWriteArrayList<Player> players = new CopyOnWriteArrayList<Player>();
 	
+	private boolean running = true;
+	
 	public void setupVariables(Game game, GameLobby gameLobby, Username username) {
 		this.game = game;
 		this.gameLobby = gameLobby;
@@ -72,7 +75,7 @@ public class GameInstanceService extends Thread {
 	@Override
 	public void run() {
 		setup();
-		while(true) {
+		while(running) {
 			for(IMessage message : messages) {
 				handleMessage(message);
 			}
@@ -212,6 +215,15 @@ public class GameInstanceService extends Thread {
 		}
 		
 		return teamPlayers;
+	}
+	
+	public void shutdown() {
+		for(Player player : players) {
+			player.playerVM.shutdown();
+		}
+		running = false;
+		gameInstanceRepository.delete(gameInstance);
+		gameInstanceRepository.flush();
 	}
 	
 	@MessageMapping("/gameInstance/{gameInstanceId}/singleButtonPress/{usernameId}/{team}/{player}")

@@ -17,13 +17,6 @@
 					</ComboBox>
 				</items>
 			</FlexBox>
-			<FlexBox alignItems="Center" justifyContent="Center">
-				<items>
-					<ComboBox id="gameInstanceGameLobby" placeholder="Select a game lobby..." items="{odata>/GameLobbys}">
-						<core:Item key="{odata>GameLobbyId}" text="{odata>GameLobbyName}"></core:Item>
-					</ComboBox>
-				</items>
-			</FlexBox>
 		</VBox>
 		
 	</Dialog>

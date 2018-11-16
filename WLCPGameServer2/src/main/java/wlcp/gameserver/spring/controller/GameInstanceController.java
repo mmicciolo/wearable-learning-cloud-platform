@@ -53,6 +53,7 @@ public class GameInstanceController {
 		gameInstanceRepository.deleteAll();
 	}
 	
+	@CrossOrigin(origins = "http://localhost:8080")
 	@GetMapping(value="/startGameInstance/{gameId}/{gameLobbyId}/{usernameId}")
 	public ResponseEntity<String> startGameInstance(@PathVariable String gameId, @PathVariable Integer gameLobbyId, @PathVariable String usernameId) {
 		if(gameRepository.existsById(gameId) && gameLobbyRepository.existsById(gameLobbyId) && usernameRepository.existsById(usernameId)) {
@@ -62,13 +63,25 @@ public class GameInstanceController {
 			gameInstances.add(service);
 			return ResponseEntity.status(HttpStatus.OK).body("");
 		} else {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("The game " + gameId + " or game lobby " + gameLobbyId + " does not exist!");
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("The game " + gameId + " or game lobby " + gameLobbyId + " does not exist, so an insance could not be started!");
 		}
 	}
 	
-	@GetMapping(value="/stopGameInstance")
-	public String stopGameInstance() {
-		return "";
+	@CrossOrigin(origins = "http://localhost:8080")
+	@GetMapping(value="/stopGameInstance/{gameInstanceId}")
+	public ResponseEntity<String> stopGameInstance(@PathVariable int gameInstanceId) {
+		if(gameInstanceRepository.existsById(gameInstanceId)) {
+			for(GameInstanceService instance : gameInstances) {
+				if(instance.getGameInstance().getGameInstanceId().equals(gameInstanceId)) {
+					instance.shutdown();
+					gameInstances.remove(instance);
+					break;
+				}
+			}
+			return ResponseEntity.status(HttpStatus.OK).body("");
+		} else {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("The game instance: " + gameInstanceId + " does not exist, so it could not be stopped!");
+		}
 	}
 	
 	@MessageMapping("/gameInstance/{gameInstanceId}/connectToGameInstance/{usernameId}/{team}/{player}")

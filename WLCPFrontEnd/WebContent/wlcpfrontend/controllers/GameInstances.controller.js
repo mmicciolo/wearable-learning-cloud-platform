@@ -23,8 +23,6 @@ sap.ui.controller("wlcpfrontend.controllers.GameInstances", {
 		var gameBinding = sap.ui.getCore().byId("gameInstanceGame").getBinding("items");
 		gameBinding.filter([new sap.ui.model.Filter("Username", "EQ", sap.ui.getCore().getModel("user").oData.username)]);
 		gameBinding.filter([new sap.ui.model.Filter("DataLog", "EQ", false)]);
-		var gameLobbyBinding = sap.ui.getCore().byId("gameInstanceGameLobby").getBinding("items");
-		gameLobbyBinding.filter([new sap.ui.model.Filter("Username", "EQ", sap.ui.getCore().getModel("user").oData.username)]);
 	},
 	
 	onCancel : function(oEvent) {
@@ -46,108 +44,39 @@ sap.ui.controller("wlcpfrontend.controllers.GameInstances", {
 	startGameInstance : function() {
 		this.busy = new sap.m.BusyDialog();
 		this.busy.open();
-		this.socket = new WebSocket("ws://" + ServerConfig.getServerAddress());
-		this.socket.binaryType = "arraybuffer";
-		this.socket.onopen = $.proxy(this.onOpen, this);
-		this.socket.onmessage = $.proxy(this.onMessage, this);
-	},
-	
-	stopGameInstance : function(oEvent) {
-		this.busy = new sap.m.BusyDialog();
-		this.busy.open();
-		this.socket = new WebSocket("ws://" + ServerConfig.getServerAddress());
-		this.socket.binaryType = "arraybuffer";
-		this.socket.onopen = $.proxy(this.onOpen2, this);
-		this.socket.onmessage = $.proxy(this.onMessage, this);
-	},
-	
-	onOpen : function(event) {
 		var gameId = sap.ui.getCore().byId("gameInstanceGame").getSelectedKey();
-		var gameLobbyId = sap.ui.getCore().byId("gameInstanceGameLobby").getSelectedKey();
-		var byteBuffer = new dcodeIO.ByteBuffer();
-		byteBuffer.writeByte(0);
-		byteBuffer.writeInt(0);
-		byteBuffer.writeInt(gameId.length);
-		byteBuffer.writeString(gameId);
-		if(isNaN(parseInt(gameLobbyId))) { 
-			byteBuffer.writeInt(-1); 
-		} else {
-			byteBuffer.writeInt(parseInt(gameLobbyId));
-		}
-		byteBuffer.writeInt(sap.ui.getCore().getModel("user").oData.username.length);
-		byteBuffer.writeString(sap.ui.getCore().getModel("user").oData.username);
-		byteBuffer.writeInt(byteBuffer.offset, 1);
-		byteBuffer.flip();
-		var buffer = byteBuffer.toArrayBuffer();
-		this.socket.send(buffer);
+		var gameLobbyId = 1;
+		$.ajax({url : "http://localhost:8081/controllers/startGameInstance/" + gameId + "/" + gameLobbyId + "/" + sap.ui.getCore().getModel("user").oData.username, success : $.proxy(this.gameInstanceStarted, this), error : $.proxy(this.gameInstanceStartError, this)});
 	},
 	
-	onOpen2 : function(event) {
-		var byteBuffer = new dcodeIO.ByteBuffer();
-		byteBuffer.writeByte(1);
-		byteBuffer.writeInt(0);
-		byteBuffer.writeInt(this.stopInstanceId);
-		byteBuffer.writeInt(byteBuffer.offset, 1);
-		byteBuffer.flip();
-		var buffer = byteBuffer.toArrayBuffer();
-		this.socket.send(buffer);
-	},
-	
-	onMessage : function(event) {
-		var byteBuffer = new dcodeIO.ByteBuffer();
-		byteBuffer.append(new Uint8Array(event.data));
-		byteBuffer.flip();
-		switch(byteBuffer.readByte()) {
-		case 2:
-			byteBuffer.readInt();
-			this.gameStartError(byteBuffer.readInt());
-			break;
-		case 14:
-			this.gameStartedSuccess();
-			break;
-		case 15:
-			this.gameStoppedSuccess();
-			break;
-		default:
-			break;
-		}
-	},
-	
-	gameStartedSuccess : function() {
-		this.socket.close();
+	gameInstanceStarted : function(response) {
 		this.onCancel();
 		this.busy.close();
 		ODataModel.getODataModel().refresh();
 		sap.m.MessageToast.show("Game Instance Start Successfully!");
 	},
 	
-	gameStoppedSuccess : function() {
-		this.socket.close();
+	gameInstanceStartError : function(response) {
+		this.onCancel();
+		this.busy.close();
+		sap.m.MessageToast.show(response.responseText);
+	},
+	
+	stopGameInstance : function(oEvent) {
+		this.busy = new sap.m.BusyDialog();
+		this.busy.open();
+		$.ajax({url : "http://localhost:8081/controllers/stopGameInstance/" + this.stopInstanceId, success : $.proxy(this.gameInstanceStopped, this), error : $.proxy(this.gameInstanceStoppedError, this)});
+	},
+	
+	gameInstanceStopped : function(response) {
 		this.busy.close();
 		ODataModel.getODataModel().refresh();
 		sap.m.MessageToast.show("Game Instance Stopped Successfully!");
 	},
 	
-	gameStartError : function(errorCode) {
-		switch(errorCode) {
-		case 0:
-			sap.m.MessageToast.show("Selected Game Does Not Exist!");
-			break;
-		case 1:
-			sap.m.MessageToast.show("Selected Game Lobby Does Not Exist!");
-			break;
-		case 2:
-			sap.m.MessageToast.show("Username Does Not Exist!");
-			break;
-		case 3:
-			sap.m.MessageToast.show("Game Instance Has Already Been Started!");
-			break;
-		default:
-			break;
-		}
-		this.socket.close();
-		this.onCancel();
+	gameInstanceStoppedError : function(response) {
 		this.busy.close();
+		sap.m.MessageToast.show(response.responseText);
 	},
 	
 /**

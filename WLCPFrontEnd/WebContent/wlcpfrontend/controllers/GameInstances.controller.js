@@ -46,7 +46,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameInstances", {
 		this.busy.open();
 		var gameId = sap.ui.getCore().byId("gameInstanceGame").getSelectedKey();
 		var gameLobbyId = 1;
-		$.ajax({url : "http://localhost:8081/controllers/startGameInstance/" + gameId + "/" + gameLobbyId + "/" + sap.ui.getCore().getModel("user").oData.username, success : $.proxy(this.gameInstanceStarted, this), error : $.proxy(this.gameInstanceStartError, this)});
+		$.ajax({url : "http://" + ServerConfig.getServerAddress() + "/controllers/startGameInstance/" + gameId + "/" + gameLobbyId + "/" + sap.ui.getCore().getModel("user").oData.username, success : $.proxy(this.gameInstanceStarted, this), error : $.proxy(this.gameInstanceStartError, this)});
 	},
 	
 	gameInstanceStarted : function(response) {
@@ -65,7 +65,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameInstances", {
 	stopGameInstance : function(oEvent) {
 		this.busy = new sap.m.BusyDialog();
 		this.busy.open();
-		$.ajax({url : "http://localhost:8081/controllers/stopGameInstance/" + this.stopInstanceId, success : $.proxy(this.gameInstanceStopped, this), error : $.proxy(this.gameInstanceStoppedError, this)});
+		$.ajax({url : "http://" + ServerConfig.getServerAddress() + "/controllers/stopGameInstance/" + this.stopInstanceId, success : $.proxy(this.gameInstanceStopped, this), error : $.proxy(this.gameInstanceStoppedError, this)});
 	},
 	
 	gameInstanceStopped : function(response) {

@@ -96,7 +96,7 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 	},
 	
 	setupSocketConnection : function(team, player) {
-		    this.socket = new SockJS('http://localhost:8081/wlcpGameServer/0');
+		    this.socket = new SockJS("http://" + ServerConfig.getServerAddress() + "/wlcpGameServer/0");
 		    this.stompClient = Stomp.over(this.socket);
 		    var that = this;
 		    this.stompClient.connect({}, function (frame) {
@@ -188,7 +188,7 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 		var gameInstanceId = sap.ui.getCore().byId("virtualDevice--gamePinInput").getValue();
 		if(gameInstanceId != "") {
 			this.gameInstanceId = parseInt(gameInstanceId);
-			$.ajax({url : "http://localhost:8081/controllers/playersAvaliable/" + this.gameInstanceId + "/" + this.username, dataType: "json", data : {}, success : $.proxy(this.handleGameTeamsAndPlayers, this), error : $.proxy(this.gameInstanceIdError, this)});
+			$.ajax({url : "http://" + ServerConfig.getServerAddress() + "/controllers/playersAvaliable/" + this.gameInstanceId + "/" + this.username, dataType: "json", data : {}, success : $.proxy(this.handleGameTeamsAndPlayers, this), error : $.proxy(this.gameInstanceIdError, this)});
 		} else {
 			sap.m.MessageBox.error("Game PIN Field Cannot Be Empty!");
 		}

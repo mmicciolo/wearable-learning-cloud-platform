@@ -15,6 +15,15 @@
 					</items>
 				</VBox>
 			</Page>
+			<Page id="selectGameInstance" showHeader="false">
+				<VBox fitContainer="true" justifyContent="Center" alignItems="Center" alignContent="Center" class="box">
+					<items>
+						<Text text="Please enter your game PIN" class="sapUiSmallMarginBottom"/>
+						<Input id="gamePinInput" width="12em" placeholder="Game PIN"/>
+						<Button width="12em" text="Join" type="Emphasized" press="joinGameInstance"></Button>
+					</items>
+				</VBox>
+			</Page>
 			<Page id="selectTeam" showHeader="false">
 				<VBox fitContainer="true" justifyContent="Center" alignItems="Center" alignContent="Center" class="box">
 					<items>

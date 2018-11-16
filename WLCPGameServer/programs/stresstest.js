@@ -43,14 +43,14 @@ var FSMGame = {
    },
 
    stresstest_state_1 : function() {
-      this.playerVM.DisplayText("Hello World!");
-      this.state = states.stresstest_state_2;
+      this.playerVM.DisplayText("State 1");
+      this.state = this.playerVM.SingleButtonPress(["1"], [states.stresstest_state_2]);
    },
 
    stresstest_state_2 : function() {
-      this.playerVM.DisplayText("Yo!");
-      this.state = states.stresstest_state_1;
-   }
+      this.playerVM.DisplayText("State 2");
+      this.state = this.playerVM.SequenceButtonPress(["1"], [states.stresstest_state_1]);
+   },
 
 };
 

@@ -1,4 +1,4 @@
-package wlcp.gameserver.message;
+package wlcp.shared.message;
 
 public class ConnectRequestMessage implements IMessage{
 	public int gameInstanceId;

@@ -15,12 +15,12 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 import jdk.nashorn.api.scripting.JSObject;
-import wlcp.gameserver.message.DisplayTextMessage;
-import wlcp.gameserver.message.IMessage;
-import wlcp.gameserver.message.KeyboardInputMessage;
-import wlcp.gameserver.message.SequenceButtonPressMessage;
-import wlcp.gameserver.message.SingleButtonPressMessage;
 import wlcp.gameserver.model.Player;
+import wlcp.shared.message.DisplayTextMessage;
+import wlcp.shared.message.IMessage;
+import wlcp.shared.message.KeyboardInputMessage;
+import wlcp.shared.message.SequenceButtonPressMessage;
+import wlcp.shared.message.SingleButtonPressMessage;
 
 @Controller
 @Scope("prototype")

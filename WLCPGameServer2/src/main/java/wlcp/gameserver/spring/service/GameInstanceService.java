@@ -18,14 +18,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import wlcp.gameserver.message.ConnectRequestMessage;
-import wlcp.gameserver.message.ConnectResponseMessage;
-import wlcp.gameserver.message.IMessage;
-import wlcp.gameserver.message.KeyboardInputMessage;
-import wlcp.gameserver.message.PlayerAvaliableMessage;
-import wlcp.gameserver.message.SequenceButtonPressMessage;
-import wlcp.gameserver.message.SingleButtonPressMessage;
-import wlcp.gameserver.message.ConnectResponseMessage.Code;
 import wlcp.gameserver.model.Player;
 import wlcp.gameserver.model.TeamPlayer;
 import wlcp.gameserver.model.UsernameClientData;
@@ -36,6 +28,14 @@ import wlcp.model.master.Game;
 import wlcp.model.master.GameInstance;
 import wlcp.model.master.GameLobby;
 import wlcp.model.master.Username;
+import wlcp.shared.message.ConnectRequestMessage;
+import wlcp.shared.message.ConnectResponseMessage;
+import wlcp.shared.message.IMessage;
+import wlcp.shared.message.KeyboardInputMessage;
+import wlcp.shared.message.PlayerAvaliableMessage;
+import wlcp.shared.message.SequenceButtonPressMessage;
+import wlcp.shared.message.SingleButtonPressMessage;
+import wlcp.shared.message.ConnectResponseMessage.Code;
 
 @Controller
 @RequestMapping("/controllers")

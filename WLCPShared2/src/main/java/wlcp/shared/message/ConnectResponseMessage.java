@@ -1,4 +1,4 @@
-package wlcp.gameserver.message;
+package wlcp.shared.message;
 
 public class ConnectResponseMessage implements IMessage {
 	public enum Code { SUCCESS, FAIL, RECONNECT}

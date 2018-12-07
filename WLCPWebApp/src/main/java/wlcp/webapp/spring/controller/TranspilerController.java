@@ -35,8 +35,8 @@ public class TranspilerController {
 		String finalProgramLocation = programLocation.getParentFile().getParent() + "/WLCPGameServer/programs/";
 		String transpiledCode = transpiler.Transpile(gameId);
 		if(write) {
-			//PrintWriter pw = new PrintWriter(new FileOutputStream("C:/Users/Matt/git/wearable-learning-cloud-platform/WLCPGameServer/programs/" + gameId + ".js", false));
-			PrintWriter pw = new PrintWriter(new FileOutputStream(finalProgramLocation + gameId + ".js", false));
+			PrintWriter pw = new PrintWriter(new FileOutputStream("C:/Users/Matt/git/wearable-learning-cloud-platform/WLCPGameServer2/programs/" + gameId + ".js", false));
+			//PrintWriter pw = new PrintWriter(new FileOutputStream(finalProgramLocation + gameId + ".js", false));
 			pw.println(transpiledCode);
 			pw.close();
 			return "";

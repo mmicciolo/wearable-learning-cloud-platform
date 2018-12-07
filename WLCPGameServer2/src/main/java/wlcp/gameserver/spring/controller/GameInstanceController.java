@@ -19,14 +19,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import wlcp.gameserver.message.ConnectRequestMessage;
-import wlcp.gameserver.message.IMessage;
-import wlcp.gameserver.message.PlayerAvaliableMessage;
 import wlcp.gameserver.spring.repository.GameInstanceRepository;
 import wlcp.gameserver.spring.repository.GameLobbyRepository;
 import wlcp.gameserver.spring.repository.GameRepository;
 import wlcp.gameserver.spring.repository.UsernameRepository;
 import wlcp.gameserver.spring.service.GameInstanceService;
+import wlcp.shared.message.ConnectRequestMessage;
+import wlcp.shared.message.IMessage;
+import wlcp.shared.message.PlayerAvaliableMessage;
 
 @RestController
 @RequestMapping("/controllers")

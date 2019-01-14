@@ -13,7 +13,7 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 	player : 0,
 	transitionHandled : false,
 	debugMode : false,
-	debugGameId : null,
+	debugGameInstanceId : null,
 	restartDebug : null,
 	
 	socket : null,
@@ -195,6 +195,11 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 		sap.ui.getCore().byId("virtualDevice--gamePinInput").setValue("");
 	},
 	
+	joinDebugGameInstance : function() {
+		this.gameInstanceId = this.debugGameInstanceId;
+		$.ajax({url : "http://" + ServerConfig.getServerAddress() + "/controllers/playersAvaliable/" + this.gameInstanceId + "/" + this.username, dataType: "json", data : {}, success : $.proxy(this.handleGameTeamsAndPlayers, this), error : $.proxy(this.gameInstanceIdError, this)});
+	},
+	
 	gameInstanceIdError : function() {
 		sap.m.MessageBox.error("Game PIN Does not Exist!");
 	},
@@ -215,19 +220,30 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 		this.setupSocketConnection(selectedTeamPlayer.team - 1, selectedTeamPlayer.player - 1);
 	},
 	
-	initVirtualDevice : function(username, debugGameId, restartDebug) {
+	initVirtualDevice : function(debugGameInstanceId, username) {
 		if(!this.debugMode) {
 			this.username = sap.ui.getCore().getModel("user").oData.username;
-			//this.setupSocketConnection();
 			sap.ui.getCore().setModel(this.model);
 		} else {
 			this.username = username;
-			this.debugGameId = debugGameId;
-			this.restartDebug = restartDebug;
-			this.setupSocketConnect();
+			this.debugGameInstanceId = debugGameInstanceId;
 			sap.ui.getCore().setModel(this.model);
 		}
 	},
+	
+//	initVirtualDevice : function(username, debugGameId, restartDebug) {
+//		if(!this.debugMode) {
+//			this.username = sap.ui.getCore().getModel("user").oData.username;
+//			//this.setupSocketConnection();
+//			sap.ui.getCore().setModel(this.model);
+//		} else {
+//			this.username = username;
+//			this.debugGameId = debugGameId;
+//			this.restartDebug = restartDebug;
+//			this.setupSocketConnect();
+//			sap.ui.getCore().setModel(this.model);
+//		}
+//	},
 
 /**
  * Called when a controller is instantiated and its View controls (if available)
@@ -244,10 +260,11 @@ sap.ui.controller("wlcpfrontend.controllers.VirtualDevice", {
 						// sap.ui.getCore().byId("virtualDevice--virtualDeviceNavContainer");
 						// navContainer.to(sap.ui.getCore().byId("virtualDevice--selectGameLobby"));
 						var navContainer = sap.ui.getCore().byId("virtualDevice--virtualDeviceNavContainer");
-						navContainer.to(sap.ui.getCore().byId("virtualDevice--selectGameInstance"));	
+						navContainer.to(sap.ui.getCore().byId("virtualDevice--selectGameInstance"));
 				  } else {
-						var navContainer = sap.ui.getCore().byId("virtualDevice--virtualDeviceNavContainer");
-						navContainer.to(sap.ui.getCore().byId("virtualDevice--selectTeamPlayer"));
+						//var navContainer = sap.ui.getCore().byId("virtualDevice--virtualDeviceNavContainer");
+						//navContainer.to(sap.ui.getCore().byId("virtualDevice--selectGameInstance"));
+					    this.joinDebugGameInstance();
 				  }
 			  }
 		}, this);

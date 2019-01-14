@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +23,9 @@ import wlcp.gameserver.spring.repository.GameLobbyRepository;
 import wlcp.gameserver.spring.repository.GameRepository;
 import wlcp.gameserver.spring.repository.UsernameRepository;
 import wlcp.gameserver.spring.service.GameInstanceService;
+import wlcp.model.master.GameInstance;
+import wlcp.model.master.GameLobby;
+import wlcp.model.master.Username;
 import wlcp.shared.message.ConnectRequestMessage;
 import wlcp.shared.message.IMessage;
 import wlcp.shared.message.PlayerAvaliableMessage;
@@ -62,7 +64,7 @@ public class GameInstanceController {
 	public ResponseEntity<String> startGameInstance(@PathVariable String gameId, @PathVariable Integer gameLobbyId, @PathVariable String usernameId) {
 		if(gameRepository.existsById(gameId) && gameLobbyRepository.existsById(gameLobbyId) && usernameRepository.existsById(usernameId)) {
 			GameInstanceService service = context.getBean(GameInstanceService.class);
-			service.setupVariables(gameRepository.getOne(gameId), gameLobbyRepository.getOne(gameLobbyId), usernameRepository.getOne(usernameId));
+			service.setupVariables(gameRepository.getOne(gameId), gameLobbyRepository.getOne(gameLobbyId), usernameRepository.getOne(usernameId), false);
 			service.start();
 			gameInstances.add(service);
 			return ResponseEntity.status(HttpStatus.OK).body("");
@@ -86,6 +88,50 @@ public class GameInstanceController {
 		} else {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("The game instance: " + gameInstanceId + " does not exist, so it could not be stopped!");
 		}
+	}
+	
+	@CrossOrigin(origins = "http://localhost:8080")
+	@GetMapping(value="/startDebugGameInstance/{gameId}/{usernameId}/{restart}")
+	public ResponseEntity<Integer> startDebugGameInstance(@PathVariable String gameId, @PathVariable String usernameId, @PathVariable Boolean restart) throws InterruptedException {
+		if(gameRepository.existsById(gameId) && usernameRepository.existsById(usernameId)) {
+			List<GameInstance> foundGameInstances = null;
+			if(restart == false) {
+				if((foundGameInstances = gameInstanceRepository.findByUsernameAndDebugInstance(new Username(usernameId, "", "", "", ""), true)).size() > 0) {
+					for(GameInstanceService instance : gameInstances) {
+						if(instance.getGameInstance().getGameInstanceId().equals(foundGameInstances.get(0).getGameInstanceId())) {
+							return ResponseEntity.status(HttpStatus.OK).body(instance.getGameInstance().getGameInstanceId());
+						}
+					}
+				}
+			}
+			if((foundGameInstances = gameInstanceRepository.findByUsernameAndDebugInstance(new Username(usernameId, "", "", "", ""), true)).size() > 0) {
+				for(GameInstanceService instance : gameInstances) {
+					if(instance.getGameInstance().getGameInstanceId().equals(foundGameInstances.get(0).getGameInstanceId())) {
+						instance.shutdown();
+						gameInstances.remove(instance);
+						break;
+					}
+				}
+				GameInstanceService service = context.getBean(GameInstanceService.class);
+				Username username = new Username();
+				username.setUsernameId(usernameId);
+				service.setupVariables(gameRepository.getOne(gameId), new GameLobby(usernameId + " Debug Lobby", username), usernameRepository.getOne(usernameId), true);
+				service.start();
+				gameInstances.add(service);
+				Thread.sleep(500); //This really should not be done, but were gonna go with it
+				return ResponseEntity.status(HttpStatus.OK).body(service.getGameInstance().getGameInstanceId());
+			} else {
+				GameInstanceService service = context.getBean(GameInstanceService.class);
+				Username username = new Username();
+				username.setUsernameId(usernameId);
+				service.setupVariables(gameRepository.getOne(gameId), new GameLobby(usernameId + " Debug Lobby", username), usernameRepository.getOne(usernameId), true);
+				service.start();
+				gameInstances.add(service);
+				Thread.sleep(500); //This really should not be done, but were gonna go with it
+				return ResponseEntity.status(HttpStatus.OK).body(service.getGameInstance().getGameInstanceId());
+			}
+		}
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(-1);
 	}
 	
 	@MessageMapping("/gameInstance/{gameInstanceId}/connectToGameInstance/{usernameId}/{team}/{player}")

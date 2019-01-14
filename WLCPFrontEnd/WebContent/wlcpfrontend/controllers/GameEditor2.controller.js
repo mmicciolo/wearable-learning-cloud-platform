@@ -1,4 +1,4 @@
-sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
+sap.ui.controller("wlcpfrontend.controllers.GameEditor2", {
 
 	oModel : null,
 	
@@ -115,24 +115,9 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		document.getElementById("gameEditor--toolbox").style["overflow-y"] = "auto";
 		
 		var connection = Transition.getClosestConnection(ui.position.left, ui.position.top, this.jsPlumbInstance);
-		
 		if(connection != null) {
-			for(var i = 0; i < GameEditor.getEditorController().connectionList.length; i++) {
-				if(GameEditor.getEditorController().connectionList[i].connectionId == connection.id) {
-					connection = GameEditor.getEditorController().connectionList[i];
-					break;
-				}
-			}
 			var inputTransition = new InputTransition("transition", connection, this.createTransitionId(), this);
-			inputTransition.connection.transition = inputTransition;
 			this.transitionList.push(inputTransition);
-			for(var i = 0; i < this.connectionList.length; i++) {
-				if(this.connectionList[i].connectionId == connection.id) {
-					this.connectionList[i].transition = inputTransition;
-					inputTransition.connection = this.connectionList[i];
-					break;
-				}
-			}
 			inputTransition.onChange(connection);
 			for(var i = 0; i < this.stateList.length; i++) {
 				if(this.stateList[i].htmlId == connection.targetId) {
@@ -157,14 +142,19 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		for(var i = 0; i < this.connectionList.length; i++) {
 			if(oEvent.connection.id == this.connectionList[i].connectionId) {
 				return false;
-			} else if(oEvent.sourceId == this.connectionList[i].connectionFrom.htmlId && oEvent.targetId == this.connectionList[i].connectionTo.htmlId) {
+			} else if(oEvent.sourceId == this.connectionList[i].connectionFrom && oEvent.targetId == this.connectionList[i].connectionTo) {
 				sap.m.MessageBox.error("You cannot have mutliple connections with same source and target state!");
 				return false;
 			}
 		}
+		//Check to make sure its not a loop back to itself
+		if(oEvent.sourceId == oEvent.targetId) {
+			sap.m.MessageBox.error("A state cannot loop back to itself!");
+			return false;
+		}
 		
 		//Else we need to create a new one
-		var connection = new Connection( this.createConnectionId(), oEvent.sourceId, oEvent.targetId);
+		var connection = new Connection(oEvent.sourceId, oEvent.targetId, this.createConnectionId());
 		this.connectionList.push(connection);
 		connection.validate();
 		return false;
@@ -242,7 +232,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		this.busy = new sap.m.BusyDialog();
 		this.busy.open();
 		
-		$.ajax({url: ODataModel.getWebAppURL() + "/Rest/Controllers/loadGame?gameId=" + this.gameModel.GameId, type: 'GET', success: $.proxy(this.loadSuccess, this), error : $.proxy(this.loadError, this)});
+		$.ajax({url: ODataModel.getWebAppURL() + "/LoadGame", type: 'POST',  dataType: 'text', data: 'gameId=' + this.gameModel.GameId, success: $.proxy(this.loadSuccess, this), error : $.proxy(this.loadError, this)});
 	},
 	
 	loadFromManager : function(gameInfo) {
@@ -257,7 +247,10 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		GameEditor.getEditorController().load();
 	},
 	
-	loadSuccess(loadedData) {
+	loadSuccess(data) {
+		
+		//var loadedData = JSON.parse(data.responseText);
+		var loadedData = JSON.parse(data);
 		
 		//Init jsPlumb
 		this.initJsPlumb();
@@ -285,60 +278,6 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 			InputTransition.load(loadedData.transitions[i]);
 		}
 		
-		//Load state connections
-		for(var i = 0; i < loadedData.states.length; i++) {
-			for(var n = 0; n < this.stateList.length; n++) {
-				if(loadedData.states[i].stateId == this.stateList[n].htmlId) {
-					for(var j = 0; j < loadedData.states[i].inputConnections.length; j++) {
-						for(var l = 0; l < this.connectionList.length; l++) {
-							if(loadedData.states[i].inputConnections[j].connectionId == this.connectionList[l].connectionId) {
-								this.stateList[n].inputConnections.push(this.connectionList[l]);
-								this.connectionList[l].connectionTo = this.stateList[n];
-							}
-						}
-					}
-					for(var j = 0; j < loadedData.states[i].outputConnections.length; j++) {
-						for(var l = 0; l < this.connectionList.length; l++) {
-							if(loadedData.states[i].outputConnections[j].connectionId == this.connectionList[l].connectionId) {
-								this.stateList[n].outputConnections.push(this.connectionList[l]);
-								this.connectionList[l].connectionFrom = this.stateList[n];
-							}
-						}
-					}
-				}
-			}
-		}
-		
-		//Load connection transition
-		for(var i = 0; i < loadedData.connections.length; i++) {
-			if(loadedData.connections[i].transition != null) {
-				for(var n = 0; n < this.connectionList.length; n++) {
-					if(this.connectionList[n].connectionId == loadedData.connections[i].connectionId) {
-						for(var j = 0; j < this.transitionList.length; j++) {
-							if(this.transitionList[j].overlayId == loadedData.connections[i].transition.transitionId) {
-								this.connectionList[n].transition = this.transitionList[j];
-							}
-						}
-					}
-				}
-			}
-		}
-		
-		//Load transition connection
-		for(var i = 0; i < loadedData.transitions.length; i++) {
-			if(loadedData.transitions[i].connection != null) {
-				for(var n = 0; n < this.transitionList.length; n++) {
-					if(this.transitionList[n].overlayId == loadedData.transitions[n].transitionId) {
-						for(var j = 0; j < this.connectionList.length; j++) {
-							if(this.connectionList[j].connectionId == loadedData.transitions[n].connection.connectionId) {
-								this.transitionList[n].connection = this.connectionList[j];
-							}
-						}
-					}
-				}
-			}
-		}
-		
 		//Have the transitions revalidate
 		for(var i = 0; i < this.transitionList.length; i++) {
 			this.transitionList[i].onChange();
@@ -348,7 +287,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		for(var i = 0; i < this.stateList.length; i++) {
 			this.stateList[i].onChange();
 		}
-
+	
 		this.busy.close();
 	},
 	
@@ -377,16 +316,12 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		
 		//Container for all of the data to be sent
 		var saveJSON = {
-				gameId : this.gameModel.GameId,
-				teamCount : this.gameModel.TeamCount,
-				playersPerTeam : this.gameModel.PlayersPerTeam,
-				stateIdCount : this.gameModel.StateIdCount,
-				transitionIdCount : this.gameModel.TransitionIdCount,
-				connectionIdCount : this.gameModel.ConnectionIdCount,
-				visibility : this.gameModel.Visibility,
-				dataLog : this.gameModel.DataLog,
-				username : {
-					usernameId : sap.ui.getCore().getModel("user").oData.username
+				game : {
+					gameId : this.gameModel.GameId,
+					teamCount : this.gameModel.TeamCount,
+					playersPerTeam : this.gameModel.PlayersPerTeam,
+					stateIdCount : this.gameModel.StateIdCount,
+					visibility : this.gameModel.Visibility,
 				},
 				states : [],
 				connections : [],
@@ -408,18 +343,7 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 			saveJSON.transitions.push(this.transitionList[i].save());
 		}
 		
-		var seen = [];
-		var stringify = JSON.stringify(saveJSON, function(key, val) {
-			   if (val != null && typeof val == "object") {
-			        if (seen.indexOf(val) >= 0) {
-			            return;
-			        }
-			        seen.push(val);
-			    }
-			    return val;
-			});
-		
-		$.ajax({headers : { 'Accept': 'application/json', 'Content-Type': 'application/json'}, url: ODataModel.getWebAppURL() + "/Rest/Controllers/saveGame", type: 'POST', dataType: 'json', data: JSON.stringify(saveJSON), success : $.proxy(this.saveSuccess, this), error : $.proxy(this.saveError, this)});
+		$.ajax({url: ODataModel.getWebAppURL() + "/SaveGame", type: 'POST', dataType: 'text', data: 'saveData=' + JSON.stringify(saveJSON), success : $.proxy(this.saveSuccess, this), error : $.proxy(this.saveError, this)});
 	},
 	
 	saveSuccess : function() {
@@ -444,102 +368,61 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		//Open the busy dialog
 		this.busy = new sap.m.BusyDialog();
 		this.busy.open();
-		$.ajax({url: ODataModel.getWebAppURL() + "/Rest/Controllers/transpileGame?gameId=" + this.gameModel.GameId + "&write=true", type: 'GET', success : $.proxy(this.runSuccess, this), error : $.proxy(this.runError, this)});
+		$.ajax({url: ODataModel.getWebAppURL() + "/Transpile", type: 'POST', dataType: 'text', data: 'gameId=' + this.gameModel.GameId, success : $.proxy(this.runSuccess, this), error : $.proxy(this.runError, this)});
 	},
 	
 	runSuccess : function() {
 		this.busy.close();
 		sap.m.MessageToast.show("Transpiled Successfully! Opening Debugger!");
-		$.ajax({url: ODataModel.getWebAppURL() + "/Rest/Controllers/checkDebugInstanceRunning?usernameId=" + sap.ui.getCore().getModel("user").oData.username, type: 'GET', success : $.proxy(this.checkForRunningDebugInstanceSuccess, this), error : $.proxy(this.checkForRunningDebugInstanceError, this)});
+		var filters = [];
+		filters.push(new sap.ui.model.Filter({path: "Username", operator: sap.ui.model.FilterOperator.EQ, value1: sap.ui.getCore().getModel("user").oData.username}));
+		filters.push(new sap.ui.model.Filter({path: "DebugInstance", operator: sap.ui.model.FilterOperator.EQ, value1: true}));
+		ODataModel.getODataModel().read("/GameInstances", {filters : filters, success : $.proxy(this.readInstancesSuccess, this), error: $.proxy(this.readInstancesError, this)});
+		//this.openDebuggerWindow();
+		//debuggerWindow.DebuggerWindow.initParams(sap.ui.getCore().getModel("user").oData.username, this.gameModel.GameId);
 	},
 	
 	runError : function() {
-		sap.m.MessageBox.error("There was an error transpiling the game. Debug not possible!");
+		sap.m.MessageBox.error("There was an error running...");
 		this.busy.close();
 	},
 	
-	checkForRunningDebugInstanceSuccess : function(data) {
-		if(data == true) {
-			sap.m.MessageBox.confirm("You are already debugging a game instance. Do you want to restart the instance (OK) or open another debugger (CANCEL) (to continue debugging the current game with another user)?", {onClose : $.proxy(this.handleDebugInstanceMessageBox, this)});
+	readInstancesSuccess : function(oData) {
+		if(oData.results.length == 0) {
+			this.restartDebug = false;
+			this.openDebuggerWindow();
 		} else {
-			$.ajax({url : "http://" + ServerConfig.getServerAddress() + "/controllers/startDebugGameInstance/" + this.gameModel.GameId + "/" + sap.ui.getCore().getModel("user").oData.username + "/false", success : $.proxy(this.openDebuggerWindow, this), error : $.proxy(this.checkForRunningDebugInstanceError, this)});
+			if(oData.results[0].Game == this.gameModel.GameId) {
+				sap.m.MessageBox.confirm("You are already debugging a game instance. Do you want to restart the instance (OK) or open another debugger (CANCEL) (to continue debugging the current game with another user)?", {onClose : $.proxy(this.handleDebugInstanceMessageBox, this)});
+			} else {
+				this.restartDebug = true;
+				this.openDebuggerWindow();
+			}
 		}
 	},
-	
-	checkForRunningDebugInstanceError : function() {
-		sap.m.MessageBox.error("There was an error starting the debug game instance!");
+		
+	readInstancesError : function() {
+		sap.m.MessageBox.error("There was an error debugging...");
 	},
 	
 	handleDebugInstanceMessageBox : function(oAction) {
 		if(oAction == sap.m.MessageBox.Action.OK) {
-			$.ajax({url : "http://" + ServerConfig.getServerAddress() + "/controllers/startDebugGameInstance/" + this.gameModel.GameId + "/" + sap.ui.getCore().getModel("user").oData.username + "/true", success : $.proxy(this.openDebuggerWindow, this), error : $.proxy(this.checkForRunningDebugInstanceError, this)});
+			this.restartDebug = true;
 		} else {
-			$.ajax({url : "http://" + ServerConfig.getServerAddress() + "/controllers/startDebugGameInstance/" + this.gameModel.GameId + "/" + sap.ui.getCore().getModel("user").oData.username + "/false", success : $.proxy(this.openDebuggerWindow, this), error : $.proxy(this.checkForRunningDebugInstanceError, this)});
-		} 
+			this.restartDebug = false;
+		}
+		this.openDebuggerWindow();
 	},
 	
-	openDebuggerWindow : function(debugGameInstanceId) {
+	openDebuggerWindow : function() {
 		this.debuggerWindow = window.open(window.location.href + "debugger.html");
-		this.debuggerWindow.addEventListener('load', $.proxy(this.debuggerWindowOpened, this, debugGameInstanceId), true); 
+		this.debuggerWindow.addEventListener('load', $.proxy(this.debuggerWindowOpened, this), true); 
 	},
-
-	debuggerWindowOpened : function(debugGameInstanceId) {
-		this.debuggerWindow.DebuggerWindow.initParams(debugGameInstanceId, sap.ui.getCore().getModel("user").oData.username);
+	
+	debuggerWindowOpened : function() {
+		this.debuggerWindow.DebuggerWindow.initParams(sap.ui.getCore().getModel("user").oData.username, this.gameModel.GameId, this.restartDebug);
 		this.debuggerWindow.DebuggerWindow.initDebugger();
 	},
-	
-//	runSuccess : function() {
-//		this.busy.close();
-//		sap.m.MessageToast.show("Transpiled Successfully! Opening Debugger!");
-//		var filters = [];
-//		filters.push(new sap.ui.model.Filter({path: "Username", operator: sap.ui.model.FilterOperator.EQ, value1: sap.ui.getCore().getModel("user").oData.username}));
-//		filters.push(new sap.ui.model.Filter({path: "DebugInstance", operator: sap.ui.model.FilterOperator.EQ, value1: true}));
-//		ODataModel.getODataModel().read("/GameInstances", {filters : filters, success : $.proxy(this.readInstancesSuccess, this), error: $.proxy(this.readInstancesError, this)});
-//		//this.openDebuggerWindow();
-//		//debuggerWindow.DebuggerWindow.initParams(sap.ui.getCore().getModel("user").oData.username, this.gameModel.GameId);
-//	},
-//	
-//	runError : function() {
-//		sap.m.MessageBox.error("There was an error running...");
-//		this.busy.close();
-//	},
-//	
-//	readInstancesSuccess : function(oData) {
-//		if(oData.results.length == 0) {
-//			this.restartDebug = false;
-//			this.openDebuggerWindow();
-//		} else {
-//			if(oData.results[0].Game == this.gameModel.GameId) {
-//				sap.m.MessageBox.confirm("You are already debugging a game instance. Do you want to restart the instance (OK) or open another debugger (CANCEL) (to continue debugging the current game with another user)?", {onClose : $.proxy(this.handleDebugInstanceMessageBox, this)});
-//			} else {
-//				this.restartDebug = true;
-//				this.openDebuggerWindow();
-//			}
-//		}
-//	},
-//		
-//	readInstancesError : function() {
-//		sap.m.MessageBox.error("There was an error debugging...");
-//	},
-//	
-//	handleDebugInstanceMessageBox : function(oAction) {
-//		if(oAction == sap.m.MessageBox.Action.OK) {
-//			this.restartDebug = true;
-//		} else {
-//			this.restartDebug = false;
-//		}
-//		this.openDebuggerWindow();
-//	},
-//	
-//	openDebuggerWindow : function() {
-//		this.debuggerWindow = window.open(window.location.href + "debugger.html");
-//		this.debuggerWindow.addEventListener('load', $.proxy(this.debuggerWindowOpened, this), true); 
-//	},
-//	
-//	debuggerWindowOpened : function() {
-//		this.debuggerWindow.DebuggerWindow.initParams(sap.ui.getCore().getModel("user").oData.username, this.gameModel.GameId, this.restartDebug);
-//		this.debuggerWindow.DebuggerWindow.initDebugger();
-//	},
 	
 	resetEditor : function() {
 		for(var i = 0; i < this.stateList.length; i++) {
@@ -579,6 +462,36 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 				  if(this.loadFromEditor != null) {
 					  this.loadFromManager(this.loadFromEditor);
 				  }
+				  
+//				  window.setTimeout($.proxy(function() {
+//					  
+//					  this.count = 0;
+//					  this.resetEditor();
+//					  this.gameModel.GameId = "SolveIt_log_" + this.count;
+//					  this.load();
+//					  
+//					  $("#gameEditor--pad").keypress($.proxy(function(){
+//						  this.count++;
+//						    this.resetEditor();
+//							this.gameModel.GameId = "SolveIt_log_" + this.count;
+//							this.load();
+//						}, this));
+//					}, 10000), this);
+				  
+				  setTimeout($.proxy(function() {
+					  this.count = 0;
+					  this.gameId = "scavengerhunt_log_";
+					  this.resetEditor();
+					  this.gameModel.GameId = this.gameId  + this.count;
+					  this.load();
+					  
+					  $("#gameEditor--pad").keypress($.proxy(function(){
+					  this.count++;
+					    this.resetEditor();
+						this.gameModel.GameId =  this.gameId + this.count;
+						this.load();
+					}, this));
+				  }, this), 2500);
 			  }
 			}, this);
 	},

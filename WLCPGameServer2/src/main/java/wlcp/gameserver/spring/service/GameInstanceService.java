@@ -60,16 +60,18 @@ public class GameInstanceService extends Thread {
 	private GameLobby gameLobby;
 	private Username username;
 	private GameInstance gameInstance;
+	private boolean debugInstance;
 	
 	private CopyOnWriteArrayList<IMessage> messages = new CopyOnWriteArrayList<IMessage>();
 	private CopyOnWriteArrayList<Player> players = new CopyOnWriteArrayList<Player>();
 	
 	private boolean running = true;
 	
-	public void setupVariables(Game game, GameLobby gameLobby, Username username) {
+	public void setupVariables(Game game, GameLobby gameLobby, Username username, boolean debugInstance) {
 		this.game = game;
 		this.gameLobby = gameLobby;
 		this.username = username;
+		this.debugInstance = debugInstance;
 	}
 	
 	@Override
@@ -91,9 +93,11 @@ public class GameInstanceService extends Thread {
 		gameInstance.setGame(game);
 		gameInstance.setGameLobby(gameLobby);
 		gameInstance.setUsername(username);
+		gameInstance.setDebugInstance(debugInstance);
 		gameInstanceRepository.save(gameInstance);
 		gameInstanceRepository.flush();
-		logger.info("Game Instance: " + gameInstance.getGameInstanceId() + " started! Playing the game: " + game.getGameId() + " with the game lobby: " + gameLobby.getGameLobbyName());
+		if(!gameInstance.isDebugInstance()) { logger.info("Game Instance: " + gameInstance.getGameInstanceId() + " started! Playing the game: " + game.getGameId() + " with the game lobby: " + gameLobby.getGameLobbyName()); }
+		if(gameInstance.isDebugInstance()) { logger.info("Debug Game Instance: " + gameInstance.getGameInstanceId() + " started! Playing the game: " + game.getGameId() + " with the game lobby: " + gameLobby.getGameLobbyName()); }
 		this.setName("WLCP-" + game.getGameId() + "-" + gameInstance.getGameInstanceId());
 	}
 	
@@ -103,13 +107,15 @@ public class GameInstanceService extends Thread {
 		Username username = usernameRepository.getOne(connect.usernameId);
 		
 		//Check to make sure the player doesnt already exist in the game (for reconnect)
-		for(Player player : players) {
-			if(player.usernameClientData.username.getUsernameId().equals(username.getUsernameId())) {
-				//User already exists in the game, maybe they are trying to reconnect?
-				player.playerVM.reconnect();
-				ConnectResponseMessage msg = new ConnectResponseMessage();
-				msg.code = Code.RECONNECT;
-				return msg;
+		if(!debugInstance) {
+			for(Player player : players) {
+				if(player.usernameClientData.username.getUsernameId().equals(username.getUsernameId())) {
+					//User already exists in the game, maybe they are trying to reconnect?
+					player.playerVM.reconnect();
+					ConnectResponseMessage msg = new ConnectResponseMessage();
+					msg.code = Code.RECONNECT;
+					return msg;
+				}
 			}
 		}
 		
@@ -188,13 +194,15 @@ public class GameInstanceService extends Thread {
 
 		List<PlayerAvaliableMessage> teamPlayers = new ArrayList<PlayerAvaliableMessage>();
 		
-		for(Player player : players) {
-			if(player.usernameClientData.username.getUsernameId().equals(usernameId)) {
-				PlayerAvaliableMessage msg = new PlayerAvaliableMessage();
-				msg.team = player.teamPlayer.team;
-				msg.player = player.teamPlayer.player;
-				teamPlayers.add(msg);
-				return teamPlayers;
+		if(!debugInstance) {
+			for(Player player : players) {
+				if(player.usernameClientData.username.getUsernameId().equals(usernameId)) {
+					PlayerAvaliableMessage msg = new PlayerAvaliableMessage();
+					msg.team = player.teamPlayer.team;
+					msg.player = player.teamPlayer.player;
+					teamPlayers.add(msg);
+					return teamPlayers;
+				}
 			}
 		}
 		
@@ -225,6 +233,7 @@ public class GameInstanceService extends Thread {
 		running = false;
 		gameInstanceRepository.delete(gameInstance);
 		gameInstanceRepository.flush();
+		logger.info("Game Instance: " + gameInstance.getGameInstanceId() + " stopped! No longer playing the game: " + game.getGameId() + " with the game lobby: " + gameLobby.getGameLobbyName());
 	}
 	
 	@MessageMapping("/gameInstance/{gameInstanceId}/singleButtonPress/{usernameId}/{team}/{player}")

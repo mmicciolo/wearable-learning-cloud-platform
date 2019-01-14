@@ -3,6 +3,6 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>wlcp.shared</groupId>
-  <artifactId>WLCPShared2</artifactId>
+  <artifactId>WLCPShared</artifactId>
   <version>0.0.3-SNAPSHOT</version>
 </project>

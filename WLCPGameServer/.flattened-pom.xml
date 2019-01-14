@@ -3,7 +3,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>wlcp.gameserver</groupId>
-  <artifactId>WLCPGameServer2</artifactId>
+  <artifactId>WLCPGameServer</artifactId>
   <version>0.0.3-SNAPSHOT</version>
   <dependencies>
     <dependency>
@@ -46,6 +46,18 @@
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
       <version>5.1.6</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>wlcp.shared</groupId>
+      <artifactId>WLCPShared</artifactId>
+      <version>0.0.3-SNAPSHOT</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>wlcp.gameserver.api</groupId>
+      <artifactId>WLCPGameServerAPI</artifactId>
+      <version>0.0.3-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
   </dependencies>

@@ -2,6 +2,7 @@ var states = {
    stresstest_start : 0,
    stresstest_state_1 : 1,
    stresstest_state_2 : 2,
+   stresstest_state_3 : 3,
 };
 
 var FSMGame = {
@@ -35,6 +36,9 @@ var FSMGame = {
          case states.stresstest_state_2:
             this.stresstest_state_2();
             break;
+         case states.stresstest_state_3:
+        	this.stresstest_state_3();
+        	break;
       }
    },
 
@@ -49,7 +53,12 @@ var FSMGame = {
 
    stresstest_state_2 : function() {
       this.playerVM.DisplayText("State 2");
-      this.state = this.playerVM.SequenceButtonPress(["1"], [states.stresstest_state_1]);
+      this.state = this.playerVM.SequenceButtonPress(["1"], [states.stresstest_state_3]);
+   },
+   
+   stresstest_state_3 : function() {
+	      this.playerVM.DisplayText("State 2");
+	      this.state = this.playerVM.KeyboardInput(["hello"], [states.stresstest_state_1]);
    },
 
 };

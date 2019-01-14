@@ -2,7 +2,6 @@ package wlcp.gameserver.spring.service;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -30,12 +29,12 @@ import wlcp.model.master.GameLobby;
 import wlcp.model.master.Username;
 import wlcp.shared.message.ConnectRequestMessage;
 import wlcp.shared.message.ConnectResponseMessage;
+import wlcp.shared.message.ConnectResponseMessage.Code;
 import wlcp.shared.message.IMessage;
 import wlcp.shared.message.KeyboardInputMessage;
 import wlcp.shared.message.PlayerAvaliableMessage;
 import wlcp.shared.message.SequenceButtonPressMessage;
 import wlcp.shared.message.SingleButtonPressMessage;
-import wlcp.shared.message.ConnectResponseMessage.Code;
 
 @Controller
 @RequestMapping("/controllers")

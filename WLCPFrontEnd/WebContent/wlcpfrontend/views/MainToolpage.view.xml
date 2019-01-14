@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
 <core:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:tnt="sap.tnt" xmlns:f="sap.f" xmlns:l="sap.ui.layout"
 		controllerName="wlcpfrontend.controllers.MainToolpage" xmlns:html="http://www.w3.org/1999/xhtml">
 		<tnt:ToolPage id="toolPage">

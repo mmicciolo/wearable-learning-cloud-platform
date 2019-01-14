@@ -111,11 +111,6 @@ public class PlayerVMService extends Thread {
 		return -1;
 	}
 	
-//	public void unblock(IMessage message) {
-//		block = false;
-//		blockMessage = message;
-//	}
-	
 	public void unblock(IMessage message) {
 		if(message == null) { block = false; blockMessage = null; return;}
 		if(message.getClass().equals(lastSentPacket.getClass())) {

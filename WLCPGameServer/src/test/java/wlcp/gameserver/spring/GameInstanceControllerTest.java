@@ -11,15 +11,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.socket.messaging.WebSocketStompClient;
 
 import wlcp.gameserver.spring.repository.GameLobbyRepository;
 import wlcp.gameserver.spring.repository.GameRepository;
-import wlcp.gameserver.spring.repository.UsernameRepository;
 import wlcp.model.master.Game;
 import wlcp.model.master.GameLobby;
 import wlcp.model.master.Username;
@@ -54,13 +51,13 @@ public class GameInstanceControllerTest {
 	@Autowired
 	private GameLobbyRepository gameLobbyRepository;
 	
-	@Autowired
-	private UsernameRepository usernameRepository;
+	//@Autowired
+	//private UsernameRepository usernameRepository;
 	
 	//@Autowired
 	//private ObjectMapper jacksonObjectMapper;
 	
-	private WebSocketStompClient stompClient;
+	//private WebSocketStompClient stompClient;
 	
 	private int gameInstanceId = 0;
 	
@@ -146,10 +143,10 @@ public class GameInstanceControllerTest {
 		mockMvc.perform(get("/controllers/startGameInstance/TestGame/1/TestUser3").contentType(MediaType.TEXT_PLAIN)).andExpect(status().isInternalServerError());
 	}
 	
-	private void startGameInstance() throws Exception {
-		mockMvc.perform(get("/controllers/startGameInstance/TestGame/1/TestUser")).andReturn();
-		gameInstanceId++;
-	}
+//	private void startGameInstance() throws Exception {
+//		mockMvc.perform(get("/controllers/startGameInstance/TestGame/1/TestUser")).andReturn();
+//		gameInstanceId++;
+//	}
 	
 	private void stopGameInstance() throws Exception {
 		mockMvc.perform(get("/controllers/stopGameInstance/" + gameInstanceId));

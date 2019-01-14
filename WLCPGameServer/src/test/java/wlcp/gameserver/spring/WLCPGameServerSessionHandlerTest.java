@@ -7,7 +7,6 @@ import org.springframework.messaging.simp.stomp.StompSession;
 
 import wlcp.gameserver.api.WLCPGameClient;
 import wlcp.gameserver.api.WLCPGameClientSessionHandler;
-import wlcp.gameserver.spring.service.GameInstanceService;
 import wlcp.shared.message.DisplayTextMessage;
 
 public class WLCPGameServerSessionHandlerTest extends WLCPGameClientSessionHandler {

@@ -7,12 +7,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import javax.sql.DataSource;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -50,9 +46,6 @@ public class LoadSaveControllerTest {
     private WebApplicationContext wac;
 
     private MockMvc mockMvc;
-	
-    @Inject
-    private DataSource dataSource;
     
     private static boolean setup = false;
     

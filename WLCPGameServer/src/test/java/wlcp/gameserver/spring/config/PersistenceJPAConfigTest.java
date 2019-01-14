@@ -15,8 +15,6 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.EclipseLinkJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
-
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = "wlcp.gameserver.spring.repository")

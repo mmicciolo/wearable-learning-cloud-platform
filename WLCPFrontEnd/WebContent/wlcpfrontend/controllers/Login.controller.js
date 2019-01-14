@@ -3,7 +3,7 @@ sap.ui.controller("wlcpfrontend.controllers.Login", {
 	modelData : {
 		username : "mmicciolo",
 		password : "",
-		mode : "Player",
+		mode : "Game Editor",
 		items : [
 			{
 				key : "A",
@@ -157,11 +157,11 @@ sap.ui.controller("wlcpfrontend.controllers.Login", {
 		//Setup the ODATA
 		ODataModel.setupODataModel();
 		
-		this.getView().addEventDelegate({
-			  onAfterRendering: function(){
-				  this.onLoginPress();
-			  }
-			}, this);
+//		this.getView().addEventDelegate({
+//			  onAfterRendering: function(){
+//				  this.onLoginPress();
+//			  }
+//			}, this);
 	},
 
 /**

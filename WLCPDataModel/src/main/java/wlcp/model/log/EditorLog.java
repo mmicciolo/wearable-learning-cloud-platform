@@ -3,8 +3,6 @@ package wlcp.model.log;
 import java.io.Serializable;
 import javax.persistence.*;
 
-import wlcp.model.master.Game;
-
 /**
  * Entity implementation class for Entity: EditorLog
  *

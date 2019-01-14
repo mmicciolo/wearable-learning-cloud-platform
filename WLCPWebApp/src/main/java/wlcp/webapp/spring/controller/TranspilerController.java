@@ -1,6 +1,5 @@
 package wlcp.webapp.spring.controller;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
@@ -31,11 +30,11 @@ public class TranspilerController {
     @ResponseBody()
 	public String transpileGame(@RequestParam("gameId") String gameId, @RequestParam("write") boolean write) throws FileNotFoundException {
 		JavaScriptTranspiler transpiler = new JavaScriptTranspiler(entityManager);
-		File programLocation = new File(context.getRealPath(context.getContextPath()));
-		String finalProgramLocation = programLocation.getParentFile().getParent() + "/WLCPGameServer/programs/";
+		//File programLocation = new File(context.getRealPath(context.getContextPath()));
+		//String finalProgramLocation = programLocation.getParentFile().getParent() + "/WLCPGameServer/programs/";
 		String transpiledCode = transpiler.Transpile(gameId);
 		if(write) {
-			PrintWriter pw = new PrintWriter(new FileOutputStream("C:/Users/Matt/git/wearable-learning-cloud-platform/WLCPGameServer2/programs/" + gameId + ".js", false));
+			PrintWriter pw = new PrintWriter(new FileOutputStream("C:/Users/Matt/git/wearable-learning-cloud-platform/WLCPGameServer/programs/" + gameId + ".js", false));
 			//PrintWriter pw = new PrintWriter(new FileOutputStream(finalProgramLocation + gameId + ".js", false));
 			pw.println(transpiledCode);
 			pw.close();

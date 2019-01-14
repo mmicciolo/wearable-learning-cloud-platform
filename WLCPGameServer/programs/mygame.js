@@ -1,6 +1,8 @@
 var states = {
    mygame_start : 0,
    mygame_state_1 : 1,
+   mygame_state_3 : 2,
+   mygame_state_4 : 3,
 };
 
 var FSMGame = {
@@ -31,6 +33,12 @@ var FSMGame = {
          case states.mygame_state_1:
             this.mygame_state_1();
             break;
+         case states.mygame_state_3:
+            this.mygame_state_3();
+            break;
+         case states.mygame_state_4:
+            this.mygame_state_4();
+            break;
       }
    },
 
@@ -39,6 +47,27 @@ var FSMGame = {
    },
 
    mygame_state_1 : function() {
+      this.playerVM.DisplayText("Press Red!");
+      this.state = this.playerVM.SingleButtonPress(["1"], [states.mygame_state_3]);
    },
 
+   mygame_state_3 : function() {
+      this.playerVM.DisplayText("Red Sequence.");
+      this.state = this.playerVM.SequenceButtonPress(["1"], [states.mygame_state_4]);
+   },
+
+   mygame_state_4 : function() {
+      this.playerVM.DisplayText("Type Red!");
+      this.state = this.playerVM.KeyboardInput(["red"], [states.mygame_state_1]);
+   },
+
+};
+
+var SetGameVariables = function(gameInstanceId, team, player, playerVM) {
+   FSMGame.gameInstanceId = gameInstanceId;
+   FSMGame.team = team;
+   FSMGame.player = player;
+   FSMGame.playerVM = playerVM;
 }
+
+

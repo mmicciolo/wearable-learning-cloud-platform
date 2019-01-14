@@ -12,7 +12,6 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		UsernameDetails : {
 			__metadata : {
 	            uri : ODataModel.getODataModelURL() + "/Usernames('" + sap.ui.getCore().getModel("user").oData.username + "')"
-				//uri : ODataModel.getODataModelURL() + "/Usernames('mmicciolo')"
 	         }
 		},
 		Visibility : true,
@@ -488,59 +487,6 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		this.debuggerWindow.DebuggerWindow.initDebugger();
 	},
 	
-//	runSuccess : function() {
-//		this.busy.close();
-//		sap.m.MessageToast.show("Transpiled Successfully! Opening Debugger!");
-//		var filters = [];
-//		filters.push(new sap.ui.model.Filter({path: "Username", operator: sap.ui.model.FilterOperator.EQ, value1: sap.ui.getCore().getModel("user").oData.username}));
-//		filters.push(new sap.ui.model.Filter({path: "DebugInstance", operator: sap.ui.model.FilterOperator.EQ, value1: true}));
-//		ODataModel.getODataModel().read("/GameInstances", {filters : filters, success : $.proxy(this.readInstancesSuccess, this), error: $.proxy(this.readInstancesError, this)});
-//		//this.openDebuggerWindow();
-//		//debuggerWindow.DebuggerWindow.initParams(sap.ui.getCore().getModel("user").oData.username, this.gameModel.GameId);
-//	},
-//	
-//	runError : function() {
-//		sap.m.MessageBox.error("There was an error running...");
-//		this.busy.close();
-//	},
-//	
-//	readInstancesSuccess : function(oData) {
-//		if(oData.results.length == 0) {
-//			this.restartDebug = false;
-//			this.openDebuggerWindow();
-//		} else {
-//			if(oData.results[0].Game == this.gameModel.GameId) {
-//				sap.m.MessageBox.confirm("You are already debugging a game instance. Do you want to restart the instance (OK) or open another debugger (CANCEL) (to continue debugging the current game with another user)?", {onClose : $.proxy(this.handleDebugInstanceMessageBox, this)});
-//			} else {
-//				this.restartDebug = true;
-//				this.openDebuggerWindow();
-//			}
-//		}
-//	},
-//		
-//	readInstancesError : function() {
-//		sap.m.MessageBox.error("There was an error debugging...");
-//	},
-//	
-//	handleDebugInstanceMessageBox : function(oAction) {
-//		if(oAction == sap.m.MessageBox.Action.OK) {
-//			this.restartDebug = true;
-//		} else {
-//			this.restartDebug = false;
-//		}
-//		this.openDebuggerWindow();
-//	},
-//	
-//	openDebuggerWindow : function() {
-//		this.debuggerWindow = window.open(window.location.href + "debugger.html");
-//		this.debuggerWindow.addEventListener('load', $.proxy(this.debuggerWindowOpened, this), true); 
-//	},
-//	
-//	debuggerWindowOpened : function() {
-//		this.debuggerWindow.DebuggerWindow.initParams(sap.ui.getCore().getModel("user").oData.username, this.gameModel.GameId, this.restartDebug);
-//		this.debuggerWindow.DebuggerWindow.initDebugger();
-//	},
-	
 	resetEditor : function() {
 		for(var i = 0; i < this.stateList.length; i++) {
 			this.jsPlumbInstance.remove(this.stateList[i].htmlId);
@@ -552,7 +498,6 @@ sap.ui.controller("wlcpfrontend.controllers.GameEditor", {
 		this.type = null;
 		
 		sap.ui.getCore().byId("gameEditor--saveButton").setEnabled(true);
-		//sap.ui.getCore().byId("gameEditor--compileButton").setEnabled(true);
 		sap.ui.getCore().byId("gameEditor--runButton").setEnabled(true);
 		
 		GameEditor.resetScroll();

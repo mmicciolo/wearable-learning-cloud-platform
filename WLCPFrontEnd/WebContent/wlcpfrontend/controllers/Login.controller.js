@@ -1,9 +1,9 @@
 sap.ui.controller("wlcpfrontend.controllers.Login", {
 	
 	modelData : {
-		username : "mmicciolo",
+		username : "",
 		password : "",
-		mode : "Game Editor",
+		mode : "",
 		items : [
 			{
 				key : "A",

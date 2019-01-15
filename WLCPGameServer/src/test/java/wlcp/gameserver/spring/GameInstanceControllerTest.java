@@ -7,37 +7,30 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import wlcp.gameserver.spring.config.AsyncConfig;
+import wlcp.gameserver.spring.config.PersistenceJPAConfigTest;
+import wlcp.gameserver.spring.config.WebSocketConfig;
 import wlcp.gameserver.spring.repository.GameLobbyRepository;
 import wlcp.gameserver.spring.repository.GameRepository;
 import wlcp.model.master.Game;
 import wlcp.model.master.GameLobby;
 import wlcp.model.master.Username;
-
-/*//@RunWith(SpringRunner.class)
-//@SpringBootTest()
-//@AutoConfigureMockMvc()
-//@ContextConfiguration(classes = {PersistenceJPAConfigTest.class})
-//@WebMvcTest()
-//@ComponentScan(basePackages = "wlcp.gameserver.spring")
+	
 @RunWith(SpringRunner.class)
-//@SpringBootTest(classes = {PersistenceJPAConfigTest.class, WebSocketConfig.class, AsyncConfig.class}, webEnvironment=WebEnvironment.DEFINED_PORT)
-//@EnableAutoConfiguration
 @WebAppConfiguration
 @EnableWebMvc
 @ContextConfiguration(classes = {PersistenceJPAConfigTest.class, WebSocketConfig.class, AsyncConfig.class})
-@ComponentScan(basePackages={"wlcp.gameserver.spring.controller, wlcp.gameserver.spring.service"})*/
-
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = SpringBootWebApplicationTest.class, webEnvironment=WebEnvironment.DEFINED_PORT)
-//@WebAppConfiguration
+@ComponentScan(basePackages={"wlcp.gameserver.spring.controller, wlcp.gameserver.spring.service"})
 public class GameInstanceControllerTest {
 	
 	@Autowired

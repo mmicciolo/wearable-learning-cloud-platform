@@ -17,13 +17,17 @@ node {
 	     }
 	  }
 	  stage('Integration Testing') {
+	  	if(params.integration) {
 	  	  sh "'${mvnHome}/bin/mvn' -f WLCPFrontEnd/pom.xml test -Pintegration-tests -Djava.io.tmpdir=/var/lib/jenkins/workspace/WLCP/temp"
+	  	}
 	  }
 	  stage('Publish Test Results') {
+	  	if(params.unit) {
 	      junit "WLCPDataModel/target/surefire-reports/*.xml"
 	      junit "WLCPFrontEnd/target/surefire-reports/*.xml"
 	      junit "WLCPGameServer/target/surefire-reports/*.xml"
 	      junit "WLCPWebApp/target/surefire-reports/*.xml"
+	    }
 	  }
 	  stage('Publish Artifacts') {
 	    withCredentials([file(credentialsId: 'settingsFile', variable: 'FILE')]) {

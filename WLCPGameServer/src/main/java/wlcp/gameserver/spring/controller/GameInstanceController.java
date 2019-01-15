@@ -32,6 +32,7 @@ import wlcp.shared.message.PlayerAvaliableMessage;
 
 @RestController
 @RequestMapping("/controllers")
+@CrossOrigin
 public class GameInstanceController {
 	
 	@Autowired
@@ -59,7 +60,6 @@ public class GameInstanceController {
 		gameInstanceRepository.deleteAll();
 	}
 	
-	@CrossOrigin(origins = "http://localhost:8080")
 	@GetMapping(value="/startGameInstance/{gameId}/{gameLobbyId}/{usernameId}")
 	public ResponseEntity<String> startGameInstance(@PathVariable String gameId, @PathVariable Integer gameLobbyId, @PathVariable String usernameId) {
 		if(gameRepository.existsById(gameId) && gameLobbyRepository.existsById(gameLobbyId) && usernameRepository.existsById(usernameId)) {
@@ -73,7 +73,6 @@ public class GameInstanceController {
 		}
 	}
 	
-	@CrossOrigin(origins = "http://localhost:8080")
 	@GetMapping(value="/stopGameInstance/{gameInstanceId}")
 	public ResponseEntity<String> stopGameInstance(@PathVariable int gameInstanceId) {
 		if(gameInstanceRepository.existsById(gameInstanceId)) {
@@ -90,7 +89,6 @@ public class GameInstanceController {
 		}
 	}
 	
-	@CrossOrigin(origins = "http://localhost:8080")
 	@GetMapping(value="/startDebugGameInstance/{gameId}/{usernameId}/{restart}")
 	public ResponseEntity<Integer> startDebugGameInstance(@PathVariable String gameId, @PathVariable String usernameId, @PathVariable Boolean restart) throws InterruptedException {
 		if(gameRepository.existsById(gameId) && usernameRepository.existsById(usernameId)) {
@@ -169,7 +167,6 @@ public class GameInstanceController {
 		return "";
 	}
 	
-	@CrossOrigin(origins = "http://localhost:8080")
 	@GetMapping("/playersAvaliable/{gameInstanceId}/{usernameId}")
 	public List<PlayerAvaliableMessage> playersAvailable(@PathVariable int gameInstanceId, @PathVariable String usernameId) {
 		for(GameInstanceService gameInstance : gameInstances) {

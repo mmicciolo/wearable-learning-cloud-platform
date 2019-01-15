@@ -11,7 +11,7 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 	
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
-		registry.addEndpoint("/wlcpGameServer/{gameInstanceId}").setAllowedOrigins("http://localhost:8080").withSockJS();
+		registry.addEndpoint("/wlcpGameServer/{gameInstanceId}").setAllowedOrigins("*").withSockJS();
 	}
 
 	

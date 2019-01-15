@@ -30,8 +30,10 @@ node {
 	    }
 	  }
 	  stage('Publish Artifacts') {
-	    withCredentials([file(credentialsId: 'settingsFile', variable: 'FILE')]) {
+	  	if(params.publish) {
+	       withCredentials([file(credentialsId: 'settingsFile', variable: 'FILE')]) {
 	        sh "'${mvnHome}/bin/mvn' clean deploy -DskipTests -s $FILE"
+	       }
 	    }
 	   }
 	   stage('Deploy') {

@@ -63,7 +63,7 @@
 		<dependency>
 			<groupId>wlcp.shared</groupId>
 			<artifactId>WLCPShared</artifactId>
-			<version>0.0.3-SNAPSHOT</version>
+			<version>${revision}</version>
 		</dependency>
 	</dependencies>
 </project>

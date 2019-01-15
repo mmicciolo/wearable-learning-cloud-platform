@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>wlcp.gameserver.api</groupId>
   <artifactId>WLCPGameServerAPI</artifactId>
-  <version>0.0.3-SNAPSHOT</version>
+  <version>0.0.4-SNAPSHOT</version>
   <dependencies>
     <dependency>
       <groupId>org.springframework</groupId>
@@ -45,7 +45,7 @@
     <dependency>
       <groupId>wlcp.shared</groupId>
       <artifactId>WLCPShared</artifactId>
-      <version>0.0.3-SNAPSHOT</version>
+      <version>0.0.4-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
   </dependencies>

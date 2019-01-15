@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>wlcp.gameserver</groupId>
   <artifactId>WLCPGameServer</artifactId>
-  <version>0.0.3-SNAPSHOT</version>
+  <version>0.0.4-SNAPSHOT</version>
   <dependencies>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -39,7 +39,7 @@
     <dependency>
       <groupId>wlcp.model</groupId>
       <artifactId>WLCPDataModel</artifactId>
-      <version>0.0.3-SNAPSHOT</version>
+      <version>0.0.4-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
@@ -51,13 +51,13 @@
     <dependency>
       <groupId>wlcp.shared</groupId>
       <artifactId>WLCPShared</artifactId>
-      <version>0.0.3-SNAPSHOT</version>
+      <version>0.0.4-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>wlcp.gameserver.api</groupId>
       <artifactId>WLCPGameServerAPI</artifactId>
-      <version>0.0.3-SNAPSHOT</version>
+      <version>0.0.4-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
   </dependencies>
